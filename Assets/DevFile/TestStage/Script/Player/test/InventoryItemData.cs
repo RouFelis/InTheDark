@@ -12,7 +12,7 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
     public FixedString128Bytes dropPrefabPath;
     public bool isPlaceable;
 
-    public InventoryItemData(FixedString128Bytes itemSpritePath, FixedString128Bytes itemName, FixedString128Bytes previewPrefabPath, FixedString128Bytes objectPrefabPath, FixedString128Bytes dropPrefabPath, bool isPlaceable)
+    public InventoryItemData( FixedString128Bytes itemName, FixedString128Bytes itemSpritePath, FixedString128Bytes previewPrefabPath, FixedString128Bytes objectPrefabPath, FixedString128Bytes dropPrefabPath, bool isPlaceable)
     {
         this.itemName = itemName;
         this.itemSpritePath = itemSpritePath;

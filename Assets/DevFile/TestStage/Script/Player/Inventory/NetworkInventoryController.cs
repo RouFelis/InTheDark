@@ -402,9 +402,9 @@ public class NetworkInventoryController : NetworkBehaviour
 
             PickupItem item = itemNetworkObject.GetComponent<PickupItem>();
 
-            InventoryItemData newItem = new InventoryItemData(
-                new FixedString128Bytes(item.inventoryItem.itemSpritePath.ToString()),
+            InventoryItemData newItem = new InventoryItemData(                
                 new FixedString128Bytes(item.inventoryItem.itemName.ToString()),
+                new FixedString128Bytes(item.inventoryItem.itemSpritePath.ToString()),
                 new FixedString128Bytes(item.inventoryItem.previewPrefabPath.ToString()),
                 new FixedString128Bytes(item.inventoryItem.objectPrefabPath.ToString()),
                 new FixedString128Bytes(item.inventoryItem.dropPrefabPath.ToString()),
