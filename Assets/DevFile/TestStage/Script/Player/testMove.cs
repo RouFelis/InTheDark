@@ -37,7 +37,7 @@ public class testMove : NetworkBehaviour, ICharacter , IDamaged
         if (IsOwner)
         {
             playerCamera.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
-            Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
+          //  Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
         }
         else
         {

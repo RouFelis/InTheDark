@@ -15,14 +15,14 @@ MonoBehaviour:
   globalPropGroupID_obsolete: 
   globalPropRanges_obsolete: []
   Length:
-    Min: 5
-    Max: 10
+    Min: 4
+    Max: 5
   BranchMode: 0
   BranchCount:
     Min: 1
     Max: 5
   GlobalProps: []
-  KeyManager: {fileID: 0}
+  KeyManager: {fileID: 11400000, guid: 5ccf0f6fc8ee25a4e8af60f511c148ae, type: 2}
   DoorwayConnectionChance: 0
   RestrictConnectionToSameSection: 0
   TileInjectionRules: []

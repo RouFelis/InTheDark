@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fc84507316e03b45877fbaa2e27ef0c, type: 3}
-  m_Name: Work Light 2
+  m_Script: {fileID: 11500000, guid: 554c36d9dfee36d46863e0f6d58fe393, type: 3}
+  m_Name: NewInventoryItem
   m_EditorClassIdentifier: 
-  itemName: Work Light 2
-  itemSpritePath: Image/Cat
-  previewPrefabPath: Prefab/Preview
-  objectPrefabPath: Prefab/Work Light 2
-  dropPrefabPath: Prefab/DropPrefab
-  isPlaceable: 1
+  inventoryItemList:
+  - {fileID: 11400000, guid: cbc65ee8145d4ed4a96ba31ea0520bbc, type: 2}
+  - {fileID: 11400000, guid: 0496000ec95e27b42b1be679da6bbab8, type: 2}

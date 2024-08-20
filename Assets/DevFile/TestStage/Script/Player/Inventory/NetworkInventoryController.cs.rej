@@ -1,0 +1,13 @@
+diff a/Assets/DevFile/TestStage/Script/Player/Inventory/NetworkInventoryController.cs b/Assets/DevFile/TestStage/Script/Player/Inventory/NetworkInventoryController.cs	(rejected hunks)
+@@ -47,6 +47,11 @@
+ 
+         // �ڷ�ƾ�� ���� �ʿ��� ������Ʈ���� ã��
+         StartCoroutine(InitializeUIElements());
++
++        if (networkItems != null)
++        {
++            networkItems.Dispose();
++        }
+     }
+     private void OnNetworkItemsChanged(NetworkListEvent<InventoryItemData> changeEvent)
+     {

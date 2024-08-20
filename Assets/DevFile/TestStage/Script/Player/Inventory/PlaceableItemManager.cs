@@ -13,10 +13,11 @@ public class PlaceableItemManager : NetworkBehaviour
     public float rotationSpeed = 100f; // 회전 속도
     public bool enableLogs = true; // 로그 활성화 체크박스
 
-    private GameObject previewObject; // 설치 미리보기 오브젝트
+    [SerializeField] private GameObject previewObject; // 설치 미리보기 오브젝트
     public bool canPlace; // 설치 가능 여부
     private float currentRotation = 0f; // 현재 회전 각도
     private bool isRotating = false; // 회전 중인지 여부
+    [SerializeField] private NetworkObject spawnedObjectParent;
     [SerializeField] private NetworkInventoryController netInvenController; 
     [SerializeField] private testMove playerController; // 플레이어 컨트롤러 참조
 
@@ -79,6 +80,7 @@ public class PlaceableItemManager : NetworkBehaviour
                     {
                         Debug.Log("PlayerController를 찾았습니다.");
                     }
+                    
                 }
 			}
 			catch
@@ -91,11 +93,34 @@ public class PlaceableItemManager : NetworkBehaviour
             
             yield return new WaitForSeconds(1f); // 1초마다 반복
         }
+        while (spawnedObjectParent == null)
+        {
+            try
+            {
+                spawnedObjectParent = GameObject.Find("SpawnedObjects").GetComponent<NetworkObject>();
+                if (playerController != null && enableLogs)
+                {
+                    Debug.Log("spawnedObjectParent 를 찾았습니다.");
+                }
+            }
+            catch
+            {
+                if (enableLogs)
+                {
+                    Debug.Log("spawnedObjectParent 를 찾는 중...");
+                }
+            }
+
+            yield return new WaitForSeconds(1f); // 1초마다 반복
+        }
+
+      
     }
     public void InitializePreviewObject(GameObject previewPrefab)
     {
+        Quaternion spawnRotation = Quaternion.Euler(Vector3.zero);
         // 프리팹을 복제하여 설치 미리보기 오브젝트 생성
-        previewObject = Instantiate(previewPrefab);
+        previewObject = Instantiate(previewPrefab,this.gameObject.transform.position ,spawnRotation);
         SetObjectTransparent(previewObject);
     }
 
@@ -134,33 +159,43 @@ public class PlaceableItemManager : NetworkBehaviour
         Vector3 targetPosition = ray.origin + ray.direction * maxPlacementDistance;
         targetPosition.y = GetGroundHeight(targetPosition); // 바닥 높이를 찾음
         previewObject.transform.position = targetPosition;
+        Debug.Log("3");
         canPlace = Physics.Raycast(previewObject.transform.position, Vector3.down, out RaycastHit hit) && hit.collider.CompareTag("Ground");
         SetObjectMaterial(previewObject, canPlace ? validPlacementMaterial : invalidPlacementMaterial);
     }
 
-    private float GetGroundHeight(Vector3 position)
+    private float GetGroundHeight(Vector3 targetPosition)
     {
-        if (Physics.Raycast(position, Vector3.down, out RaycastHit hit, Mathf.Infinity))
+        if (Physics.Raycast(new Vector3(targetPosition.x, Camera.main.transform.position.y, targetPosition.z), Vector3.down, out RaycastHit hit))
         {
+            Debug.Log("1");
             return hit.point.y;
         }
-        return position.y;
+        Debug.Log("2");
+        return targetPosition.y;
     }
+
 
     [ServerRpc(RequireOwnership = false)] // 소유권이 필요하지 않도록 설정
     void PlaceObjectServerRpc(Vector3 position, Quaternion rotation, ServerRpcParams rpcParams = default)
     {
         // 모든 클라이언트에서 오브젝트를 설치하는 ClientRpc 호출
         GameObject placedObject = Instantiate(objectPrefab, position, rotation);
-        placedObject.GetComponent<NetworkObject>().Spawn();
-        PlaceObjectClientRpc(position, rotation);
+        NetworkObject networkObject = placedObject.GetComponent<NetworkObject>();
+        networkObject.Spawn();
+        PlaceObjectClientRpc(networkObject.NetworkObjectId, position, rotation);
     }
 
     [ClientRpc] // 클라이언트에서 호출되는 RPC 메서드
-    void PlaceObjectClientRpc(Vector3 position, Quaternion rotation)
+    void PlaceObjectClientRpc(ulong objectId, Vector3 position, Quaternion rotation)
     {
         if (IsOwner)
         {
+            NetworkObject networkObject = NetworkManager.SpawnManager.SpawnedObjects[objectId];
+            NetworkObject parentObject = NetworkManager.SpawnManager.SpawnedObjects[spawnedObjectParent.NetworkObjectId];
+
+            networkObject.transform.SetParent(parentObject.transform, true);
+
             PreviewDestroy();//미리보기 삭제
             netInvenController.IsPlacingItem = false;
         }

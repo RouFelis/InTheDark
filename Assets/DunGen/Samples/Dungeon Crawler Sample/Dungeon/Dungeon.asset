@@ -44,6 +44,12 @@ MonoBehaviour:
     CanAppearOnMainPath: 0
     CanAppearOnBranchPath: 1
     IsRequired: 1
+    IsLocked: 0
+    LockID: 0
+  TileTagConnectionMode: 0
+  TileConnectionTags: []
+  BranchTagPruneMode: 1
+  BranchPruneTags: []
   Nodes:
   - Graph: {fileID: 11400000}
     TileSets:

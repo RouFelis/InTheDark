@@ -11,6 +11,12 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
     public string objectPrefabPath; // 프리팹 경로 추가
     public string dropPrefabPath; // 프리팹 경로 추가
     public bool isPlaceable;
+    public bool isUsable;
+    public int price;
+    public int minPrice;
+    public int maxPrice;
+
+    public int weight;
 
     private Sprite itemSprite; // 캐싱된 스프라이트
     private GameObject previewPrefab; // 캐싱된 프리팹
@@ -38,7 +44,6 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         }
     }
 
-
     public GameObject PreviewPrefab
     {
         get
@@ -58,7 +63,6 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
             return previewPrefab;
         }
     }
-
 
     public GameObject ObjectPrefab
     {
@@ -104,6 +108,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
     {
         serializer.SerializeValue(ref itemName);
         serializer.SerializeValue(ref isPlaceable);
+        serializer.SerializeValue(ref isUsable);
+        serializer.SerializeValue(ref price);
         serializer.SerializeValue(ref previewPrefabPath); // 직렬화 추가
         serializer.SerializeValue(ref objectPrefabPath); // 직렬화 추가
         serializer.SerializeValue(ref dropPrefabPath); // 직렬화 추가
@@ -114,6 +120,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         itemName = sourceItem.itemName;
         itemSprite = sourceItem.itemSprite;
         isPlaceable = sourceItem.isPlaceable;
+        isUsable = sourceItem.isUsable;
+        price = sourceItem.price;
         previewPrefabPath = sourceItem.previewPrefabPath; // 데이터 복사 추가
         objectPrefabPath = sourceItem.objectPrefabPath; // 데이터 복사 추가
         dropPrefabPath = sourceItem.dropPrefabPath; // 데이터 복사 추가
@@ -126,7 +134,9 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
             new FixedString128Bytes(previewPrefabPath),
             new FixedString128Bytes(objectPrefabPath),
             new FixedString128Bytes(dropPrefabPath),
-            isPlaceable
+            isPlaceable,
+            isUsable,
+            price
         );
     }
 
@@ -138,6 +148,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         objectPrefabPath = data.objectPrefabPath.ToString();
         dropPrefabPath = data.dropPrefabPath.ToString();
         isPlaceable = data.isPlaceable;
+        isUsable = data.isUsable;
+        price = data.price;
     }
 
 }

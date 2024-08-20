@@ -71,5 +71,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      TileSet: {fileID: 0}
-  LockPrefabs: []
+      TileSet: {fileID: 11400000}
+  LockPrefabs:
+  - Socket: {fileID: 11400000, guid: 81fa1ebaa27acf442aaa1c557a1cb7ee, type: 2}
+    LockPrefabs:
+      Weights: []

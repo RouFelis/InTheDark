@@ -11,15 +11,19 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
     public FixedString128Bytes objectPrefabPath;
     public FixedString128Bytes dropPrefabPath;
     public bool isPlaceable;
+    public bool isUsable;
+    public int price;
 
-    public InventoryItemData( FixedString128Bytes itemName, FixedString128Bytes itemSpritePath, FixedString128Bytes previewPrefabPath, FixedString128Bytes objectPrefabPath, FixedString128Bytes dropPrefabPath, bool isPlaceable)
+    public InventoryItemData( FixedString128Bytes itemName, FixedString128Bytes itemSpritePath, FixedString128Bytes previewPrefabPath, FixedString128Bytes objectPrefabPath, FixedString128Bytes dropPrefabPath, bool isPlaceable , bool isUsable, int price)
     {
         this.itemName = itemName;
-        this.itemSpritePath = itemSpritePath;
+        this.itemSpritePath = itemSpritePath;   
         this.previewPrefabPath = previewPrefabPath;
         this.objectPrefabPath = objectPrefabPath;
         this.dropPrefabPath = dropPrefabPath;
         this.isPlaceable = isPlaceable;
+        this.isUsable = isUsable;
+        this.price = price;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -30,6 +34,8 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
         serializer.SerializeValue(ref objectPrefabPath);
         serializer.SerializeValue(ref dropPrefabPath);
         serializer.SerializeValue(ref isPlaceable);
+        serializer.SerializeValue(ref isUsable);
+        serializer.SerializeValue(ref price);
     }
 
     public bool Equals(InventoryItemData other)
@@ -39,7 +45,9 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
                previewPrefabPath.Equals(other.previewPrefabPath) &&
                objectPrefabPath.Equals(other.objectPrefabPath) &&
                dropPrefabPath.Equals(other.dropPrefabPath) &&
-               isPlaceable == other.isPlaceable;
+               isPlaceable == other.isPlaceable &&
+               isUsable == other.isUsable &&
+               price == other.price;
     }
 
     public override bool Equals(object obj)
@@ -49,6 +57,6 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(itemName, itemSpritePath, previewPrefabPath, objectPrefabPath, dropPrefabPath, isPlaceable);
+        return HashCode.Combine(itemName, itemSpritePath, previewPrefabPath, objectPrefabPath, dropPrefabPath, isPlaceable , isUsable , price);
     }
 }

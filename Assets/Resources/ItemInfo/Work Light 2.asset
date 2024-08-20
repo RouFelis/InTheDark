@@ -10,11 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fc84507316e03b45877fbaa2e27ef0c, type: 3}
-  m_Name: Work Light
+  m_Name: Work Light 2
   m_EditorClassIdentifier: 
-  itemName: Work Light
+  itemName: Work Light 2
   itemSpritePath: Image/Cat
-  previewPrefabPath: 
-  objectPrefabPath: Prefab/Work Light
-  dropPrefabPath: Prefab/Work Light
-  isPlaceable: 0
+  previewPrefabPath: Prefab/Preview
+  objectPrefabPath: Prefab/Work Light 2
+  dropPrefabPath: Prefab/DropPrefab
+  isPlaceable: 1
+  isUsable: 0
+  price: 0
+  minPrice: 0
+  maxPrice: 0
+  weight: 10
