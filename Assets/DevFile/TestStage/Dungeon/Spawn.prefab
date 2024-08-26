@@ -1783,6 +1783,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8021851344009184582, guid: 3468885b53042c446a66886dec99d973,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2225,6 +2230,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021851344009184582, guid: 3468885b53042c446a66886dec99d973,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3097,6 +3107,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Floor Hatch
+      objectReference: {fileID: 0}
+    - target: {fileID: 6236978381588025144, guid: 8d6ba7dffb1319a449c4c6566487c4a9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6977600930884533547, guid: 8d6ba7dffb1319a449c4c6566487c4a9,
         type: 3}
@@ -4075,6 +4090,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Single Doorway (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 719165744439322775, guid: b29ddb0d1b7e05846b21ceada85482d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4142867728460830947, guid: b29ddb0d1b7e05846b21ceada85482d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5931072721558515769, guid: b29ddb0d1b7e05846b21ceada85482d0,
         type: 3}
@@ -5454,6 +5479,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Single Doorway (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 311751935903910774, guid: b29ddb0d1b7e05846b21ceada85482d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4142867728460830947, guid: b29ddb0d1b7e05846b21ceada85482d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5931072721558515769, guid: b29ddb0d1b7e05846b21ceada85482d0,
         type: 3}
       propertyPath: m_RootOrder
@@ -5908,6 +5943,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021851344009184582, guid: 3468885b53042c446a66886dec99d973,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6504,6 +6544,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8021851344009184582, guid: 3468885b53042c446a66886dec99d973,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
