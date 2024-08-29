@@ -151,7 +151,6 @@ GameObject:
   - component: {fileID: 1459929578918552886}
   - component: {fileID: 7063125711770317483}
   - component: {fileID: 8213377697239954114}
-  - component: {fileID: 7333532968153370585}
   - component: {fileID: 8772443858311929726}
   - component: {fileID: 2740562399230657829}
   m_Layer: 2
@@ -214,7 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1669537527
+  GlobalObjectIdHash: 3728243280
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -291,29 +290,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7333532968153370585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1441098053676493550}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79684fef3efc344ba1cc3a834e6575b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previewPrefab: {fileID: 5809953777107759177, guid: a9978e3c2df518448aaddc096a00f1b9,
-    type: 3}
-  objectPrefab: {fileID: 8166380069126331733, guid: e8b1c595e996b2c4d99b03baf42bd5c8,
-    type: 3}
-  maxPlacementDistance: 3
-  transparentMaterial: {fileID: 2100000, guid: 8036ca5fdfce72f40b1b0fd7672435e2, type: 2}
-  validPlacementMaterial: {fileID: 2100000, guid: 0340ade0a5cb30a40ab59a5d899c6913,
-    type: 2}
-  invalidPlacementMaterial: {fileID: 2100000, guid: ab0bf8416da6b90498ff9e548f960e3f,
-    type: 2}
-  rotationSpeed: 200
 --- !u!114 &8772443858311929726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,11 +322,23 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  pickupTextLocalized:
+    m_TableReference:
+      m_TableCollectionName: GUID:f8c79501678d46c499eb3c3c57f6c312
+    m_TableEntryReference:
+      m_KeyId: 28803284992
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   slotKeys: 3100000032000000330000003400000035000000
   pickupText: {fileID: 0}
   keySettingsManager: {fileID: 0}
   currentPlaceableItemManager: {fileID: 0}
   isPlacingItem: 0
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &2479728684603271927
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using Unity.Netcode;
 
-public class RandomNavMeshSpawner : MonoBehaviour
+public class RandomNavMeshSpawner : NetworkBehaviour
 {
     [SerializeField] ItemDataList itemDataList; 
 
@@ -15,16 +16,44 @@ public class RandomNavMeshSpawner : MonoBehaviour
 
     public void test()
     {
+        SpawnObjectServerRpc();
+    }
+
+    [ServerRpc]
+    void SpawnObjectServerRpc()
+    {
         for (int i = 0; i < numberOfObjects; i++)
         {
             GameObject objectToSpawn = GetRandomObjectByWeight();
             Vector3 randomPosition = GetRandomNavMeshPosition();
             if (objectToSpawn != null && randomPosition != Vector3.zero)
             {
-                Instantiate(objectToSpawn, randomPosition, Quaternion.identity);
+                GameObject instance = Instantiate(objectToSpawn, randomPosition, Quaternion.identity);
+
+                PickupItem invenItem = instance.GetComponent<PickupItem>();
+
+                int randomRange = Random.Range(invenItem.inventoryItem.minPrice, invenItem.inventoryItem.maxPrice);
+
+                var updatedItemData = new InventoryItemData(
+                    invenItem.cloneItem.itemName,
+                    invenItem.cloneItem.itemSpritePath,
+                    invenItem.cloneItem.previewPrefabPath,
+                    invenItem.cloneItem.objectPrefabPath,
+                    invenItem.cloneItem.dropPrefabPath,
+                    invenItem.cloneItem.isPlaceable,
+                    invenItem.cloneItem.isUsable,
+                    randomRange, // 여기서 가격만 변경
+                    invenItem.cloneItem.maxPrice,
+                    invenItem.cloneItem.minPrice
+                );
+
+                invenItem.networkInventoryItemData.Value = updatedItemData;
+
+                instance.GetComponent<NetworkObject>().Spawn();
             }
         }
     }
+
     GameObject GetRandomObjectByWeight()
     {
         float totalWeight = 0;

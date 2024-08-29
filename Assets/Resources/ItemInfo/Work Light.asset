@@ -19,7 +19,7 @@ MonoBehaviour:
   dropPrefabPath: Prefab/Work Light
   isPlaceable: 0
   isUsable: 0
-  price: 0
-  minPrice: 0
-  maxPrice: 0
-  weight: 1
+  price: 32
+  minPrice: 100
+  maxPrice: 10
+  weight: 10

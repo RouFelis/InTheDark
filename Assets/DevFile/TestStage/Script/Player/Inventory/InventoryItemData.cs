@@ -13,8 +13,10 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
     public bool isPlaceable;
     public bool isUsable;
     public int price;
+    public int minPrice;
+    public int maxPrice;
 
-    public InventoryItemData( FixedString128Bytes itemName, FixedString128Bytes itemSpritePath, FixedString128Bytes previewPrefabPath, FixedString128Bytes objectPrefabPath, FixedString128Bytes dropPrefabPath, bool isPlaceable , bool isUsable, int price)
+    public InventoryItemData( FixedString128Bytes itemName, FixedString128Bytes itemSpritePath, FixedString128Bytes previewPrefabPath, FixedString128Bytes objectPrefabPath, FixedString128Bytes dropPrefabPath, bool isPlaceable , bool isUsable, int price , int maxprice, int minprice)
     {
         this.itemName = itemName;
         this.itemSpritePath = itemSpritePath;   
@@ -24,6 +26,8 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
         this.isPlaceable = isPlaceable;
         this.isUsable = isUsable;
         this.price = price;
+        this.maxPrice = maxprice;
+        this.minPrice = minprice;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -36,6 +40,8 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
         serializer.SerializeValue(ref isPlaceable);
         serializer.SerializeValue(ref isUsable);
         serializer.SerializeValue(ref price);
+        serializer.SerializeValue(ref maxPrice);
+        serializer.SerializeValue(ref minPrice);
     }
 
     public bool Equals(InventoryItemData other)
@@ -47,7 +53,9 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
                dropPrefabPath.Equals(other.dropPrefabPath) &&
                isPlaceable == other.isPlaceable &&
                isUsable == other.isUsable &&
-               price == other.price;
+               price == other.price &&
+               maxPrice == other.maxPrice &&
+               minPrice == other.minPrice;
     }
 
     public override bool Equals(object obj)
@@ -57,6 +65,8 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(itemName, itemSpritePath, previewPrefabPath, objectPrefabPath, dropPrefabPath, isPlaceable , isUsable , price);
+        int hash1 = HashCode.Combine(itemName, itemSpritePath, previewPrefabPath, objectPrefabPath, dropPrefabPath, isPlaceable, isUsable);
+        int hash2 = HashCode.Combine(price, maxPrice, minPrice);
+        return HashCode.Combine(hash1, hash2);
     }
 }
