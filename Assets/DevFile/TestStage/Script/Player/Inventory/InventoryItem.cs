@@ -110,6 +110,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         serializer.SerializeValue(ref isPlaceable);
         serializer.SerializeValue(ref isUsable);
         serializer.SerializeValue(ref price);
+        serializer.SerializeValue(ref maxPrice);
+        serializer.SerializeValue(ref minPrice);
         serializer.SerializeValue(ref previewPrefabPath); // 직렬화 추가
         serializer.SerializeValue(ref objectPrefabPath); // 직렬화 추가
         serializer.SerializeValue(ref dropPrefabPath); // 직렬화 추가
@@ -122,6 +124,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         isPlaceable = sourceItem.isPlaceable;
         isUsable = sourceItem.isUsable;
         price = sourceItem.price;
+        maxPrice = sourceItem.maxPrice;
+        minPrice = sourceItem.minPrice;
         previewPrefabPath = sourceItem.previewPrefabPath; // 데이터 복사 추가
         objectPrefabPath = sourceItem.objectPrefabPath; // 데이터 복사 추가
         dropPrefabPath = sourceItem.dropPrefabPath; // 데이터 복사 추가
@@ -136,7 +140,9 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
             new FixedString128Bytes(dropPrefabPath),
             isPlaceable,
             isUsable,
-            price
+            price,
+            maxPrice,
+            minPrice
         );
     }
 
@@ -150,6 +156,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         isPlaceable = data.isPlaceable;
         isUsable = data.isUsable;
         price = data.price;
+        maxPrice = data.maxPrice;
+        minPrice = data.minPrice;
     }
 
 }
