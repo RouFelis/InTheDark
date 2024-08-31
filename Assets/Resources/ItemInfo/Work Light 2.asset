@@ -19,7 +19,7 @@ MonoBehaviour:
   dropPrefabPath: Prefab/DropPrefab
   isPlaceable: 1
   isUsable: 0
-  price: 0
-  minPrice: 0
-  maxPrice: 0
+  price: 10
+  minPrice: 10
+  maxPrice: 5
   weight: 10

@@ -25,7 +25,6 @@ public class testMove : NetworkBehaviour, ICharacter , IDamaged
     public int Health { get; set; }
     public int Damage { get; set; }
 
-   
 
     private NetworkVariable<Vector3> networkedPosition = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Owner);
     private NetworkVariable<Quaternion> networkedRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
@@ -37,7 +36,7 @@ public class testMove : NetworkBehaviour, ICharacter , IDamaged
         if (IsOwner)
         {
             playerCamera.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
-          //  Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
+            Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
         }
         else
         {

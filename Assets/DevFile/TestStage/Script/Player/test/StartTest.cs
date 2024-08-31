@@ -7,7 +7,13 @@ public class StartTest : NetworkBehaviour
     [SerializeField] RuntimeDungeon dungeon;
     private NetworkVariable<int> networkSeed = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-    void Start()
+	public override void OnDestroy()
+	{
+        networkSeed.Dispose();
+        base.OnDestroy();
+    }
+
+	void Start()
     {
 		if (IsHost)
 		{

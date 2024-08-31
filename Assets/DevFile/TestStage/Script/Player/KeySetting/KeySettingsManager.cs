@@ -6,10 +6,11 @@ using System.Collections.Generic;
 
 public class KeySettingsManager : MonoBehaviour
 {
+    public enum KeyName { Interact, Drop, UseItem };
     [System.Serializable]
     public class KeySettingField
     {
-        public string keyName; // 키 이름
+        public KeyName keyName; // 키 이름
         public TMP_InputField inputField; // 인풋 필드
     }
 
@@ -42,6 +43,7 @@ public class KeySettingsManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             keySettingsPanel.SetActive(!keySettingsPanel.activeSelf);
+            MouseFixed(!keySettingsPanel.activeSelf);
         }
 
         // 인풋 필드가 활성화되었을 때 키 입력을 처리
@@ -60,6 +62,18 @@ public class KeySettingsManager : MonoBehaviour
         }
     }
 
+    private void MouseFixed(bool isFix)
+	{
+        if (isFix)
+        {
+            Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None; // 커서 고정 해제
+        }
+    }
+
     private void ApplyKeySettings()
     {
         // 각 키 설정 필드를 순회하며 설정 적용
@@ -67,20 +81,22 @@ public class KeySettingsManager : MonoBehaviour
         {
             if (TryGetKeyCode(field.inputField.text, out KeyCode newKey))
             {
-                keySettings[field.keyName] = newKey;
+                keySettings[field.keyName.ToString()] = newKey;
             }
             else
             {
-                Debug.LogError("Invalid key entered for " + field.keyName); // 잘못된 키 입력 시 오류 출력
+                Debug.LogError("Invalid key entered for " + field.keyName.ToString()); // 잘못된 키 입력 시 오류 출력
             }
         }
 
+        MouseFixed(true);
         SaveKeySettings(); // 키 설정 저장
         keySettingsPanel.SetActive(false); // 키 설정 패널 비활성화
     }
 
     private void CancelKeySettings()
     {
+        MouseFixed(true);
         keySettingsPanel.SetActive(false); // 키 설정 패널 비활성화
     }
 
@@ -138,9 +154,9 @@ public class KeySettingsManager : MonoBehaviour
         // 각 키 설정 필드를 초기화
         foreach (KeySettingField field in keySettingFields)
         {
-            if (keySettings.ContainsKey(field.keyName))
+            if (keySettings.ContainsKey(field.keyName.ToString()))
             {
-                field.inputField.text = keySettings[field.keyName].ToString(); // 인풋 필드에 키 설정 값 표시
+                field.inputField.text = keySettings[field.keyName.ToString()].ToString(); // 인풋 필드에 키 설정 값 표시
                 field.inputField.onSelect.AddListener(delegate { OnInputFieldSelected(field.inputField); }); // 인풋 필드 선택 시 이벤트 리스너 추가
             }
         }
