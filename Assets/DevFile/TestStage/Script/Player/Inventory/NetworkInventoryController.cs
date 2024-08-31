@@ -18,7 +18,7 @@ public class NetworkInventoryController : NetworkBehaviour
     private Image[] slotImages;
     private NetworkObject spawnedObjectParent;
     public List<InventoryItem> items = new List<InventoryItem>();  // 로컬 인벤토리 아이템 리스트
-    public NetworkList<InventoryItemData> networkItems = new NetworkList<InventoryItemData>(); // 네트워크 동기화 인벤토리 아이템 리스트
+    public NetworkList<InventoryItemData> networkItems; // 네트워크 동기화 인벤토리 아이템 리스트
 
     public LocalizedString localizedString;
 
@@ -26,6 +26,9 @@ public class NetworkInventoryController : NetworkBehaviour
     public KeyCode[] slotKeys = new KeyCode[] {
         KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5
     };
+    private KeyCode interactKey;
+    private KeyCode dropKey;
+    private KeyCode useItemKey;
 
     public TextMeshProUGUI pickupText; // 아이템 픽업 알림 텍스트
 
@@ -39,10 +42,16 @@ public class NetworkInventoryController : NetworkBehaviour
     public bool IsPlacingItem { get { return isPlacingItem; } set { isPlacingItem = value; } }
 
     private InventoryItem currentSelectedItem = null; // 현재 선택된 아이템
+    bool invenLoading = false;
 
-    #region 초기화
+    #region 초기화    
 
-    void Start()
+    private void Awake()
+	{
+        networkItems = new NetworkList<InventoryItemData>();
+    }
+
+	void Start()
     {
         Transform inventoryTransform = GameObject.Find("Inventory").transform;
         int numberOfSlots = inventoryTransform.childCount;
@@ -63,6 +72,17 @@ public class NetworkInventoryController : NetworkBehaviour
 
     private IEnumerator InitializeUIElements()
     {
+        // PlaceableItemManager 오브젝트 찾기
+        while (currentPlaceableItemManager == null)
+        {
+            GameObject placeableItemManagerObject = GameObject.Find("PlaceableItemManager");
+            if (placeableItemManagerObject != null)
+            {
+                currentPlaceableItemManager = placeableItemManagerObject.GetComponent<PlaceableItemManager>();
+            }
+            yield return null;
+        }
+
         // PickupText 오브젝트 찾기
         while (pickupText == null)
         {
@@ -85,16 +105,6 @@ public class NetworkInventoryController : NetworkBehaviour
             yield return null;
         }
 
-        // PlaceableItemManager 오브젝트 찾기
-        while (currentPlaceableItemManager == null)
-        {
-            GameObject placeableItemManagerObject = GameObject.Find("PlaceableItemManager");
-            if (placeableItemManagerObject != null)
-            {
-                currentPlaceableItemManager = placeableItemManagerObject.GetComponent<PlaceableItemManager>();
-            }
-            yield return null;
-        }
 
         // SpawnedObjects 부모 오브젝트 찾기
         while (spawnedObjectParent == null)
@@ -112,6 +122,24 @@ public class NetworkInventoryController : NetworkBehaviour
 
         // 초기에는 픽업 텍스트 숨기기
         pickupText.gameObject.SetActive(false);
+
+        bool tempLoop = true;
+        while (tempLoop)
+        {
+            try
+            {
+                interactKey = keySettingsManager.GetKey("Interact");
+                dropKey = keySettingsManager.GetKey("Drop");
+                useItemKey = keySettingsManager.GetKey("UseItem");
+                tempLoop = false;
+                Debug.Log("KeySetting 를 찾았습니다.");
+            }
+            catch
+            {
+                Debug.Log("KeySetting 를 찾는 중...");
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -126,6 +154,10 @@ public class NetworkInventoryController : NetworkBehaviour
         UpdateSlotSelection();
     }
 
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+    }
     #endregion
 
     #region 네트워크 아이템 처리
@@ -142,7 +174,10 @@ public class NetworkInventoryController : NetworkBehaviour
         }
 
         if (IsOwner && IsClient)
+		{
             InitializeSlotImages();
+            invenLoading = false;
+        }            
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -288,7 +323,7 @@ public class NetworkInventoryController : NetworkBehaviour
     {
         if (isPlacingItem)
         {
-            currentPlaceableItemManager.CancelPreview();
+            currentPlaceableItemManager.PreviewDestroy();
             isPlacingItem = false;
             currentSelectedItem = null;
         }
@@ -330,7 +365,7 @@ public class NetworkInventoryController : NetworkBehaviour
                 if (isPlacingItem)
                 {
                     // 이전 미리보기 오브젝트가 있을 경우 삭제
-                    currentPlaceableItemManager.CancelPreview();
+                    currentPlaceableItemManager.PreviewDestroy();
                     isPlacingItem = false;
                     currentSelectedItem = null;
                 }
@@ -346,7 +381,7 @@ public class NetworkInventoryController : NetworkBehaviour
             if (isPlacingItem)
             {
                 // 이전 미리보기 오브젝트가 있을 경우 삭제
-                currentPlaceableItemManager.CancelPreview();
+                currentPlaceableItemManager.PreviewDestroy();
                 isPlacingItem = false;
                 currentSelectedItem = null;
             }
@@ -358,7 +393,7 @@ public class NetworkInventoryController : NetworkBehaviour
             if (isPlacingItem)
             {
                 // 이전 미리보기 오브젝트가 있을 경우 삭제
-                currentPlaceableItemManager.CancelPreview();
+                currentPlaceableItemManager.PreviewDestroy();
                 isPlacingItem = false;
                 currentSelectedItem = null;
             }
@@ -369,13 +404,17 @@ public class NetworkInventoryController : NetworkBehaviour
 
     private void HandleUseItem()
     {
+        if (invenLoading)
+		{
+            return;
+        }
+            
         InventoryItem currentItem = items[selectedSlot.Value];
         if (currentItem != null && currentItem.isPlaceable)
         {
             if (isPlacingItem)
             {
                 // 이전 미리보기 오브젝트가 있을 경우 삭제
-                currentPlaceableItemManager.CancelPreview();
                 isPlacingItem = false;
                 currentSelectedItem = null;
             }
@@ -383,10 +422,13 @@ public class NetworkInventoryController : NetworkBehaviour
             // 새로운 플레이스 아이템을 사용
             currentSelectedItem = currentItem;
 
-            // PlaceableItemManager 초기화
-            currentPlaceableItemManager.previewPrefab = currentItem.PreviewPrefab;
-            currentPlaceableItemManager.objectPrefab = currentItem.ObjectPrefab;
-            currentPlaceableItemManager.InitializePreviewObject(currentItem.PreviewPrefab); // 미리보기 오브젝트 초기화
+            if (currentPlaceableItemManager.previewObject == null)
+            {
+                // PlaceableItemManager 초기화
+                currentPlaceableItemManager.previewPrefab = currentItem.PreviewPrefab;
+                currentPlaceableItemManager.objectPrefab = currentItem.ObjectPrefab;
+                currentPlaceableItemManager.InitializePreviewObject(currentItem.PreviewPrefab); // 미리보기 오브젝트 초기화
+            }
             if (isPlacingItem == false)
             {
                 isPlacingItem = true; // 배치 모드 활성화
@@ -402,7 +444,6 @@ public class NetworkInventoryController : NetworkBehaviour
 
     private void HandleInteract()
     {
-        KeyCode interactKey = keySettingsManager.GetKey("Interact");
         if (Input.GetKeyDown(interactKey))
         {
             RaycastHit hit;
@@ -422,8 +463,7 @@ public class NetworkInventoryController : NetworkBehaviour
     }
 
     private void HandleDropItem()
-    {
-        KeyCode dropKey = keySettingsManager.GetKey("Drop");
+    {       
         if (Input.GetKeyDown(dropKey))
         {
             InventoryItem currentItem = items[selectedSlot.Value];
@@ -432,7 +472,7 @@ public class NetworkInventoryController : NetworkBehaviour
                 if (isPlacingItem)
                 {
                     // 미리보기 오브젝트 삭제
-                    currentPlaceableItemManager.CancelPreview();
+                    currentPlaceableItemManager.PreviewDestroy();
                     isPlacingItem = false;
                     currentSelectedItem = null;
                 }
@@ -486,7 +526,6 @@ public class NetworkInventoryController : NetworkBehaviour
                 if (networkObject != null)
                 {
                     networkObject.Spawn();
-                    NetworkObjectChangeParentsClientRpc(networkObject.NetworkObjectId);
                     if (IsOwner)
                     {
                         NetworkObject temptNetworkObject = NetworkManager.SpawnManager.SpawnedObjects[networkObject.NetworkObjectId];
@@ -508,12 +547,6 @@ public class NetworkInventoryController : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    void NetworkObjectChangeParentsClientRpc(ulong objectId)
-    {
-
-    }
-
     private void HandleRaycast()
     {
         RaycastHit hit;
@@ -524,7 +557,6 @@ public class NetworkInventoryController : NetworkBehaviour
                 PickupItem item = hit.transform.GetComponent<PickupItem>();
                 if (item != null)
                 {
-                    KeyCode interactKey = keySettingsManager.GetKey("Interact");
                     localizedString.TableReference = "InteractTable"; // 사용하고자 하는 테이블
                     localizedString.TableEntryReference = "Grab"; // 사용하고자 하는 키
                     pickupText.text = $"{item.networkInventoryItemData.Value.itemName} \n {localizedString.GetLocalizedString()} ({interactKey}) \n ";
@@ -555,6 +587,7 @@ public class NetworkInventoryController : NetworkBehaviour
         InventoryItem currentItem = items[selectedSlot.Value];
         if (currentItem != null)
         {
+            invenLoading = true;
             // 아이템 사용 후 인벤토리에서 제거
             RequestItemDataUpdataServerRpc(selectedSlot.Value , objectID);
             // 배치 모드 비활성화
@@ -588,7 +621,7 @@ public class NetworkInventoryController : NetworkBehaviour
               );
 
             NetworkManager.SpawnManager.SpawnedObjects[objectID].gameObject.GetComponent<PickupItem>().networkInventoryItemData.Value = updatedItemData;
-
+            
             CompleteClientRpc(slotIndex);
         }      
     }
@@ -618,6 +651,11 @@ public class NetworkInventoryController : NetworkBehaviour
 
     private void UpdateSlotSelection()
     {
+		if (slots == null)
+		{
+            Debug.Log("slots setting...");
+            return;
+		}
         for (int i = 0; i < slots.Length; i++)
         {
             if (i == selectedSlot.Value)
@@ -667,7 +705,7 @@ public class NetworkInventoryController : NetworkBehaviour
         if (isPlacingItem)
         {
             // 슬롯 변경 시 미리보기 오브젝트가 있을 경우 삭제
-            currentPlaceableItemManager.CancelPreview();
+            currentPlaceableItemManager.PreviewDestroy();
             isPlacingItem = false;
             currentSelectedItem = null;
         }

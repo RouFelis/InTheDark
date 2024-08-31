@@ -25,7 +25,6 @@ public class testMove : NetworkBehaviour, ICharacter , IDamaged
     public int Health { get; set; }
     public int Damage { get; set; }
 
-   
 
     private NetworkVariable<Vector3> networkedPosition = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Owner);
     private NetworkVariable<Quaternion> networkedRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);

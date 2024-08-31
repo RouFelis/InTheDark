@@ -15,68 +15,18 @@ public class PlaceableItemManager : NetworkBehaviour
     public float rotationSpeed = 100f; // 회전 속도
     public bool enableLogs = true; // 로그 활성화 체크박스
 
-    [SerializeField] private GameObject previewObject; // 설치 미리보기 오브젝트
+    [HideInInspector] public GameObject previewObject; // 설치 미리보기 오브젝트
     public bool canPlace; // 설치 가능 여부
     public bool clientRpcCompleted = false;
     private float currentRotation = 0f; // 현재 회전 각도
     private bool isRotating = false; // 회전 중인지 여부
-    [SerializeField] private NetworkObject spawnedObjectParent;
-    [SerializeField] private NetworkInventoryController netInvenController; 
-    [SerializeField] private testMove playerController; // 플레이어 컨트롤러 참조
+  
+    private NetworkObject spawnedObjectParent;
+    private NetworkInventoryController netInvenController; 
+    private testMove playerController; // 플레이어 컨트롤러 참조
 
- /*   private void OnEnable()
-    {
-        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-    }
+    public bool networkLoading = false;
 
-    private void OnDisable()
-    {
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-    }
-*/
-    private void OnClientConnected(ulong clientId)
-    {
-        if (IsClient && IsOwner)
-        {
-            StartCoroutine(InitializePlayerController());
-        }
-    }
-
-    private IEnumerator InitializePlayerController()
-    {
-        while (playerController == null)
-        {
-            var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject(); // 로컬 플레이어 오브젝트 찾기
-            if (playerObject != null)
-            {
-                playerController = playerObject.GetComponent<testMove>(); // 플레이어 컨트롤러 찾기                
-            }
-            yield return null;
-        }
-        while (netInvenController == null)
-        {
-			try
-			{
-                var playerObject = playerController.gameObject; // 로컬 플레이어 오브젝트 찾기
-                if (playerObject != null)
-                {
-                    netInvenController = playerObject.GetComponent<NetworkInventoryController>();
-                    if(enableLogs)
-                        Debug.Log("netInvenController 찾았습니다.");
-                }
-            }
-			catch
-			{
-                if (enableLogs)
-                {
-                    Debug.Log("netInvenController를 찾는 중...");
-                }
-            }            
-            yield return new WaitForSeconds(1f);
-        }
-    }
-
-   
     void Start()
     {
         if (IsOwner) // 현재 클라이언트가 오브젝트의 소유자인지 확인
@@ -137,6 +87,7 @@ public class PlaceableItemManager : NetworkBehaviour
             }
             yield return new WaitForSeconds(1f);
         }
+
         while (spawnedObjectParent == null)
         {
             try
@@ -211,10 +162,8 @@ public class PlaceableItemManager : NetworkBehaviour
     {
         if (Physics.Raycast(new Vector3(targetPosition.x, Camera.main.transform.position.y, targetPosition.z), Vector3.down, out RaycastHit hit))
         {
-            Debug.Log("1");
             return hit.point.y;
         }
-        Debug.Log("2");
         return targetPosition.y;
     }
 
@@ -239,7 +188,6 @@ public class PlaceableItemManager : NetworkBehaviour
         {;
             NetworkObject networkObject = NetworkManager.SpawnManager.SpawnedObjects[objectId];
             spawnedItem = networkObject.gameObject;
-            PreviewDestroy();//미리보기 삭제
             spawnedItemID = objectId;
             netInvenController.IsPlacingItem = false;
             // ClientRpc 완료 표시
@@ -260,24 +208,26 @@ public class PlaceableItemManager : NetworkBehaviour
         if (canPlace)
         {
             PlaceObjectServerRpc(previewObject.transform.position, previewObject.transform.rotation , itemPath);
-
+            networkLoading = true;
             yield return new WaitUntil(() => clientRpcCompleted);
+            clientRpcCompleted = false;
+            networkLoading = false;
+            PreviewDestroy();//미리보기 삭제
+            
 
             // 인벤토리에서 아이템 제거 요청
-            playerController.GetComponent<NetworkInventoryController>().UseCurrentSelectedItem(spawnedItemID);     
+            playerController.GetComponent<NetworkInventoryController>().UseCurrentSelectedItem(spawnedItemID);
+		}
+		else
+		{
+            /*yield return new WaitUntil(() => clientRpcCompleted);
+            
+            previewObject.SetActive(true);*/
         }
-        PreviewDestroy();//미리보기 삭제
+
     }
 
-    public void CancelPreview()
-    {
-        if (previewObject != null)
-        {
-            Destroy(previewObject);
-        }
-    }
-
-    public void HandleRotation(ref bool isPlacingItem, string itemPath)
+	public void HandleRotation(ref bool isPlacingItem, string itemPath)
     {
         if (Input.GetMouseButtonDown(0)) // 왼쪽 마우스 버튼을 누르면
         {
@@ -286,10 +236,11 @@ public class PlaceableItemManager : NetworkBehaviour
         }
         if (Input.GetMouseButtonUp(0)) // 왼쪽 마우스 버튼을 떼면
         {
+            networkLoading = true;            
             StartCoroutine(UseItem(itemPath)); 
             isRotating = false;
-            playerController.SetMouseControl(true); // 플레이어 회전 재개
             isPlacingItem = false; // 배치 모드 비활성화
+            playerController.SetMouseControl(true); // 플레이어 회전 재개            
         }
 
         if (isRotating)
