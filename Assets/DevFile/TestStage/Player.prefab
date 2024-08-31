@@ -153,7 +153,7 @@ GameObject:
   - component: {fileID: 8213377697239954114}
   - component: {fileID: 8772443858311929726}
   - component: {fileID: 2740562399230657829}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -322,11 +322,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  pickupTextLocalized:
+  localizedString:
     m_TableReference:
-      m_TableCollectionName: GUID:f8c79501678d46c499eb3c3c57f6c312
+      m_TableCollectionName: 
     m_TableEntryReference:
-      m_KeyId: 28803284992
+      m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
