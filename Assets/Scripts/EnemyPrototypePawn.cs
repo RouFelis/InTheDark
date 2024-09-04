@@ -1,3 +1,4 @@
+using InTheDark.Prototypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,39 +7,46 @@ using Unity.Netcode;
 
 using UnityEngine;
 
-public class EnemyPrototypePawn : NetworkBehaviour
+public class EnemyPrototypePawn : NetworkBehaviour, ICharacter, IDamaged
 {
 	private NetworkVariable<Vector3> _networkPosition = new NetworkVariable<Vector3>();
 	private NetworkVariable<Quaternion> _networkRotation = new NetworkVariable<Quaternion>();
 
+	public string Name { get; set; }
+
+	public int Health { get; set; }
+
+	public int Damage { get; set; }
+
 	private void OnEnable()
 	{
+		UpdateManager.OnUpdate += OnUpdate;
+
 		_networkPosition.OnValueChanged += OnPositionChanged;
 		_networkRotation.OnValueChanged += OnRotationChanged;
 	}
 
 	private void OnDisable()
 	{
+		UpdateManager.OnUpdate -= OnUpdate;
+
 		_networkPosition.OnValueChanged -= OnPositionChanged;
 		_networkRotation.OnValueChanged -= OnRotationChanged;
 	}
 
-	private void LateUpdate()
+	protected virtual void OnUpdate()
 	{
-		OnLateUpdate();
-	}
+		// IsHost, IsClient, IsServer, IsOwner 陥 true 級嬢身 せせせせせせせせせせせせせせせせせせせ
 
-	private void OnLateUpdate()
-	{
-		if (IsClient)
-		{
-			transform.position = _networkPosition.Value;
-			transform.rotation = _networkRotation.Value;
-		}
-		else
+		if (IsHost)
 		{
 			_networkPosition.Value = transform.position;
 			_networkRotation.Value = transform.rotation;
+		}
+		else
+		{
+			transform.position = _networkPosition.Value;
+			transform.rotation = _networkRotation.Value;
 		}
 	}
 
@@ -56,5 +64,22 @@ public class EnemyPrototypePawn : NetworkBehaviour
 		{
 			transform.rotation = newValue;
 		}
+	}
+
+	public override void OnNetworkSpawn()
+	{
+		base.OnNetworkSpawn();
+
+		Debug.Log($"{name} has been spawned!");
+	}
+
+	public void TakeDamage(int amount)
+	{
+		throw new NotImplementedException();
+	}
+
+	public void Attack(ICharacter target)
+	{
+		throw new NotImplementedException();
 	}
 }
