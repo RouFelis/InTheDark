@@ -10,6 +10,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
+// TODO: Enemy Manager 등으로 일부 기능 이동 및 분리, Spawner는 Factory의 역할
 public class MonsterSpawner : NetworkBehaviour
 {
 	[Serializable]
@@ -18,7 +19,7 @@ public class MonsterSpawner : NetworkBehaviour
 		public Vector3 Position;
 		public Quaternion Quaternion;
 
-		public static implicit operator EnemyRef(EnemyPrototype enemy)
+		public static implicit operator EnemyRef(EnemyPrototypePawn enemy)
 		{
 			var enemyRef = new EnemyRef()
 			{
@@ -45,11 +46,14 @@ public class MonsterSpawner : NetworkBehaviour
     [SerializeField]
     private float _radius;
 
-	[SerializeField]
-	private bool _isActive;
+	//[SerializeField]
+	//private bool _isActive;
+
+	//[SerializeField]
+	//private bool _isHost;
 
 	[SerializeField]
-	private bool _isHost;
+	private int _count;
 
 	private NetworkList<EnemyRef> _spawned = new NetworkList<EnemyRef>();
 
@@ -63,21 +67,36 @@ public class MonsterSpawner : NetworkBehaviour
 		Gizmos.DrawWireSphere(transform.position, _radius);
 	}
 
-	private void OnDisable()
+	public override void OnNetworkSpawn()
 	{
-		if (_isActive)
+		if (NetworkManager.Singleton)
 		{
-			OnMonsterSpawnerActive();
+			NetworkManager.Singleton.OnServerStarted += OnHostStarted;
+
+			NetworkManager.Singleton.OnClientStarted += OnClientStarted;
+			NetworkManager.Singleton.OnClientStopped += Despawn;
+		}
+	}
+
+	public override void OnNetworkDespawn()
+	{
+		if (NetworkManager.Singleton)
+		{
+			NetworkManager.Singleton.OnServerStarted -= OnHostStarted;
+
+			NetworkManager.Singleton.OnClientStarted -= OnClientStarted;
+			NetworkManager.Singleton.OnClientStopped -= Despawn;
 		}
 	}
 
 	public void OnHostStarted()
 	{
-		var enemyRef = SpawnRandomRef();
+		for (var i = 0; i < _count; i++)
+		{
+			var enemyRef = SpawnRandomRef();
 
-		_spawned.Add(enemyRef);
-
-		Debug.Log(nameof(OnHostStarted));
+			_spawned.Add(enemyRef);
+		}
 	}
 
 	public void OnClientStarted()
@@ -86,8 +105,6 @@ public class MonsterSpawner : NetworkBehaviour
 		{
 			Spawn(enemyRef.Position);
 		}
-
-		Debug.Log(nameof(OnClientStarted));
 	}
 
 	private EnemyRef SpawnRandomRef()
@@ -133,25 +150,5 @@ public class MonsterSpawner : NetworkBehaviour
 		}
 
 		return result;
-	}
-
-	public void OnMonsterSpawnerActive()
-	{
-		_isActive = !_isActive;
-
-		if (_isActive && NetworkManager.Singleton)
-		{
-			NetworkManager.Singleton.OnServerStarted += OnHostStarted;
-
-			NetworkManager.Singleton.OnClientStarted += OnClientStarted;
-			NetworkManager.Singleton.OnClientStopped += Despawn;
-		}
-		else
-		{
-			NetworkManager.Singleton.OnServerStarted -= OnHostStarted;
-
-			NetworkManager.Singleton.OnClientStarted -= OnClientStarted;
-			NetworkManager.Singleton.OnClientStopped -= Despawn;
-		}
 	}
 }

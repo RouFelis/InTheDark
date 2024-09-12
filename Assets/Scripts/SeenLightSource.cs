@@ -1,6 +1,8 @@
 ﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
+using InTheDark.Prototypes;
+
 using UnityEngine;
 
 namespace InTheDark

@@ -29,14 +29,13 @@ namespace InTheDark.Prototypes
 
 		static UpdateManager()
 		{
-			var gameObject = new GameObject(GAMEOBJECT_NAME);
-
-			gameObject.AddComponent<UpdateManager>();
-
 			OnUpdate = null;
 			OnFixedUpdate = null;
 			OnLateUpdate = null;
+		}
 
+		private void Awake()
+		{
 			DontDestroyOnLoad(gameObject);
 		}
 

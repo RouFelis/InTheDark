@@ -1,4 +1,5 @@
 using InTheDark.Prototypes;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,68 +10,90 @@ using UnityEngine;
 
 public class EnemyPrototypePawn : NetworkBehaviour, ICharacter, IDamaged
 {
-	private NetworkVariable<Vector3> _networkPosition = new NetworkVariable<Vector3>();
-	private NetworkVariable<Quaternion> _networkRotation = new NetworkVariable<Quaternion>();
+	[SerializeField]
+	private int _angle = 30;
+
+	[SerializeField]
+	private int _distance = 10;
+
+	[SerializeField]
+	private NetworkVariable<int> _health = new NetworkVariable<int>();
+
+	[SerializeField]
+	private NetworkVariable<float> _resistance = new NetworkVariable<float>(30);
+
+	private List<LightSource> _sighted = new List<LightSource>();
 
 	public string Name { get; set; }
 
-	public int Health { get; set; }
+	public int Health 
+	{
+		get=> _health.Value; 
+
+		set => _health.Value = value;
+	}
 
 	public int Damage { get; set; }
 
-	private void OnEnable()
-	{
-		UpdateManager.OnUpdate += OnUpdate;
-
-		_networkPosition.OnValueChanged += OnPositionChanged;
-		_networkRotation.OnValueChanged += OnRotationChanged;
-	}
-
-	private void OnDisable()
-	{
-		UpdateManager.OnUpdate -= OnUpdate;
-
-		_networkPosition.OnValueChanged -= OnPositionChanged;
-		_networkRotation.OnValueChanged -= OnRotationChanged;
-	}
-
-	protected virtual void OnUpdate()
-	{
-		// IsHost, IsClient, IsServer, IsOwner 陥 true 級嬢身 せせせせせせせせせせせせせせせせせせせ
-
-		if (IsHost)
-		{
-			_networkPosition.Value = transform.position;
-			_networkRotation.Value = transform.rotation;
-		}
-		else
-		{
-			transform.position = _networkPosition.Value;
-			transform.rotation = _networkRotation.Value;
-		}
-	}
-
-	private void OnPositionChanged(Vector3 oldValue, Vector3 newValue)
-	{
-		if (IsClient)
-		{
-			transform.position = newValue;
-		}
-	}
-
-	private void OnRotationChanged(Quaternion oldValue, Quaternion newValue)
-	{
-		if (IsClient)
-		{
-			transform.rotation = newValue;
-		}
-	}
+	// IsHost, IsClient, IsServer, IsOwner 陥 true 級嬢身 せせせせせせせせせせせせせせせせせせせ
 
 	public override void OnNetworkSpawn()
 	{
 		base.OnNetworkSpawn();
 
+		_resistance.OnValueChanged += OnResistanceChanged;
+
+		Logger.Instance?.LogInfo($"{name} has been spawned!");
+
 		Debug.Log($"{name} has been spawned!");
+	}
+
+	public override void OnNetworkDespawn()
+	{
+		base.OnNetworkDespawn();
+
+		_resistance.OnValueChanged -= OnResistanceChanged;
+	}
+
+	private void OnResistanceChanged(float oldValue, float newValue)
+	{
+		if (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f))
+		{
+			Dead();
+		}
+	}
+
+	public void OnLightInsighted()
+	{
+		var damage = Time.deltaTime;
+		var current = _sighted[0];
+
+		if (_sighted.Count > 1)
+		{
+			for (var i = 1; i < _sighted.Count; i++)
+			{
+				var source = _sighted[i];
+				var direction = source.transform.position - transform.position;
+				var isOccultation = Physics.Raycast(transform.position, direction, out var hit, _distance);
+				var isSight = Vector3.Angle(direction, transform.forward) < _angle;
+
+				if (hit.collider == source && isOccultation && isSight && current < source)
+				{
+					current = source;
+				}
+			}
+		}
+
+		_resistance.Value -= damage * current.DamagePercent;
+
+		_sighted.Clear();
+	}
+
+	public void OnLightInsighted(LightSource light)
+	{
+		//_resistance.Value -= Time.deltaTime;
+
+		_sighted.Add(light);
 	}
 
 	public void TakeDamage(int amount)
@@ -81,5 +104,12 @@ public class EnemyPrototypePawn : NetworkBehaviour, ICharacter, IDamaged
 	public void Attack(ICharacter target)
 	{
 		throw new NotImplementedException();
+	}
+
+	public void Dead()
+	{
+		NetworkObject.Despawn();
+
+		Destroy(gameObject);
 	}
 }

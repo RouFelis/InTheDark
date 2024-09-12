@@ -21,9 +21,24 @@ namespace InTheDark.Prototypes
 			UpdateManager.OnUpdate -= OnUpdate;
 		}
 
+		public override void OnDestroy()
+		{
+			base.OnDestroy();
+		}
+
 		private void OnUpdate()
 		{
 
+		}
+
+		public override void OnNetworkSpawn()
+		{
+			base.OnNetworkSpawn();
+		}
+
+		public override void OnNetworkDespawn()
+		{
+			base.OnNetworkDespawn();
 		}
 	}
 }
