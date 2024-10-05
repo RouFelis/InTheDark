@@ -910,7 +910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _angle: 45
-  _distance: 5
+  _distance: 20
   _damagePercent: 1
 --- !u!1001 &7141280188104381029
 PrefabInstance:

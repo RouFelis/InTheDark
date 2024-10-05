@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using Unity.Netcode;
 
 using UnityEngine;
+using UnityEngine.AI;
 
-public class EnemyPrototypePawn : NetworkBehaviour, ICharacter, IDamaged
+public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 {
 	[SerializeField]
 	private int _angle = 30;
@@ -104,6 +105,13 @@ public class EnemyPrototypePawn : NetworkBehaviour, ICharacter, IDamaged
 	public void Attack(ICharacter target)
 	{
 		throw new NotImplementedException();
+	}
+
+	// 기존 정의해둔 것 말고 새로 함수 작성함
+	// 아니 근데 이거 공격 관련해서 구현해야 만들 수 있는데
+	public void AttackPrototype(NetworkPawn target)
+	{
+		// 대충 공격했다고 이벤트 알림^^
 	}
 
 	public void Dead()

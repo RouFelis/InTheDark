@@ -1,25 +1,20 @@
-﻿using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 
-using UnityEngine;
 using UnityEngine.AI;
 
-namespace InTheDark
+public class ArriveAtDestination : Conditional
 {
-    public class ArriveAtDestination : Conditional
-    {
-        public float distance;
+	public float distance;
 
-        private NavMeshAgent _agent;
-        
-        public override void OnAwake()
-        {
-            _agent = gameObject.GetComponent<NavMeshAgent>();
-        }
+	private NavMeshAgent _agent;
 
-        public override TaskStatus OnUpdate()
-        {
-            return _agent.remainingDistance < distance ? TaskStatus.Success : TaskStatus.Failure;
-        }
-    }
+	public override void OnAwake()
+	{
+		_agent = gameObject.GetComponent<NavMeshAgent>();
+	}
+
+	public override TaskStatus OnUpdate()
+	{
+		return _agent.remainingDistance < distance ? TaskStatus.Success : TaskStatus.Failure;
+	}
 }

@@ -46,12 +46,6 @@ public class MonsterSpawner : NetworkBehaviour
     [SerializeField]
     private float _radius;
 
-	//[SerializeField]
-	//private bool _isActive;
-
-	//[SerializeField]
-	//private bool _isHost;
-
 	[SerializeField]
 	private int _count;
 
@@ -60,12 +54,6 @@ public class MonsterSpawner : NetworkBehaviour
     // ÇÁ¸®ÆÕ
     [SerializeField]
     private NetworkObject _enemyPrototypePrefab;
-
-	private void OnDrawGizmos()
-	{
-		Gizmos.color = Color.green;
-		Gizmos.DrawWireSphere(transform.position, _radius);
-	}
 
 	public override void OnNetworkSpawn()
 	{

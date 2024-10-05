@@ -1,7 +1,8 @@
 ﻿using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-
+using InTheDark.Prototypes;
 using UnityEngine;
+using Unity.Netcode;
 
 public class WithinSight : Conditional
 {
@@ -14,6 +15,8 @@ public class WithinSight : Conditional
     public LayerMask targetLayer;
     // Set the target variable when a target has been found so the subsequent tasks know which object is the target
     public SharedVector3 target;
+
+    public SharedNetworkBehaviour pawn;
 
     private int size;
     
@@ -42,12 +45,15 @@ public class WithinSight : Conditional
             {
                 // Set the target so other tasks will know which transform is within sight
                 target.Value = element.transform.position;
-                        
-                return TaskStatus.Success;
-            }
-        }
+				pawn.Value = element.GetComponent<NetworkBehaviour>();
 
-        return TaskStatus.Failure;
+				return TaskStatus.Success;
+			}
+		}
+
+		pawn.Value = default;
+
+		return TaskStatus.Failure;
     }
 
     [System.Diagnostics.Conditional("UNITY_EDITOR")]

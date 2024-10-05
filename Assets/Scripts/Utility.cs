@@ -5,8 +5,11 @@ using UnityEngine;
 
 namespace InTheDark.Prototypes
 {
-	public class Prototype_EnemyPawn : NetworkPawn
+	public static class SightUtility
 	{
+		public static void Detection<T>(Transform transform) where T : MonoBehaviour
+		{
 
+		}
 	}
 }

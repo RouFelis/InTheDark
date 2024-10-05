@@ -91,7 +91,7 @@ namespace InTheDark.Prototypes
 					var isOccultation = Physics.Raycast(source.transform.position, direction, out var hit, distance);
 					var isSight = Vector3.Angle(direction, source.transform.forward) < angle;
 
-					Debug.Log($"{name} detected {target.name} => layer: {target.gameObject.layer}");
+					//Debug.Log($"{name} detected {target.name} => layer: {target.gameObject.layer}");
 
 					if (hit.collider == target && isOccultation && isSight && !_dirties.Contains(target))
 					{
