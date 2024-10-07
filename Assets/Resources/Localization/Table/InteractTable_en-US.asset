@@ -26,6 +26,10 @@ MonoBehaviour:
     m_Localized: Energy
     m_Metadata:
       m_Items: []
+  - m_Id: 11952354258534400
+    m_Localized: Start
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

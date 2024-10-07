@@ -148,11 +148,13 @@ GameObject:
   - component: {fileID: 1441098053676493551}
   - component: {fileID: 8112225020554850714}
   - component: {fileID: -5988149418903554258}
-  - component: {fileID: 1459929578918552886}
   - component: {fileID: 7063125711770317483}
   - component: {fileID: 8213377697239954114}
   - component: {fileID: 8772443858311929726}
   - component: {fileID: 2740562399230657829}
+  - component: {fileID: -3805608106118446902}
+  - component: {fileID: 5775247870652489427}
+  - component: {fileID: -2362926755301820054}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -222,27 +224,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &1459929578918552886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1441098053676493550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4724619f67cdbff47859856f0eb9f65f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 5
-  lookSpeed: 2
-  lookXLimit: 90
-  playerCamera: {fileID: 1441098053000729887}
-  headTarget: {fileID: 4795852900395067331}
-  characterController: {fileID: 7063125711770317483}
-  jumpForce: 5
-  gravity: 9.8
-  mouseControl: 1
 --- !u!143 &7063125711770317483
 CharacterController:
   m_ObjectHideFlags: 0
@@ -322,23 +303,68 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  slotKeys: 3100000032000000330000003400000035000000
+  keySettingsManager: {fileID: 0}
+  currentPlaceableItemManager: {fileID: 0}
+  isPlacingItem: 0
+--- !u!114 &-3805608106118446902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441098053676493550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51c4f1155f04b3e4482198e8dfad5fd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  lookSpeed: 2
+  lookXLimit: 90
+  playerCamera: {fileID: 1441098053000729887}
+  headTarget: {fileID: 4795852900395067331}
+  characterController: {fileID: 7063125711770317483}
+  jumpForce: 8
+  gravity: 20
+  mouseControl: 1
+--- !u!114 &5775247870652489427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441098053676493550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a98076de11e76fd48b5fa5eda26d845e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   localizedString:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:f8c79501678d46c499eb3c3c57f6c312
     m_TableEntryReference:
       m_KeyId: 0
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  slotKeys: 3100000032000000330000003400000035000000
-  pickupText: {fileID: 0}
-  keySettingsManager: {fileID: 0}
-  currentPlaceableItemManager: {fileID: 0}
-  isPlacingItem: 0
+  interactDistance: 2
   references:
     version: 2
     RefIds: []
+--- !u!114 &-2362926755301820054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441098053676493550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29a78bd160b8ae14ea459c1d404f2dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2479728684603271927
 GameObject:
   m_ObjectHideFlags: 0

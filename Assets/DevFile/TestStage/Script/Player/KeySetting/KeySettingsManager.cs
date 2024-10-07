@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class KeySettingsManager : MonoBehaviour
 {
+    public static KeySettingsManager Instance { get; private set; }
+
     public enum KeyName { Interact, Drop, UseItem };
     [System.Serializable]
     public class KeySettingField
@@ -23,8 +25,53 @@ public class KeySettingsManager : MonoBehaviour
     private string settingsFilePath; // 키 설정 파일 경로
     private TMP_InputField activeInputField = null; // 현재 활성화된 인풋 필드
 
+    // 델리게이트와 이벤트 정의
+    public delegate void OnKeyCodeChanged();
+    public event OnKeyCodeChanged KeyCodeChanged;
+
+    [SerializeField]private KeyCode interactKey;
+    [SerializeField]private KeyCode dropKey;
+    [SerializeField]private KeyCode useItemKey;
+
+    public KeyCode InteractKey {         
+        get { return interactKey; }
+        set
+        {
+            if (interactKey != value)
+            {
+                interactKey = value;
+                KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
+            }
+        }
+    }
+    public KeyCode DropKey {         
+        get { return dropKey; }
+        set
+        {
+            if (dropKey != value)
+            {
+                dropKey = value;
+                KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
+            }
+        }
+    }
+    public KeyCode UseItemKey { 
+        get { return useItemKey; }
+        set
+        {
+            if (useItemKey != value)
+            {
+                useItemKey = value;
+                KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
+            }
+        }
+    }
+
+    
+
     private void Start()
     {
+        Instance = this;
         // 설정 파일 경로를 지정
         settingsFilePath = Path.Combine(Application.persistentDataPath, "keysettings.json");
 
@@ -35,6 +82,7 @@ public class KeySettingsManager : MonoBehaviour
         cancelButton.onClick.AddListener(CancelKeySettings); // 취소 버튼에 리스너 추가
 
         keySettingsPanel.SetActive(false); // 초기 상태는 비활성화
+        SetKey();
     }
 
     private void Update()
@@ -60,6 +108,14 @@ public class KeySettingsManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void SetKey()
+	{
+        InteractKey = GetKey("Interact");
+        DropKey = GetKey("Drop");
+        UseItemKey = GetKey("UseItem");
+        Debug.Log("KeySetting2 를 찾았습니다.");
     }
 
     private void MouseFixed(bool isFix)
@@ -91,6 +147,7 @@ public class KeySettingsManager : MonoBehaviour
 
         MouseFixed(true);
         SaveKeySettings(); // 키 설정 저장
+        SetKey(); // 키 변경 적용
         keySettingsPanel.SetActive(false); // 키 설정 패널 비활성화
     }
 

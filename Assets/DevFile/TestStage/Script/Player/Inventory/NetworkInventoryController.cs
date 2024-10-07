@@ -4,11 +4,6 @@ using System.Collections;
 using Unity.Collections;
 using UnityEngine.UI;
 using Unity.Netcode;
-using TMPro;
-
-using UnityEngine.Localization;
-using UnityEngine.Localization.Settings;
-using UnityEngine.Localization.Tables;
 
 // 이 스크립트는 네트워크 게임 환경에서 인벤토리를 관리합니다.
 public class NetworkInventoryController : NetworkBehaviour
@@ -20,8 +15,6 @@ public class NetworkInventoryController : NetworkBehaviour
     public List<InventoryItem> items = new List<InventoryItem>();  // 로컬 인벤토리 아이템 리스트
     public NetworkList<InventoryItemData> networkItems; // 네트워크 동기화 인벤토리 아이템 리스트
 
-    public LocalizedString localizedString;
-
     // 인벤토리 슬롯 키 바인딩
     public KeyCode[] slotKeys = new KeyCode[] {
         KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5
@@ -30,12 +23,9 @@ public class NetworkInventoryController : NetworkBehaviour
     private KeyCode dropKey;
     private KeyCode useItemKey;
 
-    public TextMeshProUGUI pickupText; // 아이템 픽업 알림 텍스트
-
     private NetworkVariable<int> selectedSlot = new NetworkVariable<int>(0); // 현재 선택된 슬롯
 
-    // 키 설정 변수
-    public KeySettingsManager keySettingsManager; // 키 설정 매니저
+
     [SerializeField] private PlaceableItemManager currentPlaceableItemManager; // 배치 가능한 아이템 매니저
     [SerializeField] private bool isPlacingItem = false; // 아이템 배치 여부 플래그
 
@@ -57,6 +47,7 @@ public class NetworkInventoryController : NetworkBehaviour
         int numberOfSlots = inventoryTransform.childCount;
         slots = new RectTransform[numberOfSlots];
         slotImages = new Image[numberOfSlots];
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += OnSceneEvent;
 
         // 슬롯 및 슬롯 이미지를 초기화
         for (int i = 0; i < numberOfSlots; i++)
@@ -66,8 +57,31 @@ public class NetworkInventoryController : NetworkBehaviour
             slotImages[i] = slotTransform.GetComponent<Image>();
         }
 
-        // 필요한 UI 요소를 찾기 위한 코루틴 시작
-        StartCoroutine(InitializeUIElements());
+        if (!IsOwner)
+		{
+            GetComponent<Interacter>().enabled = false;
+        }
+
+		if (IsOwner)
+        {      
+            // 필요한 UI 요소를 찾기 위한 코루틴 시작
+            StartCoroutine(InitializeUIElements());
+            // 키코드 변경 시 호출 이벤트 추가.
+            KeySettingsManager.Instance.KeyCodeChanged += SetKeys;
+            SetKeys();
+        }
+
+
+
+    }
+
+    //씬 전환시 이벤트
+    public void OnSceneEvent(SceneEvent sceneEvent)
+	{
+        if (IsOwner)
+        {
+            StartCoroutine(InitializeUIElements());
+        }
     }
 
     private IEnumerator InitializeUIElements()
@@ -83,33 +97,10 @@ public class NetworkInventoryController : NetworkBehaviour
             yield return null;
         }
 
-        // PickupText 오브젝트 찾기
-        while (pickupText == null)
-        {
-            GameObject pickupTextObject = GameObject.Find("PickupText");
-            if (pickupTextObject != null)
-            {
-                pickupText = pickupTextObject.GetComponent<TextMeshProUGUI>();
-            }
-            yield return null;
-        }
-
-        // KeySettingsManager 오브젝트 찾기
-        while (keySettingsManager == null)
-        {
-            GameObject keySettingsManagerObject = GameObject.Find("KeySettingsManager");
-            if (keySettingsManagerObject != null)
-            {
-                keySettingsManager = keySettingsManagerObject.GetComponent<KeySettingsManager>();
-            }
-            yield return null;
-        }
-
-
         // SpawnedObjects 부모 오브젝트 찾기
         while (spawnedObjectParent == null)
         {
-            GameObject spawnedObjectParentObject = GameObject.Find("SpawnedObjects");
+            GameObject spawnedObjectParentObject = GameObject.Find("MapSpawnedObjects");
             if (spawnedObjectParentObject != null)
             {
                 spawnedObjectParent = spawnedObjectParentObject.GetComponent<NetworkObject>();
@@ -119,26 +110,20 @@ public class NetworkInventoryController : NetworkBehaviour
 
         // 서버 인벤토리 초기화
         InventoryServerRpc();
+    }
 
-        // 초기에는 픽업 텍스트 숨기기
-        pickupText.gameObject.SetActive(false);
-
-        bool tempLoop = true;
-        while (tempLoop)
+    private void SetKeys()
+	{
+        try
         {
-            try
-            {
-                interactKey = keySettingsManager.GetKey("Interact");
-                dropKey = keySettingsManager.GetKey("Drop");
-                useItemKey = keySettingsManager.GetKey("UseItem");
-                tempLoop = false;
-                Debug.Log("KeySetting 를 찾았습니다.");
-            }
-            catch
-            {
-                Debug.Log("KeySetting 를 찾는 중...");
-            }
-            yield return new WaitForSeconds(0.1f);
+            interactKey = KeySettingsManager.Instance.GetKey("Interact");
+            dropKey = KeySettingsManager.Instance.GetKey("Drop");
+            useItemKey = KeySettingsManager.Instance.GetKey("UseItem");
+            Debug.Log("KeySetting 를 찾았습니다.");
+        }
+        catch
+        {
+            Debug.Log("KeySetting 를 찾지 못했습니다...");
         }
     }
 
@@ -346,7 +331,6 @@ public class NetworkInventoryController : NetworkBehaviour
             HandleMouseWheelInput();
             HandleInteract();
             HandleDropItem();
-            HandleRaycast();
             HandleUseItem(); // 아이템 사용 처리 추가
         }
         if (isPlacingItem)
@@ -547,28 +531,6 @@ public class NetworkInventoryController : NetworkBehaviour
         }
     }
 
-    private void HandleRaycast()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 2f))
-        {
-            if (hit.transform.CompareTag("Item"))
-            {
-                PickupItem item = hit.transform.GetComponent<PickupItem>();
-                if (item != null)
-                {
-                    localizedString.TableReference = "InteractTable"; // 사용하고자 하는 테이블
-                    localizedString.TableEntryReference = "Grab"; // 사용하고자 하는 키
-                    pickupText.text = $"{item.networkInventoryItemData.Value.itemName} \n {localizedString.GetLocalizedString()} ({interactKey}) \n ";
-                    localizedString.TableEntryReference = "Energy"; // 사용하고자 하는 키
-                    pickupText.text += $"{localizedString.GetLocalizedString()} ({item.networkInventoryItemData.Value.price})";
-                    pickupText.gameObject.SetActive(true);
-                    return;
-                }
-            }
-        }
-        pickupText.gameObject.SetActive(false);
-    }
 
     #endregion
 
