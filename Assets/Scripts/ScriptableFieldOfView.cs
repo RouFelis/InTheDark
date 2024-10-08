@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace InTheDark
 {
-    // 안 씀, 그냥 구조 잡는 용도
+    // 안 씀, 그냥 나중에 작성할 시야 클래스 구조 잡는 용도
     [CreateAssetMenu(fileName = FILE_NAME, menuName = MENU_NAME)]
     public class ScriptableFieldOfView : ScriptableObject
     {

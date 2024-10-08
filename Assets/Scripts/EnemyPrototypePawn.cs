@@ -23,6 +23,12 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 	[SerializeField]
 	private NetworkVariable<float> _resistance = new NetworkVariable<float>(30);
 
+	[SerializeField]
+	private NetworkVariable<EnemyAttackPrototype> _test = new NetworkVariable<EnemyAttackPrototype>();
+
+	[SerializeField]
+	private EnemyAttackPrototype _attackModule = new EnemyAttackPrototype();
+
 	private List<LightSource> _sighted = new List<LightSource>();
 
 	public string Name { get; set; }
@@ -43,6 +49,18 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 		base.OnNetworkSpawn();
 
 		_resistance.OnValueChanged += OnResistanceChanged;
+
+		if (IsHost)
+		{
+			if (_test.Value == null)
+			{
+				_test.Value = new EnemyAttackPrototype()
+				{
+					Cooldown = 100.0f,
+					Name = name
+				};
+			}
+		}
 
 		Logger.Instance?.LogInfo($"{name} has been spawned!");
 

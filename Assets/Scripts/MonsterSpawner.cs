@@ -49,11 +49,21 @@ public class MonsterSpawner : NetworkBehaviour
 	[SerializeField]
 	private int _count;
 
-	private NetworkList<EnemyRef> _spawned = new NetworkList<EnemyRef>();
+	private NetworkList<EnemyRef> _spawned;
 
     // ÇÁ¸®ÆÕ
     [SerializeField]
     private NetworkObject _enemyPrototypePrefab;
+
+	//public override void OnDestroy()
+	//{
+	//	base.OnDestroy();
+	//}
+
+	private void Awake()
+	{
+		_spawned = new NetworkList<EnemyRef>();
+	}
 
 	public override void OnNetworkSpawn()
 	{

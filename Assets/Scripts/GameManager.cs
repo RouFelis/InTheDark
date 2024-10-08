@@ -9,6 +9,6 @@ namespace InTheDark.Prototypes
 {
     public class GameManager : MonoBehaviour
     {
-
+        
 	} 
 }

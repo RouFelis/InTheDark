@@ -32,13 +32,19 @@ namespace InTheDark.Prototypes
 		private MonsterSpawner _spawner;
 
 		// 멀티플레이 전용 데이터
-		private NetworkList<EnemyPawnRef> _pawns = new NetworkList<EnemyPawnRef>();
+		private NetworkList<EnemyPawnRef> _pawns;
 
 		public static PawnManager Instance
 		{
 			get => _instance;
 		}
+		
+		private void Awake()
+		{
+			_pawns = new NetworkList<EnemyPawnRef>();
+		}
 
+		//
 		//private void OnUpdate()
 		//{
 
