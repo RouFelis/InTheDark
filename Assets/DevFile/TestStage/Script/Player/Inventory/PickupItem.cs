@@ -5,7 +5,7 @@ public class PickupItem : NetworkBehaviour
 {
     public InventoryItem inventoryItem;
 
-    public InventoryItem CloneItem;
+    private InventoryItem CloneItem;
 
     public InventoryItem cloneItem 
     {

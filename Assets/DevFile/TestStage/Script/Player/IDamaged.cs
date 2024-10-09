@@ -1,5 +1,7 @@
 public interface IDamaged
-{
-	void TakeDamage(int amount);
-	void Attack(ICharacter target);
+{	
+	public int Health { get; set; }
+	public int Damage { get; set; }
+	public void TakeDamage(int amount);
+	public void Die();
 }

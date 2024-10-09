@@ -23,6 +23,10 @@ MonoBehaviour:
     m_Key: Energy
     m_Metadata:
       m_Items: []
+  - m_Id: 11952354258534400
+    m_Key: StartInteract
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

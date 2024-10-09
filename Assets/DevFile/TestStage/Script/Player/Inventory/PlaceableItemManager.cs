@@ -21,9 +21,9 @@ public class PlaceableItemManager : NetworkBehaviour
     private float currentRotation = 0f; // 현재 회전 각도
     private bool isRotating = false; // 회전 중인지 여부
   
-    private NetworkObject spawnedObjectParent;
+    [SerializeField] private NetworkObject spawnedObjectParent;
     private NetworkInventoryController netInvenController; 
-    private testMove playerController; // 플레이어 컨트롤러 참조
+    private playerMoveController playerController; // 플레이어 컨트롤러 참조
 
     public bool networkLoading = false;
 
@@ -48,7 +48,7 @@ public class PlaceableItemManager : NetworkBehaviour
                 var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
                 if (playerObject != null)
                 {
-                    playerController = playerObject.GetComponent<testMove>();
+                    playerController = playerObject.GetComponent<playerMoveController>();
                     if (playerController != null && enableLogs)
                     {
                         Debug.Log("PlayerController를 찾았습니다.");

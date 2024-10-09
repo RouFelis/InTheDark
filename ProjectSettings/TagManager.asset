@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - Item
+  - Gatherable
+  - RandomRunner
+  - InteractableObject
   layers:
   - Default
   - TransparentFX
@@ -13,7 +16,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Object
   - Player
   - Light Source
   - Enemy

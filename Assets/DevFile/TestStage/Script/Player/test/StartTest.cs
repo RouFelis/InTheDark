@@ -1,21 +1,24 @@
+using System.Collections;
+using System.Collections.Generic;
 using DunGen;
 using UnityEngine;
 using Unity.Netcode;
 
-public class StartTest : NetworkBehaviour
+public class StartTest : PlayerTelePorter
 {
     [SerializeField] RuntimeDungeon dungeon;
     private NetworkVariable<int> networkSeed = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-	public override void OnDestroy()
-	{
+
+    public override void OnDestroy()
+    {
         networkSeed.Dispose();
         base.OnDestroy();
-    }
+    } 
 
-	void Start()
+    void Start()
     {
-		if (IsHost)
+        if (IsHost)
 		{
             // 시드를 현재 시간으로 설정하여 매번 다른 난수를 생성
             int seed = (int)System.DateTime.Now.Ticks;
@@ -25,8 +28,9 @@ public class StartTest : NetworkBehaviour
 
             dungeon.Generator.Seed = seed;
             dungeon.Generate();
+            SetEveryPlayerPos();
         }
-		else
+        else
 		{
             dungeon.Generator.Seed = networkSeed.Value;
             dungeon.Generate();

@@ -5,7 +5,8 @@ using Unity.Netcode;
 
 public class RandomNavMeshSpawner : NetworkBehaviour
 {
-    [SerializeField] ItemDataList itemDataList; 
+    [SerializeField] ItemDataList itemDataList;
+    [SerializeField] NetworkObject spawnedObjectParent;
 
     //public List<SpawnableObject> spawnableObjects; // 생성할 오브젝트 목록
     public int numberOfObjects = 10;               // 생성할 오브젝트 수
@@ -49,7 +50,12 @@ public class RandomNavMeshSpawner : NetworkBehaviour
 
                 invenItem.networkInventoryItemData.Value = updatedItemData;
 
-                instance.GetComponent<NetworkObject>().Spawn();
+                NetworkObject spawnedObject = instance.GetComponent<NetworkObject>();
+                spawnedObject.Spawn();
+
+                NetworkObject temptNetworkObject = NetworkManager.SpawnManager.SpawnedObjects[spawnedObject.NetworkObjectId];
+                NetworkObject parentObject = NetworkManager.SpawnManager.SpawnedObjects[spawnedObjectParent.NetworkObjectId];
+                temptNetworkObject.transform.SetParent(parentObject.transform, true);
             }
         }
     }

@@ -16,7 +16,7 @@ MonoBehaviour:
   - Prefab: {fileID: 0}
     Colour: {r: 0.3652003, g: 0.3905341, b: 0.69728273, a: 1}
     KeysPerLock:
-      Min: 10
-      Max: 10
+      Min: 1
+      Max: 1
     id: 0
     name: Graveyard Key
