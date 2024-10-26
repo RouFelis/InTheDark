@@ -2301,7 +2301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDataList: {fileID: 11400000, guid: efeecff22288ece4d9a18f2ae0117528, type: 2}
-  spawnedObjectParent: {fileID: 712449473}
+  spawnedObjectParent: {fileID: 0}
   numberOfObjects: 50
   range: 50
   minDistanceBetweenObjects: 5

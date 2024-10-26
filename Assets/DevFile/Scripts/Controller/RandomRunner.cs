@@ -130,7 +130,7 @@ public class RandomRunner : MonoBehaviour
         {
             if (_mode)
             {
-                rig.velocity = Vector3.zero;
+                rig.linearVelocity = Vector3.zero;
                 rig.detectCollisions = true;
             }
             rig.useGravity = _mode;

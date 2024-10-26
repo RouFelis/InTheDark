@@ -18,6 +18,14 @@ public class GoRoom : InteractableObject
         base.Interact(interactingObjectTransform);
         // 서버에서 씬 전환
         NetworkManager.Singleton.SceneManager.LoadScene("GameRoom", LoadSceneMode.Single);
-    }
+
+		// 추가?
+		using var command = new InTheDark.Prototypes.Exit()
+		{
+			BuildIndex = 0
+		};
+
+		command.Invoke();
+	}
 
 }

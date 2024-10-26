@@ -35,6 +35,14 @@ public class StartTest : PlayerTelePorter
             dungeon.Generator.Seed = networkSeed.Value;
             dungeon.Generate();
         }
+
+        // Ãß°¡?
+        using var command = new InTheDark.Prototypes.Enter()
+        {
+            BuildIndex = 0
+        };
+
+        command.Invoke();
     }
 
     public void Init()
