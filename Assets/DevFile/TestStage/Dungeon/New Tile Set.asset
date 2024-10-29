@@ -14,36 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TileWeights:
     Weights:
-    - Value: {fileID: 999147650744031964, guid: 3e8ce7e7ec4375b45a27f7b369207616,
-        type: 3}
-      MainPathWeight: 1
-      BranchPathWeight: 1
-      DepthWeightScale:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      TileSet: {fileID: 11400000}
-    - Value: {fileID: 999147650744031964, guid: f29cfab787e400c4fb88d1c08255d13a,
+    - Value: {fileID: 6037774493621946778, guid: 458c0c19da457bb4eaa8fc9b5527ae5b,
         type: 3}
       MainPathWeight: 1
       BranchPathWeight: 1

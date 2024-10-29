@@ -23,7 +23,7 @@ public class NetworkInventoryController : NetworkBehaviour
     private KeyCode dropKey;
     private KeyCode useItemKey;
 
-    private NetworkVariable<int> selectedSlot = new NetworkVariable<int>(0); // 현재 선택된 슬롯
+    public NetworkVariable<int> selectedSlot = new NetworkVariable<int>(0); // 현재 선택된 슬롯
 
 
     [SerializeField] private PlaceableItemManager currentPlaceableItemManager; // 배치 가능한 아이템 매니저
@@ -446,6 +446,7 @@ public class NetworkInventoryController : NetworkBehaviour
         }
     }
 
+    //아이템 내려놓기(슬롯지정하기).
     private void HandleDropItem()
     {       
         if (Input.GetKeyDown(dropKey))
@@ -476,6 +477,14 @@ public class NetworkInventoryController : NetworkBehaviour
                 DropItemServerRpc(currentItem.itemName, dropPosition, dropRotation, selectedSlot.Value);
             }
         }
+    }
+
+    //아이템 지우기(현재 슬롯)
+    public int HandleSellItem()
+	{
+        int price = items[selectedSlot.Value].price;
+        RequestRemoveItemFromInventoryServerRpc(selectedSlot.Value);
+        return price;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -566,9 +575,7 @@ public class NetworkInventoryController : NetworkBehaviour
 
         if (GetComponent<NetworkObject>().OwnerClientId == senderClientId)
         {
-            Debug.Log("ddddd");
             InventoryItem currentItem = items[selectedSlot.Value];
-            Debug.Log("ccccc");
             var updatedItemData = new InventoryItemData(
                   currentItem.itemName,
                   currentItem.itemSpritePath,
@@ -587,6 +594,7 @@ public class NetworkInventoryController : NetworkBehaviour
             CompleteClientRpc(slotIndex);
         }      
     }
+    
     [ClientRpc]
     private void CompleteClientRpc(int slotIndex)
 	{
@@ -595,7 +603,7 @@ public class NetworkInventoryController : NetworkBehaviour
 
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestRemoveItemFromInventoryServerRpc(int slotIndex , ServerRpcParams rpcParams = default)
+    public void RequestRemoveItemFromInventoryServerRpc(int slotIndex , ServerRpcParams rpcParams = default)
     {
         networkItems[slotIndex] = new InventoryItemData(); // 빈 데이터를 할당하여 초기화
         RemoveItemFromInventoryClientRpc(slotIndex);

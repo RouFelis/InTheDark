@@ -21,7 +21,7 @@ public class InteractableObject : NetworkBehaviour
     public virtual void Start()
     {
         gameObject.layer = LayerMask.NameToLayer("InteractableObject");  // 오브젝트의 레이어를 'InteractableObject'로 설정
-        SetObjectName();
+       // SetObjectName();
     }
 
 
@@ -37,7 +37,7 @@ public class InteractableObject : NetworkBehaviour
     public virtual void Interact(Transform interactingObjectTransform)
     {
         Debug.Log(interactingObjectTransform.name + " has interacted with " + transform.name);
-    }
+    }    
 
     // 오브젝트가 플레이어의 집중 대상이 되었을 때 호출됨
     public void OnFocused(Transform playerTransform)

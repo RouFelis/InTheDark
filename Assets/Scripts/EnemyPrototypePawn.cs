@@ -82,4 +82,9 @@ public class EnemyPrototypePawn : NetworkBehaviour, ICharacter, IDamaged
 	{
 		throw new NotImplementedException();
 	}
+
+	public void Die()
+	{
+		throw new NotImplementedException();
+	}
 }

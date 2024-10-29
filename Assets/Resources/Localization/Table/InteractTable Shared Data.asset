@@ -27,6 +27,10 @@ MonoBehaviour:
     m_Key: StartInteract
     m_Metadata:
       m_Items: []
+  - m_Id: 24471859312410624
+    m_Key: Collectionbox
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

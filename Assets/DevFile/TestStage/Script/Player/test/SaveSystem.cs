@@ -6,7 +6,7 @@ using Unity.Netcode;
 public class SaveSystem : MonoBehaviour
 {
     public PlayerSaveSystem playerSaveSystem;
-    GameObject SaveObjects;
+    [SerializeField] GameObject SaveObjects;
 
 	private void Start()
 	{

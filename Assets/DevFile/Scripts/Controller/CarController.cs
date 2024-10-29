@@ -91,9 +91,9 @@ public class CarController : MonoBehaviour
         }
 
         // Lift
-        lift = liftCoefficiet * rigidbody.velocity.sqrMagnitude;
+        lift = liftCoefficiet * rigidbody.linearVelocity.sqrMagnitude;
 
-        carSpeed = Mathf.RoundToInt(rigidbody.velocity.sqrMagnitude);
+        carSpeed = Mathf.RoundToInt(rigidbody.linearVelocity.sqrMagnitude);
     }
 
     public void FixedUpdate()
@@ -109,7 +109,7 @@ public class CarController : MonoBehaviour
                 rigidbody.AddForce(lift * transform.up, ForceMode.Acceleration);
 
                 // Drag : Max Speed Limit
-                rigidbody.AddForce(-rigidbody.velocity.x * speedLimiterDragForce, 0f, -rigidbody.velocity.z * speedLimiterDragForce, ForceMode.Acceleration);
+                rigidbody.AddForce(-rigidbody.linearVelocity.x * speedLimiterDragForce, 0f, -rigidbody.linearVelocity.z * speedLimiterDragForce, ForceMode.Acceleration);
 
             }
             ////////////////////////
@@ -144,7 +144,7 @@ public class CarController : MonoBehaviour
             if (brakeFlag == true)
             {
                 
-                if (Mathf.Abs(motor) < 0.1f || rigidbody.velocity.sqrMagnitude > 200f)
+                if (Mathf.Abs(motor) < 0.1f || rigidbody.linearVelocity.sqrMagnitude > 200f)
                 {
                     axleInfo.leftWheel.brakeTorque = brakeTorque;
                     axleInfo.rightWheel.brakeTorque = brakeTorque;
@@ -217,7 +217,7 @@ public class CarController : MonoBehaviour
         WheelFrictionCurve leftWheel = axleInfo.leftWheel.sidewaysFriction;
         WheelFrictionCurve rightWheel = axleInfo.leftWheel.sidewaysFriction;
 
-        float carV = Mathf.Abs(rigidbody.velocity.sqrMagnitude);
+        float carV = Mathf.Abs(rigidbody.linearVelocity.sqrMagnitude);
         float rpmV = Mathf.Abs(axleInfo.leftWheel.rpm * axleInfo.leftWheel.rpm);
         float driftFactor = Mathf.Clamp01(carV/100 + rpmV/100) * 10f;
 

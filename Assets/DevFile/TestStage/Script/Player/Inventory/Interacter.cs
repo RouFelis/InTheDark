@@ -53,7 +53,7 @@ public class Interacter : MonoBehaviour
             if (hit.transform.CompareTag("InteractableObject"))
             {
                 localizedString.TableReference = "InteractTable"; // 사용하고자 하는 테이블
-                localizedString.TableEntryReference = "StartInteract"; // 사용하고자 하는 키
+                localizedString.TableEntryReference = hit.transform.name; // 사용하고자 하는 키
                 infoText.text = $"{localizedString.GetLocalizedString()} ({KeySettingsManager.Instance.InteractKey}) \n";
                 
 				if (Input.GetKeyDown(KeySettingsManager.Instance.InteractKey))

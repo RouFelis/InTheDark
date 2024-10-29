@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TileWeights:
     Weights:
-    - Value: {fileID: 999147650744031964, guid: 3c7a86216c8498b4baaca1ac0ea2e739,
+    - Value: {fileID: 6037774493621946778, guid: 2e199d3486560a54ba31cddbbd30b297,
         type: 3}
       MainPathWeight: 1
       BranchPathWeight: 1

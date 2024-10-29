@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59296c11d75e7024ebd73d93f5babf99, type: 3}
   m_Name: New Doorway Socket
   m_EditorClassIdentifier: 
-  size: {x: 0.5, y: 1}
+  size: {x: 10, y: 10}
