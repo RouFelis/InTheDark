@@ -22,34 +22,34 @@ public class LobbyUI : NetworkBehaviour
 		serverBtn.onClick.AddListener(() => {
 			if (NetworkManager.Singleton.StartServer())
 			{
-				Logger.Instance.LogInfo("Server started...");	
+				Logger.Instance?.LogInfo("Server started...");	
 			}
 			else
 			{
-				Logger.Instance.LogInfo("Server could not be started...");
+				Logger.Instance?.LogInfo("Server could not be started...");
 			}
 		});
 		hostBtn.onClick.AddListener(() => {			
 			if (NetworkManager.Singleton.StartHost())
 			{
-				Logger.Instance.LogInfo("Host started...");
+				Logger.Instance?.LogInfo("Host started...");
 				NetworkManager.Singleton.SceneManager.LoadScene("GameRoom", LoadSceneMode.Single);
 			}
 			else
 			{
-				Logger.Instance.LogInfo("Host could not be started...");
+				Logger.Instance?.LogInfo("Host could not be started...");
 			}
 		});
 		clientBtn.onClick.AddListener(() => {
 
 			if (NetworkManager.Singleton.StartClient())
 			{
-				Logger.Instance.LogInfo("Client started...");
+				Logger.Instance?.LogInfo("Client started...");
 				NetworkManager.Singleton.SceneManager.LoadScene("GameRoom", LoadSceneMode.Single);
 			}
 			else
 			{
-				Logger.Instance.LogInfo("Client could not be started...");
+				Logger.Instance?.LogInfo("Client could not be started...");
 			}
 		});
 	}

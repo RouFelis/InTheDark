@@ -15,10 +15,6 @@ namespace InTheDark.Prototypes
 		public delegate void FixedUpdateDelegate();
 		public delegate void LateUpdateDelegate();
 
-		// [========================= Constant =========================]
-
-		public const string GAMEOBJECT_NAME = "Update Manager";
-
 		// [========================= Field =========================]
 
 		public static event UpdateDelegate OnUpdate;
@@ -29,14 +25,13 @@ namespace InTheDark.Prototypes
 
 		static UpdateManager()
 		{
-			var gameObject = new GameObject(GAMEOBJECT_NAME);
+			OnUpdate = default;
+			OnFixedUpdate = default;
+			OnLateUpdate = default;
+		}
 
-			gameObject.AddComponent<UpdateManager>();
-
-			OnUpdate = null;
-			OnFixedUpdate = null;
-			OnLateUpdate = null;
-
+		private void Awake()
+		{
 			DontDestroyOnLoad(gameObject);
 		}
 
