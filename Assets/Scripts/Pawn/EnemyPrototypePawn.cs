@@ -35,6 +35,11 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 
 	public string Name { get; set; }
 
+	public int Level { get; set; }
+
+	public int Experience { get; set; }
+
+
 	public string Land {  get; set; }
 
 	public int Health 

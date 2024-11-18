@@ -9,7 +9,7 @@ public class InteractableObject : NetworkBehaviour
     public float radius = 0.25f;               // 상호작용을 위해 얼마나 가까워야 하는지 설정 (반경)
     public Transform interactionTransform;     // 상호작용을 수행할 위치를 나타내는 트랜스폼 (위치를 오프셋할 때 사용)
 
-    LayerMask interactableMask;  // 상호작용 가능한 오브젝트를 위한 레이어 마스크
+//    LayerMask interactableMask;  // 상호작용 가능한 오브젝트를 위한 레이어 마스크 (안씀)
 
     bool isFocus = false;   // 현재 이 상호작용 가능한 오브젝트가 집중되고 있는지 여부
     Transform player;       // 플레이어의 트랜스폼을 참조하기 위한 변수
@@ -20,7 +20,7 @@ public class InteractableObject : NetworkBehaviour
 
     public virtual void Start()
     {
-        gameObject.layer = LayerMask.NameToLayer("InteractableObject");  // 오브젝트의 레이어를 'InteractableObject'로 설정
+     //   gameObject.layer = LayerMask.NameToLayer("InteractableObject");  // 오브젝트의 레이어를 'InteractableObject'로 설정
        // SetObjectName();
     }
 

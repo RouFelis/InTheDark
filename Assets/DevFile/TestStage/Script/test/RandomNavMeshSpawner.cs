@@ -45,7 +45,9 @@ public class RandomNavMeshSpawner : NetworkBehaviour
                     invenItem.cloneItem.isUsable,
                     randomRange, // 여기서 가격만 변경
                     invenItem.cloneItem.maxPrice,
-                    invenItem.cloneItem.minPrice
+                    invenItem.cloneItem.minPrice,
+                    invenItem.cloneItem.batteryLevel,
+                    invenItem.cloneItem.batteryEfficiency
                 );
 
                 invenItem.networkInventoryItemData.Value = updatedItemData;

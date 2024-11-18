@@ -15,6 +15,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
     public int price;
     public int minPrice;
     public int maxPrice;
+    public float batteryLevel;
+    public float batteryEfficiency;
 
     public int weight;
 
@@ -115,6 +117,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         serializer.SerializeValue(ref previewPrefabPath); // 직렬화 추가
         serializer.SerializeValue(ref objectPrefabPath); // 직렬화 추가
         serializer.SerializeValue(ref dropPrefabPath); // 직렬화 추가
+        serializer.SerializeValue(ref batteryLevel); // 직렬화 추가
+        serializer.SerializeValue(ref batteryEfficiency); // 직렬화 추가
     }
 
     public void CopyDataFrom(InventoryItem sourceItem)
@@ -129,6 +133,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         previewPrefabPath = sourceItem.previewPrefabPath; // 데이터 복사 추가
         objectPrefabPath = sourceItem.objectPrefabPath; // 데이터 복사 추가
         dropPrefabPath = sourceItem.dropPrefabPath; // 데이터 복사 추가
+        batteryLevel = sourceItem.batteryLevel; // 데이터 복사 추가
+        batteryEfficiency = sourceItem.batteryEfficiency; // 데이터 복사 추가
     }
     public InventoryItemData ToData()
     {
@@ -142,7 +148,9 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
             isUsable,
             price,
             maxPrice,
-            minPrice
+            minPrice,
+            batteryLevel,
+            batteryEfficiency
         );
     }
 
@@ -158,6 +166,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         price = data.price;
         maxPrice = data.maxPrice;
         minPrice = data.minPrice;
+        batteryLevel = data.batteryLevel;
+        batteryEfficiency = data.batteryEfficiency;
     }
 
 }

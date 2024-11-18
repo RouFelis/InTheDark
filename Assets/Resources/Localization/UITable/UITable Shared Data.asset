@@ -14,7 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_TableCollectionName: UITable
   m_TableCollectionNameGuidString: 40dea47d4a893de458355d96b844c4bb
-  m_Entries: []
+  m_Entries:
+  - m_Id: 164267371216896
+    m_Key: Token
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164902132989952
+    m_Key: RearToken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1285316863279104
+    m_Key: SAMSUNStore
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

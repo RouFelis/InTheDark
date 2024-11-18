@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
 public class playerMoveController : NetworkBehaviour
 {
+    [SerializeField] private GameObject VirtualCam;
     [SerializeField] private float walkSpeed = 5.0f; // 걷기 속도
     [SerializeField] private float lookSpeed = 2.0f; // 시야 회전 속도
     [SerializeField] private float lookXLimit = 90.0f; // 시야 회전 제한 각도
@@ -13,12 +12,13 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private Camera playerCamera; // 플레이어 카메라
     [SerializeField] private Transform headTarget; // 머리 타겟 (시야 회전용)
     [SerializeField] private CharacterController characterController; // 캐릭터 컨트롤러
+    [SerializeField] private Animator animator;
     private Vector3 moveDirection = Vector3.zero; // 이동 방향
     private float rotationX = 0; // X축 회전 값
 
     [SerializeField] private float jumpForce = 8.0f; // 점프 힘
     [SerializeField] private float gravity = 20.0f; // 중력 가속도
-    [SerializeField] private bool mouseControl = true; // 마우스 컨트롤 여부
+    [SerializeField] private bool mouseControl = true; // 마우스 컨트롤 여부 
 
     private bool isJumping = false; // 점프 중인지 여부
 
@@ -26,25 +26,25 @@ public class playerMoveController : NetworkBehaviour
     private NetworkVariable<Quaternion> networkedRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
     private NetworkVariable<Quaternion> networkedHeadRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
 
-	private void Awake()
+	public virtual void Start()
 	{
         DontDestroyOnLoad(this.gameObject);
-    }
 
-	void Start()
-    {
         characterController = GetComponent<CharacterController>();
         SceneManager.sceneLoaded += OnSceneLoaded;
         if (IsOwner)
         {
             playerCamera.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
+            VirtualCam.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
             Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
         }
         else
         {
             playerCamera.gameObject.SetActive(false); // 소유자가 아닐 때는 카메라 비활성화
+            VirtualCam.gameObject.SetActive(false); // 소유자가 아닐 때는 카메라 비활성화
         }
     }
+
 
     void OnEnable()
     {
@@ -82,7 +82,7 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
-    void OnDestroy()
+    public override void OnDestroy()
     {
         // 씬 로드 이벤트 해제
         SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -152,7 +152,12 @@ public class playerMoveController : NetworkBehaviour
         float curSpeedX = Input.GetAxis("Vertical") * walkSpeed;
         float curSpeedY = Input.GetAxis("Horizontal") * walkSpeed;
         moveDirection.x = (forward * curSpeedX + right * curSpeedY).x;
-        moveDirection.z = (forward * curSpeedX + right * curSpeedY).z;
+        moveDirection.z = (forward * curSpeedX + right * curSpeedY).z;        
+
+        // 애니메이터의 상태 업데이트
+        bool isWalking = moveDirection.x != 0 || moveDirection.z != 0;
+
+        animator.SetBool("IsWalking", isWalking);
 
         if (characterController.isGrounded)
         {
@@ -179,10 +184,10 @@ public class playerMoveController : NetworkBehaviour
         {
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-            playerCamera.transform.localEulerAngles = new Vector3(rotationX, 0, 0);
+            //playerCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
 
-            headTarget.localEulerAngles = new Vector3(-rotationX, 0, 0);
+            headTarget.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
         }
     }
 

@@ -5,7 +5,7 @@ public class PickupItem : NetworkBehaviour
 {
     public InventoryItem inventoryItem;
 
-    private InventoryItem CloneItem;
+   [SerializeField] private InventoryItem CloneItem;
 
     public InventoryItem cloneItem 
     {
@@ -48,4 +48,14 @@ public class PickupItem : NetworkBehaviour
     {
         cloneItem.CopyDataFrom(data);
     }
+
+    void Update()
+    {
+		if (cloneItem.isPlaceable)
+		{
+            cloneItem.batteryLevel -= cloneItem.batteryEfficiency * Time.deltaTime;
+        }       
+    }
+
+
 }

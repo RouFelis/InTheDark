@@ -34,6 +34,10 @@ MonoBehaviour:
     m_Localized: Collection Box
     m_Metadata:
       m_Items: []
+  - m_Id: 29345971809763328
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

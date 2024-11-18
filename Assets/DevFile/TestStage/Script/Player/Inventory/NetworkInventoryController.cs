@@ -4,6 +4,7 @@ using System.Collections;
 using Unity.Collections;
 using UnityEngine.UI;
 using Unity.Netcode;
+using UnityEngine.Animations;
 
 // 이 스크립트는 네트워크 게임 환경에서 인벤토리를 관리합니다.
 public class NetworkInventoryController : NetworkBehaviour
@@ -12,6 +13,8 @@ public class NetworkInventoryController : NetworkBehaviour
     private RectTransform[] slots;
     private Image[] slotImages;
     private NetworkObject spawnedObjectParent;
+    private NetworkObject playerNetObject;
+    private NetworkObject grabedObject;
     public List<InventoryItem> items = new List<InventoryItem>();  // 로컬 인벤토리 아이템 리스트
     public NetworkList<InventoryItemData> networkItems; // 네트워크 동기화 인벤토리 아이템 리스트
 
@@ -23,16 +26,25 @@ public class NetworkInventoryController : NetworkBehaviour
     private KeyCode dropKey;
     private KeyCode useItemKey;
 
-    public NetworkVariable<int> selectedSlot = new NetworkVariable<int>(0); // 현재 선택된 슬롯
+    private InventoryItem currentSelectedItem = null; // 현재 선택된 아이템
+    private bool invenLoading = false;
 
+    [SerializeField] public Player player;
+
+
+    public NetworkVariable<int> selectedSlot = new NetworkVariable<int>(0); // 현재 선택된 슬롯
 
     [SerializeField] private PlaceableItemManager currentPlaceableItemManager; // 배치 가능한 아이템 매니저
     [SerializeField] private bool isPlacingItem = false; // 아이템 배치 여부 플래그
 
     public bool IsPlacingItem { get { return isPlacingItem; } set { isPlacingItem = value; } }
+    public NetworkObject GrabedObject { get=> grabedObject; set=> grabedObject=value; }
 
-    private InventoryItem currentSelectedItem = null; // 현재 선택된 아이템
-    bool invenLoading = false;
+
+    //손에 아이템 잡기 관련. 여기다 추가하기 싫은데 어쩔수가없다 ㅠㅠ
+    public Transform garbHandTransform;
+
+
 
     #region 초기화    
 
@@ -48,6 +60,7 @@ public class NetworkInventoryController : NetworkBehaviour
         slots = new RectTransform[numberOfSlots];
         slotImages = new Image[numberOfSlots];
         NetworkManager.Singleton.SceneManager.OnSceneEvent += OnSceneEvent;
+        playerNetObject = gameObject.GetComponent<NetworkObject>();
 
         // 슬롯 및 슬롯 이미지를 초기화
         for (int i = 0; i < numberOfSlots; i++)
@@ -181,7 +194,7 @@ public class NetworkInventoryController : NetworkBehaviour
             // 기본 아이템으로 네트워크 아이템 초기화
             for (int i = 0; i < test; i++)
             {
-                var defaultItem = new InventoryItemData(new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), false , false, 0 ,0 ,0);
+                var defaultItem = new InventoryItemData(new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), false , false, 0 ,0 ,0 ,0,0);
                 Debug.Log("기본 아이템을 networkItems에 추가");
                 networkItems.Add(defaultItem);
                 Debug.Log("기본 아이템이 networkItems에 추가됨");
@@ -229,7 +242,9 @@ public class NetworkInventoryController : NetworkBehaviour
                 item.networkInventoryItemData.Value.isUsable,
                 item.networkInventoryItemData.Value.price,
                 item.networkInventoryItemData.Value.maxPrice,
-                item.networkInventoryItemData.Value.minPrice
+                item.networkInventoryItemData.Value.minPrice,
+                item.networkInventoryItemData.Value.batteryLevel,
+                item.networkInventoryItemData.Value.batteryEfficiency
             );
 
             networkItems[slotIndex] = newItem;
@@ -279,6 +294,7 @@ public class NetworkInventoryController : NetworkBehaviour
         {
             ItemInputRequestServerRpc(slotIndex, itemNetworkObjectId);
             RequestDespawnItemServerRpc(itemNetworkObjectId);
+            RequestItemSetHand(itemNetworkObjectId);
             UpdateSlotSelection();
         }
         else
@@ -292,15 +308,55 @@ public class NetworkInventoryController : NetworkBehaviour
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(itemNetworkObjectId, out NetworkObject itemNetworkObject))
         {
-            itemNetworkObject.Despawn();
+            itemNetworkObject.transform.SetParent(this.NetworkObject.transform, true);
         }
     }
 
+    private void RequestItemSetHand(ulong itemNetworkObjectId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(itemNetworkObjectId, out NetworkObject itemNetworkObject))        
+        {
+            itemNetworkObject.GetComponent<GrabHelper>().AttachToPlayerServerRpc(this.GetComponent<NetworkObject>().NetworkObjectId);
+        }    
+    }
+
     [ServerRpc(RequireOwnership = false)]
-    private void RequestSlotChangeServerRpc(int newSlot)
+    private void RequestSlotChangeServerRpc(int newSlot , ulong PlayerID)
     {
         selectedSlot.Value = newSlot;
+
+        //슬롯 바꾸는거.
         UpdateSlotSelectionClientRpc(newSlot);
+
+		if (GrabedObject != null)
+		{
+            GrabedObject.Despawn();
+        }
+        
+
+        //손에 아이템 장착 시키기.
+        InventoryItem itemToDrop = items[newSlot];
+        if (itemToDrop != null)
+        {
+            GameObject itemPrefab = itemToDrop.DropPrefab; // 경로를 통한 프리팹 로드
+            if (itemPrefab != null)
+            {
+                GameObject droppedItem = Instantiate(itemPrefab);
+                PickupItem temptItem = droppedItem.GetComponent<PickupItem>();
+
+
+                NetworkObject networkObject = droppedItem.GetComponent<NetworkObject>();
+                if (networkObject != null)
+                {
+                    networkObject.Spawn();
+                    GrabedObject = networkObject;
+                }
+
+                droppedItem.GetComponent<GrabHelper>().AttachToPlayerServerRpc(PlayerID);
+            }
+        }
+
+        
     }
 
     [ClientRpc]
@@ -353,7 +409,7 @@ public class NetworkInventoryController : NetworkBehaviour
                     isPlacingItem = false;
                     currentSelectedItem = null;
                 }
-                RequestSlotChangeServerRpc(i);
+                RequestSlotChangeServerRpc(i, playerNetObject.NetworkObjectId);
             }
         }
     }
@@ -370,7 +426,7 @@ public class NetworkInventoryController : NetworkBehaviour
                 currentSelectedItem = null;
             }
             int newSlot = (selectedSlot.Value + 1) % slots.Length;
-            RequestSlotChangeServerRpc(newSlot);
+            RequestSlotChangeServerRpc(newSlot, playerNetObject.NetworkObjectId);
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
         {
@@ -382,7 +438,7 @@ public class NetworkInventoryController : NetworkBehaviour
                 currentSelectedItem = null;
             }
             int newSlot = (selectedSlot.Value - 1 + slots.Length) % slots.Length;
-            RequestSlotChangeServerRpc(newSlot);
+            RequestSlotChangeServerRpc(newSlot, playerNetObject.NetworkObjectId);
         }
     }
 
@@ -510,7 +566,9 @@ public class NetworkInventoryController : NetworkBehaviour
                     itemToDrop.isUsable,
                     itemToDrop.price, // 여기서 가격만 변경
                     itemToDrop.maxPrice,
-                    itemToDrop.minPrice
+                    itemToDrop.minPrice,
+                    itemToDrop.batteryLevel,
+                    itemToDrop.batteryEfficiency
                 );
 
                 temptItem.networkInventoryItemData.Value = updatedItemData;
@@ -586,7 +644,9 @@ public class NetworkInventoryController : NetworkBehaviour
                   currentItem.isUsable,
                   currentItem.price, // 여기서 가격만 변경
                   currentItem.maxPrice,
-                  currentItem.minPrice
+                  currentItem.minPrice,
+                  currentItem.batteryLevel,
+                  currentItem.batteryEfficiency
               );
 
             NetworkManager.SpawnManager.SpawnedObjects[objectID].gameObject.GetComponent<PickupItem>().networkInventoryItemData.Value = updatedItemData;

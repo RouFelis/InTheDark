@@ -5,10 +5,13 @@ using Unity.Netcode;
 
 public class SaveSystem : MonoBehaviour
 {
-    public PlayerSaveSystem playerSaveSystem;
     [SerializeField] GameObject SaveObjects;
 
-	private void Start()
+    public bool useEncryption = true;
+
+    private readonly string encryptionCodeWord = "fortheworld";
+
+    private void Start()
 	{
         SaveObjects = GameObject.Find("SpawnedObjects");
         //SaveGame();
@@ -45,6 +48,13 @@ public class SaveSystem : MonoBehaviour
         }
 
         string json = JsonUtility.ToJson(new SaveDataListWrapper { saveDataList = saveDataList }, true);
+
+		if (useEncryption)
+		{
+            json = EncryptDecrypt(json);
+        }
+ 
+
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
         Debug.Log(Application.persistentDataPath + "/savefile.json 에 저장" );
     }
@@ -57,6 +67,12 @@ public class SaveSystem : MonoBehaviour
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
+
+            if (useEncryption)
+            {
+                json = EncryptDecrypt(json);
+            }
+
             SaveDataListWrapper dataWrapper = JsonUtility.FromJson<SaveDataListWrapper>(json);
             List<SaveData> saveDataList = dataWrapper.saveDataList;
 
@@ -85,7 +101,9 @@ public class SaveSystem : MonoBehaviour
                      changedObj.cloneItem.isUsable,
                      data.price, // 여기서 가격만 변경
                      changedObj.cloneItem.maxPrice,
-                     changedObj.cloneItem.minPrice
+                     changedObj.cloneItem.minPrice,
+                     changedObj.cloneItem.batteryLevel,
+                     changedObj.cloneItem.batteryEfficiency
                     );
 
                     changedObj.networkInventoryItemData.Value = updatedItemData;
@@ -99,6 +117,39 @@ public class SaveSystem : MonoBehaviour
             }
         }
     }
+
+    public void SavePlayerData(Player player)
+    {
+        Debug.Log(2);
+        PlayerData playerData = new PlayerData
+        {
+            playerName = player.playerName.Value.ToString(),
+            experience = player.experience.Value,
+            level = player.level.Value
+        };
+
+        string json = JsonUtility.ToJson(playerData, true);
+
+        if (useEncryption)
+        {
+            json = EncryptDecrypt(json);
+        }
+
+        File.WriteAllText(Application.persistentDataPath + "/playerdata.json", json);
+
+        Debug.Log("저장 : " + Application.persistentDataPath + "/playerdata.json");
+    }
+
+    public string EncryptDecrypt(string data)
+	{
+        string modifiedData = "";
+        for (int i =0; i < data.Length ; i++)
+		{
+            modifiedData += (char)(data[i] ^ encryptionCodeWord[i % encryptionCodeWord.Length]);
+        }
+        return modifiedData;
+    }
+
 
     [System.Serializable]
     private class SaveDataListWrapper

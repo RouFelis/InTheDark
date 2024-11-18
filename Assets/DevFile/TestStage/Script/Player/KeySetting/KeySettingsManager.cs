@@ -3,12 +3,16 @@ using TMPro;
 using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 public class KeySettingsManager : MonoBehaviour
 {
     public static KeySettingsManager Instance { get; private set; }
 
-    public enum KeyName { Interact, Drop, UseItem };
+    public enum KeyName { Interact, Drop, UseItem, ScanKey, Light };
+
     [System.Serializable]
     public class KeySettingField
     {
@@ -32,6 +36,9 @@ public class KeySettingsManager : MonoBehaviour
     [SerializeField]private KeyCode interactKey;
     [SerializeField]private KeyCode dropKey;
     [SerializeField]private KeyCode useItemKey;
+    [SerializeField]private KeyCode scanKey;
+    [SerializeField]private KeyCode lightKey;
+    public TMP_Dropdown languageDropdown; // TMP 드롭다운 사용
 
     public KeyCode InteractKey {         
         get { return interactKey; }
@@ -65,9 +72,33 @@ public class KeySettingsManager : MonoBehaviour
                 KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
             }
         }
+    }       
+    public KeyCode ScanKey
+    { 
+        get { return scanKey; }
+        set
+        {
+            if (scanKey != value)
+            {
+                scanKey = value;
+                KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
+            }
+        }
+    }
+    public KeyCode LightKey
+    {
+        get { return lightKey; }
+        set
+        {
+            if (lightKey != value)
+            {
+                lightKey = value;
+                KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
+            }
+        }
     }
 
-    
+
 
     private void Start()
     {
@@ -82,6 +113,7 @@ public class KeySettingsManager : MonoBehaviour
         cancelButton.onClick.AddListener(CancelKeySettings); // 취소 버튼에 리스너 추가
 
         keySettingsPanel.SetActive(false); // 초기 상태는 비활성화
+        SetLanguage();
         SetKey();
     }
 
@@ -115,6 +147,8 @@ public class KeySettingsManager : MonoBehaviour
         InteractKey = GetKey("Interact");
         DropKey = GetKey("Drop");
         UseItemKey = GetKey("UseItem");
+        ScanKey = GetKey("ScanKey");
+        lightKey = GetKey("Light");
         Debug.Log("KeySetting2 를 찾았습니다.");
     }
 
@@ -180,6 +214,8 @@ public class KeySettingsManager : MonoBehaviour
             keySettings["Interact"] = KeyCode.F;
             keySettings["Drop"] = KeyCode.Q;
             keySettings["UseItem"] = KeyCode.E;
+            keySettings["ScanKey"] = KeyCode.Tab;
+            keySettings["Light"] = KeyCode.R;
         }
     }
 
@@ -251,6 +287,34 @@ public class KeySettingsManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void SetLanguage()
+	{
+        // TMP 드롭다운 초기화 (설정된 로케일 목록을 드롭다운에 추가)
+        languageDropdown.options.Clear();
+        foreach (var locale in LocalizationSettings.AvailableLocales.Locales)
+        {
+            languageDropdown.options.Add(new TMP_Dropdown.OptionData(locale.Identifier.CultureInfo.NativeName));
+        }
+
+        // 현재 언어에 맞춰 드롭다운 선택 초기화
+        languageDropdown.value = LocalizationSettings.AvailableLocales.Locales.IndexOf(LocalizationSettings.SelectedLocale);
+        languageDropdown.onValueChanged.AddListener(ChangeLanguage);
+
+    }
+
+    public void ChangeLanguage(int index)
+    {
+        // 선택된 인덱스에 따라 언어 변경
+        Locale selectedLocale = LocalizationSettings.AvailableLocales.Locales[index];
+        StartCoroutine(SetLocale(selectedLocale));
+    }
+
+    IEnumerator SetLocale(Locale locale)
+    {
+        yield return LocalizationSettings.InitializationOperation; // 로케일 초기화 대기
+        LocalizationSettings.SelectedLocale = locale; // 선택한 로케일로 변경
     }
 
     [System.Serializable]

@@ -6,9 +6,8 @@ TagManager:
   tags:
   - Ground
   - Item
-  - Gatherable
-  - RandomRunner
   - InteractableObject
+  - IronFloor
   layers:
   - Default
   - TransparentFX
@@ -16,10 +15,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Object
-  - Player
-  - Light Source
-  - Enemy
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

@@ -22,4 +22,6 @@ MonoBehaviour:
   price: 10
   minPrice: 10
   maxPrice: 5
+  batteryLevel: 100
+  batteryEfficiency: 1
   weight: 10

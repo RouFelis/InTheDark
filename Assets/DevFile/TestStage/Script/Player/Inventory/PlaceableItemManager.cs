@@ -21,7 +21,7 @@ public class PlaceableItemManager : NetworkBehaviour
     private float currentRotation = 0f; // 현재 회전 각도
     private bool isRotating = false; // 회전 중인지 여부
   
-    [SerializeField] private NetworkObject spawnedObjectParent;
+    private NetworkObject spawnedObjectParent;
     private NetworkInventoryController netInvenController; 
     private playerMoveController playerController; // 플레이어 컨트롤러 참조
 
@@ -118,7 +118,6 @@ public class PlaceableItemManager : NetworkBehaviour
         previewObject = Instantiate(previewPrefab,this.gameObject.transform.position ,spawnRotation);
         SetObjectTransparent(previewObject);
     }
-
     public void UpdatePreviewObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

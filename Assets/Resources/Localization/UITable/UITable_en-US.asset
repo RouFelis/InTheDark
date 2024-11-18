@@ -17,7 +17,21 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 40dea47d4a893de458355d96b844c4bb, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 164267371216896
+    m_Localized: Toekn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164902132989952
+    m_Localized: RearToken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1285316863279104
+    m_Localized: 'SAMSUN
+
+      Store'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

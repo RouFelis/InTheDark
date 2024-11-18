@@ -4,7 +4,7 @@ using DunGen;
 using UnityEngine;
 using Unity.Netcode;
 
-public class StartTest : PlayerTelePorter
+public class StartTest : StartRoomSetter
 {
     [SerializeField] RuntimeDungeon dungeon;
     private NetworkVariable<int> networkSeed = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
