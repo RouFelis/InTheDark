@@ -9,7 +9,7 @@ public class SharedNetworkBehaviour : SharedVariable<NetworkBehaviour>
 	{
 		var sharedVariable = new SharedNetworkBehaviour()
 		{
-			Value = value
+			mValue = value
 		};
 
 		return sharedVariable;

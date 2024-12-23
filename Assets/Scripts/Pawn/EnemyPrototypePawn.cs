@@ -124,8 +124,6 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 		throw new NotImplementedException();
 	}
 
-	// 기존 정의해둔 것 말고 새로 함수 작성함
-	// 아니 근데 이거 공격 관련해서 구현해야 만들 수 있는데
 	public void AttackPrototype(NetworkPawn target)
 	{
 		// 대충 공격했다고 이벤트 알림^^
@@ -136,7 +134,6 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 	{
 		if (_cooldown.Value < 0.0F || Mathf.Approximately(_cooldown.Value, 0.0F))
 		{
-			// 이거 어차피 저쪽에 구현 안 되어 있을걸?
 			//target.TakeDamage(_damage.Value);
 
 			Debug.Log("HIT!!!");

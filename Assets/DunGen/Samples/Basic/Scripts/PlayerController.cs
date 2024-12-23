@@ -50,7 +50,7 @@ namespace DunGen.Demo
 
 		private void GetAdditionalScreenText(StringBuilder infoText)
 		{
-			infoText.AppendLine("Press 'C' to switch between camera modes");
+			infoText.AppendLine("Press 'B2' to switch between camera modes");
 		}
 
 		protected virtual void OnGenerationStatusChanged(DungeonGenerator generator, GenerationStatus status)

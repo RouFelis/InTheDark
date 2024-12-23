@@ -79,7 +79,7 @@ namespace DunGen.DungeonCrawler
 
 		private void OnTriggerEnter(Collider other)
 		{
-			if (!other.gameObject.CompareTag("Player"))
+			if (!other.gameObject.CompareTag("PlayerBox"))
 				return;
 
 			// Adjust the open angle so the door always opens away from the player
@@ -96,7 +96,7 @@ namespace DunGen.DungeonCrawler
 
 		private void OnTriggerExit(Collider other)
 		{
-			if (!other.gameObject.CompareTag("Player"))
+			if (!other.gameObject.CompareTag("PlayerBox"))
 				return;
 
 			Close();

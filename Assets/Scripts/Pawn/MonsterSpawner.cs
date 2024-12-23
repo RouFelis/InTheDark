@@ -14,7 +14,7 @@ namespace InTheDark.Prototypes
 	[Serializable]
 	public class AIGenerateData
 	{
-		public int Count;
+		public NetworkObject[] Prefabs;
 	}
 
 	// TODO: Enemy Manager 등으로 일부 기능 이동 및 분리, Spawner는 Factory의 역할
@@ -149,7 +149,7 @@ namespace InTheDark.Prototypes
 			{
 				var data = _stage[received.BuildIndex];
 
-				for (var i = 0; i < data.Count; i++)
+				for (var i = 0; i < data.Prefabs.Length; i++)
 				{
 					var enemyRef = SpawnRandomRef();
 

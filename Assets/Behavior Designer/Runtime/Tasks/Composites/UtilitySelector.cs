@@ -2,7 +2,7 @@
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
-    [TaskDescription("The utility selector task evaluates the child tasks using Utility Theory AI. The child task can override the GetUtility method and return the utility value " +
+    [TaskDescription("The utility selector task evaluates the child tasks using Utility Theory AIBox. The child task can override the GetUtility method and return the utility value " +
                      "at that particular time. The task with the highest utility value will be selected and the existing running task will be aborted. The utility selector " +
                      "task reevaluates its children every tick.")]
     [TaskIcon("{SkinColor}UtilitySelectorIcon.png")]

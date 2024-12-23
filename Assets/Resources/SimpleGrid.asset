@@ -9,6 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 871554983e289664e97219f4a7a371af, type: 3}
-  m_Name: OnGameStart
+  m_Script: {fileID: 11500000, guid: c3e42ff1a4c1c834cb7a9082a63b72db, type: 3}
+  m_Name: SimpleGrid
   m_EditorClassIdentifier: 
+  _tests: []
+  _count: 10
+  _space: 1

@@ -13,7 +13,7 @@ public class PlayerHud : NetworkBehaviour
 	{
 		if (IsServer)
 		{
-			playersName.Value = $"Player {OwnerClientId}";
+			playersName.Value = $"PlayerBox {OwnerClientId}";
 		}
 	}
 

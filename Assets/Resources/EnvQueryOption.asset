@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe7bbe1065fd465c8980ef4c9b98b0f2, type: 3}
-  m_Name: FieldOfView
+  m_Script: {fileID: 11500000, guid: db564857b15cf174e9e420913b17a66d, type: 3}
+  m_Name: EnvQueryOption
   m_EditorClassIdentifier: 
+  _generator: {fileID: 11400000, guid: f7309621373c44641986df2734d3314c, type: 2}
