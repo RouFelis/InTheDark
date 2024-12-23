@@ -15,6 +15,9 @@ public class NetworkInventoryController : NetworkBehaviour
     private NetworkObject spawnedObjectParent;
     private NetworkObject playerNetObject;
     private NetworkObject grabedObject;
+
+    [SerializeField] private float garbDistance = 3f;
+
     public List<InventoryItem> items = new List<InventoryItem>();  // 로컬 인벤토리 아이템 리스트
     public NetworkList<InventoryItemData> networkItems; // 네트워크 동기화 인벤토리 아이템 리스트
 
@@ -487,7 +490,7 @@ public class NetworkInventoryController : NetworkBehaviour
         if (Input.GetKeyDown(interactKey))
         {
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 2f))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, garbDistance))
             {
                 if (hit.transform.CompareTag("Item"))
                 {
@@ -520,15 +523,17 @@ public class NetworkInventoryController : NetworkBehaviour
 
                 Vector3 dropPosition = transform.position + transform.forward * 2;
                 Quaternion dropRotation = Quaternion.LookRotation(transform.forward);
-                if (Physics.Raycast(transform.position + transform.forward, Vector3.down, out RaycastHit hit, 2.0f))
-                {
-                    dropPosition = hit.point;
-                }
-                else
-                {
-                    // 바닥이 발견되지 않으면 플레이어 앞에 두기
-                    dropPosition = transform.position + transform.forward * 2;
-                }
+                /*                if (Physics.Raycast(transform.position + transform.forward, Vector3.down, out RaycastHit hit, garbDistance))
+                                {
+                                    dropPosition = hit.point;
+                                }
+                                else
+                                {
+                                    // 바닥이 발견되지 않으면 플레이어 앞에 두기
+                                    dropPosition = transform.position + transform.forward * 2;
+                                }*/
+
+                dropPosition = transform.position + transform.forward * 2;
 
                 DropItemServerRpc(currentItem.itemName, dropPosition, dropRotation, selectedSlot.Value);
             }
@@ -577,14 +582,24 @@ public class NetworkInventoryController : NetworkBehaviour
                 if (networkObject != null)
                 {
                     networkObject.Spawn();
+                
                     if (IsOwner)
                     {
                         NetworkObject temptNetworkObject = NetworkManager.SpawnManager.SpawnedObjects[networkObject.NetworkObjectId];
                         NetworkObject parentObject = NetworkManager.SpawnManager.SpawnedObjects[spawnedObjectParent.NetworkObjectId];
                         temptNetworkObject.transform.SetParent(parentObject.transform, true);
                     }
-                  
+                    StartCoroutine(ApplyForceAfterSpawn(networkObject.gameObject.GetComponent<Rigidbody>()));
+                    Debug.Log("날아갔냐");
+
                 }
+
+				if (GrabedObject != null)
+				{
+                    GrabedObject.Despawn();
+                }
+                
+
                 RequestRemoveItemFromInventoryServerRpc(slotIndex);
             }
             else
@@ -596,6 +611,13 @@ public class NetworkInventoryController : NetworkBehaviour
         {
             Debug.LogError("Item to drop is null at slot: " + slotIndex);
         }
+    }
+
+    private IEnumerator ApplyForceAfterSpawn(Rigidbody rb)
+    {
+        yield return null; // 다음 프레임까지 대기
+        Debug.Log("날아감");
+        rb.AddForce(transform.forward * 10, ForceMode.Impulse);
     }
 
 

@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.UI;
 using TMPro;
-
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
@@ -14,7 +14,7 @@ public class Interacter : MonoBehaviour
     public LocalizedString localizedString;
     public int interactDistance = 2;
     private TextMeshProUGUI infoText;
-
+    private NetworkObject netobject;
 
     void Update()
 	{
@@ -58,7 +58,7 @@ public class Interacter : MonoBehaviour
                 
 				if (Input.GetKeyDown(KeySettingsManager.Instance.InteractKey))
 				{
-                    hit.transform.gameObject.GetComponent<InteractableObject>().Interact(this.transform);
+                    hit.transform.gameObject.GetComponent<InteractableObject>().Interact(netobject.OwnerClientId , this.transform);
 				}
                 infoText.gameObject.SetActive(true);
                 return;
@@ -69,19 +69,6 @@ public class Interacter : MonoBehaviour
 
     private IEnumerator InitializeUIElements()
     {
-
-   /*     // KeySettingsManager 오브젝트 찾기
-        while (KeySettingsManager == null)
-        {
-            GameObject keySettingsManagerObject = GameObject.Find("KeySettingsManager");
-            Debug.Log("keySettingsManager 를 찾는중 입니다.");
-            if (keySettingsManagerObject != null)
-            {
-                keySettingsManager = keySettingsManagerObject.GetComponent<KeySettingsManager>();
-            }
-            yield return null;
-        }*/
-
         // PickupText 오브젝트 찾기
         while (infoText == null)
         {
@@ -91,6 +78,13 @@ public class Interacter : MonoBehaviour
             {
                 infoText = pickupTextObject.GetComponent<TextMeshProUGUI>();
             }
+            yield return null;
+        }     
+        
+        while (netobject == null)
+        {
+            netobject = this.gameObject.GetComponent<NetworkObject>();
+            Debug.Log("netobject 를 찾는중 입니다.");
             yield return null;
         }
 

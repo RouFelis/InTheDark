@@ -20,11 +20,15 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private float gravity = 20.0f; // 중력 가속도
     [SerializeField] private bool mouseControl = true; // 마우스 컨트롤 여부 
 
+
     private bool isJumping = false; // 점프 중인지 여부
+    private Quaternion savedHeadRotation; // Save the head rotation during pause
+
 
     private NetworkVariable<Vector3> networkedPosition = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Owner);
     private NetworkVariable<Quaternion> networkedRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
     private NetworkVariable<Quaternion> networkedHeadRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>( false , writePerm: NetworkVariableWritePermission.Owner);
 
 	public virtual void Start()
 	{
@@ -36,7 +40,9 @@ public class playerMoveController : NetworkBehaviour
         {
             playerCamera.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
             VirtualCam.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
-            Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
+            FixedMouse(); // 마우스 고정
+            MenuManager.Instance.OnPause += FreeMouse;
+            MenuManager.Instance.OnResume += FixedMouse;
         }
         else
         {
@@ -45,6 +51,30 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
+    void FixedMouse()
+	{
+		if (!isEventPlaying.Value)
+		{
+            Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
+           // this.enabled = true;
+        }
+    }
+
+    void FreeMouse()
+    {
+        Cursor.lockState = CursorLockMode.None; // 커서 고정 해제.
+       // this.enabled = false;
+    }
+
+    public void EventToggle(bool boolValue)
+	{
+        isEventPlaying.Value = boolValue;
+        enabled = !boolValue;
+        if(boolValue)
+            Cursor.lockState = CursorLockMode.None;// 마우스 해제
+        else
+            Cursor.lockState = CursorLockMode.Locked;// 마우스 잠금
+    }
 
     void OnEnable()
     {
@@ -86,6 +116,11 @@ public class playerMoveController : NetworkBehaviour
     {
         // 씬 로드 이벤트 해제
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (IsOwner)
+        {
+            MenuManager.Instance.OnPause -= FreeMouse;
+            MenuManager.Instance.OnResume -= FixedMouse;
+        }
     }   
     
     private void HandleInput()
@@ -147,6 +182,20 @@ public class playerMoveController : NetworkBehaviour
 
     void PlayerControlle()
     {
+        if (MenuManager.Instance.IsPaused)
+        {
+            headTarget.localRotation = savedHeadRotation;
+            animator.SetBool("IsWalking", false);
+
+            // Only apply gravity while paused
+            if (!characterController.isGrounded)
+            {               
+                moveDirection.y -= gravity * Time.deltaTime; // Gravity application
+                characterController.Move(moveDirection * Time.deltaTime);
+            }
+            return;
+        }
+
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
         float curSpeedX = Input.GetAxis("Vertical") * walkSpeed;
@@ -185,9 +234,9 @@ public class playerMoveController : NetworkBehaviour
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
             //playerCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
-            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
-
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);           
             headTarget.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
+            savedHeadRotation = headTarget.localRotation;
         }
     }
 

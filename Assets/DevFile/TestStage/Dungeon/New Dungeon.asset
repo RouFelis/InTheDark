@@ -49,6 +49,15 @@ MonoBehaviour:
     Keys: []
     Locks: []
     LockPlacement: 0
+  - Graph: {fileID: 11400000}
+    TileSets:
+    - {fileID: 11400000, guid: 7eb160c0de3905345b5af5b39e40123c, type: 2}
+    NodeType: 0
+    Position: 0.17170732
+    Label: QuestNode
+    Keys: []
+    Locks: []
+    LockPlacement: 0
   Lines:
   - Graph: {fileID: 11400000}
     DungeonArchetypes:

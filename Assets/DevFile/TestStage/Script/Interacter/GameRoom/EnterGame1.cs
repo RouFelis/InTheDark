@@ -30,9 +30,9 @@ public class EnterGame1 : InteractableObject
     }
 
 
-    public override void Interact(Transform interactingObjectTransform)
+    public override void Interact(ulong uerID, Transform interactingObjectTransform)
     {
 
-        base.Interact(interactingObjectTransform);
+        base.Interact(uerID, interactingObjectTransform);
     }
 }

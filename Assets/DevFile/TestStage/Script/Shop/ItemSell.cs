@@ -10,13 +10,13 @@ public class ItemSell : InteractableObject
         insertItemList = new NetworkList<InventoryItemData>();
     }
 
-    public override void Interact(Transform interactingObjectTransform)
+    public override void Interact(ulong uerID , Transform interactingObjectTransform)
     {
         NetworkInventoryController controller = interactingObjectTransform.GetComponent<NetworkInventoryController>();
         int sellPrice = controller.HandleSellItem();
 
         SharedData.Instance.AddMoneyServerRpc(sellPrice);
 
-        base.Interact(interactingObjectTransform);
+        base.Interact(uerID ,interactingObjectTransform);
     }
 }

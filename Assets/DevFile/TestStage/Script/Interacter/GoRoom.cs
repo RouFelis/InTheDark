@@ -13,9 +13,9 @@ public class GoRoom : InteractableObject
     }
 
 
-    public override void Interact(Transform interactingObjectTransform)
+    public override void Interact(ulong uerID, Transform interactingObjectTransform)
     {
-        base.Interact(interactingObjectTransform);
+        base.Interact(uerID, interactingObjectTransform);
         // 서버에서 씬 전환
         NetworkManager.Singleton.SceneManager.LoadScene("GameRoom", LoadSceneMode.Single);
 

@@ -56,7 +56,9 @@ public class Player : playerMoveController , IDamaged, ICharacter
 
 	public GameObject playerLight;
 	private bool lightState = true;
-	[SerializeField]private SaveSystem saveSystem;
+
+	[SerializeField] private SaveSystem saveSystem;
+	[SerializeField] private AudioSource audioSource;
 
 	public override void Start()
 	{
@@ -65,6 +67,7 @@ public class Player : playerMoveController , IDamaged, ICharacter
 		playerName.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 		experience.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 		level.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
+		//AudioManager.Instance.SetbuttonSorce(audioSource);
 	}
 
 	private void Update()

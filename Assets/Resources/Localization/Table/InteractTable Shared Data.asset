@@ -32,7 +32,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 29345971809763328
-    m_Key: 
+    m_Key: WireStart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35108913071210496
+    m_Key: WireEnd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42976940584288256
+    m_Key: Enter
     m_Metadata:
       m_Items: []
   m_Metadata:

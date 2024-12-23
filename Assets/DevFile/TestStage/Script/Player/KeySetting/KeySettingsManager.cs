@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.IO;
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.Localization;
@@ -17,19 +18,22 @@ public class KeySettingsManager : MonoBehaviour
     public class KeySettingField
     {
         public KeyName keyName; // 키 이름
-        public TMP_InputField inputField; // 인풋 필드
+        public TMP_Text keyText; // 키를 표시할 텍스트
+        public Button keyButton; // 키 설정 버튼
     }
 
+    private KeySettingField activeKeySettingField = null;
     public List<KeySettingField> keySettingFields; // 인스펙터에서 키 이름과 인풋 필드를 설정
     public Button applyButton; // 적용 버튼
     public Button cancelButton; // 취소 버튼
     public GameObject keySettingsPanel; // 키 설정 패널
 
+
     private Dictionary<string, KeyCode> keySettings = new Dictionary<string, KeyCode>(); // 키 설정을 저장하는 딕셔너리
     private string settingsFilePath; // 키 설정 파일 경로
-    private TMP_InputField activeInputField = null; // 현재 활성화된 인풋 필드
+    public TMP_Dropdown languageDropdown; // TMP 드롭다운 사용
 
-    // 델리게이트와 이벤트 정의
+    // 델리게이트와 이벤트 정의 (키값이 바뀌면...)
     public delegate void OnKeyCodeChanged();
     public event OnKeyCodeChanged KeyCodeChanged;
 
@@ -38,9 +42,13 @@ public class KeySettingsManager : MonoBehaviour
     [SerializeField]private KeyCode useItemKey;
     [SerializeField]private KeyCode scanKey;
     [SerializeField]private KeyCode lightKey;
-    public TMP_Dropdown languageDropdown; // TMP 드롭다운 사용
 
-    public KeyCode InteractKey {         
+
+
+    private bool isPaused = false;
+
+	#region 이게 제일 빠를거같고 키도 몇개안되서 이래 함. 맘에 안들면 이거지우고 그냥 딕셔너리값 불러오게하면됨. 위에있음 ㅇㅇ
+	public KeyCode InteractKey {         
         get { return interactKey; }
         set
         {
@@ -97,10 +105,9 @@ public class KeySettingsManager : MonoBehaviour
             }
         }
     }
+	#endregion
 
-
-
-    private void Start()
+	private void Start()
     {
         Instance = this;
         // 설정 파일 경로를 지정
@@ -119,29 +126,21 @@ public class KeySettingsManager : MonoBehaviour
 
     private void Update()
     {
-        // Esc 키를 눌러 키 설정 UI를 토글
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (activeKeySettingField != null)
         {
-            keySettingsPanel.SetActive(!keySettingsPanel.activeSelf);
-            MouseFixed(!keySettingsPanel.activeSelf);
-        }
-
-        // 인풋 필드가 활성화되었을 때 키 입력을 처리
-        if (activeInputField != null)
-        {
-            foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
+            foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
             {
                 if (Input.GetKeyDown(key))
                 {
-                    activeInputField.text = key.ToString();
-                    activeInputField = null; // 입력이 완료되면 인풋 필드를 비활성화
-                    EnableAllInputFields(); // 다른 인풋 필드 활성화
+                    UpdateKeySetting(activeKeySettingField, key);
+                    activeKeySettingField = null;
                     break;
                 }
             }
         }
     }
 
+  
     private void SetKey()
 	{
         InteractKey = GetKey("Interact");
@@ -152,24 +151,12 @@ public class KeySettingsManager : MonoBehaviour
         Debug.Log("KeySetting2 를 찾았습니다.");
     }
 
-    private void MouseFixed(bool isFix)
-	{
-        if (isFix)
-        {
-            Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None; // 커서 고정 해제
-        }
-    }
-
     private void ApplyKeySettings()
     {
         // 각 키 설정 필드를 순회하며 설정 적용
         foreach (KeySettingField field in keySettingFields)
         {
-            if (TryGetKeyCode(field.inputField.text, out KeyCode newKey))
+            if (TryGetKeyCode(field.keyText.ToString(), out KeyCode newKey))
             {
                 keySettings[field.keyName.ToString()] = newKey;
             }
@@ -179,16 +166,14 @@ public class KeySettingsManager : MonoBehaviour
             }
         }
 
-        MouseFixed(true);
+        MenuManager.Instance.CloseCurrentMenu();
         SaveKeySettings(); // 키 설정 저장
         SetKey(); // 키 변경 적용
-        keySettingsPanel.SetActive(false); // 키 설정 패널 비활성화
     }
 
     private void CancelKeySettings()
     {
-        MouseFixed(true);
-        keySettingsPanel.SetActive(false); // 키 설정 패널 비활성화
+        MenuManager.Instance.CloseCurrentMenu();
     }
 
     public KeyCode GetKey(string name)
@@ -249,31 +234,28 @@ public class KeySettingsManager : MonoBehaviour
         {
             if (keySettings.ContainsKey(field.keyName.ToString()))
             {
-                field.inputField.text = keySettings[field.keyName.ToString()].ToString(); // 인풋 필드에 키 설정 값 표시
-                field.inputField.onSelect.AddListener(delegate { OnInputFieldSelected(field.inputField); }); // 인풋 필드 선택 시 이벤트 리스너 추가
+                // 버튼에 표시할 텍스트 설정
+                field.keyText.text = keySettings[field.keyName.ToString()].ToString();
+
+                // 버튼 클릭 이벤트 설정
+                field.keyButton.onClick.AddListener(() => OnKeyButtonClicked(field));
             }
         }
     }
 
-    private void OnInputFieldSelected(TMP_InputField selectedInputField)
+    private void OnKeyButtonClicked(KeySettingField field)
     {
-        // 다른 인풋 필드 비활성화
-        foreach (KeySettingField field in keySettingFields)
-        {
-            if (field.inputField != selectedInputField)
-            {
-                field.inputField.interactable = false;
-            }
-        }
-        activeInputField = selectedInputField; // 현재 활성화된 인풋 필드 설정
+        activeKeySettingField = field; // 현재 활성화된 필드 설정
+        Debug.Log("Press a key to set for: " + field.keyName);
     }
-
-    private void EnableAllInputFields()
+    private void UpdateKeySetting(KeySettingField field, KeyCode newKey)
     {
-        // 모든 인풋 필드를 활성화
-        foreach (KeySettingField field in keySettingFields)
+        string keyName = field.keyName.ToString();
+
+        if (keySettings.ContainsKey(keyName))
         {
-            field.inputField.interactable = true;
+            keySettings[keyName] = newKey; // 키 설정 업데이트
+            field.keyText.text = newKey.ToString(); // 텍스트 업데이트
         }
     }
 
@@ -317,7 +299,9 @@ public class KeySettingsManager : MonoBehaviour
         LocalizationSettings.SelectedLocale = locale; // 선택한 로케일로 변경
     }
 
-    [System.Serializable]
+
+	#region 키값
+	[System.Serializable]
     private class KeySetting
     {
         public string name; // 키 이름
@@ -329,4 +313,6 @@ public class KeySettingsManager : MonoBehaviour
     {
         public List<KeySetting> keySettings; // 키 설정 리스트
     }
+
+	#endregion
 }

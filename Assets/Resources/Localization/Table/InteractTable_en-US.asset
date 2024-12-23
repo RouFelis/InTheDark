@@ -35,7 +35,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 29345971809763328
-    m_Localized: 
+    m_Localized: Wire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35108913071210496
+    m_Localized: Wire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42976940584288256
+    m_Localized: Enter
     m_Metadata:
       m_Items: []
   references:

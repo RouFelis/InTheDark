@@ -34,10 +34,10 @@ public class InteractableObject : NetworkBehaviour
 
 
     // 상호작용 메서드는 자식 클래스에서 재정의되도록 설계됨
-    public virtual void Interact(Transform interactingObjectTransform)
+    public virtual void Interact(ulong userId ,Transform interactingObjectTransform)
     {
         Debug.Log(interactingObjectTransform.name + " has interacted with " + transform.name);
-    }    
+    }
 
     // 오브젝트가 플레이어의 집중 대상이 되었을 때 호출됨
     public void OnFocused(Transform playerTransform)
@@ -61,7 +61,7 @@ public class InteractableObject : NetworkBehaviour
     /// Update 메서드 내에서 플레이어와 상호작용 가능한 오브젝트 사이의 거리를 체크함.
     /// 이 메서드 내에서 상호작용 메서드가 호출됨.
     /// </summary>
-    public void checkDistance()
+/*    public void checkDistance()
     {
         // 현재 이 오브젝트가 집중되고 있고
         // 아직 상호작용하지 않은 경우에만 실행
@@ -77,11 +77,11 @@ public class InteractableObject : NetworkBehaviour
             if ((distance <= radius) && (angle <= 5))
             {
                 // 오브젝트와 상호작용
-                Interact(player);
+                Interact(uerID , player);
                 hasInteracted = true;  // 상호작용 완료 표시
             }
         }
-    }
+    }*/
 
     // 에디터에서 반경을 시각적으로 그려줌
     void OnDrawGizmosSelected()

@@ -124,7 +124,7 @@ public class StoreUI : MonoBehaviour
             var playerController = networkObject.gameObject.GetComponent<playerMoveController>();
             if (playerController != null)
             {
-                playerController.enabled = true;
+                playerController.EventToggle(false);
                 Debug.Log($"Disabled playerMoveController for {networkObject.name}");
             }
             else
@@ -136,9 +136,7 @@ public class StoreUI : MonoBehaviour
         {
             Debug.LogError("Failed to retrieve the player's NetworkObject using LocalClientId.");
         }
-
         Cursor.lockState = CursorLockMode.Locked;
     }
-
 }
 

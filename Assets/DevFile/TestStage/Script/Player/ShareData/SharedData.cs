@@ -1,9 +1,12 @@
 using UnityEngine;
 using Unity.Netcode;
 public class SharedData : NetworkBehaviour
-{
-    public NetworkVariable<int> Money = new NetworkVariable<int>(0);
+{   
 	public static SharedData Instance { get; private set; }
+
+	public NetworkVariable<int> Money = new NetworkVariable<int>(0);
+	public NetworkVariable<int> networkSeed = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
 
 	public override void OnNetworkSpawn()
 	{
@@ -21,6 +24,15 @@ public class SharedData : NetworkBehaviour
 	private void Start()
 	{
 		Money.OnValueChanged += ChangeValue;
+	}
+
+	public void SetNetSeed()
+	{
+		// 시드를 현재 시간으로 설정하여 매번 다른 난수를 생성
+		int seed = (int)System.DateTime.Now.Ticks;
+		Random.InitState(seed);
+
+		SharedData.Instance.networkSeed.Value = seed;
 	}
 
 	private void ChangeValue(int oldValue , int newValue)
@@ -48,5 +60,8 @@ public class SharedData : NetworkBehaviour
 		}
 		
 	}
+
+
+
 
 }
