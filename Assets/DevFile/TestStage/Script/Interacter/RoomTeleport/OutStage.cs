@@ -15,7 +15,13 @@ public class OutStage : InteractableObject
         }
         PlayDoorSound();
         SetEveryPlayerPosServerRPC(uerID);
-    }
+
+		// 2024.12.24 던전 퇴장 이벤트 재배치
+		InTheDark.Prototypes.Game.OnDungeonExit.Invoke(new InTheDark.Prototypes.DungeonExitEvent()
+		{
+			BuildIndex = 0
+		});
+	}
 
     private void PlayDoorSound()
     {
