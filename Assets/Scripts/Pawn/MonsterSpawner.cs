@@ -87,7 +87,7 @@ namespace InTheDark.Prototypes
 				Game.OnDungeonEnter += OnDungeonEnter;
 				Game.OnDungeonExit += OnDungeonExit;
 
-				UpdateManager.OnUpdate += OnUpdate;
+				//UpdateManager.OnUpdate += OnUpdate;
 			}
 		}
 
@@ -96,21 +96,21 @@ namespace InTheDark.Prototypes
 			Game.OnDungeonEnter -= OnDungeonEnter;
 			Game.OnDungeonExit -= OnDungeonExit;
 
-			UpdateManager.OnUpdate -= OnUpdate;
+			//UpdateManager.OnUpdate -= OnUpdate;
 		}
 
-		private void OnUpdate()
-		{
-			if (Input.GetKeyDown(KeyCode.V))
-			{
-				if (IsHost)
-				{
-					OnHostStarted();
-				}
+		//private void OnUpdate()
+		//{
+		//	if (Input.GetKeyDown(KeyCode.V))
+		//	{
+		//		if (IsHost)
+		//		{
+		//			OnHostStarted();
+		//		}
 
-				OnClientStarted();
-			}
-		}
+		//		OnClientStarted();
+		//	}
+		//}
 
 		// 정보 추가
 		public void OnHostStarted()
@@ -188,11 +188,13 @@ namespace InTheDark.Prototypes
 		private Vector3 GetRandomPositionInNavMesh()
 		{
 			var result = Vector3.zero;
+			var isOnNavMesh = false;
 
-			for (var i = 0; i < 30; i++)
+			for (var i = 0; i < 30 && !isOnNavMesh; i++)
 			{
 				var direction = UnityEngine.Random.insideUnitSphere * _radius;
-				var isOnNavMesh = NavMesh.SamplePosition(direction, out var hit, _radius, NavMesh.AllAreas);
+
+				isOnNavMesh = NavMesh.SamplePosition(direction, out var hit, _radius, NavMesh.AllAreas);
 
 				//Debug.Log(direction);
 				//Debug.Log($"[{isOnNavMesh}] [{direction} == {hit.position}]");
@@ -200,8 +202,6 @@ namespace InTheDark.Prototypes
 				if (isOnNavMesh)
 				{
 					result = hit.position;
-
-					break;
 				}
 			}
 

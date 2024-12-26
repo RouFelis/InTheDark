@@ -9,7 +9,10 @@ public class WithinSight : Conditional
 {
     // public int maxPlayerCount;
     
-    public float distance;
+    //public float distance;;
+
+	public float sightDistance;
+	public float aroundDistance;
 
     public float fieldOfViewAngle;
     // The LayerMask of the targets
@@ -25,30 +28,68 @@ public class WithinSight : Conditional
     
     public override TaskStatus OnUpdate()
     {
-        for (var i = 0; i < size; i++)
-        {
-            colliders[i] = default;
-        }
+		// 12 26 구버전!!!!
+        //var angle = pawn.Value ? 360 : fieldOfViewAngle;
 
-        size = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, targetLayer);
+        //Debug.Log($"angle: {angle}");
+
+		//for (var i = 0; i < size; i++)
+  //      {
+  //          colliders[i] = default;
+  //      }
+
+  //      size = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, targetLayer);
         
-        for (var i = 0; i < size; i++)
-        {
-            var element = colliders[i];
+  //      for (var i = 0; i < size; i++)
+  //      {
+  //          var element = colliders[i];
 
-            var direction = element.transform.position - transform.position;
-            var isOccultation = Physics.Raycast(transform.position, direction, out var hit, distance);
-            var isSight = Vector3.Angle(direction, transform.forward) < fieldOfViewAngle;
+  //          var direction = element.transform.position - transform.position;
+  //          var isOccultation = Physics.Raycast(transform.position, direction, out var hit, distance);
+  //          var isSight = Vector3.Angle(direction, transform.forward) < fieldOfViewAngle;
             
-            OnDrawRaycastGizmo(element, hit, direction, isSight);
+  //          OnDrawRaycastGizmo(element, hit, direction, isSight);
             
-            if (hit.collider == element && isOccultation && isSight) 
-            {
-                NavMesh.SamplePosition(element.transform.position, out var destination, 5.0f, NavMesh.AllAreas);
+  //          if (hit.collider == element && isOccultation && isSight) 
+  //          {
+  //              NavMesh.SamplePosition(element.transform.position, out var destination, 5.0f, NavMesh.AllAreas);
+
+		//		// Set the target so other tasks will know which transform is within sight
+		//		//target.Value = element.transform.position;
+  //              target.Value = destination.position;
+		//		pawn.Value = element.GetComponent<NetworkBehaviour>();
+
+		//		return TaskStatus.Success;
+		//	}
+		//}
+
+		// -> 수정 버전!!!!!!
+
+		for (var i = 0; i < size; i++)
+		{
+			colliders[i] = default;
+		}
+
+		size = Physics.OverlapSphereNonAlloc(transform.position, sightDistance, colliders, targetLayer);
+
+		for (var i = 0; i < size; i++)
+		{
+			var element = colliders[i];
+
+			var direction = element.transform.position - transform.position;
+			var isSight = Vector3.Angle(direction, transform.forward) < fieldOfViewAngle;
+			var distance = isSight ? sightDistance : aroundDistance;
+			var isOccultation = Physics.Raycast(transform.position, direction, out var hit, distance);
+
+			OnDrawRaycastGizmo(element, hit, direction, isSight);
+
+			if (hit.collider == element && isOccultation && isSight)
+			{
+				NavMesh.SamplePosition(element.transform.position, out var destination, 5.0f, NavMesh.AllAreas);
 
 				// Set the target so other tasks will know which transform is within sight
 				//target.Value = element.transform.position;
-                target.Value = destination.position;
+				target.Value = destination.position;
 				pawn.Value = element.GetComponent<NetworkBehaviour>();
 
 				return TaskStatus.Success;

@@ -37,9 +37,17 @@ public class EnterGame : InteractableObject
         NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
         colider.enabled = false;
         RequestSceneChangeClientRpc();
-    }
 
-    [ClientRpc]
+        // 2024.12.26 던전 입장 이벤트 재배치
+        using var command = new InTheDark.Prototypes.Enter()
+        {
+            BuildIndex = 0
+        };
+
+        command.Invoke();
+	}
+
+	[ClientRpc]
     private void RequestSceneChangeClientRpc()
     {
         colider.enabled = false;

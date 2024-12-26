@@ -2,7 +2,7 @@ using System;
 
 namespace InTheDark.Prototypes
 {
-	public abstract class Action : IDisposable
+	public abstract class GameAction : IDisposable
 	{
 		public virtual void Dispose()
 		{
@@ -12,7 +12,7 @@ namespace InTheDark.Prototypes
 		public abstract void Invoke();
 	}
 
-	public class Enter : Action
+	public class Enter : GameAction
 	{
 		public int BuildIndex;
 
@@ -25,7 +25,7 @@ namespace InTheDark.Prototypes
 		}
 	}
 
-	public class Exit : Action
+	public class Exit : GameAction
 	{
 		public int BuildIndex;
 
