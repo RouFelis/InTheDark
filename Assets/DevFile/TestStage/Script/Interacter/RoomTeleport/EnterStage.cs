@@ -15,15 +15,16 @@ public class EnterStage : InteractableObject
         PlayDoorSound();
         SetEveryPlayerPosServerRPC(uerID);
 
-        // 2024.12.24 던전 입장 이벤트 재배치
-        InTheDark.Prototypes.Game.OnDungeonEnter.Invoke(new InTheDark.Prototypes.DungeonEnterEvent()
-        {
-            BuildIndex = 0
-        });
-    }
+		// 2024.12.24 던전 입장 이벤트 추가
+		// 2024.12.26 던전 입장 이벤트 재배치
+		//InTheDark.Prototypes.Game.OnDungeonEnter.Invoke(new InTheDark.Prototypes.DungeonEnterEvent()
+		//{
+		//    BuildIndex = 0
+		//});
+	}
 
 
-    private void PlayDoorSound()
+	private void PlayDoorSound()
 	{
         if (otherSideDoorSource == null)
         {

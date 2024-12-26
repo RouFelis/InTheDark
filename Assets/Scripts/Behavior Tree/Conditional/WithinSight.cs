@@ -25,7 +25,11 @@ public class WithinSight : Conditional
     
     public override TaskStatus OnUpdate()
     {
-        for (var i = 0; i < size; i++)
+        var angle = pawn.Value ? 360 : fieldOfViewAngle;
+
+        //Debug.Log($"angle: {angle}");
+
+		for (var i = 0; i < size; i++)
         {
             colliders[i] = default;
         }
