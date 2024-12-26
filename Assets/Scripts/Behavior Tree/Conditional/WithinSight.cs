@@ -33,6 +33,8 @@ public class WithinSight : Conditional
 
         //Debug.Log($"angle: {angle}");
 
+        //Debug.Log($"angle: {angle}");
+
 		//for (var i = 0; i < size; i++)
   //      {
   //          colliders[i] = default;
