@@ -83,9 +83,9 @@ public class WithinSight : Conditional
 			var distance = isSight ? sightDistance : aroundDistance;
 			var isOccultation = Physics.Raycast(transform.position, direction, out var hit, distance);
 
-			OnDrawRaycastGizmo(element, hit, direction, isSight);
+			OnDrawRaycastGizmo(element, hit, direction/*, isSight*/);
 
-			if (hit.collider == element && isOccultation && isSight)
+			if (hit.collider == element && isOccultation/* && isSight*/)
 			{
 				NavMesh.SamplePosition(element.transform.position, out var destination, 5.0f, NavMesh.AllAreas);
 
@@ -104,9 +104,9 @@ public class WithinSight : Conditional
     }
 
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
-    private void OnDrawRaycastGizmo(Collider collider, RaycastHit hit, Vector3 direction, bool isSight)
+    private void OnDrawRaycastGizmo(Collider collider, RaycastHit hit, Vector3 direction/*, bool isSight*/)
     {
-        var color = hit.collider == collider && isSight ? Color.blue : Color.red;
+        var color = hit.collider == collider/* && isSight*/ ? Color.blue : Color.red;
             
         Debug.DrawRay(transform.position, direction, color);
     }
