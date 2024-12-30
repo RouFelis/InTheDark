@@ -42,6 +42,7 @@ public class KeySettingsManager : MonoBehaviour
     [SerializeField]private KeyCode useItemKey;
     [SerializeField]private KeyCode scanKey;
     [SerializeField]private KeyCode lightKey;
+    [SerializeField]private KeyCode sprintKey;
 
 
 
@@ -105,9 +106,21 @@ public class KeySettingsManager : MonoBehaviour
             }
         }
     }
-	#endregion
+    public KeyCode SprintKey
+    {
+        get { return sprintKey; }
+        set
+        {
+            if (sprintKey != value)
+            {
+                sprintKey = value;
+                KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
+            }
+        }
+    }
+    #endregion
 
-	private void Start()
+    private void Start()
     {
         Instance = this;
         // 설정 파일 경로를 지정
@@ -148,6 +161,7 @@ public class KeySettingsManager : MonoBehaviour
         UseItemKey = GetKey("UseItem");
         ScanKey = GetKey("ScanKey");
         lightKey = GetKey("Light");
+        sprintKey = GetKey("Sprint");
         Debug.Log("KeySetting2 를 찾았습니다.");
     }
 

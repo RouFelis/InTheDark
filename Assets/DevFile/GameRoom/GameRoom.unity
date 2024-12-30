@@ -40767,11 +40767,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  near clip plane: 0.18
+  far clip plane: 5000
+  field of view: 40
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -40795,8 +40795,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 544633467}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1000.8934, y: 0.95798206, z: -1.7147641}
+  m_LocalRotation: {x: 0.26705632, y: -0.001172684, z: 0.0037646769, w: 0.96367294}
+  m_LocalPosition: {x: 0.004836964, y: 1.5810733, z: 0.19313438}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42789,7 +42789,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0012461967, y: -0.0053013125}
+  m_AnchoredPosition: {x: 0.0012461967, y: -0.014059818}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1004104937
@@ -43956,77 +43956,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: DissonanceSetup
       objectReference: {fileID: 0}
+    - target: {fileID: 824823894133727455, guid: 2c50758a6d3b8114a8ce30a2fd9e4380, type: 3}
+      propertyPath: _playbackPrefab2
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 824823894133727453, guid: 2c50758a6d3b8114a8ce30a2fd9e4380, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1337958734}
-    - targetCorrespondingSourceObject: {fileID: 824823894133727453, guid: 2c50758a6d3b8114a8ce30a2fd9e4380, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1337958735}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c50758a6d3b8114a8ce30a2fd9e4380, type: 3}
---- !u!1 &1337958733 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 824823894133727453, guid: 2c50758a6d3b8114a8ce30a2fd9e4380, type: 3}
-  m_PrefabInstance: {fileID: 1337958732}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1337958734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1337958733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3737438748cf23f448d18cd2c6192e95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _roomExpanded: 1
-  _tokensExpanded: 1
-  _colliderExpanded: 1
-  _roomName: Global
-  _useTrigger: 0
---- !u!114 &1337958735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1337958733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _channelTypeExpanded: 0
-  _metadataExpanded: 0
-  _activationModeExpanded: 0
-  _tokensExpanded: 0
-  _ampExpanded: 0
-  _activationFaderSettings:
-    _volume: 1
-    _fadeInTicks: 0
-    _fadeOutTicks: 1500000
-  _triggerFaderSettings:
-    _volume: 1
-    _fadeInTicks: 7500000
-    _fadeOutTicks: 11500000
-  _broadcastPosition: 1
-  _channelType: 0
-  _inputName: 
-  _mode: 1
-  _muted: 0
-  _playerId: 
-  _useTrigger: 0
-  _roomName: 
-  _priority: -2
 --- !u!43 &1368767888
 Mesh:
   m_ObjectHideFlags: 0
@@ -48122,7 +48060,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 53347799}
   m_HandleRect: {fileID: 53347798}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 0.9999932
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -48847,7 +48785,7 @@ PrefabInstance:
       objectReference: {fileID: 1298079546}
     - target: {fileID: 86931003327021909, guid: 1eb81787d2128014ba3ab7f0eed6ab4b, type: 3}
       propertyPath: m_VersionIndex
-      value: 3621
+      value: 3624
       objectReference: {fileID: 0}
     - target: {fileID: 508289978785610641, guid: 1eb81787d2128014ba3ab7f0eed6ab4b, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -48891,7 +48829,7 @@ PrefabInstance:
       objectReference: {fileID: 1834677250}
     - target: {fileID: 2545190788419854744, guid: 1eb81787d2128014ba3ab7f0eed6ab4b, type: 3}
       propertyPath: m_VersionIndex
-      value: 3403
+      value: 3406
       objectReference: {fileID: 0}
     - target: {fileID: 2682771526957272296, guid: 1eb81787d2128014ba3ab7f0eed6ab4b, type: 3}
       propertyPath: GlobalObjectIdHash

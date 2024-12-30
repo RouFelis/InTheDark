@@ -187,10 +187,10 @@ public class playerMoveController : NetworkBehaviour
             headTarget.localRotation = savedHeadRotation;
             animator.SetBool("IsWalking", false);
 
-            // Only apply gravity while paused
+            // 일시정지 중에는 중력만 적용
             if (!characterController.isGrounded)
-            {               
-                moveDirection.y -= gravity * Time.deltaTime; // Gravity application
+            {
+                moveDirection.y -= gravity * Time.deltaTime; // 중력 적용
                 characterController.Move(moveDirection * Time.deltaTime);
             }
             return;
@@ -200,19 +200,31 @@ public class playerMoveController : NetworkBehaviour
         Vector3 right = transform.TransformDirection(Vector3.right);
         float curSpeedX = Input.GetAxis("Vertical") * walkSpeed;
         float curSpeedY = Input.GetAxis("Horizontal") * walkSpeed;
+
+        // Shift 키를 눌렀을 때 달리기 속도 적용
+        if (Input.GetKey(KeySettingsManager.Instance.SprintKey))
+        {
+            curSpeedX *= 1.4f; // 속도를 20% 증가
+            curSpeedY *= 1.4f;
+            animator.speed = 1.4f; // 애니메이션 속도 20% 증가
+        }
+        else
+        {
+            animator.speed = 1.0f; // 기본 애니메이션 속도로 복원
+        }
+
         moveDirection.x = (forward * curSpeedX + right * curSpeedY).x;
-        moveDirection.z = (forward * curSpeedX + right * curSpeedY).z;        
+        moveDirection.z = (forward * curSpeedX + right * curSpeedY).z;
 
-        // 애니메이터의 상태 업데이트
+        // 애니메이터 상태 업데이트
         bool isWalking = moveDirection.x != 0 || moveDirection.z != 0;
-
         animator.SetBool("IsWalking", isWalking);
 
         if (characterController.isGrounded)
         {
             if (isJumping)
             {
-                moveDirection.y = 0; // 바닥에 닿으면 Y 속도 초기화
+                moveDirection.y = 0; // 땅에 닿으면 Y축 속도 초기화
                 isJumping = false;
             }
 
@@ -221,10 +233,13 @@ public class playerMoveController : NetworkBehaviour
                 moveDirection.y = jumpForce;
                 isJumping = true;
             }
+
+            //발소리 어케하노?
         }
         else
         {
             moveDirection.y -= gravity * Time.deltaTime; // 중력 적용
+            //발소리 중지
         }
 
         characterController.Move(moveDirection * Time.deltaTime);
@@ -233,8 +248,7 @@ public class playerMoveController : NetworkBehaviour
         {
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-            //playerCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
-            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);           
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
             headTarget.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
             savedHeadRotation = headTarget.localRotation;
         }

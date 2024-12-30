@@ -4,7 +4,7 @@ using Unity.Netcode;
 
 public class DungeunNetobjectSpawner : MonoBehaviour
 {
-    [SerializeField] private List<NetworkObject> spawnObjects;
+    [SerializeField] private List<GameObject> spawnObjects;
 
     private void Start()
     {
@@ -25,9 +25,21 @@ public class DungeunNetobjectSpawner : MonoBehaviour
     {
         foreach (var obj in spawnObjects)
         {
-            if (obj != null && !obj.IsSpawned)
+            NetworkObject spawnedObj = obj.GetComponent<NetworkObject>();
+            if (spawnedObj != null && !spawnedObj.IsSpawned)
             {
-                obj.Spawn();
+                spawnedObj.Spawn();
+            }
+            var test = spawnedObj.transform.GetComponentsInChildren<Transform>();
+
+            foreach (Transform child in test)
+            {
+                NetworkObject childNetworkObject = child.GetComponent<NetworkObject>();
+                if (childNetworkObject != null && !childNetworkObject.IsSpawned)
+                {
+                    childNetworkObject.Spawn();
+                    child.SetParent(spawnedObj.transform);
+                }
             }
         }
     }

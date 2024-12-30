@@ -34357,9 +34357,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnObjects:
-  - {fileID: 2259795801292576953}
-  - {fileID: 1804503752672567986}
-  - {fileID: 3059560435023097053}
+  - {fileID: 9110900955496892683}
+  - {fileID: 7113043762791130939}
+  - {fileID: 3916182425922512240}
 --- !u!1 &3840785958990072208
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private Slider masterSlider;
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Slider uiSlider;
 
     private const float MinVolumeDb = -80f; // AudioMixer에서 무음으로 설정되는 dB 값
     private const float MaxVolumeDb = 0f;  // AudioMixer에서 최대 볼륨으로 설정되는 dB 값
@@ -42,11 +43,13 @@ public class AudioManager : MonoBehaviour
         masterSlider.value = DbToLinear(GetMixerVolume("MasterVolume"));
         musicSlider.value = DbToLinear(GetMixerVolume("MusicVolume"));
         sfxSlider.value = DbToLinear(GetMixerVolume("SFXVolume"));
+        uiSlider.value = DbToLinear(GetMixerVolume("UIVolume"));
 
         // 슬라이더 이벤트 연결
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+        uiSlider.onValueChanged.AddListener(SetUIVolume);
 
         LoadAudioSettings();
     }
@@ -92,6 +95,12 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat("SFXVolume", LinearToDb(value));
     }
 
+    // UI Volume 설정
+    public void SetUIVolume(float value)
+    {
+        audioMixer.SetFloat("UIVolume", LinearToDb(value));
+    }
+
 
     // JSON 저장
     public void SaveAudioSettings()
@@ -100,7 +109,8 @@ public class AudioManager : MonoBehaviour
         {
             masterVolume = masterSlider.value,
             musicVolume = musicSlider.value,
-            sfxVolume = sfxSlider.value
+            sfxVolume = sfxSlider.value,
+            uiVolume = uiSlider.value
         };
 
         string json = JsonUtility.ToJson(settings, true);
@@ -116,19 +126,32 @@ public class AudioManager : MonoBehaviour
             string json = File.ReadAllText(GetFilePath());
             AudioSettingsData settings = JsonUtility.FromJson<AudioSettingsData>(json);
 
-            masterSlider.value = settings.masterVolume;
-            musicSlider.value = settings.musicVolume;
-            sfxSlider.value = settings.sfxVolume;
+            masterSlider.value = settings?.masterVolume ?? 1.0f;
+            musicSlider.value = settings?.musicVolume ?? 1.0f;
+            sfxSlider.value = settings?.sfxVolume ?? 1.0f;
+            uiSlider.value = settings?.uiVolume ?? 1.0f;
 
             // 불러온 값으로 AudioMixer 업데이트
             SetMasterVolume(masterSlider.value);
             SetMusicVolume(musicSlider.value);
             SetSFXVolume(sfxSlider.value);
+            SetUIVolume(uiSlider.value);
 
             Debug.Log($"Audio settings loaded from {GetFilePath()}");
         }
         else
         {
+            // JSON 파일이 없을 경우 기본값 1로 설정
+            masterSlider.value = 1.0f;
+            musicSlider.value = 1.0f;
+            sfxSlider.value = 1.0f;
+            uiSlider.value = 1.0f;
+
+            SetMasterVolume(masterSlider.value);
+            SetMusicVolume(musicSlider.value);
+            SetSFXVolume(sfxSlider.value);
+            SetUIVolume(uiSlider.value);
+
             Debug.Log("No audio settings file found. Using default values.");
         }
     }
@@ -166,4 +189,5 @@ public class AudioSettingsData
     public float masterVolume;
     public float musicVolume;
     public float sfxVolume;
+    public float uiVolume;
 }

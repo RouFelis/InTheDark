@@ -137,6 +137,13 @@ namespace DunGen.Adapters
 						surface.agentTypeID = settings.agentTypeID;
 						surface.collectObjects = CollectObjects.Children;
 						surface.layerMask = LayerMask;
+						// 메시 세부 사항 조정
+						surface.overrideVoxelSize = true;
+						surface.voxelSize = 0.05f; // 값을 작게 하면 메시가 더 세밀해짐
+
+						/*surface.overrideTileSize = true;
+						surface.tileSize = 16; // 타일 크기를 작게 설정*/
+						surface.BuildNavMesh();
 					}
 
 					fullBakeSurfaces.Add(surface);

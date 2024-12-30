@@ -40,22 +40,18 @@ public class Checker : InteractableObject
 
 	public override void Interact(ulong uerID, Transform interactingObjectTransform)
 	{
-		base.Interact(uerID , interactingObjectTransform);
-		Debug.Log(interactingObjectTransform.gameObject.layer);
+		base.Interact(uerID , interactingObjectTransform);		
 		if (isComplete.Value)
 		{
 			return;
 		}
-		if (interactingObjectTransform.gameObject.layer == 7)
-		{			
-			if (isStart)
-			{
-				quest.WireStar(startEndTransform, this , this.connectionOrder , uerID);	
-			}
-			else
-			{
-				quest.WireEnd(startEndTransform, this);
-			}
+		if (isStart)
+		{
+			quest.WireStar(startEndTransform, this, this.connectionOrder, uerID);
+		}
+		else
+		{
+			quest.WireEnd(startEndTransform, this);
 		}
 	}
 }

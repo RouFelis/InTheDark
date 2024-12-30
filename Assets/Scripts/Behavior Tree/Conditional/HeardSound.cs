@@ -52,4 +52,45 @@ public class HeardSound : Conditional
 
 		return TaskStatus.Failure;
 	}
+/*
+	public SharedGameObject targetObject;  // 타겟 객체
+	public LayerMask soundLayer = 3;          // 소리가 감지될 레이어
+	public float hearingRadius = 10.0f;   // 청취 반경
+
+	public override TaskStatus OnUpdate()
+	{
+		if (IsObjectWithinHearingRange())
+		{
+			return TaskStatus.Success;
+		}
+		return TaskStatus.Failure;
+	}
+
+	private bool IsObjectWithinHearingRange()
+	{
+		Debug.Log("1");
+		if (targetObject.Value == null)
+		{
+			Debug.Log("3");
+			return false;
+		}
+		Debug.Log("2");
+		float distance = Vector3.Distance(transform.position, targetObject.Value.transform.position);
+		if (distance <= hearingRadius)
+		{
+			// 소리가 들리는 객체가 반경 내에 있는지 확인
+			RaycastHit hit;
+			Vector3 direction = (targetObject.Value.transform.position - transform.position).normalized;
+
+			
+
+			if (Physics.Raycast(transform.position, direction, out hit, hearingRadius))
+			{
+				Debug.Log("소리 테스트 " + hit.rigidbody.gameObject.layer);
+
+				return hit.collider.gameObject == targetObject.Value;
+			}
+		}
+		return false;
+	}*/
 }
