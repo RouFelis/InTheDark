@@ -319,7 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1669537527
+  GlobalObjectIdHash: 3215250298
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -371,7 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   TransitionStateInfoList: []
-  m_Animator: {fileID: 2995284574874311501}
+  m_Animator: {fileID: 0}
 --- !u!114 &2740562399230657829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1868,11 +1868,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!95 &2995284574874311501 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 153a802a9f37fd0489113517f99538f4, type: 3}
-  m_PrefabInstance: {fileID: 8717832922106144476}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7011640698054924564 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1852576806548013000, guid: 153a802a9f37fd0489113517f99538f4, type: 3}

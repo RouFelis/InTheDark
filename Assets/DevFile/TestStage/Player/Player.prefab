@@ -370,7 +370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   TransitionStateInfoList: []
-  m_Animator: {fileID: 0}
+  m_Animator: {fileID: 4900552500753901785}
 --- !u!114 &2740562399230657829
 MonoBehaviour:
   m_ObjectHideFlags: 0
