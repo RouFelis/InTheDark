@@ -22,10 +22,10 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private Animator animator;
 
     [Header("Networking")]
-    private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>();
-    private NetworkVariable<Vector3> networkRotation = new NetworkVariable<Vector3>();
-    private NetworkVariable<Quaternion> networkHeadRotation = new NetworkVariable<Quaternion>();
-    private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
+    [SerializeField] private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>();
+    [SerializeField] private NetworkVariable<Vector3> networkRotation = new NetworkVariable<Vector3>();
+    [SerializeField] private NetworkVariable<Quaternion> networkHeadRotation = new NetworkVariable<Quaternion>();
+    [SerializeField] private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
 
     private CharacterController characterController;
     private Vector3 moveDirection = Vector3.zero;
@@ -193,7 +193,14 @@ public class playerMoveController : NetworkBehaviour
 
     private void SyncState()
     {
-        transform.position = networkPosition.Value;
+        if (!IsOwner)
+        {
+            // 네트워크에서 받은 방향 벡터로 이동
+            Vector3 direction = networkPosition.Value - transform.position;
+
+            // CharacterController로 부드럽게 이동
+            characterController.SimpleMove(direction.normalized * walkSpeed);
+        }
         transform.rotation = Quaternion.Euler(networkRotation.Value);
     }
 
