@@ -1,56 +1,99 @@
 using UnityEngine;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
-using Unity.Services.Relay;
-using Unity.Services.Relay.Models;
-using QuickCmd;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using System.Threading.Tasks;
+using System;
+using Unity.Services.Core;
+using Unity.Services.Core.Environments;
+using Unity.Services.Authentication;
+using Unity.Services.Relay;
+using Unity.Services;
+using Unity.Services.Relay.Models;
+
+
 
 public class TestRelay : MonoBehaviour
 {
-    private async void Start()
-	{
-		await UnityServices.InitializeAsync();
+	public static TestRelay Instance { get; set; }
 
-		AuthenticationService.Instance.SignedIn += () =>
+	[SerializeField]
+	private string enviromnet = "production";
+
+	[SerializeField]
+	private int maxConnections = 10;
+
+	private void Awake()
+	{
+		Instance = this;
+	}
+
+	public bool IsRelayEnabled => Transport != null &&
+		Transport.Protocol == UnityTransport.ProtocolType.RelayUnityTransport;
+
+	public UnityTransport Transport => NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
+
+	public async Task<RelayHostData> SetupRelay()
+	{
+		Debug.Log($"Relay Server Starting With max connetcions {maxConnections}");
+		InitializationOptions options = new InitializationOptions().SetEnvironmentName(enviromnet);
+
+		await UnityServices.InitializeAsync(options);
+
+		if (!AuthenticationService.Instance.IsSignedIn)
 		{
-			Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
+			await AuthenticationService.Instance.SignInAnonymouslyAsync();
+		}
+
+		Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxConnections);
+
+		RelayHostData relayHostData = new RelayHostData
+		{
+			Key = allocation.Key,
+			Port = (ushort)allocation.RelayServer.Port,
+			AllocationID = allocation.AllocationId,
+			AllocationIDBytes = allocation.AllocationIdBytes,
+			IPv4Address = allocation.RelayServer.IpV4,
+			ConnectionData = allocation.ConnectionData
 		};
-		await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+		relayHostData.JoinCode = await RelayService.Instance.GetJoinCodeAsync(relayHostData.AllocationID);
+
+		Transport.SetRelayServerData(relayHostData.IPv4Address, relayHostData.Port, relayHostData.AllocationIDBytes, relayHostData.Key, relayHostData.ConnectionData) ;
+
+		Logger.Instance?.LogInfo($"Relay Server generated a join code {relayHostData.JoinCode}");
+
+		return relayHostData;
 	}
-    
-	[Command]
-	private async void CreateRelay()
+		
+	public async Task<RelayJoinData> JoinRelay(string joinCode)
 	{
-		try
+		InitializationOptions options = new InitializationOptions().SetEnvironmentName(enviromnet);
+
+		await UnityServices.InitializeAsync(options);
+
+		if (!AuthenticationService.Instance.IsSignedIn)
 		{
-			Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
-
-			string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-
-			Debug.Log(joinCode);
-
-			//NetworkManager.Instantiate.GetComponent<unitytansport>
+			await AuthenticationService.Instance.SignInAnonymouslyAsync();
 		}
-		catch (RelayServiceException e)
+
+		JoinAllocation allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+
+		RelayJoinData relayJoinData = new RelayJoinData
 		{
-			Debug.Log(e);
-		}
+			Key = allocation.Key,
+			Port = (ushort)allocation.RelayServer.Port,
+			AllocationID = allocation.AllocationId,
+			AllocationIDBytes = allocation.AllocationIdBytes,
+			ConnectionData = allocation.ConnectionData,
+			HostConnectionData = allocation.HostConnectionData,
+			IPv4Address = allocation.RelayServer.IpV4,
+			JoinCode = joinCode
+		};
+
+		Transport.SetRelayServerData(relayJoinData.IPv4Address , relayJoinData.Port, relayJoinData.AllocationIDBytes, relayJoinData.Key, relayJoinData.ConnectionData, relayJoinData.HostConnectionData);
+
+		Logger.Instance?.LogInfo($"Relay Server generated a join code {joinCode}");
+
+		return relayJoinData;
 	}
-
-	[Command]
-	private async void JoinRelay(string joinCode)
-	{
-		try
-		{
-			Debug.Log("joining Relay with " + joinCode);
-			await RelayService.Instance.JoinAllocationAsync(joinCode);
-		} 
-		catch (RelayServiceException e)
-		{
-			Debug.Log(e);
-		}
-
-	}
-
 }

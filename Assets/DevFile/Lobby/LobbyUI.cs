@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,7 @@ public class LobbyUI : NetworkBehaviour
 	[SerializeField] private Button hostBtn;
 	[SerializeField] private Button clientBtn;
 	[SerializeField] private Text text;
+	[SerializeField] private TMP_InputField joinCodeInput;
 
 	private void FixedUpdate()
 	{
@@ -29,7 +31,12 @@ public class LobbyUI : NetworkBehaviour
 				Logger.Instance?.LogInfo("Server could not be started...");
 			}
 		});
-		hostBtn.onClick.AddListener(() => {			
+		hostBtn.onClick.AddListener(async () => {
+			if (TestRelay.Instance.IsRelayEnabled)
+			{
+				await TestRelay.Instance.SetupRelay();
+			}
+
 			if (NetworkManager.Singleton.StartHost())
 			{
 				Logger.Instance?.LogInfo("Host started...");
@@ -40,7 +47,12 @@ public class LobbyUI : NetworkBehaviour
 				Logger.Instance?.LogInfo("Host could not be started...");
 			}
 		});
-		clientBtn.onClick.AddListener(() => {
+		clientBtn.onClick.AddListener(async () => {
+
+			if (TestRelay.Instance.IsRelayEnabled && !string.IsNullOrEmpty(joinCodeInput.text))
+			{
+				await TestRelay.Instance.JoinRelay(joinCodeInput.text);
+			}
 
 			if (NetworkManager.Singleton.StartClient())
 			{
