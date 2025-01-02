@@ -224,14 +224,14 @@ public class playerMoveController : NetworkBehaviour
         Cursor.visible = true;
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void UpdateServerPositionRotationServerRpc(Vector3 newPosition, Vector3 newRotation)
     {
         networkPosition.Value = transform.position + newPosition * Time.deltaTime;
         networkRotation.Value = transform.eulerAngles + newRotation * Time.deltaTime;
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void UpdateHeadRotationServerRpc(Quaternion newHeadRotation)
     {
         networkHeadRotation.Value = newHeadRotation;
