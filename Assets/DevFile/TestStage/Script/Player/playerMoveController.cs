@@ -4,227 +4,127 @@ using UnityEngine.SceneManagement;
 
 public class playerMoveController : NetworkBehaviour
 {
-    [SerializeField] private GameObject VirtualCam;
-    [SerializeField] private float walkSpeed = 5.0f; // 걷기 속도
-    [SerializeField] private float lookSpeed = 2.0f; // 시야 회전 속도
-    [SerializeField] private float lookXLimit = 90.0f; // 시야 회전 제한 각도
+    [Header("Movement Settings")]
+    [SerializeField] private float walkSpeed = 5.0f;
+    [SerializeField] private float runSpeedMultiplier = 1.5f;
+    [SerializeField] private float rotationSpeed = 2.0f;
+    [SerializeField] private float gravity = 20.0f;
+    [SerializeField] private float jumpForce = 8.0f;
 
-    [SerializeField] private Camera playerCamera; // 플레이어 카메라
-    [SerializeField] private Transform headTarget; // 머리 타겟 (시야 회전용)
-    [SerializeField] private CharacterController characterController; // 캐릭터 컨트롤러
+    [Header("Camera & Head Rotation")]
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private GameObject virtualCamera;
+    [SerializeField] private Transform headTarget;
+    [SerializeField] private float lookSpeed = 2.0f;
+    [SerializeField] private float lookXLimit = 90.0f;
+
+    [Header("Animation")]
     [SerializeField] private Animator animator;
-    private Vector3 moveDirection = Vector3.zero; // 이동 방향
-    private float rotationX = 0; // X축 회전 값
 
-    [SerializeField] private float jumpForce = 8.0f; // 점프 힘
-    [SerializeField] private float gravity = 20.0f; // 중력 가속도
-    [SerializeField] private bool mouseControl = true; // 마우스 컨트롤 여부 
+    [Header("Networking")]
+    private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>();
+    private NetworkVariable<Vector3> networkRotation = new NetworkVariable<Vector3>();
+    private NetworkVariable<Quaternion> networkHeadRotation = new NetworkVariable<Quaternion>();
+    private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
 
+    private CharacterController characterController;
+    private Vector3 moveDirection = Vector3.zero;
+    private float rotationX = 0.0f;
 
-    private bool isJumping = false; // 점프 중인지 여부
-    private Quaternion savedHeadRotation; // Save the head rotation during pause
+    private bool mouseControl = true;
+    private bool isJumping = false;
+    private Quaternion savedHeadRotation;
 
-
-    private NetworkVariable<Vector3> networkedPosition = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Owner);
-    private NetworkVariable<Quaternion> networkedRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
-    private NetworkVariable<Quaternion> networkedHeadRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
-    public NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>( false , writePerm: NetworkVariableWritePermission.Owner);
-
-	public virtual void Start()
-	{
-        DontDestroyOnLoad(this.gameObject);
-
+    private void Awake()
+    {
         characterController = GetComponent<CharacterController>();
-        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    public override void OnNetworkSpawn()
+    {
         if (IsOwner)
         {
-            playerCamera.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
-            VirtualCam.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
-            FixedMouse(); // 마우스 고정
+            playerCamera.gameObject.SetActive(true);
+            virtualCamera.SetActive(true);
+            FixedMouse();
             MenuManager.Instance.OnPause += FreeMouse;
             MenuManager.Instance.OnResume += FixedMouse;
         }
         else
         {
-            playerCamera.gameObject.SetActive(false); // 소유자가 아닐 때는 카메라 비활성화
-            VirtualCam.gameObject.SetActive(false); // 소유자가 아닐 때는 카메라 비활성화
+            playerCamera.gameObject.SetActive(false);
+            virtualCamera.SetActive(false);
         }
     }
 
-    void FixedMouse()
-	{
-		if (!isEventPlaying.Value)
-		{
-            Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
-           // this.enabled = true;
-        }
-    }
-
-    void FreeMouse()
+    private void Start()
     {
-        Cursor.lockState = CursorLockMode.None; // 커서 고정 해제.
-       // this.enabled = false;
+        DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    public void EventToggle(bool boolValue)
-	{
-        isEventPlaying.Value = boolValue;
-        enabled = !boolValue;
-        if(boolValue)
-            Cursor.lockState = CursorLockMode.None;// 마우스 해제
-        else
-            Cursor.lockState = CursorLockMode.Locked;// 마우스 잠금
-    }
-
-    void OnEnable()
-    {
-        networkedPosition.OnValueChanged += OnNetworkPositionChanged;
-        networkedRotation.OnValueChanged += OnNetworkRotationChanged;
-        networkedHeadRotation.OnValueChanged += OnNetworkHeadRotationChanged;
-    }
-
-    void OnDisable()
-    {
-        networkedPosition.OnValueChanged -= OnNetworkPositionChanged;
-        networkedRotation.OnValueChanged -= OnNetworkRotationChanged;
-        networkedHeadRotation.OnValueChanged -= OnNetworkHeadRotationChanged;
-    }
-
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (IsOwner)
         {
-            HandleInput(); // 입력 처리
-            UpdateNetworkedTransform(); // 네트워크 변환 값 업데이트
+            if (!isEventPlaying.Value)
+            {
+                HandleInput();
+            }
         }
         else
         {
-            SyncTransform(); // 변환 값 동기화
+            SyncState();
         }
+
+        UpdateMovement();
+        UpdateAnimator();
+        UpdateHeadRotation();
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 현재 씬이 "Lobby" 씬일 경우에만 오브젝트 파괴
         if (scene.name == "Lobby")
         {
-            Destroy(gameObject);  // 로비 씬으로 이동 시 오브젝트 파괴
+            Destroy(gameObject);
         }
     }
 
-    public override void OnDestroy()
+    private void OnDestroy()
     {
-        // 씬 로드 이벤트 해제
         SceneManager.sceneLoaded -= OnSceneLoaded;
         if (IsOwner)
         {
             MenuManager.Instance.OnPause -= FreeMouse;
             MenuManager.Instance.OnResume -= FixedMouse;
         }
-    }   
-    
+    }
+
     private void HandleInput()
     {
-        PlayerControlle(); // 플레이어 컨트롤 처리
-
-        // 네트워크 위치와 회전 값 업데이트
-        networkedPosition.Value = transform.position;
-        networkedRotation.Value = transform.rotation;
-        networkedHeadRotation.Value = headTarget.localRotation;
-    }
-
-    private void UpdateNetworkedTransform()
-    {
-        if (IsOwner)
-        {
-            // 네트워크 변수 값 업데이트
-            networkedPosition.Value = transform.position;
-            networkedRotation.Value = transform.rotation;
-            networkedHeadRotation.Value = headTarget.localRotation;
-        }
-    }
-
-    private void SyncTransform()
-    {
-        // 네트워크 변수 값을 사용하여 위치와 회전 동기화
-        transform.position = networkedPosition.Value;
-        transform.rotation = networkedRotation.Value;
-        headTarget.localRotation = networkedHeadRotation.Value;
-    }
-
-    // 네트워크 위치 값 변경 이벤트 핸들러
-    private void OnNetworkPositionChanged(Vector3 oldValue, Vector3 newValue)
-    {
-        if (!IsOwner)
-        {
-            transform.position = newValue;
-        }
-    }
-
-    // 네트워크 회전 값 변경 이벤트 핸들러
-    private void OnNetworkRotationChanged(Quaternion oldValue, Quaternion newValue)
-    {
-        if (!IsOwner)
-        {
-            transform.rotation = newValue;
-        }
-    }
-
-    // 네트워크 머리 회전 값 변경 이벤트 핸들러
-    private void OnNetworkHeadRotationChanged(Quaternion oldValue, Quaternion newValue)
-    {
-        if (!IsOwner)
-        {
-            headTarget.localRotation = newValue;
-        }
-    }
-
-
-    void PlayerControlle()
-    {
-        if (MenuManager.Instance.IsPaused)
-        {
-            headTarget.localRotation = savedHeadRotation;
-            animator.SetBool("IsWalking", false);
-
-            // 일시정지 중에는 중력만 적용
-            if (!characterController.isGrounded)
-            {
-                moveDirection.y -= gravity * Time.deltaTime; // 중력 적용
-                characterController.Move(moveDirection * Time.deltaTime);
-            }
-            return;
-        }
+        // 이동 입력
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 right = transform.TransformDirection(Vector3.right);
-        float curSpeedX = Input.GetAxis("Vertical") * walkSpeed;
-        float curSpeedY = Input.GetAxis("Horizontal") * walkSpeed;
 
-        // Shift 키를 눌렀을 때 달리기 속도 적용
-        if (Input.GetKey(KeySettingsManager.Instance.SprintKey))
-        {
-            curSpeedX *= 1.4f; // 속도를 20% 증가
-            curSpeedY *= 1.4f;
-            animator.speed = 1.4f; // 애니메이션 속도 20% 증가
-        }
-        else
-        {
-            animator.speed = 1.0f; // 기본 애니메이션 속도로 복원
-        }
+        Vector3 inputDirection = forward * vertical + right * horizontal;
 
-        moveDirection.x = (forward * curSpeedX + right * curSpeedY).x;
-        moveDirection.z = (forward * curSpeedX + right * curSpeedY).z;
+        if (inputDirection.magnitude > 1)
+            inputDirection.Normalize();
 
-        // 애니메이터 상태 업데이트
-        bool isWalking = moveDirection.x != 0 || moveDirection.z != 0;
-        animator.SetBool("IsWalking", isWalking);
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
+        moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier;
+        moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier;
 
+        // 점프 처리
         if (characterController.isGrounded)
         {
             if (isJumping)
             {
-                moveDirection.y = 0; // 땅에 닿으면 Y축 속도 초기화
+                moveDirection.y = 0;
                 isJumping = false;
             }
 
@@ -232,28 +132,110 @@ public class playerMoveController : NetworkBehaviour
             {
                 moveDirection.y = jumpForce;
                 isJumping = true;
+                animator.speed = 1.0f; // 점프 중에는 기본 속도
             }
-
-            //발소리 어케하노?
         }
         else
         {
-            moveDirection.y -= gravity * Time.deltaTime; // 중력 적용
-            //발소리 중지
+            moveDirection.y -= gravity * Time.deltaTime;
         }
 
-        characterController.Move(moveDirection * Time.deltaTime);
-
-        if (mouseControl)
-        {
+		if (mouseControl)
+		{
+            // 마우스 회전 입력
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
             headTarget.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
             savedHeadRotation = headTarget.localRotation;
         }
+
+
+        if (IsOwner)
+        {
+            UpdateServerPositionRotationServerRpc(inputDirection * walkSpeed, Vector3.up * horizontal * rotationSpeed);
+            UpdateHeadRotationServerRpc(headTarget.localRotation);
+        }
     }
 
+    private void UpdateMovement()
+    {
+        characterController.Move(moveDirection * Time.deltaTime);
+    }
+
+    private void UpdateAnimator()
+    {
+        bool isWalking = moveDirection.x != 0 || moveDirection.z != 0;
+        bool isRunning = isWalking && Input.GetKey(KeyCode.LeftShift);
+
+        animator.SetBool("IsWalking", isWalking);
+        animator.SetBool("IsRunning", isRunning);
+        animator.SetBool("IsJumping", isJumping);
+
+        // 애니메이션 속도 및 사운드 동기화
+        if (isWalking)
+        {
+            animator.speed = isRunning ? 1.4f : 1.0f;
+        }
+        else
+        {
+            animator.speed = 1.0f; // 기본 속도
+        }
+    }
+
+    private void UpdateHeadRotation()
+    {
+        if (!IsOwner)
+        {
+            headTarget.localRotation = networkHeadRotation.Value;
+        }
+    }
+
+    private void SyncState()
+    {
+        transform.position = networkPosition.Value;
+        transform.rotation = Quaternion.Euler(networkRotation.Value);
+    }
+
+    public void EventToggle(bool value)
+    {
+        isEventPlaying.Value = value;
+        enabled = !value;
+
+        if (value)
+        {
+            FreeMouse();
+        }
+        else
+        {
+            FixedMouse();
+        }
+    }
+
+    private void FixedMouse()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void FreeMouse()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    [ServerRpc]
+    private void UpdateServerPositionRotationServerRpc(Vector3 newPosition, Vector3 newRotation)
+    {
+        networkPosition.Value = transform.position + newPosition * Time.deltaTime;
+        networkRotation.Value = transform.eulerAngles + newRotation * Time.deltaTime;
+    }
+
+    [ServerRpc]
+    private void UpdateHeadRotationServerRpc(Quaternion newHeadRotation)
+    {
+        networkHeadRotation.Value = newHeadRotation;
+    }
 
     public void SetMouseControl(bool enable)
     {

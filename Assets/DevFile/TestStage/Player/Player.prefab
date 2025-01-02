@@ -411,19 +411,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  VirtualCam: {fileID: 6760767569417569767}
   walkSpeed: 5
+  runSpeedMultiplier: 1.5
+  rotationSpeed: 2
+  gravity: 20
+  playerCamera: {fileID: 1441098053000729887}
+  virtualCamera: {fileID: 6760767569417569767}
+  headTarget: {fileID: 6651332738564536394}
   lookSpeed: 2
   lookXLimit: 90
-  playerCamera: {fileID: 1441098053000729887}
-  headTarget: {fileID: 6651332738564536394}
-  characterController: {fileID: 7063125711770317483}
   animator: {fileID: 4900552500753901785}
-  jumpForce: 8
-  gravity: 20
-  mouseControl: 1
-  isEventPlaying:
-    m_InternalValue: 0
   playerName:
     m_InternalValue:
       utf8LengthInBytes: 0

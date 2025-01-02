@@ -60,13 +60,15 @@ public class Player : playerMoveController , IDamaged, ICharacter
 	[SerializeField] private SaveSystem saveSystem;
 	[SerializeField] private AudioSource audioSource;
 
-	public override void Start()
+	public  void Start()
 	{
-		base.Start();
-		StartCoroutine(InitSaveSystem());
-		playerName.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
-		experience.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
-		level.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
+		if (IsOwner)
+		{
+			StartCoroutine(InitSaveSystem());
+			playerName.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
+			experience.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
+			level.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
+		}
 		//AudioManager.Instance.SetbuttonSorce(audioSource);
 	}
 
