@@ -25,28 +25,17 @@ public class playerMoveController : NetworkBehaviour
     private Quaternion savedHeadRotation; // Save the head rotation during pause
 
 
-    private NetworkVariable<Vector3> networkedPosition = new NetworkVariable<Vector3>(
-     writePerm: NetworkVariableWritePermission.Owner
- );
-    private NetworkVariable<Quaternion> networkedRotation = new NetworkVariable<Quaternion>(
-        writePerm: NetworkVariableWritePermission.Owner
-    );
-    private NetworkVariable<Quaternion> networkedHeadRotation = new NetworkVariable<Quaternion>(
-        writePerm: NetworkVariableWritePermission.Owner
-    );
+    private NetworkVariable<Vector3> networkedPosition = new NetworkVariable<Vector3>(writePerm: NetworkVariableWritePermission.Owner);
+    private NetworkVariable<Quaternion> networkedRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
+    private NetworkVariable<Quaternion> networkedHeadRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>( false , writePerm: NetworkVariableWritePermission.Owner);
 
-    private float lastSyncTime = 0f; // 마지막 동기화 시간
-    private const float syncInterval = 0.05f; // 동기화 간격 (0.1초)
-
-    public NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false, writePerm: NetworkVariableWritePermission.Owner);
-
-    public virtual void Start()
-    {
+	public virtual void Start()
+	{
         DontDestroyOnLoad(this.gameObject);
 
         characterController = GetComponent<CharacterController>();
         SceneManager.sceneLoaded += OnSceneLoaded;
-
         if (IsOwner)
         {
             playerCamera.gameObject.SetActive(true); // 소유자일 때만 카메라 활성화
@@ -61,28 +50,30 @@ public class playerMoveController : NetworkBehaviour
             VirtualCam.gameObject.SetActive(false); // 소유자가 아닐 때는 카메라 비활성화
         }
     }
-   
+
     void FixedMouse()
-    {
-        if (!isEventPlaying.Value)
-        {
+	{
+		if (!isEventPlaying.Value)
+		{
             Cursor.lockState = CursorLockMode.Locked; // 커서를 중앙에 고정
+           // this.enabled = true;
         }
     }
 
     void FreeMouse()
     {
-        Cursor.lockState = CursorLockMode.None; // 커서 고정 해제
+        Cursor.lockState = CursorLockMode.None; // 커서 고정 해제.
+       // this.enabled = false;
     }
 
     public void EventToggle(bool boolValue)
-    {
+	{
         isEventPlaying.Value = boolValue;
         enabled = !boolValue;
-        if (boolValue)
-            Cursor.lockState = CursorLockMode.None; // 마우스 해제
+        if(boolValue)
+            Cursor.lockState = CursorLockMode.None;// 마우스 해제
         else
-            Cursor.lockState = CursorLockMode.Locked; // 마우스 잠금
+            Cursor.lockState = CursorLockMode.Locked;// 마우스 잠금
     }
 
     void OnEnable()
@@ -104,6 +95,7 @@ public class playerMoveController : NetworkBehaviour
         if (IsOwner)
         {
             HandleInput(); // 입력 처리
+            UpdateNetworkedTransform(); // 네트워크 변환 값 업데이트
         }
         else
         {
@@ -113,14 +105,16 @@ public class playerMoveController : NetworkBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // 현재 씬이 "Lobby" 씬일 경우에만 오브젝트 파괴
         if (scene.name == "Lobby")
         {
-            Destroy(gameObject); // 로비 씬으로 이동 시 오브젝트 파괴
+            Destroy(gameObject);  // 로비 씬으로 이동 시 오브젝트 파괴
         }
     }
 
     public override void OnDestroy()
     {
+        // 씬 로드 이벤트 해제
         SceneManager.sceneLoaded -= OnSceneLoaded;
         if (IsOwner)
         {
@@ -131,31 +125,34 @@ public class playerMoveController : NetworkBehaviour
     
     private void HandleInput()
     {
-        PlayerControlle();
+        PlayerControlle(); // 플레이어 컨트롤 처리
 
-        if (IsOwner && Time.time - lastSyncTime >= syncInterval) // 동기화 간격을 만족할 때만 실행
+        // 네트워크 위치와 회전 값 업데이트
+        networkedPosition.Value = transform.position;
+        networkedRotation.Value = transform.rotation;
+        networkedHeadRotation.Value = headTarget.localRotation;
+    }
+
+    private void UpdateNetworkedTransform()
+    {
+        if (IsOwner)
         {
-            lastSyncTime = Time.time; // 마지막 동기화 시간 갱신
-
             // 네트워크 변수 값 업데이트
-            if (networkedPosition.Value != transform.position)
-                networkedPosition.Value = transform.position;
-
-            if (networkedRotation.Value != transform.rotation)
-                networkedRotation.Value = transform.rotation;
-
-            if (networkedHeadRotation.Value != headTarget.localRotation)
-                networkedHeadRotation.Value = headTarget.localRotation;
+            networkedPosition.Value = transform.position;
+            networkedRotation.Value = transform.rotation;
+            networkedHeadRotation.Value = headTarget.localRotation;
         }
     }
 
     private void SyncTransform()
     {
+        // 네트워크 변수 값을 사용하여 위치와 회전 동기화
         transform.position = networkedPosition.Value;
         transform.rotation = networkedRotation.Value;
         headTarget.localRotation = networkedHeadRotation.Value;
     }
 
+    // 네트워크 위치 값 변경 이벤트 핸들러
     private void OnNetworkPositionChanged(Vector3 oldValue, Vector3 newValue)
     {
         if (!IsOwner)
@@ -164,6 +161,7 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
+    // 네트워크 회전 값 변경 이벤트 핸들러
     private void OnNetworkRotationChanged(Quaternion oldValue, Quaternion newValue)
     {
         if (!IsOwner)
@@ -172,6 +170,7 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
+    // 네트워크 머리 회전 값 변경 이벤트 핸들러
     private void OnNetworkHeadRotationChanged(Quaternion oldValue, Quaternion newValue)
     {
         if (!IsOwner)
@@ -180,6 +179,7 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
+
     void PlayerControlle()
     {
         if (MenuManager.Instance.IsPaused)
@@ -187,9 +187,10 @@ public class playerMoveController : NetworkBehaviour
             headTarget.localRotation = savedHeadRotation;
             animator.SetBool("IsWalking", false);
 
+            // 일시정지 중에는 중력만 적용
             if (!characterController.isGrounded)
             {
-                moveDirection.y -= gravity * Time.deltaTime;
+                moveDirection.y -= gravity * Time.deltaTime; // 중력 적용
                 characterController.Move(moveDirection * Time.deltaTime);
             }
             return;
@@ -200,20 +201,22 @@ public class playerMoveController : NetworkBehaviour
         float curSpeedX = Input.GetAxis("Vertical") * walkSpeed;
         float curSpeedY = Input.GetAxis("Horizontal") * walkSpeed;
 
+        // Shift 키를 눌렀을 때 달리기 속도 적용
         if (Input.GetKey(KeySettingsManager.Instance.SprintKey))
         {
-            curSpeedX *= 1.4f;
+            curSpeedX *= 1.4f; // 속도를 20% 증가
             curSpeedY *= 1.4f;
-            animator.speed = 1.4f;
+            animator.speed = 1.4f; // 애니메이션 속도 20% 증가
         }
         else
         {
-            animator.speed = 1.0f;
+            animator.speed = 1.0f; // 기본 애니메이션 속도로 복원
         }
 
         moveDirection.x = (forward * curSpeedX + right * curSpeedY).x;
         moveDirection.z = (forward * curSpeedX + right * curSpeedY).z;
 
+        // 애니메이터 상태 업데이트
         bool isWalking = moveDirection.x != 0 || moveDirection.z != 0;
         animator.SetBool("IsWalking", isWalking);
 
@@ -221,7 +224,7 @@ public class playerMoveController : NetworkBehaviour
         {
             if (isJumping)
             {
-                moveDirection.y = 0;
+                moveDirection.y = 0; // 땅에 닿으면 Y축 속도 초기화
                 isJumping = false;
             }
 
@@ -230,10 +233,13 @@ public class playerMoveController : NetworkBehaviour
                 moveDirection.y = jumpForce;
                 isJumping = true;
             }
+
+            //발소리 어케하노?
         }
         else
         {
-            moveDirection.y -= gravity * Time.deltaTime;
+            moveDirection.y -= gravity * Time.deltaTime; // 중력 적용
+            //발소리 중지
         }
 
         characterController.Move(moveDirection * Time.deltaTime);
@@ -247,6 +253,7 @@ public class playerMoveController : NetworkBehaviour
             savedHeadRotation = headTarget.localRotation;
         }
     }
+
 
     public void SetMouseControl(bool enable)
     {
