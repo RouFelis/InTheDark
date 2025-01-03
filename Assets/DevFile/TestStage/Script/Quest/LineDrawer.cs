@@ -26,6 +26,7 @@ public class LineDrawer : NetworkBehaviour
         var spawnedObject = Instantiate(cablePrefab);
         var networkObject = spawnedObject.GetComponent<NetworkObject>();
         networkObject.Spawn();
+        cableNet = networkObject;
         networkObject.ChangeOwnership(clientId);
 
         // 생성된 오브젝트 정보를 해당 클라이언트에게 전달
@@ -37,6 +38,7 @@ public class LineDrawer : NetworkBehaviour
     private void SendSpawnInfoToClientRpc(ulong targetClientId, ulong networkObjectId, int matColor, ClientRpcParams clientRpcParams = default)
     {
         var networkObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkObjectId];
+        cableNet = networkObject;
         Debug.Log("타겟 " + networkObjectId);
         if (networkObject != null)
         {
@@ -92,6 +94,7 @@ public class LineDrawer : NetworkBehaviour
 
     public void MissDraw()
 	{
+        isDraw = false;
         DestroyCableServerRpc();
     }
 
