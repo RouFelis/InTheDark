@@ -195,13 +195,15 @@ public class playerMoveController : NetworkBehaviour
     {
         if (!IsOwner)
         {
-            // 네트워크에서 받은 방향 벡터로 이동
-            Vector3 direction = networkPosition.Value - transform.position;
+            // Disable the CharacterController temporarily for position update
+            characterController.enabled = false;
 
-            // CharacterController로 부드럽게 이동
-            characterController.SimpleMove(direction.normalized * walkSpeed);
+            // Smoothly interpolate position and rotation
+            transform.position = Vector3.Lerp(transform.position, networkPosition.Value, 0.1f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(networkRotation.Value), 0.1f);
+
+            characterController.enabled = true;
         }
-        transform.rotation = Quaternion.Euler(networkRotation.Value);
     }
 
     public void EventToggle(bool value)
@@ -235,7 +237,7 @@ public class playerMoveController : NetworkBehaviour
     private void UpdateServerPositionRotationServerRpc(Vector3 newPosition, Vector3 newRotation)
     {
         networkPosition.Value = transform.position + newPosition * Time.deltaTime;
-        networkRotation.Value = transform.eulerAngles + newRotation * Time.deltaTime;
+        networkRotation.Value = newRotation;
     }
 
     [ServerRpc(RequireOwnership = false)]
