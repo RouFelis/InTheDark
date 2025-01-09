@@ -17,7 +17,7 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 	private int _distance = 10;
 
 	[SerializeField]
-	private bool _isDead = false;
+	private NetworkVariable<bool> _isDead = new NetworkVariable<bool>(false);
 
 	[SerializeField]
 	private NetworkVariable<int> _health = new NetworkVariable<int>();
@@ -78,7 +78,7 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 
 	private void OnResistanceChanged(float oldValue, float newValue)
 	{
-		if (!_isDead && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
+		if (!_isDead.Value && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
 		{
 			Dead();
 		}
@@ -144,7 +144,7 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 
 	public void Dead()
 	{
-		_isDead = true;
+		_isDead.Value = true;
 
 		NetworkObject.Despawn();
 

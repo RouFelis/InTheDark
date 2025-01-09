@@ -49,6 +49,8 @@ namespace InTheDark.Prototypes
 			}
 		}
 
+		private static MonsterSpawner _instance;
+
 		// 몬스터 생성 최대 거리
 		[SerializeField]
 		private float _radius;
@@ -64,10 +66,31 @@ namespace InTheDark.Prototypes
 		private NetworkObject _enemyPrototypePrefab;
 
 		private NetworkList<EnemyRef> _spawned;
+		private NetworkList<int> _enemyCount;
+
+		public static MonsterSpawner Instance
+		{
+			get
+			{
+				return _instance;
+			}
+
+			private set
+			{
+				_instance = value;
+			}
+		}
+
+		static MonsterSpawner()
+		{
+			_instance = default;
+		}
 
 		private void Awake()
 		{
+			_instance = this;
 			_spawned = new NetworkList<EnemyRef>();
+			_enemyCount = new NetworkList<int>();
 
 			DontDestroyOnLoad(gameObject);
 		}
@@ -145,9 +168,15 @@ namespace InTheDark.Prototypes
 
 		private void OnDungeonEnter(DungeonEnterEvent received)
 		{
+			OnDungeonEnterRpc(received.BuildIndex);
+		}
+
+		[Rpc(SendTo.Server)]
+		private void OnDungeonEnterRpc(int buildIndex)
+		{
 			if (IsHost)
 			{
-				var data = _stage[received.BuildIndex];
+				var data = _stage[buildIndex];
 
 				for (var i = 0; i < data.Prefabs.Length; i++)
 				{
@@ -157,10 +186,7 @@ namespace InTheDark.Prototypes
 				}
 			}
 
-			foreach (var enemyRef in _spawned)
-			{
-				Spawn(enemyRef.Position);
-			}
+			SpawnEnemyInDungeonRpc();
 		}
 
 		private void OnDungeonExit(DungeonExitEvent received)
@@ -168,6 +194,15 @@ namespace InTheDark.Prototypes
 			if (IsHost)
 			{
 				_spawned.Clear();
+			}
+		}
+
+		[Rpc(SendTo.Everyone)]
+		private void SpawnEnemyInDungeonRpc()
+		{
+			foreach (var enemyRef in _spawned)
+			{
+				Spawn(enemyRef.Position);
 			}
 		}
 
