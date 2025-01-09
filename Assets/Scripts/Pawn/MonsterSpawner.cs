@@ -68,6 +68,8 @@ namespace InTheDark.Prototypes
 		private NetworkList<EnemyRef> _spawned;
 		private NetworkList<int> _enemyCount;
 
+		private NetworkVariable<bool> _isLocked = new NetworkVariable<bool>(false);
+
 		public static MonsterSpawner Instance
 		{
 			get
@@ -174,9 +176,11 @@ namespace InTheDark.Prototypes
 		[Rpc(SendTo.Server)]
 		private void OnDungeonEnterRpc(int buildIndex)
 		{
-			if (IsHost)
+			if (!_isLocked.Value)
 			{
 				var data = _stage[buildIndex];
+
+				_isLocked.Value = true;
 
 				for (var i = 0; i < data.Prefabs.Length; i++)
 				{
@@ -184,9 +188,9 @@ namespace InTheDark.Prototypes
 
 					_spawned.Add(enemyRef);
 				}
-			}
 
-			SpawnEnemyInDungeonRpc();
+				SpawnEnemyInDungeonRpc();
+			}
 		}
 
 		private void OnDungeonExit(DungeonExitEvent received)
