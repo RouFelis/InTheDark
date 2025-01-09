@@ -250,7 +250,6 @@ GameObject:
   - component: {fileID: 5775247870652489427}
   - component: {fileID: 3170867798847322346}
   - component: {fileID: 2664938574842109991}
-  - component: {fileID: 914133269539521093}
   - component: {fileID: 344860905703892509}
   - component: {fileID: -2362926755301820054}
   - component: {fileID: 4967549593802716169}
@@ -524,6 +523,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  baseWeaponData: {fileID: 11400000, guid: f6978c0ff5c7a0842b225f0666687ee6, type: 2}
+  weaponInstance:
+    weaponName: 
+    level: 0
+    baseDamage: 0
+    baseUpgarde: 0
+    zoomDamage: 0
+    zoomUpgarde: 0
+    batteryCapacity: 0
+    upgradeCost: 0
+  currentLevel:
+    m_InternalValue: 0
+  baseDamage:
+    m_InternalValue: 0
+  zoomDamage:
+    m_InternalValue: 0
+  batteryCapacity:
+    m_InternalValue: 0
   weaponLight: {fileID: 8435523306820746354}
   zoomedInnerAngle: 20
   zoomedOuterAngle: 30
@@ -545,37 +562,6 @@ MonoBehaviour:
   isClickBlocked:
     m_InternalValue: 0
   recoveryDelayTimer:
-    m_InternalValue: 0
---- !u!114 &914133269539521093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1441098053676493550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20625096da1332489a4244eb1db3389, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  baseWeaponData: {fileID: 11400000, guid: f6978c0ff5c7a0842b225f0666687ee6, type: 2}
-  weaponInstance:
-    weaponName: 
-    level: 0
-    baseDamage: 0
-    baseUpgarde: 0
-    zoomDamage: 0
-    zoomUpgarde: 0
-    batteryCapacity: 0
-    upgradeCost: 0
-  currentLevel:
-    m_InternalValue: 0
-  baseDamage:
-    m_InternalValue: 0
-  zoomDamage:
-    m_InternalValue: 0
-  batteryCapacity:
     m_InternalValue: 0
 --- !u!82 &344860905703892509
 AudioSource:

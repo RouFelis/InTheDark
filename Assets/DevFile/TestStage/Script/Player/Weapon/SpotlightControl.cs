@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using Unity.Netcode;
 
-public class SpotlightControl : NetworkBehaviour
+public class SpotlightControl : WeaponSystem
 {
     [Header("Spotlight Settings")]
     public Light weaponLight; // 무기 역할을 하는 조명
