@@ -72,10 +72,11 @@ namespace InTheDark.Prototypes
 
 			// 단순하게 9번째 레이어구나! 하고 9로 값 넣어주고 보니 애로사항이 꽃핌
 			// 우리 Enemy 친구... 레이어마스크 값 512야...?
-			var layerMask = 1 << 9;
-			var ifNameToLayer = LayerMask.NameToLayer("Enemy");
+			// 현재 1월 10일... 지금은 7로 해줘야 합니당...
+			var layerMask = 1 << 7;
+			var nameToLayer = LayerMask.NameToLayer("Enemy");
 
-			//Debug.Log($"layerMask: {layerMask}, ifNameToLayer: {ifNameToLayer}");
+			Debug.Log($"layerMask: {layerMask}, nameToLayer: {nameToLayer}");
 
 			_dirties.Clear();
 
@@ -100,6 +101,8 @@ namespace InTheDark.Prototypes
 						pawn?.OnLightInsighted(source);
 
 						_dirties.Add(target);
+
+						Debug.Log($"dirty: {target}, light: {source}");
 					}
 				}
 			}
