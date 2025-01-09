@@ -32,6 +32,10 @@ MonoBehaviour:
       Store'
     m_Metadata:
       m_Items: []
+  - m_Id: 25755086069121024
+    m_Localized: Upgrade
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

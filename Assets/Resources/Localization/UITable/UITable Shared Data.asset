@@ -27,6 +27,10 @@ MonoBehaviour:
     m_Key: SAMSUNStore
     m_Metadata:
       m_Items: []
+  - m_Id: 25755086069121024
+    m_Key: Upgrade
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
@@ -35,7 +39,6 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 4540517492298350681
-      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables,
-        asm: Unity.Localization}
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
       data:
         m_CustomEpoch: 1730183272868

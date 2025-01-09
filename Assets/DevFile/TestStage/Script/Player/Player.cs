@@ -50,12 +50,11 @@ public class Player : playerMoveController , IDamaged, ICharacter
 	public int Health { get; set; }
 	public int Damage { get; set; }
 
-	public NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
-	public NetworkVariable<int> experience = new NetworkVariable<int>();
-	public NetworkVariable<int> level = new NetworkVariable<int>();
 
-	public GameObject playerLight;
-	private bool lightState = true;
+	[Header("PlayerState")]
+	public NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
+	public NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Owner);
+	public NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Owner);
 
 	[SerializeField] private SaveSystem saveSystem;
 	[SerializeField] private AudioSource audioSource;
@@ -65,24 +64,13 @@ public class Player : playerMoveController , IDamaged, ICharacter
 		if (IsOwner)
 		{
 			StartCoroutine(InitSaveSystem());
-			playerName.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
-			experience.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
-			level.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 		}
 		//AudioManager.Instance.SetbuttonSorce(audioSource);
 	}
 
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeySettingsManager.Instance.LightKey))
-		{
-			LightOnOff();
-		}
 
-		if (lightState)
-		{
-
-		}
 	}
 
 	private IEnumerator InitSaveSystem()
@@ -97,6 +85,10 @@ public class Player : playerMoveController , IDamaged, ICharacter
 			}
 			yield return null;
 		}
+
+		playerName.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
+		experience.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
+		level.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 	}
 
 	public void Die()
@@ -105,12 +97,6 @@ public class Player : playerMoveController , IDamaged, ICharacter
 
 	public void TakeDamage(int amount)
 	{
-	}
-
-	private void LightOnOff()
-	{
-		playerLight.SetActive(!playerLight.activeInHierarchy);
-		lightState = playerLight.activeInHierarchy;
 	}
 
 	[ServerRpc(RequireOwnership =false)]
@@ -136,9 +122,10 @@ public class Player : playerMoveController , IDamaged, ICharacter
 }
 
 [System.Serializable]
-struct PlayerData
+public struct PlayerData
 {
 	public string playerName;
 	public int experience;
 	public int level;
+	public WeaponInstance weaponInstance; // 플레이어의 무기 데이터
 }

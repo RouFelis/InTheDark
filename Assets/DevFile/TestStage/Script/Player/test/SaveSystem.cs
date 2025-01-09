@@ -29,6 +29,8 @@ public class SaveSystem : MonoBehaviour
      //   playerSaveSystem.LoadPlayerData();
     }
 
+    #region 저장 오브젝트
+
     private void Save()
     {
         PickupItem[] saveObjectList = SaveObjects.GetComponentsInChildren<PickupItem>();
@@ -59,7 +61,8 @@ public class SaveSystem : MonoBehaviour
         Debug.Log(Application.persistentDataPath + "/savefile.json 에 저장" );
     }
 
-    [ServerRpc] //불러오기
+	
+	[ServerRpc] //불러오기
     private void LoadObjects()
     {
         string path = Application.persistentDataPath + "/savefile.json";
@@ -87,7 +90,7 @@ public class SaveSystem : MonoBehaviour
                 netobj.transform.SetParent(parentObject.transform, true);
 
                 Debug.Log(Application.persistentDataPath + "/savefile.json 에 불러오기");
-                //가격 설정. 다른값도 설정해줘야할지도... 아 복잡티비
+                //가격 설정. 다른값도 설정해줘야할지도...
                 if (obj != null)
                 {
                     PickupItem changedObj = obj.GetComponent<PickupItem>();
@@ -116,6 +119,42 @@ public class SaveSystem : MonoBehaviour
                 }
             }
         }
+    }
+
+	#endregion
+
+
+	#region 무기정보 저장
+	public void SaveWeaponData(WeaponInstance weaponData, string playerName)
+    {
+        string json = JsonUtility.ToJson(weaponData, true); // JSON 문자열로 변환
+
+        var filePath = Path.Combine(Application.persistentDataPath, playerName + ".json");
+
+        File.WriteAllText(filePath, json); // JSON 파일 저장
+        Debug.Log($"무기 데이터가 저장되었습니다: {filePath}");
+    }
+
+    public WeaponInstance LoadWeaponData(string playerName)
+    {
+        var filePath = Path.Combine(Application.persistentDataPath, playerName + ".json");
+
+        if (!File.Exists(filePath))
+        {
+            Debug.LogWarning("무기 데이터 파일이 존재하지 않습니다. 기본 데이터를 생성합니다.");
+            return new WeaponInstance(CreateDefaultWeaponData()) ; // 기본 데이터 반환
+        }
+
+        string json = File.ReadAllText(filePath); // JSON 파일 읽기
+        WeaponInstance weaponData = JsonUtility.FromJson<WeaponInstance>(json); // JSON 문자열을 객체로 변환
+        Debug.Log(playerName + "의 무기 데이터가 로드되었습니다... path : " + weaponData);
+        return weaponData;
+    }
+	#endregion
+
+	private WeaponData CreateDefaultWeaponData()
+    {
+        return ScriptableObject.CreateInstance<WeaponData>();
     }
 
     public void SavePlayerData(Player player)

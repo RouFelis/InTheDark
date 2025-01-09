@@ -10,20 +10,28 @@ public class PurchaseController : NetworkBehaviour
     public struct PurchaseStruct 
     { 
         public Button purchaseButton;
-        public TMP_Text tmp;
+        public TMP_Text name;
+        public TMP_Text explain;
         public string objectPath;
         public int price;
+        public bool upgrade;
     }
 
+    [Header("상정 UI 관련")]
     public Transform[] SpawnPosition;
     public PurchaseStruct[] purchaseStruct;
 
+    [Header("플레이어 정보 받기위한 Shopinterecter")]
+    public ShopInteracter shopInteracter;
+
+    private WeaponSystem weaponSystem;
     private NetworkObject spawnedObjectParent;
 
     private void Start()
 	{
         StartCoroutine(InitManager());
         initButton();
+        shopInteracter.SelectPlayerCode.OnValueChanged += (olbvalue, newvalue) => PlayerChange();
     }
 	private IEnumerator InitManager()
 	{
@@ -42,13 +50,28 @@ public class PurchaseController : NetworkBehaviour
         }
     }
 
+    public void PlayerChange()
+    {
+        weaponSystem = NetworkManager.Singleton.SpawnManager.SpawnedObjects[shopInteracter.SelectPlayerCode.Value].GetComponent<WeaponSystem>();
+        foreach (var purchase in purchaseStruct)
+        {
+			if (purchase.upgrade)
+            {
+                purchase.purchaseButton.onClick.AddListener(() => { weaponSystem.UpgradeWeapon(); });
+                purchase.name.text = purchase.price.ToString() + "TK";
+            }
+        }
+    }
+
     private void initButton()
 	{
         foreach (var purchase in purchaseStruct)
         {
-            purchase.tmp.text = purchase.price.ToString() + "TK";
-
-            purchase.purchaseButton.onClick.AddListener(() => { PurchaseObjectServerRpc(purchase.objectPath, purchase.price); });
+			if (!purchase.upgrade)
+            {
+                purchase.name.text = purchase.price.ToString() + "TK";
+                purchase.purchaseButton.onClick.AddListener(() => { PurchaseObjectServerRpc(purchase.objectPath, purchase.price); });
+            }
         }
     }
 

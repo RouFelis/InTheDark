@@ -309,6 +309,22 @@ MonoBehaviour:
   m_SampleCount:
     m_OverrideState: 1
     m_Value: 8
+--- !u!114 &-6913496222526282817
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8615557f396f346a3aeb8df3454971, type: 3}
+  m_Name: ToonShadingPP
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &-6695744374532608148
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -644,6 +660,24 @@ MonoBehaviour:
   reflectionProbeIntensityMultiplier:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &-1946409206392020828
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be4c793d24b4b724b91a05438a858ca0, type: 3}
+  m_Name: PostProcessOutlineRenderer
+  m_EditorClassIdentifier: 
+  active: 1
+  <displayName>k__BackingField: 
+  m_IsInitialized: 0
+  typeName: 
+  <passName>k__BackingField: 
+  material: {fileID: 0}
 --- !u!114 &-1664661013288601750
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -688,6 +722,22 @@ MonoBehaviour:
   cameraClusterRange:
     m_OverrideState: 1
     m_Value: 10
+--- !u!114 &-1309238602043819347
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb10db1864eca2479622772f393cc1f, type: 3}
+  m_Name: PosterizationEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &-1119250304862639298
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -770,6 +820,40 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0
   opacity:
+    m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &-39146619719045918
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aec9c83ecd472243822d940eb6db6aa, type: 3}
+  m_Name: Sobel
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
+  outlineColour:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  outlineThickness:
+    m_OverrideState: 1
+    m_Value: 1
+  depthMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  depthBias:
+    m_OverrideState: 1
+    m_Value: 1
+  normalMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  normalBias:
     m_OverrideState: 1
     m_Value: 1
 --- !u!114 &-22812688322879382
@@ -944,6 +1028,8 @@ MonoBehaviour:
   - {fileID: 2497499440700750437}
   - {fileID: -4441261510575924137}
   - {fileID: -4353277641226493917}
+  - {fileID: -39146619719045918}
+  - {fileID: -6913496222526282817}
 --- !u!114 &173808485995747388
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -2095,6 +2181,42 @@ MonoBehaviour:
     castShadows:
       m_OverrideState: 1
       m_Value: 0
+--- !u!114 &6763466549705966446
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67cb34a54ec02dd4783496adb8d366b3, type: 3}
+  m_Name: PostProcessOutline
+  m_EditorClassIdentifier: 
+  active: 1
+  <displayName>k__BackingField: 
+  scale:
+    m_OverrideState: 1
+    m_Value: 1
+  color:
+    m_OverrideState: 1
+    m_Value:
+      r: 1
+      g: 1
+      b: 1
+      a: 1
+  depthThreshold:
+    m_OverrideState: 1
+    m_Value: 1.5
+  depthNormalThreshold:
+    m_OverrideState: 1
+    m_Value: 0.5
+  depthNormalThresholdScale:
+    m_OverrideState: 1
+    m_Value: 7
+  normalThreshold:
+    m_OverrideState: 1
+    m_Value: 0.4
 --- !u!114 &7502528774814404555
 MonoBehaviour:
   m_ObjectHideFlags: 3
