@@ -53,8 +53,8 @@ public class Player : playerMoveController , IDamaged, ICharacter
 
 	[Header("PlayerState")]
 	public NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
-	public NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Owner);
-	public NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Owner);
+	public NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
+	public NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
 
 	[SerializeField] private SaveSystem saveSystem;
 	[SerializeField] private AudioSource audioSource;

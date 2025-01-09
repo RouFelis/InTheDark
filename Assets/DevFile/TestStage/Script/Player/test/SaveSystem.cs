@@ -147,7 +147,7 @@ public class SaveSystem : MonoBehaviour
 
         string json = File.ReadAllText(filePath); // JSON 파일 읽기
         WeaponInstance weaponData = JsonUtility.FromJson<WeaponInstance>(json); // JSON 문자열을 객체로 변환
-        Debug.Log(playerName + "의 무기 데이터가 로드되었습니다... path : " + weaponData);
+        Debug.Log(playerName + "의 무기 데이터가 로드되었습니다... path : " + filePath);
         return weaponData;
     }
 	#endregion

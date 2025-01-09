@@ -471,7 +471,6 @@ MonoBehaviour:
     m_InternalValue: 0
   level:
     m_InternalValue: 0
-  dataManager: {fileID: 0}
   saveSystem: {fileID: 0}
   audioSource: {fileID: 5628609664115642516}
 --- !u!114 &5775247870652489427
@@ -524,6 +523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25b20d0b4d3d6f42880e615759d1f22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   weaponLight: {fileID: 8435523306820746354}
   zoomedInnerAngle: 20
   zoomedOuterAngle: 30
@@ -531,7 +531,21 @@ MonoBehaviour:
   defaultInnerAngle: 32
   defaultOuterAngle: 70
   defaultIntensity: 600
-  baseWeaponData: 3
+  gaugeImage: {fileID: 0}
+  decreaseRate: 0.1
+  increaseRate: 0.1
+  delayBeforeRecovery: 0.5
+  minGauge: 0.001
+  maxGauge: 1
+  gaugeThreshold: 0.2
+  isRightClickHeld:
+    m_InternalValue: 0
+  isRecovering:
+    m_InternalValue: 0
+  isClickBlocked:
+    m_InternalValue: 0
+  recoveryDelayTimer:
+    m_InternalValue: 0
 --- !u!114 &914133269539521093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -546,6 +560,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   baseWeaponData: {fileID: 11400000, guid: f6978c0ff5c7a0842b225f0666687ee6, type: 2}
+  weaponInstance:
+    weaponName: 
+    level: 0
+    baseDamage: 0
+    baseUpgarde: 0
+    zoomDamage: 0
+    zoomUpgarde: 0
+    batteryCapacity: 0
+    upgradeCost: 0
   currentLevel:
     m_InternalValue: 0
   baseDamage:
@@ -734,7 +757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
+  NetworkTransformExpanded: 1
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
@@ -744,9 +767,9 @@ MonoBehaviour:
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01

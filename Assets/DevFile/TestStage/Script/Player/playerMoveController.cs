@@ -153,7 +153,7 @@ public class playerMoveController : NetworkBehaviour
 
         if (IsOwner)
         {
-            UpdateServerPositionRotationServerRpc(inputDirection * walkSpeed, Vector3.up * horizontal * rotationSpeed);
+            UpdateServerPositionRotationServerRpc(moveDirection , transform.eulerAngles);
             UpdateHeadRotationServerRpc(headTarget.localRotation);
         }
     }

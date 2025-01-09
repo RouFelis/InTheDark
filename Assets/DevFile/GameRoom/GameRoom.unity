@@ -2571,7 +2571,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 0.942
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -43217,11 +43217,11 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!1 &981037354
 GameObject:
@@ -43305,7 +43305,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0012461967, y: -0.011310499}
+  m_AnchoredPosition: {x: 0.0012461967, y: -0.0163575}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1004104937
@@ -45584,7 +45584,7 @@ Transform:
   m_GameObject: {fileID: 1418398734}
   serializedVersion: 2
   m_LocalRotation: {x: 1.110223e-17, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.923, y: 205.433, z: 1.499}
+  m_LocalPosition: {x: 5.923, y: 206.3, z: 1.499}
   m_LocalScale: {x: 1, y: 1.0498, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -49202,7 +49202,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 53347798}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.9999874
+  m_Size: 0.99999875
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -22,12 +22,13 @@ public class SpotlightControl : NetworkBehaviour
     public float delayBeforeRecovery = 0.5f; // 회복 대기 시간 (초)
     public float minGauge = 0.001f; // 최소 게이지 값
     public float maxGauge = 1f; // 최대 게이지 값
-    public float gaugeThreshold = 0.1f; // 10% (0.1) 이하 제한 값
+    public float gaugeThreshold = 0.2f; // 10% (0.1) 이하 제한 값
 
-    private bool isRightClickHeld = false;
-    private bool isRecovering = false;
-    private bool isClickBlocked = false; // 우클릭 차단 여부
-    private float recoveryDelayTimer = 0f;
+    public NetworkVariable<bool> isRightClickHeld = new NetworkVariable<bool>(false, writePerm: NetworkVariableWritePermission.Owner );
+    public NetworkVariable<bool> isRecovering = new NetworkVariable<bool>(false, writePerm: NetworkVariableWritePermission.Owner );
+    public NetworkVariable<bool> isClickBlocked = new NetworkVariable<bool>(false, writePerm: NetworkVariableWritePermission.Owner );
+    public NetworkVariable<float> recoveryDelayTimer = new NetworkVariable<float>(0f, writePerm: NetworkVariableWritePermission.Owner );
+
 
     void Start()
     {
@@ -42,17 +43,19 @@ public class SpotlightControl : NetworkBehaviour
 
     void Update()
     {
-        HandleRightClickInput();
-        HandleGauge();
+        if (IsOwner)
+        {
+            HandleRightClickInput();
+            HandleGauge();
+        }
+        UpdateSpotlightState();
     }
 
     private IEnumerator initUI()
 	{
-        Debug.Log("크아아아악");
         // PlaceableItemManager 오브젝트 찾기
         while (gaugeImage == null)
         {
-            Debug.Log("크아아아악2");
             GameObject obj = GameObject.Find("Battery_Icon_4_Slider");
             if (obj == null)
             {
@@ -67,42 +70,39 @@ public class SpotlightControl : NetworkBehaviour
             Debug.LogError("Gauge Slider가 연결되지 않았습니다!");
             yield return null;
         }
-        Debug.Log("크아아아악3");
-        Debug.Log("Gauge Slider가 연결 완료!");
     }
-
     private void HandleRightClickInput()
     {
-        if (Input.GetMouseButtonDown(1) && !isClickBlocked) // 우클릭
+        if (Input.GetMouseButtonDown(1) && !isClickBlocked.Value) // 우클릭
         {
-            isRightClickHeld = true;
-            isRecovering = false; // 충전 상태를 중단
-            recoveryDelayTimer = 0f; // 충전 대기시간 초기화
-            SetLightValues(zoomedInnerAngle, zoomedOuterAngle, zoomedIntensity);
+            isRightClickHeld.Value = true;
+            isRecovering.Value = false;
+            recoveryDelayTimer.Value = 0f;
         }
 
         if (Input.GetMouseButtonUp(1)) // 우클릭 해제
         {
-            ResetRightClick();
+            isRightClickHeld.Value = false;
         }
     }
 
+
     private void HandleGauge()
     {
-        if (isRightClickHeld)
+        if (isRightClickHeld.Value)
         {
             DecreaseGauge(Time.deltaTime * decreaseRate);
         }
-        else if (!isRecovering && gaugeImage.fillAmount < maxGauge)
+        else if (!isRecovering.Value && gaugeImage.fillAmount < maxGauge)
         {
-            recoveryDelayTimer += Time.deltaTime;
-            if (recoveryDelayTimer >= delayBeforeRecovery)
+            recoveryDelayTimer.Value += Time.deltaTime;
+            if (recoveryDelayTimer.Value >= 0.5f) // delayBeforeRecovery
             {
-                StartRecovery();
+                isRecovering.Value = true;
             }
         }
 
-        if (isRecovering)
+        if (isRecovering.Value)
         {
             RecoverGauge(Time.deltaTime * increaseRate);
         }
@@ -110,11 +110,11 @@ public class SpotlightControl : NetworkBehaviour
         // 게이지 상태에 따른 우클릭 차단 여부 업데이트
         if (gaugeImage.fillAmount < gaugeThreshold)
         {
-            isClickBlocked = true; // 게이지 10% 미만에서 우클릭 차단
+            isClickBlocked.Value = true;
         }
-        else if (gaugeImage.fillAmount >= gaugeThreshold && isClickBlocked)
+        else if (gaugeImage.fillAmount >= gaugeThreshold && isClickBlocked.Value)
         {
-            isClickBlocked = false; // 게이지 10% 이상이 되면 우클릭 가능
+            isClickBlocked.Value = false;
         }
     }
 
@@ -124,13 +124,8 @@ public class SpotlightControl : NetworkBehaviour
         if (gaugeImage.fillAmount <= minGauge)
         {
             gaugeImage.fillAmount = 0f; // 게이지가 0 이하로는 떨어지지 않음
-            ResetRightClick(); // 우클릭 상태 해제
+            isRightClickHeld.Value = false; // 우클릭 상태 해제
         }
-    }
-
-    private void StartRecovery()
-    {
-        isRecovering = true;
     }
 
     private void RecoverGauge(float amount)
@@ -139,14 +134,20 @@ public class SpotlightControl : NetworkBehaviour
         if (gaugeImage.fillAmount >= maxGauge)
         {
             gaugeImage.fillAmount = maxGauge; // 최대값으로 제한
-            isRecovering = false;
+            isRecovering.Value = false;
         }
     }
 
-    private void ResetRightClick()
+    private void UpdateSpotlightState()
     {
-        isRightClickHeld = false;
-        SetLightValues(defaultInnerAngle, defaultOuterAngle, defaultIntensity);
+        if (isRightClickHeld.Value)
+        {
+            SetLightValues(zoomedInnerAngle, zoomedOuterAngle, zoomedIntensity);
+        }
+        else
+        {
+            SetLightValues(defaultInnerAngle, defaultOuterAngle, defaultIntensity);
+        }
     }
 
     private void SetLightValues(float innerAngle, float outerAngle, float intensity)
@@ -164,7 +165,7 @@ public class SpotlightControl : NetworkBehaviour
         defaultIntensity = intensity;
 
         // 우클릭이 아닐 경우 즉시 적용
-        if (!isRightClickHeld)
+        if (!isRightClickHeld.Value)
         {
             SetLightValues(defaultInnerAngle, defaultOuterAngle, defaultIntensity);
         }

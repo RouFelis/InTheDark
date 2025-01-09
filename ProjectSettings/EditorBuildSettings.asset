@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Initialize.unity
+    guid: 7d927ca4362144043a6744a9538c2349
+  - enabled: 1
     path: Assets/DevFile/Lobby/Lobby.unity
     guid: 51b1ae1959ae58c438a9958daf88d42e
   - enabled: 1
@@ -14,12 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/DevFile/TestStage/TestScene.unity
     guid: 4ed1b835e13a23242a16d36247edfdb1
-  - enabled: 1
-    path: Assets/Dissonance/Integrations/Unity_NFGO/Demo/NFGO Demo.unity
-    guid: 1bdec2967990ae446b5f49942f2711ca
-  - enabled: 1
-    path: Assets/Dissonance/Integrations/Unity_NFGO/Demo/NFGO Game World.unity
-    guid: f4094d19af87518439a92d834fb4f720
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 15d7f3a64a0635d4397028df782ce76f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 35845fe01580c41289b024647b1d1c53, type: 3}
