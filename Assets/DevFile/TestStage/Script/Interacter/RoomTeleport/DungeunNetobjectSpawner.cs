@@ -16,7 +16,7 @@ public class DungeunNetobjectSpawner : MonoBehaviour
         else
         {
             // 클라이언트인 경우 모든 객체를 파괴
-            DestroyAllObjects();
+            //DestroyAllObjects();
         }
     }
 
