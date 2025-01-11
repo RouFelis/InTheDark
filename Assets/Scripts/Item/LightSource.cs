@@ -20,11 +20,44 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private float _damagePercent;
 
-		public float Angle => _angle;
+		public float Angle
+		{
+			get
+			{
+				return _angle;
+			}
 
-		public float Distance => _distance;
+			set
+			{
+				_angle = value;
+			}
+		}
 
-		public float DamagePercent => _damagePercent;
+		public float Distance
+		{
+			get
+			{
+				return _distance;
+			}
+
+			set
+			{
+				_distance = value;
+			}
+		}
+
+		public float DamagePercent
+		{
+			get
+			{
+				return _damagePercent;
+			}
+
+			set
+			{
+				_damagePercent = value;
+			}
+		}
 
 		public static LightSource operator >(LightSource a, LightSource b)
 		{

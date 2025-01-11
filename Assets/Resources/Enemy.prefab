@@ -251,11 +251,12 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _angle: 45
   _distance: 20
-  _isDead: 0
-  _health:
+  _isDead:
     m_InternalValue: 0
+  _health:
+    m_InternalValue: 100
   _resistance:
-    m_InternalValue: 30
+    m_InternalValue: 100
   _damage:
     m_InternalValue: 5
   _cooldown:

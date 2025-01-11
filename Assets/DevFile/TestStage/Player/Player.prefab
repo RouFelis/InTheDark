@@ -258,6 +258,8 @@ GameObject:
   - component: {fileID: -4093968302819230910}
   - component: {fileID: 5433317087579366420}
   - component: {fileID: 8955661536294078910}
+  - component: {fileID: 4815689048121716002}
+  - component: {fileID: 7236338420078833990}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -523,7 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  baseWeaponData: {fileID: 11400000, guid: f6978c0ff5c7a0842b225f0666687ee6, type: 2}
+  baseWeaponData: {fileID: 0}
   weaponInstance:
     weaponName: 
     level: 0
@@ -536,18 +538,18 @@ MonoBehaviour:
   currentLevel:
     m_InternalValue: 0
   baseDamage:
-    m_InternalValue: 0
+    m_InternalValue: 1
   zoomDamage:
-    m_InternalValue: 0
+    m_InternalValue: 8
   batteryCapacity:
     m_InternalValue: 0
   weaponLight: {fileID: 8435523306820746354}
   zoomedInnerAngle: 20
   zoomedOuterAngle: 30
-  zoomedIntensity: 2000
+  zoomedIntensity: 1000
   defaultInnerAngle: 32
   defaultOuterAngle: 70
-  defaultIntensity: 600
+  defaultIntensity: 300
   gaugeImage: {fileID: 0}
   decreaseRate: 0.1
   increaseRate: 0.1
@@ -790,6 +792,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12031778f3aece14ab7ad71b5a5f310f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4815689048121716002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441098053676493550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8964a37a62ddd004abdee11764fe98bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _weapon: {fileID: 2664938574842109991}
+  _source: {fileID: 7236338420078833990}
+--- !u!114 &7236338420078833990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441098053676493550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76070aa4e47498892985e5411579684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _angle: 0
+  _distance: 0
+  _damagePercent: 0
 --- !u!1 &1595425553284540487
 GameObject:
   m_ObjectHideFlags: 0

@@ -213,6 +213,7 @@ namespace InTheDark.Prototypes
 		public void Spawn(Vector3 position)
 		{
 			var enemy = Instantiate(_enemyPrototypePrefab, position, Quaternion.identity);
+			var pawn = enemy.GetComponent<EnemyPrototypePawn>();
 
 			enemy.Spawn(true);
 
