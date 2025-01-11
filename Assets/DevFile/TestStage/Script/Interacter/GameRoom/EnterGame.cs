@@ -24,11 +24,11 @@ public class EnterGame : InteractableObject
         base.Interact(uerID , interactingObjectTransform);
         // 서버에서 씬 전환
 
+        RequestSceneChangeServerRpc("TestScene");
         if (doorAnimationCoroutine == null)
         {
             doorAnimationCoroutine = StartCoroutine(AnimateDoorsWithSound(!doorState.Value));
         }
-        RequestSceneChangeServerRpc("TestScene");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -36,7 +36,7 @@ public class EnterGame : InteractableObject
     {
         NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
         colider.enabled = false;
-        RequestSceneChangeClientRpc();
+        RequestSceneChangeClientRpc(sceneName);
 
         // 2024.12.26 던전 입장 이벤트 재배치
         using var command = new InTheDark.Prototypes.Enter()
@@ -48,8 +48,13 @@ public class EnterGame : InteractableObject
 	}
 
 	[ClientRpc]
-    private void RequestSceneChangeClientRpc()
+    private void RequestSceneChangeClientRpc(string sceneName)
     {
+        // 클라이언트에서 씬 로드 (Additive)
+        if (!NetworkManager.Singleton.IsServer)
+        {
+            SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        }
         colider.enabled = false;
     }
 

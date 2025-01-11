@@ -12,6 +12,7 @@ public class DungeunNetobjectSpawner : MonoBehaviour
         {
             // 서버인 경우 모든 객체를 스폰
             SpawnAllObjectsServerRpc();
+            Debug.Log("yes222");
         }
         else
         {
@@ -42,6 +43,7 @@ public class DungeunNetobjectSpawner : MonoBehaviour
                 }
             }
         }
+        Debug.Log("yes");
     }
 
     private void DestroyAllObjects()
