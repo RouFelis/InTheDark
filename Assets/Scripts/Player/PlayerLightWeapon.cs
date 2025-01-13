@@ -33,8 +33,8 @@ namespace InTheDark.Prototypes
 				_weapon.isRightClickHeld.OnValueChanged += OnPlayerRightClickHeld;
 				_weapon.isRecovering.OnValueChanged += OnPlayerRecovering;
 
-				SetWeaponData(false);
-				SetWeaponActive(false);
+				SetWeaponData(_weapon.isRightClickHeld.Value);
+				SetWeaponActive(_weapon.isRecovering.Value);
 			}
 		}
 

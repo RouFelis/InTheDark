@@ -194,9 +194,7 @@ MonoBehaviour:
   _count: 12
   _stage:
   - Prefabs:
-    - {fileID: 2701683871105232419, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
-    - {fileID: 2701683871105232419, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
-    - {fileID: 2701683871105232419, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
+    - {fileID: 2701683871105232419, guid: cb6c9a952d86fa349ac1f084ed08ac97, type: 3}
   _enemyPrototypePrefab: {fileID: 2701683871105232419, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
 --- !u!1 &697649707
 GameObject:

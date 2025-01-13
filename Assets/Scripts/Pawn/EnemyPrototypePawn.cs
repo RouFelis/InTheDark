@@ -8,7 +8,7 @@ using Unity.Netcode;
 
 using UnityEngine;
 
-public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
+public class EnemyPrototypePawn : NetworkPawn, IDamaged
 {
 	[SerializeField]
 	private int _angle = 30;
@@ -31,16 +31,23 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 	[SerializeField]
 	private NetworkVariable<float> _cooldown = new NetworkVariable<float>(5.0f);
 
+	[SerializeField]
+	private EnemyDeathTrigger _deathTrigger;
+
 	private List<LightSource> _sighted = new List<LightSource>();
 
-	public string Name { get; set; }
+	public bool IsDead
+	{
+		get
+		{
+			return _isDead.Value;
+		}
 
-	public int Level { get; set; }
-
-	public int Experience { get; set; }
-
-
-	public string Land {  get; set; }
+		set
+		{
+			_isDead.Value = value;
+		}
+	}
 
 	public int Health 
 	{
@@ -49,14 +56,26 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 		set => _health.Value = value;
 	}
 
-	public int Damage { get; set; }
+	public float Resistance
+	{
+		get
+		{
+			return _resistance.Value;
+		}
 
-	// IsHost, IsClient, IsServer, IsOwner 陥 true 級嬢身 せせせせせせせせせせせせせせせせせせせ
+		set
+		{
+			_resistance.Value = value;
+		}
+	}
+
+	public int Damage { get; set; }
 
 	public override void OnNetworkSpawn()
 	{
 		base.OnNetworkSpawn();
 
+		_isDead.OnValueChanged += OnIsDeadChanged;
 		_resistance.OnValueChanged += OnResistanceChanged;
 
 		UpdateManager.OnUpdate += OnUpdate;
@@ -66,6 +85,7 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 	{
 		base.OnNetworkDespawn();
 
+		_isDead.OnValueChanged -= OnIsDeadChanged;
 		_resistance.OnValueChanged -= OnResistanceChanged;
 
 		UpdateManager.OnUpdate -= OnUpdate;
@@ -73,7 +93,22 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 
 	private void OnUpdate()
 	{
-		_cooldown.Value = Math.Max(_cooldown.Value - Time.deltaTime, 0.0f);
+		_cooldown.Value = Math.Max(_cooldown.Value - Time.deltaTime, 0.0F);
+	}
+
+	private void OnIsDeadChanged(bool previousValue, bool newValue)
+	{
+		if (!previousValue.Equals(newValue))
+		{
+			if (newValue)
+			{
+				gameObject.SetActive(false);
+			}
+			else
+			{
+				gameObject.SetActive(true);
+			}
+		}
 	}
 
 	private void OnResistanceChanged(float oldValue, float newValue)
@@ -144,11 +179,13 @@ public class EnemyPrototypePawn : NetworkPawn, ICharacter, IDamaged
 
 	public void Dead()
 	{
-		_isDead.Value = true;
+		//_isDead.Value = true;
 
-		NetworkObject.Despawn();
+		//NetworkObject.Despawn();
 
-		Destroy(gameObject);
+		//Destroy(gameObject);
+
+		_deathTrigger.OnUpdate(this);
 	}
 
 	public void Die()

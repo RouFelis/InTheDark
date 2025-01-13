@@ -44,9 +44,7 @@ namespace InTheDark.Prototypes
 		{
 			if (NetworkManager.Singleton)
 			{
-				NetworkManager.Singleton.OnServerStarted += OnServerStarted;
 
-				NetworkManager.Singleton.OnClientStarted += OnClientStarted;
 			}
 		}
 
@@ -54,9 +52,7 @@ namespace InTheDark.Prototypes
 		{
 			if (NetworkManager.Singleton)
 			{
-				NetworkManager.Singleton.OnServerStarted -= OnServerStarted;
 
-				NetworkManager.Singleton.OnClientStarted -= OnClientStarted;
 			}
 		}
 
@@ -66,25 +62,5 @@ namespace InTheDark.Prototypes
 
 			DontDestroyOnLoad(gameObject);
 		}
-
-		private void OnServerStarted()
-		{
-			for (var i = 0; i < 2; i++)
-			{
-				var pawn = new EnemyPawnRef();
-
-				_pawns.Add(pawn);
-			}
-		}
-
-		private void OnClientStarted()
-		{
-
-		}
-
-		//private void OnListChanged(NetworkListEvent<EnemyPawnRef> changeEvent)
-		//{
-		//	Debug.Log($"Event Type: {changeEvent.Type}, Value: {changeEvent.Value}, Index: {changeEvent.Index}");
-		//}
 	}
 }

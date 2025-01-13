@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 6672058305329523563}
   - component: {fileID: 808785113655335579}
   m_Layer: 7
-  m_Name: Enemy
+  m_Name: Enemy 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +70,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: e8c742a2cb19aaf419117865177d62e5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3677719752
+  GlobalObjectIdHash: 2222854697
   InScenePlacedSourceGlobalObjectIdHash: 2165609246
   DeferredDespawnTick: 0
   Ownership: 1
@@ -254,11 +254,11 @@ MonoBehaviour:
   _isDead:
     m_InternalValue: 0
   _health:
-    m_InternalValue: 100
+    m_InternalValue: 50
   _resistance:
     m_InternalValue: 100
   _damage:
     m_InternalValue: 5
   _cooldown:
     m_InternalValue: 5
-  _deathTrigger: {fileID: 11400000, guid: d2dc9e120596c1c40a3890c4958ee638, type: 2}
+  _deathTrigger: {fileID: 11400000, guid: 9e6fb9f4c41927347bdfef3a3430592f, type: 2}

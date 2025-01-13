@@ -27,10 +27,14 @@ namespace InTheDark.LoremIpsum
 		// Perception
 		// Context
 
+		// IsHost, IsClient, IsServer, IsOwner 다 true 들어옴 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+
 		// ServerRpc() == Rpc(SendTo.Server) == 서버에게!
 		// ClientRpc() == Rpc(SendTo.NotServer) == 다른 유저에게!
 
 		// 내부 이터레이터 이용해서 이벤트 구현해야지..
+
+		// 토라스크 && 레포데 위치 반대 느낌 
 	}
 }
 

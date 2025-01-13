@@ -26,6 +26,9 @@ namespace InTheDark.Prototypes
 			public Vector3 Position;
 			public Quaternion Quaternion;
 
+			public int DataIndex;
+			public int MonsterIndex;
+
 			public static implicit operator EnemyRef(EnemyPrototypePawn enemy)
 			{
 				var enemyRef = new EnemyRef()
@@ -46,6 +49,9 @@ namespace InTheDark.Prototypes
 			{
 				serializer.SerializeValue(ref Position);
 				serializer.SerializeValue(ref Quaternion);
+
+				serializer.SerializeValue(ref DataIndex);
+				serializer.SerializeValue(ref MonsterIndex);
 			}
 		}
 
@@ -66,7 +72,6 @@ namespace InTheDark.Prototypes
 		private NetworkObject _enemyPrototypePrefab;
 
 		private NetworkList<EnemyRef> _spawned;
-		private NetworkList<int> _enemyCount;
 
 		private NetworkVariable<bool> _isLocked = new NetworkVariable<bool>(false);
 
@@ -91,8 +96,8 @@ namespace InTheDark.Prototypes
 		private void Awake()
 		{
 			_instance = this;
+
 			_spawned = new NetworkList<EnemyRef>();
-			_enemyCount = new NetworkList<int>();
 
 			DontDestroyOnLoad(gameObject);
 		}
@@ -101,18 +106,8 @@ namespace InTheDark.Prototypes
 		{
 			if (NetworkManager.Singleton)
 			{
-				//NetworkManager.Singleton.SceneManager.OnLoadComplete += (clientID, sceneName, loadSceneMode) =>
-				//{
-				//	if (sceneName is "GameRoom")
-				//	{
-				//		Despawn();
-				//	}
-				//};
-
 				Game.OnDungeonEnter += OnDungeonEnter;
 				Game.OnDungeonExit += OnDungeonExit;
-
-				//UpdateManager.OnUpdate += OnUpdate;
 			}
 		}
 
@@ -120,41 +115,6 @@ namespace InTheDark.Prototypes
 		{
 			Game.OnDungeonEnter -= OnDungeonEnter;
 			Game.OnDungeonExit -= OnDungeonExit;
-
-			//UpdateManager.OnUpdate -= OnUpdate;
-		}
-
-		//private void OnUpdate()
-		//{
-		//	if (Input.GetKeyDown(KeyCode.V))
-		//	{
-		//		if (IsHost)
-		//		{
-		//			OnHostStarted();
-		//		}
-
-		//		OnClientStarted();
-		//	}
-		//}
-
-		// 정보 추가
-		public void OnHostStarted()
-		{
-			for (var i = 0; i < _count; i++)
-			{
-				var enemyRef = SpawnRandomRef();
-
-				_spawned.Add(enemyRef);
-			}
-		}
-
-		// 실제 오브젝트 생성
-		public void OnClientStarted()
-		{
-			foreach (var enemyRef in _spawned)
-			{
-				Spawn(enemyRef.Position);
-			}
 		}
 
 		private EnemyRef SpawnRandomRef()
@@ -186,6 +146,9 @@ namespace InTheDark.Prototypes
 				{
 					var enemyRef = SpawnRandomRef();
 
+					enemyRef.DataIndex = buildIndex;
+					enemyRef.MonsterIndex = i;
+
 					_spawned.Add(enemyRef);
 				}
 
@@ -206,13 +169,14 @@ namespace InTheDark.Prototypes
 		{
 			foreach (var enemyRef in _spawned)
 			{
-				Spawn(enemyRef.Position);
+				Spawn(enemyRef);
 			}
 		}
 
-		public void Spawn(Vector3 position)
+		private void Spawn(EnemyRef enemyRef)
 		{
-			var enemy = Instantiate(_enemyPrototypePrefab, position, Quaternion.identity);
+			var prefab = _stage[enemyRef.DataIndex].Prefabs[enemyRef.MonsterIndex];
+			var enemy = Instantiate(prefab, enemyRef.Position, Quaternion.identity);
 			var pawn = enemy.GetComponent<EnemyPrototypePawn>();
 
 			enemy.Spawn(true);
@@ -261,5 +225,4 @@ namespace InTheDark.Prototypes
 			return result;
 		}
 	}
-
 }
