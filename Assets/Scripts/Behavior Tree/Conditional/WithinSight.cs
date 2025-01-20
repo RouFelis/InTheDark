@@ -28,45 +28,6 @@ public class WithinSight : Conditional
     
     public override TaskStatus OnUpdate()
     {
-		// 12 26 구버전!!!!
-        //var angle = pawn.Value ? 360 : fieldOfViewAngle;
-
-        //Debug.Log($"angle: {angle}");
-
-        //Debug.Log($"angle: {angle}");
-
-		//for (var i = 0; i < size; i++)
-  //      {
-  //          colliders[i] = default;
-  //      }
-
-  //      size = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, targetLayer);
-        
-  //      for (var i = 0; i < size; i++)
-  //      {
-  //          var element = colliders[i];
-
-  //          var direction = element.transform.position - transform.position;
-  //          var isOccultation = Physics.Raycast(transform.position, direction, out var hit, distance);
-  //          var isSight = Vector3.Angle(direction, transform.forward) < fieldOfViewAngle;
-            
-  //          OnDrawRaycastGizmo(element, hit, direction, isSight);
-            
-  //          if (hit.collider == element && isOccultation && isSight) 
-  //          {
-  //              NavMesh.SamplePosition(element.transform.position, out var destination, 5.0f, NavMesh.AllAreas);
-
-		//		// Set the target so other tasks will know which transform is within sight
-		//		//target.Value = element.transform.position;
-  //              target.Value = destination.position;
-		//		pawn.Value = element.GetComponent<NetworkBehaviour>();
-
-		//		return TaskStatus.Success;
-		//	}
-		//}
-
-		// -> 수정 버전!!!!!!
-
 		for (var i = 0; i < size; i++)
 		{
 			colliders[i] = default;
@@ -103,7 +64,15 @@ public class WithinSight : Conditional
 		return TaskStatus.Failure;
     }
 
-    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+	//public override void OnDrawGizmos()
+	//{
+	//	if (pawn.Value)
+	//	{
+
+	//	}
+	//}
+
+	[System.Diagnostics.Conditional("UNITY_EDITOR")]
     private void OnDrawRaycastGizmo(Collider collider, RaycastHit hit, Vector3 direction/*, bool isSight*/)
     {
         var color = hit.collider == collider/* && isSight*/ ? Color.blue : Color.red;

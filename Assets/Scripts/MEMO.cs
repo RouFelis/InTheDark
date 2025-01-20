@@ -7,6 +7,7 @@ namespace InTheDark.LoremIpsum
 	{
 		// 씬에 이미 배치되있던 NetworkObject들은 자동으로 Spawn되는 듯
 		// 아니면 이렇게 세팅해둔건가
+		// 기본 사양이었네요~
 
 		// SceneEvent sceneEvent => onSceneEvent 대리자 사용을 위해서 필요
 
@@ -31,10 +32,12 @@ namespace InTheDark.LoremIpsum
 
 		// ServerRpc() == Rpc(SendTo.Server) == 서버에게!
 		// ClientRpc() == Rpc(SendTo.NotServer) == 다른 유저에게!
+		// 근데 보통 SendTo.Everyone 쓰게 되는 일이 더 많은 듯?
 
-		// 내부 이터레이터 이용해서 이벤트 구현해야지..
+		// 시간차 소환
+		// AI 모델 및 모션 적용
 
-		// 토라스크 && 레포데 위치 반대 느낌 
+		// Immediate
 	}
 }
 
