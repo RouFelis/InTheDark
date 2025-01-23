@@ -25,6 +25,8 @@ public class ShopInteracter : InteractableObject
 
             ChangeBoolServerRpc(interactingObjectTransform.GetComponent<NetworkObject>().NetworkObjectId);
 
+            MenuManager.Instance.IsEvenet = true;
+
             base.Interact(uerID, interactingObjectTransform);
         }       
     }

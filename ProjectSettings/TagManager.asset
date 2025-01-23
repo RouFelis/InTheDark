@@ -19,9 +19,9 @@ TagManager:
   - Enemy
   - Light
   - Room
-  - 
-  - 
-  - 
+  - Ground
+  - RenderableObject
+  - DisRenderableObject
   - 
   - 
   - 

@@ -3,10 +3,13 @@ public class WeaponInstance
 {
     public string weaponName;
     public float level;
+
     public float baseDamage;
     public float baseUpgarde;
+
     public float zoomDamage;
     public float zoomUpgarde;
+
     public float batteryCapacity;
     public float upgradeCost;
 

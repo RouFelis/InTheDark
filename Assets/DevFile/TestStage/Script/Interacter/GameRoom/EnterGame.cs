@@ -25,10 +25,7 @@ public class EnterGame : InteractableObject
         // 서버에서 씬 전환
 
         RequestSceneChangeServerRpc("TestScene");
-        if (doorAnimationCoroutine == null)
-        {
-            doorAnimationCoroutine = StartCoroutine(AnimateDoorsWithSound(!doorState.Value));
-        }
+       
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -42,7 +39,15 @@ public class EnterGame : InteractableObject
         using var command = new InTheDark.Prototypes.Enter()
         {
             BuildIndex = 0
-        };
+        }; 
+        
+        if (doorAnimationCoroutine == null)
+        {
+            doorAnimationCoroutine = StartCoroutine(AnimateDoorsWithSound(!doorState.Value));
+
+            // 문 상태 업데이트
+            doorState.Value = !doorState.Value;
+        }
 
         command.Invoke();
 	}
@@ -95,9 +100,6 @@ public class EnterGame : InteractableObject
         // 최종적으로 목표 회전값에 도달
         leftDoorAxis.localRotation = leftDoorTargetRotation;
         rightDoorAxis.localRotation = rightDoorTargetRotation;
-
-        // 문 상태 업데이트
-        doorState.Value = open;
 
         // 코루틴 해제
         doorAnimationCoroutine = null;

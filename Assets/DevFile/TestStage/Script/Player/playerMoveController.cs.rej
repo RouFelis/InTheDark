@@ -1,0 +1,25 @@
+diff a/Assets/DevFile/TestStage/Script/Player/playerMoveController.cs b/Assets/DevFile/TestStage/Script/Player/playerMoveController.cs	(rejected hunks)
+@@ -107,11 +107,21 @@
+         }
+     }
+ 
+-    private void HandleInput()
+-    {
++    private Vector2 InputNormal()
++	{
+         // �̵� �Է�
+         float horizontal = Input.GetAxis("Horizontal");
++        Debug.Log("horizontal : " + horizontal);
+         float vertical = Input.GetAxis("Vertical");
++        Debug.Log("vertical : " + vertical);
++        return new Vector2(horizontal, vertical);
++    }
++
++    [ServerRpc(RequireOwnership = false)]
++    private void HandleInputServerRPC(Vector2 inputVector)
++    {
++        float horizontal = inputVector.x;
++        float vertical = inputVector.y;
+ 
+         Vector3 forward = transform.TransformDirection(Vector3.forward);
+         Vector3 right = transform.TransformDirection(Vector3.right);

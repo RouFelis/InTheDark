@@ -76,7 +76,7 @@ namespace InTheDark.Prototypes
 			var layerMask = 1 << 7;
 			var nameToLayer = LayerMask.NameToLayer("Enemy");
 
-			Debug.Log($"layerMask: {layerMask}, nameToLayer: {nameToLayer}");
+			//Debug.Log($"layerMask: {layerMask}, nameToLayer: {nameToLayer}");
 
 			_dirties.Clear();
 

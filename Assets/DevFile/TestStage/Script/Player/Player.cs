@@ -59,11 +59,24 @@ public class Player : playerMoveController , IDamaged, ICharacter
 	[SerializeField] private SaveSystem saveSystem;
 	[SerializeField] private AudioSource audioSource;
 
-	public  void Start()
+	[Header("Player Layer Object")]
+	[SerializeField] private GameObject firstPersonObject;
+	[SerializeField] private GameObject thirdPersonObject;
+
+
+	public override void Start()
 	{
+		base.Start();
 		if (IsOwner)
 		{
 			StartCoroutine(InitSaveSystem());
+			ChangeLayer(firstPersonObject , 11);
+			ChangeLayer(thirdPersonObject, 12);
+		}
+		else
+		{
+			ChangeLayer(firstPersonObject, 12);
+			ChangeLayer(thirdPersonObject , 11);
 		}
 		//AudioManager.Instance.SetbuttonSorce(audioSource);
 	}
@@ -90,6 +103,21 @@ public class Player : playerMoveController , IDamaged, ICharacter
 		experience.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 		level.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 	}
+
+
+	// 특정 오브젝트와 자식 오브젝트의 레이어를 변경하는 함수
+	public void ChangeLayer(GameObject parentObject, int newLayer)
+	{
+		// 부모 오브젝트의 레이어를 변경
+		parentObject.layer = newLayer;
+
+		// 모든 자식 오브젝트의 레이어를 변경
+		foreach (Transform child in parentObject.transform)
+		{
+			ChangeLayer(child.gameObject, newLayer);
+		}
+	}
+
 
 	public void Die()
 	{

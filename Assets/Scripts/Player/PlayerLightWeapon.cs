@@ -69,7 +69,7 @@ namespace InTheDark.Prototypes
 
 			//Debug.LogError($"OnrightClicked {value}");
 
-			_source.Angle = _weapon.weaponLight.spotAngle;
+			_source.Angle = _weapon.thirdPersonWeaponLight.spotAngle;
 			_source.Distance = Mathf.Sqrt(intensity);
 			_source.DamagePercent = value ? _weapon.zoomDamage.Value : _weapon.baseDamage.Value;
 		}

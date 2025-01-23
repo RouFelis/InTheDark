@@ -15,9 +15,10 @@ public class MenuManager : MonoBehaviour
     public event PauseEvent OnResume;
 
 
+    private bool isEvenet = false;
     private bool isPaused = false;
 
-    public bool IsPaused { get => isPaused ; }
+    public bool IsEvenet { get => isEvenet; set => IsEvenet = value;  }
 
     private Stack<GameObject> menuStack = new Stack<GameObject>();
 
@@ -57,7 +58,7 @@ public class MenuManager : MonoBehaviour
     {
         isPaused = !isPaused;
        
-        if (isPaused)
+        if (isPaused && !isEvenet)
         {
             OnPause?.Invoke();
             ShowMenu(menuPanel);

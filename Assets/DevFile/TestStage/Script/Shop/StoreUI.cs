@@ -125,6 +125,8 @@ public class StoreUI : MonoBehaviour
             if (playerController != null)
             {
                 playerController.EventToggle(false);
+
+                MenuManager.Instance.IsEvenet = false;
                 Debug.Log($"Disabled playerMoveController for {networkObject.name}");
             }
             else

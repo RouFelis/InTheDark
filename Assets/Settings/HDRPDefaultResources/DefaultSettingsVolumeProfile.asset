@@ -322,7 +322,10 @@ MonoBehaviour:
   m_Name: ToonShadingPP
   m_EditorClassIdentifier: 
   active: 1
-  intensity:
+  _posterizeAmount:
+    m_OverrideState: 1
+    m_Value: 1
+  _isEnabled:
     m_OverrideState: 1
     m_Value: 0
 --- !u!114 &-6695744374532608148

@@ -6,7 +6,8 @@ using Unity.Netcode;
 public class SpotlightControl : WeaponSystem
 {
     [Header("Spotlight Settings")]
-    public Light weaponLight; // 무기 역할을 하는 조명
+    public Light firstPersonWeaponLight; // 무기 역할을 하는 조명
+    public Light thirdPersonWeaponLight; // 무기 역할을 하는 조명
     public float zoomedInnerAngle = 20f; // 우클릭 시 Inner Angle
     public float zoomedOuterAngle = 30f; // 우클릭 시 Outer Angle
     public float zoomedIntensity = 2000f;   // 우클릭 시 Intensity
@@ -30,14 +31,19 @@ public class SpotlightControl : WeaponSystem
     public NetworkVariable<float> recoveryDelayTimer = new NetworkVariable<float>(0f, writePerm: NetworkVariableWritePermission.Owner );
 
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         // Spotlight 초기화 확인
-        if (weaponLight == null)
+        if (thirdPersonWeaponLight == null)
         {
             Debug.LogError("Weapon Light가 연결되지 않았습니다!");
         }
-        if(IsOwner)
+        if (firstPersonWeaponLight == null)
+        {
+            Debug.LogError("Weapon Light가 연결되지 않았습니다!");
+        }
+        if (IsOwner)
           StartCoroutine(initUI());
     }
 
@@ -70,6 +76,15 @@ public class SpotlightControl : WeaponSystem
             Debug.LogError("Gauge Slider가 연결되지 않았습니다!");
             yield return null;
         }
+
+		if (IsOwner)
+        {
+            thirdPersonWeaponLight.gameObject.SetActive(false);
+        }
+		else
+		{
+            firstPersonWeaponLight.gameObject.SetActive(false);
+		}
     }
     private void HandleRightClickInput()
     {
@@ -152,9 +167,13 @@ public class SpotlightControl : WeaponSystem
 
     private void SetLightValues(float innerAngle, float outerAngle, float intensity)
     {
-        weaponLight.innerSpotAngle = innerAngle;
-        weaponLight.spotAngle = outerAngle;
-        weaponLight.intensity = intensity;
+        firstPersonWeaponLight.innerSpotAngle = innerAngle;
+        firstPersonWeaponLight.spotAngle = outerAngle;
+        firstPersonWeaponLight.intensity = intensity;
+
+        thirdPersonWeaponLight.innerSpotAngle = innerAngle;
+        thirdPersonWeaponLight.spotAngle = outerAngle;
+        thirdPersonWeaponLight.intensity = intensity;
     }
 
     public void UpdateDefaultValues(float innerAngle, float outerAngle, float intensity)

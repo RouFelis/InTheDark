@@ -24,7 +24,7 @@ public class WeaponSystem : NetworkBehaviour
     public event OnWeaponUpgraded WeaponUpgraded;
 
 
-	void Start()
+	public virtual void Start()
     {
         if (baseWeaponData == null)
         {
@@ -44,6 +44,7 @@ public class WeaponSystem : NetworkBehaviour
         while (saveSystem == null)
         {
             saveSystem = FindAnyObjectByType<SaveSystem>();
+            Debug.Log("saveSystem serch....");
             yield return null;
         }
         player = GetComponent<Player>();
@@ -63,6 +64,7 @@ public class WeaponSystem : NetworkBehaviour
         zoomDamage.Value = weaponInstance.zoomDamage;
         batteryCapacity.Value = weaponInstance.batteryCapacity;
         currentLevel.Value = weaponInstance.level;
+        Debug.Log("initWeaponInstance....");
     }
 
     private void BaseDamageValueChaged()
@@ -86,7 +88,11 @@ public class WeaponSystem : NetworkBehaviour
     {
         float cost = weaponInstance.upgradeCost * (1 + (currentLevel.Value * 0.1f));
 
+        Debug.Log("weaponInstance.upgradeCost : " + weaponInstance.upgradeCost);
         Debug.Log("cost : " + cost);
+        Debug.Log("currentLevel.Value : " + currentLevel.Value);
+        Debug.Log("test : " + (1 + (currentLevel.Value * 0.1f)));
+
         if (SharedData.Instance.Money.Value < cost)
         {
             Debug.Log("강화에 필요한 통화가 부족합니다.");

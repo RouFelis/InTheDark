@@ -138,13 +138,11 @@ public class SaveSystem : MonoBehaviour
     public WeaponInstance LoadWeaponData(string playerName)
     {
         var filePath = Path.Combine(Application.persistentDataPath, playerName + ".json");
-
         if (!File.Exists(filePath))
         {
             Debug.LogWarning("무기 데이터 파일이 존재하지 않습니다. 기본 데이터를 생성합니다.");
             return new WeaponInstance(CreateDefaultWeaponData()) ; // 기본 데이터 반환
         }
-
         string json = File.ReadAllText(filePath); // JSON 파일 읽기
         WeaponInstance weaponData = JsonUtility.FromJson<WeaponInstance>(json); // JSON 문자열을 객체로 변환
         Debug.Log(playerName + "의 무기 데이터가 로드되었습니다... path : " + filePath);

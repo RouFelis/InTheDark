@@ -70,8 +70,7 @@ namespace Dissonance.Integrations.Unity_NFGO
                 _comms = FindObjectOfType<DissonanceComms>();
                 if (_comms == null)
                 {
-                    Debug.Log("테스트" +
-                        "");
+
                 }
                 else
                 {

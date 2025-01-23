@@ -5,45 +5,58 @@ using Unity.Netcode;
 public class DungeunNetobjectSpawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> spawnObjects;
+    [SerializeField] private List<Vector3> spawnPos; // 부모 기준 로컬 위치
+    [SerializeField] private List<Quaternion> spawnRot; // 부모 기준 로컬 회전
 
     private void Start()
     {
         if (NetworkManager.Singleton.IsServer)
         {
-            // 서버인 경우 모든 객체를 스폰
             SpawnAllObjectsServerRpc();
-            Debug.Log("yes222");
         }
         else
         {
-            // 클라이언트인 경우 모든 객체를 파괴
-            //DestroyAllObjects();
+          // DestroyAllObjects();
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
     private void SpawnAllObjectsServerRpc()
     {
-        foreach (var obj in spawnObjects)
+        // spawnObjects, spawnPos, spawnRot의 갯수 확인
+        if (spawnObjects.Count > spawnPos.Count || spawnObjects.Count > spawnRot.Count)
         {
-            NetworkObject spawnedObj = obj.GetComponent<NetworkObject>();
-            if (spawnedObj != null && !spawnedObj.IsSpawned)
-            {
-                spawnedObj.Spawn();
-            }
-            var test = spawnedObj.transform.GetComponentsInChildren<Transform>();
+            Debug.LogError("Not enough spawn positions or rotations for all spawn objects.");
+            return;
+        }
 
-            foreach (Transform child in test)
+        for (int i = 0; i < spawnObjects.Count; i++)
+        {
+            // 로컬 위치와 회전을 월드 기준으로 변환
+            Vector3 worldPosition = transform.TransformPoint(spawnPos[i]);
+            Quaternion worldRotation = transform.rotation * spawnRot[i];
+
+            // 객체 생성
+            GameObject obj = Instantiate(spawnObjects[i], worldPosition, worldRotation, transform);
+
+            // NetworkObject 스폰 처리
+            NetworkObject networkObj = obj.GetComponent<NetworkObject>();
+            if (networkObj != null && !networkObj.IsSpawned)
+            {
+                networkObj.Spawn();
+            }
+
+            // 자식 객체 스폰 처리
+            var childTransforms = obj.GetComponentsInChildren<Transform>();
+            foreach (Transform child in childTransforms)
             {
                 NetworkObject childNetworkObject = child.GetComponent<NetworkObject>();
                 if (childNetworkObject != null && !childNetworkObject.IsSpawned)
                 {
                     childNetworkObject.Spawn();
-                    child.SetParent(spawnedObj.transform);
                 }
             }
         }
-        Debug.Log("yes");
     }
 
     private void DestroyAllObjects()
@@ -52,7 +65,7 @@ public class DungeunNetobjectSpawner : MonoBehaviour
         {
             if (obj != null)
             {
-                Destroy(obj.gameObject);
+                Destroy(obj);
             }
         }
     }

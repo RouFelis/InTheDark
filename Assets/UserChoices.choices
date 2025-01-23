@@ -17,7 +17,7 @@ MonoBehaviour:
     Answers:
     - QuestionId: Pace
       Answers:
-      - Slow
+      - Fast
     - QuestionId: Cheating
       Answers:
       - CheatingNotImportant
