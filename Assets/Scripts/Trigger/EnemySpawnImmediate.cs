@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,7 +12,15 @@ namespace InTheDark.Prototypes
 
 		public override void OnUpdate()
 		{
-			MonsterSpawner.Instance.SpawnEnemyRPC(_buildIndex, MonsterSpawner.Instance.GetRandomPositionInNavMesh(), Quaternion.identity);
+			SendingSpawnEnemyRPC();
+		}
+
+		[Rpc(SendTo.Server)]
+		private void SendingSpawnEnemyRPC()
+		{
+			var position = MonsterSpawner.Instance.GetRandomPositionInNavMesh();
+
+			MonsterSpawner.Instance.SpawnEnemyRPC(_buildIndex, position, Quaternion.identity);
 		}
 	}
 }

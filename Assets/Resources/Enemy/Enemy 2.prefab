@@ -215,16 +215,16 @@ MonoBehaviour:
   logTaskChanges: 0
   group: 0
   resetValuesOnRestart: 0
-  externalBehavior: {fileID: 11400000, guid: 39a9abd4275512b479359daa56301f39, type: 2}
+  externalBehavior: {fileID: 11400000, guid: 88fc21d6fef0e86459418b497b1ad818, type: 2}
   mBehaviorSource:
-    behaviorName: Behavior
+    behaviorName: Witch
     behaviorDescription: 
     mTaskData:
       types: []
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: '{"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}]}'
+      JSONSerialization: 
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -233,7 +233,7 @@ MonoBehaviour:
         unityObjects: []
         byteData: 
         byteDataArray: 
-      Version: 1.7.10
+      Version: 
   gizmoViewMode: 2
   showBehaviorDesignerGizmo: 1
 --- !u!114 &808785113655335579

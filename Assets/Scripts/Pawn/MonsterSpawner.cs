@@ -14,7 +14,7 @@ namespace InTheDark.Prototypes
 	[Serializable]
 	public class AIGenerateData
 	{
-		public int[] BuildIndex;
+		public EnemySpawnTrigger[] Triggers;
 	}
 
 	// TODO: Enemy Manager 등으로 일부 기능 이동 및 분리, Spawner는 Factory의 역할
@@ -47,6 +47,8 @@ namespace InTheDark.Prototypes
 
 		[SerializeField]
 		private EnemyPrototypePawn[] _prefabs;
+
+		private float _agentHeight = 0.0F;
 
 		private NetworkList<EnemyRef> _spawned;
 
@@ -161,9 +163,10 @@ namespace InTheDark.Prototypes
 				//	_spawned.Add(enemyRef);
 				//}
 
-				foreach (var index in data.BuildIndex)
+				foreach (var trigger in data.Triggers)
 				{
-					SpawnEnemyRPC(index, GetRandomPositionInNavMesh(), Quaternion.identity);
+					//SpawnEnemyRPC(index, GetRandomPositionInNavMesh(), Quaternion.identity);
+					trigger.OnUpdate();
 				}
 
 				//SpawnEnemyInDungeonRpc();
@@ -174,6 +177,12 @@ namespace InTheDark.Prototypes
 		{
 			var prefab = _prefabs[enemyRef.BuildIndex];
 			var enemy = Instantiate(prefab, position, rotation);
+			var agent = enemy.GetComponent<NavMeshAgent>();
+			var height = UnityEngine.Random.Range(0.1F, 1.0F);
+
+			agent.height = _agentHeight;
+
+			_agentHeight += height;
 
 			enemy.NetworkObject.Spawn(true);
 		}

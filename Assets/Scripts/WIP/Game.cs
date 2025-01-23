@@ -6,11 +6,15 @@ namespace InTheDark.Prototypes
 	// 일단 임시
 	public static class Game
 	{
+		public static Action<RelayEvent> OnRelay;
+
 		public static Action<DungeonEnterEvent> OnDungeonEnter;
 		public static Action<DungeonExitEvent> OnDungeonExit;
 
 		static Game()
 		{
+			OnRelay = default;
+
 			OnDungeonEnter = default;
 			OnDungeonExit = default;
 		}
