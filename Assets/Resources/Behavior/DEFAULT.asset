@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b23f08d2ae4cba14087c1ed36193d82b, type: 3}
+  m_Name: DEFAULT
+  m_EditorClassIdentifier: 
+  mBehaviorSource:
+    behaviorName: 
+    behaviorDescription: 
+    mTaskData:
+      types: []
+      parentIndex: 
+      startIndex: 
+      variableStartIndex: 
+      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(97.62791,-3.705431)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-4.63378334,102.911041)"},"ID":1,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-134.51001,124.705872)"},"ID":2,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"AttackableNearby","NodeData":{"Offset":"(-73.06125,100)"},"ID":3,"Name":"Attackable
+        Nearby","Instant":true,"Singledistance":2.5,"SharedNetworkBehaviourpawn":{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}},{"Type":"AttackTargetPawn","NodeData":{"Offset":"(73.92792,98.54492)"},"ID":4,"Name":"Attack
+        Target Pawn","Instant":true,"SharedNetworkBehaviourpawn":{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(106.698105,121.849579)"},"ID":5,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-50,96.1111145)"},"ID":6,"Name":"Selector","Instant":true,"AbortTypeabortType":"Both","Children":[{"Type":"WithinSight","NodeData":{"Offset":"(-114.848465,100)"},"ID":7,"Name":"Within
+        Sight","Instant":true,"SinglesightDistance":30,"SinglearoundDistance":15,"SinglefieldOfViewAngle":60,"LayerMasktargetLayer":8,"SharedVector3target":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedNetworkBehaviourpawn":{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}},{"Type":"HeardSound","NodeData":{"Offset":"(4.545513,95.1515045)"},"ID":8,"Name":"Heard
+        Sound","Instant":true,"Singledistance":15,"LayerMasktargetLayer":8,"SharedVector3target":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedNetworkBehaviourpawn":{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(110,100)"},"ID":9,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"ArriveAtDestination","NodeData":{"Offset":"(-70,100)"},"ID":10,"Name":"Arrive
+        At Destination","Instant":true,"Singledistance":0.1},{"Type":"GetRandomPositionOnNavMesh","NodeData":{"Offset":"(60,100)"},"ID":11,"Name":"
+        On Nav Mesh","Instant":true,"Singleradius":15,"SharedVector3target":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"}}]}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent.SetDestination","NodeData":{"Offset":"(70,96.1111145)"},"ID":12,"Name":"Set
+        Destination","Instant":true,"SharedGameObjecttargetGameObject":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":null},"SharedVector3destination":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"}}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}]}'
+      fieldSerializationData:
+        typeName: []
+        fieldNameHash: 
+        startIndex: 
+        dataPosition: 
+        unityObjects: []
+        byteData: 
+        byteDataArray: 
+      Version: 1.7.10

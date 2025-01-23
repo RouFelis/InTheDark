@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d00a309c7957e04da3e946b1dd46247, type: 3}
+  m_Name: test resurrect
+  m_EditorClassIdentifier: 
+  _time: 5.25
+  _handlerPrefab: {fileID: 6809147370024293509, guid: 1c4e7f8864536724db98b1ac1c2ae3ea, type: 3}

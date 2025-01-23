@@ -22,7 +22,7 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private List<LightSource> _sources = new List<LightSource>();
 
-		private List<Collider> _dirties = new List<Collider>();
+		//private List<Collider> _dirties = new List<Collider>();
 
 		// [========================= Method =========================]
 
@@ -73,12 +73,13 @@ namespace InTheDark.Prototypes
 			// 단순하게 9번째 레이어구나! 하고 9로 값 넣어주고 보니 애로사항이 꽃핌
 			// 우리 Enemy 친구... 레이어마스크 값 512야...?
 			// 현재 1월 10일... 지금은 7로 해줘야 합니당...
-			var layerMask = 1 << 7;
-			var nameToLayer = LayerMask.NameToLayer("Enemy");
+			//var layerMask = 1 << 7;
+			//var nameToLayer = LayerMask.NameToLayer("Enemy");
+			var layerMask = 1 << LayerMask.NameToLayer("Enemy");
 
 			//Debug.Log($"layerMask: {layerMask}, nameToLayer: {nameToLayer}");
 
-			_dirties.Clear();
+			//_dirties.Clear();
 
 			foreach (var source in _sources)
 			{
@@ -94,26 +95,26 @@ namespace InTheDark.Prototypes
 
 					//Debug.Log($"{name} detected {target.name} => layer: {target.gameObject.layer}");
 
-					if (hit.collider == target && isOccultation && isSight && !_dirties.Contains(target))
+					if (hit.collider == target && isOccultation && isSight/* && !_dirties.Contains(target)*/)
 					{
 						var pawn = target.GetComponent<EnemyPrototypePawn>();
 
 						pawn?.OnLightInsighted(source);
 
-						_dirties.Add(target);
+						//_dirties.Add(target);
 
-						Debug.Log($"dirty: {target}, light: {source}");
+						//Debug.Log($"dirty: {target}, light: {source}");
 					}
 				}
 			}
 
-			foreach (var dirty in _dirties)
-			{
-				var pawn = dirty.GetComponent<EnemyPrototypePawn>();
+			//foreach (var dirty in _dirties)
+			//{
+			//	var pawn = dirty.GetComponent<EnemyPrototypePawn>();
 
-				// 이름 다르게 해야 하는데 딱히 생각 안남.
-				pawn?.OnLightInsighted();
-			}
+			//	// 이름 다르게 해야 하는데 딱히 생각 안남.
+			//	pawn?.OnLightInsighted();
+			//}
 		}
 
 		public void OnWorkLightSpanwed(LightSource light)

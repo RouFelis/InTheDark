@@ -14,7 +14,7 @@ namespace InTheDark.Prototypes
 	[Serializable]
 	public class AIGenerateData
 	{
-		public NetworkObject[] Prefabs;
+		public int[] BuildIndex;
 	}
 
 	// TODO: Enemy Manager 등으로 일부 기능 이동 및 분리, Spawner는 Factory의 역할
@@ -23,29 +23,16 @@ namespace InTheDark.Prototypes
 		[Serializable]
 		private struct EnemyRef : IEquatable<EnemyRef>, INetworkSerializable
 		{
-			public Vector3 Position;
-			public Quaternion Quaternion;
-
-			public static implicit operator EnemyRef(EnemyPrototypePawn enemy)
-			{
-				var enemyRef = new EnemyRef()
-				{
-					Position = enemy.transform.position,
-					Quaternion = enemy.transform.rotation
-				};
-
-				return enemyRef;
-			}
+			public int BuildIndex;
 
 			public bool Equals(EnemyRef other)
 			{
-				return Position.Equals(other.Position) && Quaternion.Equals(other.Quaternion);
+				return BuildIndex.Equals(other.BuildIndex);
 			}
 
 			public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
 			{
-				serializer.SerializeValue(ref Position);
-				serializer.SerializeValue(ref Quaternion);
+				serializer.SerializeValue(ref BuildIndex);
 			}
 		}
 
@@ -56,17 +43,12 @@ namespace InTheDark.Prototypes
 		private float _radius;
 
 		[SerializeField]
-		private int _count;
-
-		[SerializeField]
 		private AIGenerateData[] _stage;
 
-		// 프리팹
 		[SerializeField]
-		private NetworkObject _enemyPrototypePrefab;
+		private EnemyPrototypePawn[] _prefabs;
 
 		private NetworkList<EnemyRef> _spawned;
-		private NetworkList<int> _enemyCount;
 
 		private NetworkVariable<bool> _isLocked = new NetworkVariable<bool>(false);
 
@@ -91,8 +73,8 @@ namespace InTheDark.Prototypes
 		private void Awake()
 		{
 			_instance = this;
+
 			_spawned = new NetworkList<EnemyRef>();
-			_enemyCount = new NetworkList<int>();
 
 			DontDestroyOnLoad(gameObject);
 		}
@@ -101,18 +83,16 @@ namespace InTheDark.Prototypes
 		{
 			if (NetworkManager.Singleton)
 			{
-				//NetworkManager.Singleton.SceneManager.OnLoadComplete += (clientID, sceneName, loadSceneMode) =>
-				//{
-				//	if (sceneName is "GameRoom")
-				//	{
-				//		Despawn();
-				//	}
-				//};
-
 				Game.OnDungeonEnter += OnDungeonEnter;
 				Game.OnDungeonExit += OnDungeonExit;
 
-				//UpdateManager.OnUpdate += OnUpdate;
+				if (_isLocked.Value)
+				{
+					foreach (var enemyRef in _spawned)
+					{
+						SpawnInternal(enemyRef, GetRandomPositionInNavMesh(), Quaternion.identity);
+					}
+				}
 			}
 		}
 
@@ -120,61 +100,50 @@ namespace InTheDark.Prototypes
 		{
 			Game.OnDungeonEnter -= OnDungeonEnter;
 			Game.OnDungeonExit -= OnDungeonExit;
-
-			//UpdateManager.OnUpdate -= OnUpdate;
-		}
-
-		//private void OnUpdate()
-		//{
-		//	if (Input.GetKeyDown(KeyCode.V))
-		//	{
-		//		if (IsHost)
-		//		{
-		//			OnHostStarted();
-		//		}
-
-		//		OnClientStarted();
-		//	}
-		//}
-
-		// 정보 추가
-		public void OnHostStarted()
-		{
-			for (var i = 0; i < _count; i++)
-			{
-				var enemyRef = SpawnRandomRef();
-
-				_spawned.Add(enemyRef);
-			}
-		}
-
-		// 실제 오브젝트 생성
-		public void OnClientStarted()
-		{
-			foreach (var enemyRef in _spawned)
-			{
-				Spawn(enemyRef.Position);
-			}
-		}
-
-		private EnemyRef SpawnRandomRef()
-		{
-			var enemyRef = new EnemyRef()
-			{
-				Position = GetRandomPositionInNavMesh(),
-				Quaternion = Quaternion.identity
-			};
-
-			return enemyRef;
-		}
-
-		private void OnDungeonEnter(DungeonEnterEvent received)
-		{
-			OnDungeonEnterRpc(received.BuildIndex);
 		}
 
 		[Rpc(SendTo.Server)]
-		private void OnDungeonEnterRpc(int buildIndex)
+		public void SpawnEnemyRPC(int buildIndex, Vector3 position, Quaternion rotation)
+		{
+			var enemyRef = new EnemyRef()
+			{
+				BuildIndex = buildIndex
+			};
+
+			SpawnEnemyServerRPC(enemyRef);
+			SpawnEnemyClientRPC(enemyRef, position, rotation);
+		}
+
+		[Rpc(SendTo.Server)]
+		private void SpawnEnemyServerRPC(EnemyRef enemyRef)
+		{
+			_spawned.Add(enemyRef);
+		}
+
+		[Rpc(SendTo.Everyone)]
+		private void SpawnEnemyClientRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
+		{
+			SpawnInternal(enemyRef, position, rotation);
+		}
+
+		//private EnemyRef SpawnRandomRef()
+		//{
+		//	var enemyRef = new EnemyRef()
+		//	{
+		//		Position = GetRandomPositionInNavMesh(),
+		//		Quaternion = Quaternion.identity
+		//	};
+
+		//	return enemyRef;
+		//}
+
+		private void OnDungeonEnter(DungeonEnterEvent received)
+		{
+			OnDungeonEnterRPC(received.BuildIndex);
+		}
+
+		[Rpc(SendTo.Server)]
+		private void OnDungeonEnterRPC(int buildIndex)
 		{
 			if (!_isLocked.Value)
 			{
@@ -182,15 +151,31 @@ namespace InTheDark.Prototypes
 
 				_isLocked.Value = true;
 
-				for (var i = 0; i < data.Prefabs.Length; i++)
-				{
-					var enemyRef = SpawnRandomRef();
+				//for (var i = 0; i < data.Triggers.Length; i++)
+				//{
+				//	var enemyRef = SpawnRandomRef();
 
-					_spawned.Add(enemyRef);
+				//	//enemyRef.DataIndex = buildIndex;
+				//	//enemyRef.MonsterIndex = i;
+
+				//	_spawned.Add(enemyRef);
+				//}
+
+				foreach (var index in data.BuildIndex)
+				{
+					SpawnEnemyRPC(index, GetRandomPositionInNavMesh(), Quaternion.identity);
 				}
 
-				SpawnEnemyInDungeonRpc();
+				//SpawnEnemyInDungeonRpc();
 			}
+		}
+
+		private void SpawnInternal(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
+		{
+			var prefab = _prefabs[enemyRef.BuildIndex];
+			var enemy = Instantiate(prefab, position, rotation);
+
+			enemy.NetworkObject.Spawn(true);
 		}
 
 		private void OnDungeonExit(DungeonExitEvent received)
@@ -201,31 +186,7 @@ namespace InTheDark.Prototypes
 			}
 		}
 
-		[Rpc(SendTo.Everyone)]
-		private void SpawnEnemyInDungeonRpc()
-		{
-			foreach (var enemyRef in _spawned)
-			{
-				Spawn(enemyRef.Position);
-			}
-		}
-
-		public void Spawn(Vector3 position)
-		{
-			var enemy = Instantiate(_enemyPrototypePrefab, position, Quaternion.identity);
-			var pawn = enemy.GetComponent<EnemyPrototypePawn>();
-
-			enemy.Spawn(true);
-
-			Debug.Log(enemy.name);
-		}
-
-		public void Despawn()
-		{
-			_spawned.Clear();
-		}
-
-		private Vector3 GetRandomPositionInNavMesh()
+		public Vector3 GetRandomPositionInNavMesh()
 		{
 			var result = Vector3.zero;
 			var isOnNavMesh = false;
@@ -261,5 +222,4 @@ namespace InTheDark.Prototypes
 			return result;
 		}
 	}
-
 }
