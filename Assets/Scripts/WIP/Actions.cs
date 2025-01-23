@@ -12,6 +12,19 @@ namespace InTheDark.Prototypes
 		public abstract void Invoke();
 	}
 
+	public class RelayAction : GameAction
+	{
+		public string JoinCode;
+
+		public override void Invoke()
+		{
+			Game.OnRelay?.Invoke(new RelayEvent()
+			{
+				JoinCode = JoinCode
+			});
+		}
+	}
+
 	public class Enter : GameAction
 	{
 		public int BuildIndex;

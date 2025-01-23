@@ -9,6 +9,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Relay;
 using Unity.Services;
 using Unity.Services.Relay.Models;
+using InTheDark.Prototypes;
 
 
 
@@ -61,6 +62,14 @@ public class TestRelay : MonoBehaviour
 		Transport.SetRelayServerData(relayHostData.IPv4Address, relayHostData.Port, relayHostData.AllocationIDBytes, relayHostData.Key, relayHostData.ConnectionData) ;
 
 		Logger.Instance?.LogInfo($"Relay Server generated a join code {relayHostData.JoinCode}");
+
+		// 250121 -> 코드 긁어오기 용
+		using var command = new RelayAction()
+		{
+			JoinCode = relayHostData.JoinCode
+		};
+
+		command.Invoke();
 
 		return relayHostData;
 	}

@@ -36,8 +36,6 @@ namespace InTheDark.LoremIpsum
 
 		// 시간차 소환
 		// AI 모델 및 모션 적용
-
-		// Immediate
 	}
 }
 
