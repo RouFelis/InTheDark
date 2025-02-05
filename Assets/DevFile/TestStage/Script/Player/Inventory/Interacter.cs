@@ -9,7 +9,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 
 
-public class Interacter : MonoBehaviour
+public class Interacter : NetworkBehaviour
 {
     public LocalizedString localizedString;
     public int interactDistance = 2;
@@ -23,11 +23,19 @@ public class Interacter : MonoBehaviour
 
 	public void Start()
 	{
+		if (!IsOwner)
+		{
+            enabled = false;
+		}
         StartCoroutine(InitializeUIElements());
     }
 
+	private void OnDisable()
+	{
+        infoText.gameObject.SetActive(false);
+    }
 
-    //아이템 오브젝트 확인 (Item Object Check)
+	//아이템 오브젝트 확인 (Item Object Check)
 	public void HandleRaycast()
     {
         RaycastHit hit;

@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3371959488
+  GlobalObjectIdHash: 3677719752
   InScenePlacedSourceGlobalObjectIdHash: 2165609246
   DeferredDespawnTick: 0
   Ownership: 1
@@ -405,3 +405,4 @@ MonoBehaviour:
   _lightInsightedTrigger: {fileID: 11400000, guid: e3029e7a3b60ff74a94892dd565492d3, type: 2}
   _loots:
   - {fileID: 11400000, guid: cb98219c2ef743244bc6f8071018cdfe, type: 2}
+  attackSound: {fileID: 8300000, guid: 5eb4498c9e032624cada3505b66da46c, type: 3}

@@ -13,19 +13,10 @@ MonoBehaviour:
   m_Name: New Key Manager
   m_EditorClassIdentifier: 
   keys:
-  - Prefab: {fileID: 8166380069126331733, guid: fb710e2acc7e379479f737b2c758f298,
-      type: 3}
+  - Prefab: {fileID: 8166380069126331733, guid: fb710e2acc7e379479f737b2c758f298, type: 3}
     Colour: {r: 0.8129575, g: 0.9950001, b: 0.85437024, a: 1}
     KeysPerLock:
       Min: 10
       Max: 10
     id: 0
     name: New Key
-  - Prefab: {fileID: 7194840080227655079, guid: 627f3866a69d83a4a8d703a12d391f94,
-      type: 3}
-    Colour: {r: 0.5890469, g: 0.6645281, b: 0.8166169, a: 1}
-    KeysPerLock:
-      Min: 10
-      Max: 10
-    id: 1
-    name: New Key 2

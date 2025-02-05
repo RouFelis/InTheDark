@@ -3,6 +3,7 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using System.Collections;
 using System.IO;
+using TMPro;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,13 +11,15 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private Button applyButton; // 적용 버튼
-    [SerializeField] private Slider masterSlider;
-    [SerializeField] private Slider musicSlider;
-    [SerializeField] private Slider sfxSlider;
-    [SerializeField] private Slider uiSlider;
+    [SerializeField] private AudioUI masterUI;
+    [SerializeField] private AudioUI musicUI;
+    [SerializeField] private AudioUI sfxUI;
+    [SerializeField] private AudioUI uiUI;
 
     private const float MinVolumeDb = -80f; // AudioMixer에서 무음으로 설정되는 dB 값
     private const float MaxVolumeDb = 0f;  // AudioMixer에서 최대 볼륨으로 설정되는 dB 값
+    private const float minSensitivity = 0f;  // 볼륨 최소값
+    private const float maxSensitivity = 1f;  // 볼륨 최대값
     private const string FilePath = "AudioSettings.json"; // 설정 파일 이름
 
     [SerializeField] private AudioSource buttonAudioSource;
@@ -40,16 +43,28 @@ public class AudioManager : MonoBehaviour
         applyButton.onClick.AddListener(SaveAudioSettings); // 적용 버튼에 리스너 추가
 
         // 초기 슬라이더 값을 AudioMixer에서 가져오기
-        masterSlider.value = DbToLinear(GetMixerVolume("MasterVolume"));
-        musicSlider.value = DbToLinear(GetMixerVolume("MusicVolume"));
-        sfxSlider.value = DbToLinear(GetMixerVolume("SFXVolume"));
-        uiSlider.value = DbToLinear(GetMixerVolume("UIVolume"));
+        masterUI.slider.value = DbToLinear(GetMixerVolume("MasterVolume"));
+        musicUI.slider.value = DbToLinear(GetMixerVolume("MusicVolume"));
+        sfxUI.slider.value = DbToLinear(GetMixerVolume("SFXVolume"));
+        uiUI.slider.value = DbToLinear(GetMixerVolume("UIVolume"));
 
         // 슬라이더 이벤트 연결
-        masterSlider.onValueChanged.AddListener(SetMasterVolume);
-        musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-        uiSlider.onValueChanged.AddListener(SetUIVolume);
+        masterUI.slider.onValueChanged.AddListener(value => SetVolume(masterUI));
+        musicUI.slider.onValueChanged.AddListener(value => SetVolume(musicUI));
+        sfxUI.slider.onValueChanged.AddListener(value => SetVolume(sfxUI));
+        uiUI.slider.onValueChanged.AddListener(value => SetVolume(uiUI));
+
+        //업데이트 이벤트 연결....
+        masterUI.slider.onValueChanged.AddListener(value => UpdateInputField(masterUI, value));
+        musicUI.slider.onValueChanged.AddListener(value => UpdateInputField(musicUI, value));
+        sfxUI.slider.onValueChanged.AddListener(value => UpdateInputField(sfxUI, value));
+        uiUI.slider.onValueChanged.AddListener(value => UpdateInputField(uiUI, value));
+
+        masterUI.inputField.onEndEdit.AddListener(value => UpdateSliderFromInput(uiUI, value));
+        musicUI.inputField.onEndEdit.AddListener(value => UpdateSliderFromInput(uiUI, value));
+        sfxUI.inputField.onEndEdit.AddListener(value => UpdateSliderFromInput(uiUI, value));
+        uiUI.inputField.onEndEdit.AddListener(value => UpdateSliderFromInput(uiUI, value));
+
 
         LoadAudioSettings();
     }
@@ -76,41 +91,21 @@ public class AudioManager : MonoBehaviour
     {
         return linear <= 0f ? MinVolumeDb : Mathf.Log10(linear) * 20f;
     }
-
-    // Master Volume 설정
-    public void SetMasterVolume(float value)
+      
+    public void SetVolume(AudioUI audioUI)
     {
-        audioMixer.SetFloat("MasterVolume", LinearToDb(value));
+        audioMixer.SetFloat(audioUI.name, LinearToDb(audioUI.slider.value));
     }
-
-    // Music Volume 설정
-    public void SetMusicVolume(float value)
-    {
-        audioMixer.SetFloat("MusicVolume", LinearToDb(value));
-    }
-
-    // SFX Volume 설정
-    public void SetSFXVolume(float value)
-    {
-        audioMixer.SetFloat("SFXVolume", LinearToDb(value));
-    }
-
-    // UI Volume 설정
-    public void SetUIVolume(float value)
-    {
-        audioMixer.SetFloat("UIVolume", LinearToDb(value));
-    }
-
 
     // JSON 저장
     public void SaveAudioSettings()
     {
         AudioSettingsData settings = new AudioSettingsData
         {
-            masterVolume = masterSlider.value,
-            musicVolume = musicSlider.value,
-            sfxVolume = sfxSlider.value,
-            uiVolume = uiSlider.value
+            masterVolume = masterUI.slider.value,
+            musicVolume = musicUI.slider.value,
+            sfxVolume = sfxUI.slider.value,
+            uiVolume = uiUI.slider.value
         };
 
         string json = JsonUtility.ToJson(settings, true);
@@ -126,31 +121,41 @@ public class AudioManager : MonoBehaviour
             string json = File.ReadAllText(GetFilePath());
             AudioSettingsData settings = JsonUtility.FromJson<AudioSettingsData>(json);
 
-            masterSlider.value = settings?.masterVolume ?? 1.0f;
-            musicSlider.value = settings?.musicVolume ?? 1.0f;
-            sfxSlider.value = settings?.sfxVolume ?? 1.0f;
-            uiSlider.value = settings?.uiVolume ?? 1.0f;
+            masterUI.slider.value = settings?.masterVolume ?? 1.0f;
+            musicUI.slider.value = settings?.musicVolume ?? 1.0f;
+            sfxUI.slider.value = settings?.sfxVolume ?? 1.0f;
+            uiUI.slider.value = settings?.uiVolume ?? 1.0f;
 
             // 불러온 값으로 AudioMixer 업데이트
-            SetMasterVolume(masterSlider.value);
-            SetMusicVolume(musicSlider.value);
-            SetSFXVolume(sfxSlider.value);
-            SetUIVolume(uiSlider.value);
+            SetVolume(masterUI);
+            SetVolume(musicUI);
+            SetVolume(sfxUI);
+            SetVolume(uiUI);
+
+            UpdateInputField(masterUI, masterUI.slider.value);
+            UpdateInputField(musicUI, musicUI.slider.value);
+            UpdateInputField(sfxUI, sfxUI.slider.value);
+            UpdateInputField(uiUI, uiUI.slider.value);
+
+            UpdateSliderFromInput(uiUI, masterUI.slider.value.ToString());
+            UpdateSliderFromInput(uiUI, musicUI.slider.value.ToString());
+            UpdateSliderFromInput(uiUI, sfxUI.slider.value.ToString());
+            UpdateSliderFromInput(uiUI, uiUI.slider.value.ToString());
 
             Debug.Log($"Audio settings loaded from {GetFilePath()}");
         }
         else
         {
             // JSON 파일이 없을 경우 기본값 1로 설정
-            masterSlider.value = 1.0f;
-            musicSlider.value = 1.0f;
-            sfxSlider.value = 1.0f;
-            uiSlider.value = 1.0f;
+            masterUI.slider.value = 1.0f;
+            musicUI.slider.value = 1.0f;
+            sfxUI.slider.value = 1.0f;
+            uiUI.slider.value = 1.0f;
 
-            SetMasterVolume(masterSlider.value);
-            SetMusicVolume(musicSlider.value);
-            SetSFXVolume(sfxSlider.value);
-            SetUIVolume(uiSlider.value);
+            SetVolume(masterUI);
+            SetVolume(musicUI);
+            SetVolume(sfxUI);
+            SetVolume(uiUI);
 
             Debug.Log("No audio settings file found. Using default values.");
         }
@@ -163,12 +168,33 @@ public class AudioManager : MonoBehaviour
         return Path.Combine(Application.persistentDataPath, FilePath);
     }
 
-    #endregion
 
+    // 슬라이더 값이 변경되면 InputField 업데이트
+    private void UpdateInputField(AudioUI audioUI, float value)
+    {
+        audioUI.inputField.text = value.ToString("0.0"); // 소수점 한 자리까지 표시
+    }
 
-    #region 사운드 플레이 관련
+    // InputField 값이 변경되면 슬라이더 값 업데이트
+    private void UpdateSliderFromInput(AudioUI audioUI, string input)
+    {
+        if (float.TryParse(input, out float value))
+        {
+            // 최소/최대 값 범위 제한
+            value = Mathf.Clamp(value, minSensitivity, maxSensitivity);
+            audioUI.slider.value = value; // 슬라이더 값 변경
+        }
+        else
+        {
+            // 숫자가 아닐 경우 기본 값으로 복원
+            audioUI.inputField.text = audioUI.slider.value.ToString("0");
+        }
+    }
+	#endregion
 
-    public void PlaySound(AudioClip clip)
+	#region 사운드 플레이 관련
+
+	public void PlaySound(AudioClip clip)
     {
         if (clip != null && buttonAudioSource != null)
         {
@@ -181,6 +207,13 @@ public class AudioManager : MonoBehaviour
 
     #endregion
 
+}
+[System.Serializable]
+public struct AudioUI
+{
+    public Slider slider;
+    public TMP_InputField inputField;
+    public string name;
 }
 
 [System.Serializable]

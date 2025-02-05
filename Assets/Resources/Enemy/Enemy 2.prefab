@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 565085129
+  GlobalObjectIdHash: 79278365
   InScenePlacedSourceGlobalObjectIdHash: 2165609246
   DeferredDespawnTick: 0
   Ownership: 1
@@ -224,7 +224,7 @@ MonoBehaviour:
       parentIndex: 
       startIndex: 
       variableStartIndex: 
-      JSONSerialization: 
+      JSONSerialization: '{"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}]}'
       fieldSerializationData:
         typeName: []
         fieldNameHash: 
@@ -233,7 +233,7 @@ MonoBehaviour:
         unityObjects: []
         byteData: 
         byteDataArray: 
-      Version: 
+      Version: 1.7.10
   gizmoViewMode: 2
   showBehaviorDesignerGizmo: 1
 --- !u!114 &808785113655335579
@@ -404,3 +404,4 @@ MonoBehaviour:
   _deathTrigger: {fileID: 11400000, guid: d2dc9e120596c1c40a3890c4958ee638, type: 2}
   _lightInsightedTrigger: {fileID: 11400000, guid: 1dfb7a485c570924ba0b9ad05ca58a9c, type: 2}
   _loots: []
+  attackSound: {fileID: 8300000, guid: 5eb4498c9e032624cada3505b66da46c, type: 3}

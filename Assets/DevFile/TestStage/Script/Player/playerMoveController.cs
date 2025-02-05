@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.Animations.Rigging;
+using Cinemachine;
 
 public class playerMoveController : NetworkBehaviour
 {
@@ -14,15 +15,15 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private float jumpForce = 8.0f;
 
     [Header("Camera & Head Rotation")]
-    [SerializeField] private Camera playerCamera;
-    [SerializeField] private GameObject virtualCamera;
+    [SerializeField] protected Camera playerCamera;
+    [SerializeField] protected CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Transform headTarget;
     [SerializeField] private Transform camTarget;
     [SerializeField] private float lookSpeed = 2.0f;
     [SerializeField] private float lookXLimit = 60.0f;
 
     [Header("Animation")]
-    [SerializeField] private Animator animator;
+    [SerializeField] protected Animator animator;
 
     [Header("Networking")]
   //  [SerializeField] private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>();
@@ -46,6 +47,16 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private float aimMaxDistance = 100f;
     [SerializeField] private RigBuilder rigBuilder_firstPerson;
     [SerializeField] private RigBuilder rigBuilder_thridPerson;
+    [SerializeField] private float smoothTime = 0.1f; // 이동 감속 속도
+
+    public LayerMask layerMask;
+
+    private Vector3 aimTargetPosition; // 에임타겟 포지션
+    private Vector3 velocity = Vector3.zero;
+    private CharacterController characterController;
+    private Vector3 moveDirection = Vector3.zero;
+    private float rotationX = 0.0f;
+    private RaycastHit hit;
 
     [Header("Head Bobbing Settings")]
     public float bobbingSpeed = 14f; // 머리 흔들림 속도
@@ -55,25 +66,19 @@ public class playerMoveController : NetworkBehaviour
     public float midpoint = 0f; // 기본 카메라 높이 (플레이어 머리 위치)
 
     private float timer = 0f; // 시간 값을 추적
-
-
-    //private LayerMask layerMask;
-    private CharacterController characterController;
-    private Vector3 moveDirection = Vector3.zero;
-    private float rotationX = 0.0f;
-    private RaycastHit hit;
+    private bool pause = false; //퍼즈
 
 
     private bool mouseControl = true;
     private bool isJumping = false;
+    private bool isFalling = false;
     private Quaternion savedHeadRotation;
+
+    private Interacter interacter;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        //layerMask = ~LayerMask.GetMask("CharacterFirstPerson", "CharacterThridPerson");
-        /*        layerMask = ((1 << LayerMask.NameToLayer("CharacterFirstPerson")) | (1 << LayerMask.NameToLayer("CharacterThridPerson")));
-                layerMask = ~layerMask;*/
     }
 
     public override void OnNetworkSpawn()
@@ -81,15 +86,16 @@ public class playerMoveController : NetworkBehaviour
         if (IsOwner)
         {
             playerCamera.gameObject.SetActive(true);
-            virtualCamera.SetActive(true);
+            virtualCamera.gameObject.SetActive(true);
             FixedMouse();
+            interacter = GetComponent<Interacter>();
             MenuManager.Instance.OnPause += FreeMouse;
             MenuManager.Instance.OnResume += FixedMouse;
         }
         else
         {
             playerCamera.gameObject.SetActive(false);
-            virtualCamera.SetActive(false);
+            virtualCamera.gameObject.SetActive(false);
         }
     }
 
@@ -101,6 +107,10 @@ public class playerMoveController : NetworkBehaviour
         if (IsOwner)
         {
             SpawnAndNotifyServerRpc(OwnerClientId);
+		}
+		else
+		{
+            InitRagdolls();
         }
     }
 
@@ -108,15 +118,19 @@ public class playerMoveController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            if (!isEventPlaying.Value)
+            if (!isEventPlaying.Value && !pause)
             {
                 HandleInput();
-                // HandleInputServerRpc(InputMoveNormal() , InputMouseNormal());
-            }
+				// HandleInputServerRpc(InputMoveNormal() , InputMouseNormal());
+			}
+			else
+			{
+                EventPlayingStop();
+			}
         }
 		else
 		{
-            FindAimTargetObject();
+
         }
       /*  if(handAimTarget == null)
             FindAimTargetObject();*/
@@ -214,9 +228,16 @@ public class playerMoveController : NetworkBehaviour
         HeadBobbing();
     }
 
+    private void EventPlayingStop()
+	{
+        moveDirection = Vector3.zero;
+        SetPlayerAimPos(new Vector3(0, 2f, 10f));
+    }
+
+
     private void HeadBobbing()
 	{
-        if (characterController != null && characterController.isGrounded && characterController.velocity.magnitude > 0.1f)
+        if (characterController != null && IsGrounded() && characterController.velocity.magnitude > 0.1f)
         {
             // 걷는 중일 때만 흔들림
             timer += Time.deltaTime * bobbingSpeed;
@@ -233,23 +254,27 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
+
     private void HandleAim()
 	{
-        /*    //허리 각도 조절이랑 에임 조절용
-            if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, aimMaxDistance , layerMask))
-            {
-                // 충돌한 경우 hit.point로 설정
-               // handAimTarget.transform.position = hit.point;
-                // 충돌하지 않은 경우, maxDistance 지점으로 설정
-                handAimTarget.transform.position = playerCamera.transform.position + playerCamera.transform.forward * aimMaxDistance;
-            }
-            else
-            {
-                // 충돌하지 않은 경우, maxDistance 지점으로 설정
-                handAimTarget.transform.position = playerCamera.transform.position + playerCamera.transform.forward * aimMaxDistance;
-            }*/
+        //허리 각도 조절이랑 에임 조절용
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, aimMaxDistance, layerMask))
+        {
+            Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * hit.distance, Color.red, 0.1f);
 
-        handAimTarget.transform.position = playerCamera.transform.position + playerCamera.transform.forward * aimMaxDistance;
+            // 충돌한 경우 hit.point로 설정
+            aimTargetPosition = hit.point;
+            // 충돌하지 않은 경우, maxDistance 지점으로 설정
+            //handAimTarget.transform.position = playerCamera.transform.position + playerCamera.transform.forward * aimMaxDistance;
+        }
+        else
+        {
+            Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * hit.distance, Color.red, 0.1f);
+            // 충돌하지 않은 경우, maxDistance 지점으로 설정
+            aimTargetPosition = playerCamera.transform.position + playerCamera.transform.forward * aimMaxDistance;
+        }
+
+        handAimTarget.transform.position = Vector3.SmoothDamp(handAimTarget.transform.position, aimTargetPosition, ref velocity, smoothTime);
 
         Vector3 cameraForward = playerCamera.transform.forward.normalized;
         Vector3 cameraPosition = playerCamera.transform.position;
@@ -261,8 +286,9 @@ public class playerMoveController : NetworkBehaviour
         isRunning.Value = isWalking.Value && Input.GetKey(KeyCode.LeftShift);
 
         animator.SetBool("IsWalking", isWalking.Value);
-      //  animator.SetBool("IsRunning", isRunning);
-      //  animator.SetBool("IsJumping", isJumping);
+        //  animator.SetBool("IsRunning", isRunning);
+        animator.SetBool("IsJumping", isJumping);
+        //animator.SetBool("IsJumping", isFalling);
 
         // 애니메이션 속도 및 사운드 동기화
         if (isWalking.Value)
@@ -276,7 +302,7 @@ public class playerMoveController : NetworkBehaviour
 			else
 			{
                 animator.speed = 1f;
-                bobbingSpeed = 14f; // 달리기 속도
+                bobbingSpeed = 13f; // 달리기 속도
                 bobbingAmount = walkBobbingAmount; // 달리기 흔들림 강도
             }
         }
@@ -287,31 +313,67 @@ public class playerMoveController : NetworkBehaviour
     }
 
 
-    public void EventToggle(bool value)
+    public void EventToggle(bool value, GameObject target)
     {
         isEventPlaying.Value = value;
-        enabled = !value;
+        //enabled = !value;
+        interacter.enabled = !value;
 
         if (value)
         {
             FreeMouse();
+            SetAimMode(true , target);
         }
         else
         {
             FixedMouse();
+            SetAimMode();
         }
     }
+
+    //특수상황에 사용하는 에임 포즈.
+    public void SetPlayerAimPos(Vector3 vector)
+	{
+        handAimTarget.transform.position = vector;
+	}
+
+    public void SetAimMode(bool enableComposer = false, GameObject target = null)
+    {
+        if (virtualCamera == null) return;
+
+        if (enableComposer)
+        {
+            // Composer 설정 (LookAt 사용 가능)
+            var composer = virtualCamera.GetCinemachineComponent<CinemachineComposer>();
+            if (composer == null)
+            {
+                virtualCamera.AddCinemachineComponent<CinemachineComposer>();
+            }
+            virtualCamera.LookAt = target.transform; // 카메라가 타겟을 바라보도록 설정
+
+        }
+        else
+        {
+            // Do Nothing 설정 (LookAt 무시)
+            virtualCamera.DestroyCinemachineComponent<CinemachineComposer>();
+            virtualCamera.LookAt = null; // 비우기
+        }
+    }
+
+
 
     private void FixedMouse()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        pause = false;
     }
 
     private void FreeMouse()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        pause = true;
     }
 
     public void SetMouseControl(bool enable)
@@ -319,16 +381,21 @@ public class playerMoveController : NetworkBehaviour
         mouseControl = enable;
     }
 
-    private bool IsGrounded()
+    public bool IsGrounded()
     {
-        return Physics.OverlapSphere(groundCheckPosition.position, groundCheckRadius, groundLayer).Length > 0;
+        bool value = Physics.OverlapSphere(groundCheckPosition.position, groundCheckRadius, groundLayer).Length > 0;
+        return value;
     }
 
-
+    public void SetMouseSensitivity(float sensitivity)
+    {
+        lookSpeed = sensitivity;
+    }
 
     #region SpawnTargetPointer
 
-    public void FindAimTargetObject()
+    //Ragdoll 초기화
+    public void InitRagdolls()
     {
         handAimTarget = this.transform.Find("HandTarget(Clone)");
 

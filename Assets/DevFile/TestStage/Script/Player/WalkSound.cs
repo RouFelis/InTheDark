@@ -7,13 +7,13 @@ public class WalkSound : MonoBehaviour
     public AudioSource footstepSource; // 발소리를 재생할 AudioSource
     public FootstepSoundData footstepSoundData; // 바닥별 발소리 데이터
 
-
+    [SerializeField]private playerMoveController controller;
     public int pos;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -24,10 +24,13 @@ public class WalkSound : MonoBehaviour
 
     public void StepSound()
 	{
-        AudioClip clipToPlay = GetFootstepSound();
-        if (clipToPlay != null && footstepSource != null)
-        {
-            footstepSource.PlayOneShot(clipToPlay);
+        if(controller.IsGrounded())
+		{
+            AudioClip clipToPlay = GetFootstepSound();
+            if (clipToPlay != null && footstepSource != null)
+            {
+                footstepSource.PlayOneShot(clipToPlay);
+            }
         }
     }
 

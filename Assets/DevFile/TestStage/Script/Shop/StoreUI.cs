@@ -27,11 +27,12 @@ public class StoreUI : MonoBehaviour
 
     public LocalizedString localizedString;
 
-    [SerializeField] List<UIStruct> staticUIList; //Á¤Àû UI.
-    [SerializeField] List<AppStruct> appList;
-    [SerializeField] UIStruct token;
-    [SerializeField] UIStruct rareToken;
-    [SerializeField] Button powerButton;
+    [SerializeField] private List<UIStruct> staticUIList; //Á¤Àû UI.
+    [SerializeField] private List<AppStruct> appList;
+    [SerializeField] private UIStruct token;
+    [SerializeField] private UIStruct rareToken;
+    [SerializeField] private Button powerButton;
+    [SerializeField] private ShopInteracter shopInteracter;
 
 
     void Start()
@@ -118,13 +119,15 @@ public class StoreUI : MonoBehaviour
     public void PowerOff()
 	{
         ulong networkObjectId = NetworkManager.Singleton.LocalClient.PlayerObject.NetworkObjectId;
+        Debug.Log("À×ÀÌÀÌÀ×");
 
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
             var playerController = networkObject.gameObject.GetComponent<playerMoveController>();
             if (playerController != null)
             {
-                playerController.EventToggle(false);
+                playerController.EventToggle(false, this.gameObject);
+                shopInteracter.ChangePowerServerRpc(0, false);
 
                 MenuManager.Instance.IsEvenet = false;
                 Debug.Log($"Disabled playerMoveController for {networkObject.name}");

@@ -8,7 +8,7 @@ using Unity.Netcode;
 
 using UnityEngine;
 
-public class EnemyPrototypePawn : NetworkPawn, IDamaged
+public class EnemyPrototypePawn : NetworkPawn, IHealth
 {
 	public const string DEFAULT_STATE = "Normal";
 
@@ -23,7 +23,7 @@ public class EnemyPrototypePawn : NetworkPawn, IDamaged
 	private NetworkVariable<bool> _isActive = new NetworkVariable<bool>(true);
 
 	[SerializeField]
-	private NetworkVariable<int> _health = new NetworkVariable<int>();
+	private NetworkVariable<float> _health = new NetworkVariable<float>();
 
 	// Health로 기능 이전 예정
 	[SerializeField, Obsolete]
@@ -75,12 +75,14 @@ public class EnemyPrototypePawn : NetworkPawn, IDamaged
 		}
 	}
 
-	public int Health 
+	public float Health 
 	{
 		get=> _health.Value; 
 
 		set => _health.Value = value;
 	}
+
+	public AudioClip attackSound;  //타격음 삽입해야해용
 
 	[Obsolete]
 	public float Resistance
@@ -95,8 +97,6 @@ public class EnemyPrototypePawn : NetworkPawn, IDamaged
 			_resistance.Value = value;
 		}
 	}
-
-	public int Damage { get; set; }
 
 	public string State
 	{
@@ -205,7 +205,7 @@ public class EnemyPrototypePawn : NetworkPawn, IDamaged
 		_lightInsightedTrigger.OnUpdate(this, light);
 	}
 
-	public void TakeDamage(int amount)
+	public void TakeDamage(float amount , AudioClip hitSound)
 	{
 		throw new NotImplementedException();
 	}
@@ -221,11 +221,11 @@ public class EnemyPrototypePawn : NetworkPawn, IDamaged
 	//}
 
 	// 갸아아악
-	public void AttackPrototype(IDamaged target)
+	public void AttackPrototype(IHealth target)
 	{
 		if (_cooldown.Value < 0.0F || Mathf.Approximately(_cooldown.Value, 0.0F))
 		{
-			target.TakeDamage(_damage.Value);
+			target.TakeDamage(_damage.Value , attackSound);
 
 			Debug.Log("HIT!!!");
 

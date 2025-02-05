@@ -29,8 +29,10 @@ public class EnterStage : InteractableObject
         if (otherSideDoorSource == null)
         {
             otherSideDoorSource = GameObject.Find("OutDoor_1_SoundSource").GetComponent<AudioSource>();
+            Debug.Log("테스트");
         }
         otherSideDoorSource.Play();
+        Debug.Log("테스트2");
     }
 
 

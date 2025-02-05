@@ -169,6 +169,12 @@ MonoBehaviour:
   scanKey: 0
   lightKey: 0
   sprintKey: 0
+  keySenstive: 2
+  minSensitivity: 0.1
+  maxSensitivity: 10
+  sensitivityInput: {fileID: 0}
+  sensitivitySlider: {fileID: 0}
+  localPlayer: {fileID: 0}
 --- !u!4 &11559153
 Transform:
   m_ObjectHideFlags: 0
@@ -1274,6 +1280,7 @@ MonoBehaviour:
     NetworkTopology: 0
     UseCMBService: 0
     AutoSpawnPlayerPrefabClientSide: 1
+    NetworkMessageMetrics: 1
     NetworkProfilingMetrics: 1
     OldPrefabList: []
   RunInBackground: 1

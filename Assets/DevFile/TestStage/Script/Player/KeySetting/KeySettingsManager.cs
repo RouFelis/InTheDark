@@ -37,6 +37,8 @@ public class KeySettingsManager : MonoBehaviour
     public delegate void OnKeyCodeChanged();
     public event OnKeyCodeChanged KeyCodeChanged;
 
+
+    [Header("Keys")]
     [SerializeField]private KeyCode interactKey;
     [SerializeField]private KeyCode dropKey;
     [SerializeField]private KeyCode useItemKey;
@@ -44,12 +46,18 @@ public class KeySettingsManager : MonoBehaviour
     [SerializeField]private KeyCode lightKey;
     [SerializeField]private KeyCode sprintKey;
 
-
+    [Header("Senstive")]
+    [SerializeField] private float keySenstive = 2f;
+    [SerializeField] private float minSensitivity = 0.1f;
+    [SerializeField] private float maxSensitivity = 10f;
+    [SerializeField] private TMP_InputField sensitivityInput; // 감도 입력 필드 (TMP_InputField 사용)
+    [SerializeField] private Slider sensitivitySlider; // 슬라이더 연결
+    public Player localPlayer;
 
     private bool isPaused = false;
 
-	#region 이게 제일 빠를거같고 키도 몇개안되서 이래 함. 맘에 안들면 이거지우고 그냥 딕셔너리값 불러오게하면됨. 위에있음 ㅇㅇ
-	public KeyCode InteractKey {         
+    #region 이게 제일 빠를거같고 키도 몇개안되서 이래 함. 맘에 안들면 이거지우고 그냥 딕셔너리값 불러오게하면됨. 위에있음 ㅇㅇ
+    public KeyCode InteractKey {         
         get { return interactKey; }
         set
         {
@@ -131,6 +139,9 @@ public class KeySettingsManager : MonoBehaviour
 
         applyButton.onClick.AddListener(ApplyKeySettings); // 적용 버튼에 리스너 추가
         cancelButton.onClick.AddListener(CancelKeySettings); // 취소 버튼에 리스너 추가
+
+        sensitivitySlider.onValueChanged.AddListener(UpdateInputField); //슬라이더 이벤트 추가
+        sensitivityInput.onEndEdit.AddListener(UpdateSliderFromInput); //슬라이더 이벤트 추가
 
         keySettingsPanel.SetActive(false); // 초기 상태는 비활성화
         SetLanguage();
@@ -313,9 +324,59 @@ public class KeySettingsManager : MonoBehaviour
         LocalizationSettings.SelectedLocale = locale; // 선택한 로케일로 변경
     }
 
+	#region MouseSenestive
+	public void senestiveInit()
+	{
+        // 슬라이더 초기화
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.value = keySenstive;
+            sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+        }
 
-	#region 키값
-	[System.Serializable]
+        // 플레이어 컨트롤러 초기화
+        if (localPlayer != null)
+        {
+            localPlayer.SetMouseSensitivity(keySenstive);
+        }
+    }
+    public void SetSensitivity(float sensitivity)
+    {
+        if (localPlayer != null)
+        {
+            localPlayer.SetMouseSensitivity(sensitivity);
+        }
+    }
+
+    // 슬라이더 값이 변경되면 InputField 업데이트
+    private void UpdateInputField(float value)
+    {
+        sensitivityInput.text = value.ToString("0.0"); // 소수점 한 자리까지 표시
+        if (localPlayer != null)
+        {
+            localPlayer.SetMouseSensitivity(value);
+        }
+    }
+
+    // InputField 값이 변경되면 슬라이더 값 업데이트
+    private void UpdateSliderFromInput(string input)
+    {
+        if (float.TryParse(input, out float value))
+        {
+            // 최소/최대 값 범위 제한
+            value = Mathf.Clamp(value, minSensitivity, maxSensitivity);
+            sensitivitySlider.value = value; // 슬라이더 값 변경
+        }
+        else
+        {
+            // 숫자가 아닐 경우 기본 값으로 복원
+            sensitivityInput.text = sensitivitySlider.value.ToString("0");
+        }
+    }
+
+    #endregion
+    #region 키값
+    [System.Serializable]
     private class KeySetting
     {
         public string name; // 키 이름

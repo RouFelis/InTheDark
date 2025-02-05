@@ -16,14 +16,14 @@ public class ShopInteracter : InteractableObject
 		{
             NetworkObject netObject = interactingObjectTransform.GetComponent<NetworkObject>();
             NetUtil.TeleportUtil.SetEveryPlayerPosServerRPC(netObject.NetworkObjectId, usePosTransform.position, new Vector3(0f, 90f, 0f));
-
+            
             //ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ ¸ØÃç!
             playerMoveController controller = netObject.gameObject.GetComponent<playerMoveController>();
-            controller.EventToggle(true);
+            controller.EventToggle(true, this.gameObject);
 
             storeUI.initObject();
 
-            ChangeBoolServerRpc(interactingObjectTransform.GetComponent<NetworkObject>().NetworkObjectId);
+            ChangePowerServerRpc(interactingObjectTransform.GetComponent<NetworkObject>().NetworkObjectId , true);
 
             MenuManager.Instance.IsEvenet = true;
 
@@ -31,11 +31,19 @@ public class ShopInteracter : InteractableObject
         }       
     }
 
-
-    [ServerRpc]
-    public void ChangeBoolServerRpc(ulong playerNum)
+/*    ulong test;
+	private void Update()
 	{
-        isUsed.Value = false;
+		if (isUsed.Value)
+		{
+            NetUtil.TeleportUtil.SetEveryPlayerPosServerRPC(test, usePosTransform.position, new Vector3(0f, 90f, 0f));
+        }
+	}*/
+
+	[ServerRpc(RequireOwnership = false)]
+    public void ChangePowerServerRpc(ulong playerNum , bool isPower)
+	{        
+        isUsed.Value = isPower;
         SelectPlayerCode.Value = playerNum;
     }
 }

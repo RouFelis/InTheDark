@@ -22,7 +22,7 @@ public class AttackTargetPawn : Action
 
 	public override TaskStatus OnUpdate()
 	{
-		var target = pawn.Value.GetComponent<IDamaged>();
+		var target = pawn.Value.GetComponent<IHealth>();
 
 		if (!_agent.isStopped)
 		{
