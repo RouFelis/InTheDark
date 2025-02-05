@@ -238,15 +238,14 @@ MonoBehaviour:
   _radius: 30
   _stage:
   - Triggers:
-    - {fileID: 11400000, guid: 9278ab461829f3b40b5c43c41d0c31f4, type: 2}
-    - {fileID: 11400000, guid: 9278ab461829f3b40b5c43c41d0c31f4, type: 2}
-    - {fileID: 11400000, guid: 9278ab461829f3b40b5c43c41d0c31f4, type: 2}
+    - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
   _prefabs:
   - {fileID: 808785113655335579, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
   - {fileID: 808785113655335579, guid: cb6c9a952d86fa349ac1f084ed08ac97, type: 3}
   - {fileID: 808785113655335579, guid: 4ca8b27a6a5622340971b24e50b98f7d, type: 3}
   - {fileID: 808785113655335579, guid: e989c7fad7b413e46800b60a33598e6b, type: 3}
   - {fileID: 808785113655335579, guid: ba75bd1aa7fd3fd4d94d6e092475c058, type: 3}
+  - {fileID: 1433858302028618446, guid: 43cdb5ef002b2be4ba64d6a54dcec8be, type: 3}
 --- !u!1 &697649707
 GameObject:
   m_ObjectHideFlags: 0
