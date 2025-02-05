@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: new delay spawn
   m_EditorClassIdentifier: 
   _buildIndex: 4
-  _cooldown: 5
+  _cooldown: 15
+  _generator: {fileID: 11400000, guid: 3d77ce21b3e83c7448dfc2ed1e03e9ad, type: 2}
   _handlerPrefab: {fileID: 2253583424494195628, guid: 44df0b05a6caf594a87c046080ef46ed, type: 3}

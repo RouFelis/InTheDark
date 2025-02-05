@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dbdd7cdda54d024abad2fb7112378a3, type: 3}
-  m_Name: IsEnemyInSight
+  m_Script: {fileID: 11500000, guid: 38baaae3739e5a049b28d4acf671710b, type: 3}
+  m_Name: ReturnVector3Zero
   m_EditorClassIdentifier: 
-  _isDisplayable: 1
-  _maxDistance: 30
-  _angle: 30

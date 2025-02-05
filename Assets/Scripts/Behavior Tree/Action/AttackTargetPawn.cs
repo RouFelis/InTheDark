@@ -24,10 +24,12 @@ public class AttackTargetPawn : Action
 	{
 		var target = pawn.Value.GetComponent<IHealth>();
 
-		if (!_agent.isStopped)
-		{
-			_agent?.ResetPath();
-		}
+		//if (!_agent.isStopped)
+		//{
+		//	_agent?.ResetPath();
+		//}
+
+		_agent?.ResetPath();
 
 		// 대충 공격하는 스크립트
 		if (target != null)

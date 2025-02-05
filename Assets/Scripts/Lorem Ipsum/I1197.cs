@@ -1,8 +1,6 @@
-using UnityEngine;
-
 namespace InTheDark.LoremIpsum
 {
-	public interface I0566<T>
+	public interface I1197<T>
 	{
 		public void OnCompleted();
 

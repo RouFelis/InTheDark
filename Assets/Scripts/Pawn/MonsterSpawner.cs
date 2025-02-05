@@ -212,6 +212,8 @@ namespace InTheDark.Prototypes
 				if (isOnNavMesh)
 				{
 					result = hit.position;
+
+					Debug.Log($"{i}번 시도 차에 {hit.position} 목표 설정 - {gameObject}");
 				}
 			}
 
