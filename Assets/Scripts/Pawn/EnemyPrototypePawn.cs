@@ -1,16 +1,21 @@
+using Cysharp.Threading.Tasks;
 using InTheDark.Prototypes;
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Unity.Collections;
 using Unity.Netcode;
 
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyPrototypePawn : NetworkPawn, IHealth
 {
 	public const string DEFAULT_STATE = "Normal";
+
+	public const string WALKING_STATE = "IsWalking";
 
 	public float InitializeCooldownValue;
 	public int InitializeHealthValue;
@@ -38,6 +43,11 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	[SerializeField]
 	private NetworkVariable<FixedString128Bytes> _state = new(DEFAULT_STATE);
 
+	public AudioClip attackSound;  //타격음 삽입해야해용
+
+	[SerializeField]
+	private NavMeshAgent _agent;
+
 	[SerializeField]
 	private Animator _animator;
 
@@ -49,6 +59,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	[SerializeField]
 	private Loot[] _loots;
+
+	private CancellationTokenSource _onAttack;
 
 	//private List<LightSource> _sighted = new List<LightSource>();
 
@@ -85,8 +97,6 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		set => _health.Value = value;
 	}
 
-	public AudioClip attackSound;  //타격음 삽입해야해용
-
 	[Obsolete]
 	public float Resistance
 	{
@@ -112,6 +122,14 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		{
 			_state.Value = value;
 		}
+	}
+
+	public override void OnDestroy()
+	{
+		base.OnDestroy();
+
+		_onAttack?.Cancel();
+		_onAttack?.Dispose();
 	}
 
 	public override void OnNetworkSpawn()
@@ -228,13 +246,23 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	{
 		if (_cooldown.Value < 0.0F || Mathf.Approximately(_cooldown.Value, 0.0F))
 		{
-			target.TakeDamage(_damage.Value , attackSound);
-			_animator?.SetTrigger("IsAttacking");
-
-			Debug.Log("HIT!!!");
-
 			_cooldown.Value = InitializeCooldownValue;
+
+			//target.TakeDamage(_damage.Value , attackSound);
+			//_animator?.SetTrigger("OnAttack");
+
+			OnAttackWithAnimaiton(target).Forget();
 		}
+	}
+
+	private async UniTaskVoid OnAttackWithAnimaiton(IHealth target)
+	{
+		_animator?.SetTrigger("OnAttack");
+
+		await UniTask.Delay(TimeSpan.FromSeconds(1.0F));
+
+		target.TakeDamage(_damage.Value, attackSound);
+		Debug.Log("HIT!!!");
 	}
 
 	public void Dead()
@@ -250,6 +278,20 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public void Die()
 	{
+		_onAttack?.Cancel();
+		_onAttack?.Dispose();
+
 		_deathTrigger.OnUpdate(this);
+	}
+
+	public void StartMove()
+	{
+		_animator?.SetBool(WALKING_STATE, true);
+	}
+
+	public void StopMove()
+	{
+		_agent?.ResetPath();
+		_animator?.SetBool(WALKING_STATE, false);
 	}
 }

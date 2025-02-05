@@ -29,7 +29,8 @@ public class AttackTargetPawn : Action
 		//	_agent?.ResetPath();
 		//}
 
-		_agent?.ResetPath();
+		//_agent?.ResetPath();
+		_self.StopMove();
 
 		// 대충 공격하는 스크립트
 		if (target != null)
