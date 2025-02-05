@@ -13,6 +13,9 @@ namespace InTheDark.Prototypes
 		private float _cooldown;
 
 		[SerializeField]
+		private PositionGenerator _generator;
+
+		[SerializeField]
 		private EnemySpawnDelayHandler _handlerPrefab;
 
 		private EnemySpawnDelayHandler _handler;
@@ -25,7 +28,8 @@ namespace InTheDark.Prototypes
 		[Rpc(SendTo.Server)]
 		private void SendingSpawnEnemyRPC()
 		{
-			var position = MonsterSpawner.Instance.GetRandomPositionInNavMesh();
+			//var position = MonsterSpawner.Instance.GetRandomPositionInNavMesh();
+			var position = _generator.Generate();
 
 			GetHandler().StartEnemySpawnRPC(_buildIndex, position, Quaternion.identity, _cooldown);
 		}

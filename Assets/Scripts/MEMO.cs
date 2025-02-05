@@ -21,8 +21,6 @@ namespace InTheDark.LoremIpsum
 
 		// Subscriber
 
-		// Decorate
-
 		// Instruction
 
 		// Perception
@@ -30,12 +28,24 @@ namespace InTheDark.LoremIpsum
 
 		// IsHost, IsClient, IsServer, IsOwner 다 true 들어옴 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
 
+		// logistics
+
+		// IUpStream<TSource>
+		// IDownStream<TSource>
+		// IStreamHandler
+
 		// ServerRpc() == Rpc(SendTo.Server) == 서버에게!
 		// ClientRpc() == Rpc(SendTo.NotServer) == 다른 유저에게!
 		// 근데 보통 SendTo.Everyone 쓰게 되는 일이 더 많은 듯?
 
-		// 시간차 소환
+		// 시간차 소환 (O)
 		// AI 모델 및 모션 적용
+
+		// AI 몬스터 방 넘어가게 변경
+		// Player 공격 하면 감지
+
+		// 소한 위치 조정 (플레이어 근처 X -> 시야 밖 생성)
+		// 상점 기능 대체 방법 생각하기 (티비)
 	}
 }
 

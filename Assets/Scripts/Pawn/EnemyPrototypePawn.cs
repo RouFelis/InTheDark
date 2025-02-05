@@ -39,6 +39,9 @@ public class EnemyPrototypePawn : NetworkPawn, IDamaged
 	private NetworkVariable<FixedString128Bytes> _state = new(DEFAULT_STATE);
 
 	[SerializeField]
+	private Animator _animator;
+
+	[SerializeField]
 	private EnemyDeathTrigger _deathTrigger;
 
 	[SerializeField]
@@ -226,6 +229,7 @@ public class EnemyPrototypePawn : NetworkPawn, IDamaged
 		if (_cooldown.Value < 0.0F || Mathf.Approximately(_cooldown.Value, 0.0F))
 		{
 			target.TakeDamage(_damage.Value);
+			//_animator?.SetTrigger("IsAttacking");
 
 			Debug.Log("HIT!!!");
 

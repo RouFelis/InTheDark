@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3371959488
+  GlobalObjectIdHash: 3677719752
   InScenePlacedSourceGlobalObjectIdHash: 2165609246
   DeferredDespawnTick: 0
   Ownership: 1
@@ -215,7 +215,7 @@ MonoBehaviour:
   logTaskChanges: 0
   group: 0
   resetValuesOnRestart: 0
-  externalBehavior: {fileID: 11400000, guid: 39a9abd4275512b479359daa56301f39, type: 2}
+  externalBehavior: {fileID: 11400000, guid: ddefc1849c5fc1340a3f69a9f19cb0f3, type: 2}
   mBehaviorSource:
     behaviorName: Behavior
     behaviorDescription: 
@@ -401,6 +401,7 @@ MonoBehaviour:
         byte0123: 0
         byte0124: 0
         byte0125: 0
+  _animator: {fileID: 0}
   _deathTrigger: {fileID: 11400000, guid: d2dc9e120596c1c40a3890c4958ee638, type: 2}
   _lightInsightedTrigger: {fileID: 11400000, guid: e3029e7a3b60ff74a94892dd565492d3, type: 2}
   _loots:

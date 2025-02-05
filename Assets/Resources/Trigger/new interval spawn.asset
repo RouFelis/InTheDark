@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _buildIndex: 0
   _cooldown: 6
+  _generator: {fileID: 11400000, guid: 3bf31087fa19c84448bf32d2a1708b68, type: 2}
   _handlerPrefab: {fileID: 9146537953736876458, guid: 7a203b2d61ada9c4d8510e590b73b45e, type: 3}

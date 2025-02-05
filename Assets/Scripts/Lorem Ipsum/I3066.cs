@@ -2,8 +2,8 @@ using System;
 
 namespace InTheDark.LoremIpsum
 {
-	public interface I3066<out T>
+	public interface I3066<T>
 	{
-		public IDisposable Subscribe(I0566<T> i0566);
+		public IDisposable Subscribe(I0566<T> observer);
 	} 
 }
