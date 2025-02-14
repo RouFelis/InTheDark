@@ -19,10 +19,10 @@ public class GetRandomPositionOnNavMesh : Action
         
         target.Value = isOnNavMesh ? hit.position : transform.position;
 
-        if (isOnNavMesh)
-        {
-            Debug.Log($"아니 여긴 {gameObject} 목표 {randomDirection}을 {hit.position}로 잘 잡아주잖아 ㅡㅡ");
-        }
+        //if (isOnNavMesh)
+        //{
+        //    Debug.Log($"아니 여긴 {gameObject} 목표 {randomDirection}을 {hit.position}로 잘 잡아주잖아 ㅡㅡ");
+        //}
 
         return result;
     }

@@ -239,6 +239,8 @@ MonoBehaviour:
   _stage:
   - Triggers:
     - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
+    - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
+    - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
   _prefabs:
   - {fileID: 808785113655335579, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
   - {fileID: 808785113655335579, guid: cb6c9a952d86fa349ac1f084ed08ac97, type: 3}

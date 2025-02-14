@@ -16,6 +16,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public const string DEFAULT_STATE = "Normal";
 
 	public const string WALKING_STATE = "IsWalking";
+	public const string ATTACK_TRIGGER = "OnAttack";
 
 	public float InitializeCooldownValue;
 	public int InitializeHealthValue;
@@ -60,7 +61,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	[SerializeField]
 	private Loot[] _loots;
 
-	private CancellationTokenSource _onAttack;
+	//private CancellationTokenSource _onAttack;
 
 	//private List<LightSource> _sighted = new List<LightSource>();
 
@@ -128,8 +129,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	{
 		base.OnDestroy();
 
-		_onAttack?.Cancel();
-		_onAttack?.Dispose();
+		//_onAttack?.Cancel();
+		//_onAttack?.Dispose();
 	}
 
 	public override void OnNetworkSpawn()
@@ -257,12 +258,16 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	private async UniTaskVoid OnAttackWithAnimaiton(IHealth target)
 	{
-		_animator?.SetTrigger("OnAttack");
+		if (_animator)
+		{
+			_animator.SetTrigger(ATTACK_TRIGGER);
+		}
+		//_animator?.SetTrigger(ATTACK_TRIGGER);
 
-		await UniTask.Delay(TimeSpan.FromSeconds(1.0F));
+		await UniTask.Delay(TimeSpan.FromSeconds(0.9F));
 
 		target.TakeDamage(_damage.Value, attackSound);
-		Debug.Log("HIT!!!");
+		//Debug.Log("HIT!!!");
 	}
 
 	public void Dead()
@@ -278,20 +283,33 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public void Die()
 	{
-		_onAttack?.Cancel();
-		_onAttack?.Dispose();
+		//_onAttack?.Cancel();
+		//_onAttack?.Dispose();
 
 		_deathTrigger.OnUpdate(this);
 	}
 
 	public void StartMove()
 	{
-		_animator?.SetBool(WALKING_STATE, true);
+		if (_animator)
+		{
+			_animator.SetBool(WALKING_STATE, true);
+		}
 	}
 
 	public void StopMove()
 	{
-		_agent?.ResetPath();
-		_animator?.SetBool(WALKING_STATE, false);
+		if (_agent)
+		{
+			_agent.ResetPath();
+		}
+
+		if (_animator)
+		{
+			_animator.SetBool(WALKING_STATE, false);
+		}
+
+		//_agent?.ResetPath();
+		//_animator?.SetBool(WALKING_STATE, false);
 	}
 }

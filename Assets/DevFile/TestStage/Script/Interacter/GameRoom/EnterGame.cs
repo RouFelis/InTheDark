@@ -36,10 +36,10 @@ public class EnterGame : InteractableObject
         RequestSceneChangeClientRpc(sceneName);
 
         // 2024.12.26 던전 입장 이벤트 재배치
-        using var command = new InTheDark.Prototypes.Enter()
-        {
-            BuildIndex = 0
-        }; 
+        //using var command = new InTheDark.Prototypes.Enter()
+        //{
+        //    BuildIndex = 0
+        //}; 
         
         if (doorAnimationCoroutine == null)
         {
@@ -49,7 +49,7 @@ public class EnterGame : InteractableObject
             doorState.Value = !doorState.Value;
         }
 
-        command.Invoke();
+        //command.Invoke();
 	}
 
 	[ClientRpc]

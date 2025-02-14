@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,9 +20,18 @@ namespace InTheDark.Prototypes
 				var damage = Time.deltaTime * light.DamagePercent;
 				var resistance = Mathf.Max(pawn.Resistance - damage, 0.0F);
 				var agent = pawn.GetComponent<NavMeshAgent>();
+				var behavior = pawn.GetComponent<BehaviorTree>();
+				var player = light.GetComponent<Player>();
 
 				pawn.Resistance = resistance;
 				pawn.State = ENRAGE_STATE;
+
+				if (behavior && player)
+				{
+					behavior.SetVariableValue("TargetPawn", player);
+
+					//Debug.Log("³ª È­³µ¾û!");
+				}
 
 				agent.speed = 11.25F;
 			}

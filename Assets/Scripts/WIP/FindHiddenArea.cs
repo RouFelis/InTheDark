@@ -27,12 +27,13 @@ namespace InTheDark.Prototypes
 				var point = Random.insideUnitSphere * _radius + result;
 				var isEnable = NavMesh.SamplePosition(point, out var navMeshHitInfo, _radius, NavMesh.AllAreas);
 
-				if (isEnable)
-				{
-					Debug.Log($"제발 {navMeshHitInfo.position}가 된다면 한번만이라도 메세지를...ㅠㅠㅠ");
-				}
+				// 이제 됩니당!
+				//if (isEnable)
+				//{
+				//	Debug.Log($"제발 {navMeshHitInfo.position}가 된다면 한번만이라도 메세지를...ㅠㅠㅠ");
+				//}
 
-				Debug.Log($"원본이 {point}인데 어떻게... 아니 그냥 {navMeshHitInfo.position}일단 뜨,ㅣ워");
+				//Debug.Log($"원본이 {point}인데 어떻게... 아니 그냥 {navMeshHitInfo.position}일단 뜨,ㅣ워");
 
 				for (var j = 0; isEnable && j < players.Length; j++)
 				{
@@ -53,7 +54,7 @@ namespace InTheDark.Prototypes
 					result = navMeshHitInfo.position;
 					isRunning = false;
 
-					Debug.Log($"{result} 로 합의...");
+					Debug.Log($"{result} 로 극적 합의...");
 				}
 
 				//Debug.Log($"{result} jbfhsdbfjdsbdfjb");

@@ -24,13 +24,14 @@ public class StartTest : StartRoomSetter
             dungeon.Generate();
         }
 
-		// 추가?
-		// 2024.12.26 던전 입장 이벤트 재배치
-		//using var command = new InTheDark.Prototypes.Enter()
-		//{
-		//    BuildIndex = 0
-		//};
+        // 추가?
+        // 2024.12.26 던전 입장 이벤트 재배치
+        // 2025.02.10 롤백?
+        using var command = new InTheDark.Prototypes.Enter()
+        {
+            BuildIndex = 0
+        };
 
-		//command.Invoke();
-	}
+        command.Invoke();
+    }
 }

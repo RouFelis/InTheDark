@@ -81,6 +81,13 @@ namespace InTheDark.Prototypes
 			DontDestroyOnLoad(gameObject);
 		}
 
+		//private void Update()
+		//{
+		//	var target = GetRandomPositionInNavMesh();
+
+		//	Debug.Log($"현재 랜덤으로 받아오는 좌표는 {target}야...");
+		//}
+
 		public override void OnNetworkSpawn()
 		{
 			if (NetworkManager.Singleton)

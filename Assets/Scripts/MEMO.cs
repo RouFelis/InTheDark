@@ -37,6 +37,7 @@ namespace InTheDark.LoremIpsum
 		// ServerRpc() == Rpc(SendTo.Server) == 서버에게!
 		// ClientRpc() == Rpc(SendTo.NotServer) == 다른 유저에게!
 		// 근데 보통 SendTo.Everyone 쓰게 되는 일이 더 많은 듯?
+		// 아닌가
 
 		// 시간차 소환 (O)
 		// AI 모델 및 모션 적용
@@ -46,6 +47,8 @@ namespace InTheDark.LoremIpsum
 
 		// 소한 위치 조정 (플레이어 근처 X -> 시야 밖 생성)
 		// 상점 기능 대체 방법 생각하기 (티비)
+
+		// 그냥 던전이 생성 안된 상태에서 위치 잡아서 그런거였네...
 	}
 }
 
