@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2916c4b164907446b40a4d15214ba78, type: 3}
   m_Name: DebugSettings
   m_EditorClassIdentifier: 
-  _levels: 
+  _levels: 02000000020000000200000002000000
   EnableRecordingDiagnostics: 0
   RecordMicrophoneRawAudio: 0
   RecordPreprocessorOutput: 0

@@ -193,26 +193,7 @@ MonoBehaviour:
       - rid: 3671807161102762007
       - rid: 3671807161102762008
     m_RuntimeSettings:
-      m_List:
-      - rid: 8556427327610290176
-      - rid: 8556427327610290180
-      - rid: 3671807161102761984
-      - rid: 3671807161102761985
-      - rid: 3671807161102761988
-      - rid: 3671807161102761989
-      - rid: 3671807161102761990
-      - rid: 3671807161102761992
-      - rid: 3671807161102761995
-      - rid: 3671807161102761996
-      - rid: 3671807161102761997
-      - rid: 3671807161102761998
-      - rid: 3671807161102761999
-      - rid: 3671807161102762001
-      - rid: 3671807161102762002
-      - rid: 3671807161102762005
-      - rid: 3671807161102762006
-      - rid: 3671807161102762007
-      - rid: 3671807161102762008
+      m_List: []
   renderingLayerNames:
   - Light Layer default
   - Light Layer 1
@@ -285,14 +266,14 @@ MonoBehaviour:
           m_CustomPostProcessTypesAsString: []
         m_BeforePostProcessCustomPostProcesses:
           m_InjectionPoint: 1
-          m_CustomPostProcessTypesAsString: []
+          m_CustomPostProcessTypesAsString:
+          - ToonShadingPP, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         m_AfterPostProcessBlursCustomPostProcesses:
           m_InjectionPoint: 4
           m_CustomPostProcessTypesAsString: []
         m_AfterPostProcessCustomPostProcesses:
           m_InjectionPoint: 2
           m_CustomPostProcessTypesAsString:
-          - ToonShadingPP, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
           - Sobel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
     - rid: 3671807161102761990
       type: {class: RenderGraphSettings, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}

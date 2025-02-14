@@ -282,8 +282,11 @@ public class playerMoveController : NetworkBehaviour
 
     private void UpdateAnimator()
     {
-        isWalking.Value = moveDirection.x != 0 || moveDirection.z != 0;
-        isRunning.Value = isWalking.Value && Input.GetKey(KeyCode.LeftShift);
+		if (IsOwner)
+        {
+            isWalking.Value = moveDirection.x != 0 || moveDirection.z != 0;
+            isRunning.Value = isWalking.Value && Input.GetKey(KeyCode.LeftShift);
+        }
 
         animator.SetBool("IsWalking", isWalking.Value);
         //  animator.SetBool("IsRunning", isRunning);

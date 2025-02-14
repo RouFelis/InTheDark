@@ -11,6 +11,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
+using UnityEngine.VFX;
+
+
 public class EnemyPrototypePawn : NetworkPawn, IHealth
 {
 	public const string DEFAULT_STATE = "Normal";
@@ -22,6 +25,21 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public int InitializeHealthValue;
 	[Obsolete] public float InitializeResistanceValue;
 
+	//추가. 24 2 14
+	[SerializeField]
+	private Renderer objectRenderer;
+	[SerializeField]
+	private VisualEffect damagedVFXgraph;
+	[SerializeField]
+	private VisualEffect dieVFXgraph;
+	[SerializeField]
+	private Material[] skinnedMaterials;
+
+
+	private float dissolveRate = 0.025f;
+	private float refreshRate = 0.025f;
+
+
 	[SerializeField]
 	private NetworkVariable<bool> _isDead = new NetworkVariable<bool>(false);
 
@@ -30,6 +48,9 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	[SerializeField]
 	private NetworkVariable<float> _health = new NetworkVariable<float>();
+
+	[SerializeField]
+	private NetworkVariable<float> _maxHealth = new NetworkVariable<float>();
 
 	// Health로 기능 이전 예정
 	[SerializeField, Obsolete]
@@ -98,6 +119,13 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		set => _health.Value = value;
 	}
 
+	public float MaxHealth
+	{
+		get => _maxHealth.Value;
+
+		set => _maxHealth.Value = value;
+	}
+
 	[Obsolete]
 	public float Resistance
 	{
@@ -123,6 +151,11 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		{
 			_state.Value = value;
 		}
+	}
+
+	private void Start()
+	{
+		skinnedMaterials = objectRenderer.materials;
 	}
 
 	public override void OnDestroy()
@@ -172,7 +205,9 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 			//	gameObject.SetActive(true);
 			//}
 
-			gameObject.SetActive(!newValue);
+			//gameObject.SetActive(!newValue);
+
+			StartCoroutine(DieEffect());
 		}
 
 		//Debug.LogError("설마 이거 호출 안됨?");
@@ -188,6 +223,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	private void OnResistanceChanged(float oldValue, float newValue)
 	{
+		DamagedEffect();
+
 		if (!_isDead.Value && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
 		{
 			//Dead();
@@ -223,8 +260,52 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public void OnLightInsighted(LightSource light)
 	{
 		//_sighted.Add(light);
-
 		_lightInsightedTrigger.OnUpdate(this, light);
+	}
+
+	//데미지 받았을 때 이펙트.
+	public void DamagedEffect()
+	{ 
+		float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / _maxHealth.Value)); // 0~1 값으로 제한
+
+		Debug.Log($"Damaged : {_resistance.Value}");
+		Debug.Log($"healthRatio : {healthRatio}");
+
+		if (dieVFXgraph != null && damagedVFXgraph != null)
+		{
+			damagedVFXgraph.Play();
+		}
+
+		// 모든 머티리얼에 적용
+		foreach (Material mat in skinnedMaterials)
+		{
+			mat.SetFloat("_ColorFillAmount", healthRatio);
+		}
+	}
+
+	public IEnumerator DieEffect()
+	{
+		if (dieVFXgraph != null && damagedVFXgraph != null)
+		{
+			Debug.Log("Enemy DieEffectPlaying...");
+			damagedVFXgraph.Stop();
+			dieVFXgraph.Play();
+		}
+
+		if (skinnedMaterials.Length > 0)
+		{
+			float counter = 0;
+
+			while (skinnedMaterials[0].GetFloat("_DissolveAmount") < 1)
+			{
+				counter += dissolveRate;
+				for (int i = 0; i < skinnedMaterials.Length; i++)
+				{
+					skinnedMaterials[i].SetFloat("_DissolveAmount", counter);
+				}
+				yield return new WaitForSeconds(refreshRate);
+			}
+		}
 	}
 
 	public void TakeDamage(float amount , AudioClip hitSound)
