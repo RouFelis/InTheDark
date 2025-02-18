@@ -16,6 +16,7 @@ public class playerMoveController : NetworkBehaviour
 
     [Header("Camera & Head Rotation")]
     [SerializeField] protected Camera playerCamera;
+    [SerializeField] protected Camera thirdPersonCamera;
     [SerializeField] protected CinemachineVirtualCamera virtualCamera;
     [SerializeField] private Transform headTarget;
     [SerializeField] private Transform camTarget;
@@ -26,9 +27,6 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] protected Animator animator;
 
     [Header("Networking")]
-  //  [SerializeField] private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>();
-  //  [SerializeField] private NetworkVariable<Vector3> networkRotation = new NetworkVariable<Vector3>();
- //   [SerializeField] private NetworkVariable<Quaternion> networkHeadRotation = new NetworkVariable<Quaternion>();
     [SerializeField] private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
@@ -87,6 +85,7 @@ public class playerMoveController : NetworkBehaviour
         {
             playerCamera.gameObject.SetActive(true);
             virtualCamera.gameObject.SetActive(true);
+            thirdPersonCamera.gameObject.SetActive(false);
             FixedMouse();
             interacter = GetComponent<Interacter>();
             MenuManager.Instance.OnPause += FreeMouse;
@@ -96,6 +95,7 @@ public class playerMoveController : NetworkBehaviour
         {
             playerCamera.gameObject.SetActive(false);
             virtualCamera.gameObject.SetActive(false);
+            thirdPersonCamera.gameObject.SetActive(false);
         }
     }
 
@@ -114,7 +114,7 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
-    private void LateUpdate()
+    public virtual void LateUpdate()
     {
         if (IsOwner)
         {
@@ -153,23 +153,6 @@ public class playerMoveController : NetworkBehaviour
             MenuManager.Instance.OnPause -= FreeMouse;
             MenuManager.Instance.OnResume -= FixedMouse;
         }
-    }
-
-    private Vector2 InputMoveNormal()
-	{
-        // 이동 입력
-        float horizontal = Input.GetAxis("Horizontal");
-        Debug.Log("horizontal : " + horizontal);
-        float vertical = Input.GetAxis("Vertical");
-        Debug.Log("vertical : " + vertical);
-        return new Vector2(horizontal, vertical);
-    }
-    private Vector2 InputMouseNormal()
-    {
-        // 이동 입력
-        float horizontal = Input.GetAxis("Mouse X");
-        float vertical = Input.GetAxis("Mouse Y");
-        return new Vector2(horizontal, vertical);
     }
 
     private void HandleInput()
@@ -235,6 +218,7 @@ public class playerMoveController : NetworkBehaviour
     }
 
 
+    //걸을때 머리 덜렁이기 ㅋㅋ
     private void HeadBobbing()
 	{
         if (characterController != null && IsGrounded() && characterController.velocity.magnitude > 0.1f)

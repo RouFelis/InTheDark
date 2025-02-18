@@ -54,7 +54,7 @@ public class Player : playerMoveController , IHealth , ICharacter
 	public NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
 	public NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
 	public NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
-	[SerializeField] private float maxHealth = 100;
+	[SerializeField] private float maxHealth = 5;
 	public NetworkVariable<float> currentHealth = new NetworkVariable<float>(value:100, writePerm: NetworkVariableWritePermission.Server);
 
 	public float Health => currentHealth.Value; // 체력 값은 외부에서 수정 불가
@@ -68,7 +68,11 @@ public class Player : playerMoveController , IHealth , ICharacter
 	[SerializeField] private GameObject firstPersonObject;
 	[SerializeField] private GameObject thirdPersonObject;
 
-	
+	[Header("DieTarget")]
+	[SerializeField] private GameObject DieTargetGameObject;
+
+	private SpotlightControl spotlightControl;
+
 	//Hit Volume
 	private Volume volume;
 	private Vignette vignette;
@@ -97,10 +101,13 @@ public class Player : playerMoveController , IHealth , ICharacter
 		//AudioManager.Instance.SetbuttonSorce(audioSource);
 	}
 
-	private void Update()
+	public override void LateUpdate()
 	{
-
+		if(!IsDead)
+			base.LateUpdate();
 	}
+
+
 
 	private IEnumerator InitSaveSystem()
 	{
@@ -123,6 +130,7 @@ public class Player : playerMoveController , IHealth , ICharacter
 			defaultVignette = vignette.intensity.value;
 		}
 
+		spotlightControl = GetComponent<SpotlightControl>();
 		originalCameraPosition = playerCamera.transform.localPosition;
 		KeySettingsManager.Instance.localPlayer = this;
 		playerName.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
@@ -239,7 +247,9 @@ public class Player : playerMoveController , IHealth , ICharacter
 		}
 
 		firstPersonObject.gameObject.SetActive(false);
-		virtualCamera.LookAt = transform;
+		ChangeLayer(thirdPersonObject, 11);
+		SetAimMode(true, DieTargetGameObject);
+		spotlightControl.ToogleLight();
 	}
 
 

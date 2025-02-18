@@ -16,8 +16,8 @@ public class WeaponSystem : NetworkBehaviour
     public NetworkVariable<float> batteryCapacity = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
 
     [Header("needDatas")]
-    private SaveSystem saveSystem;
-    private Player player;
+    protected SaveSystem saveSystem;
+    protected Player player;
 
 
     public delegate void OnWeaponUpgraded(float _baseDamage, float _zoomDamage);

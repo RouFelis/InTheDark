@@ -169,7 +169,7 @@ Material:
     - _DissolveAmount: 0
     - _DissolveAmount_2: 0
     - _DissolveScale: 100
-    - _DissolveWidth: 0.1
+    - _DissolveWidth: -0.2
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 1

@@ -31,6 +31,10 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	[SerializeField]
 	private VisualEffect damagedVFXgraph;
 	[SerializeField]
+	private AudioSource damagedAudio;
+	[SerializeField]
+	private AudioSource damagedAudioClip;
+	[SerializeField]
 	private VisualEffect dieVFXgraph;
 	[SerializeField]
 	private Material[] skinnedMaterials;
@@ -280,7 +284,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		foreach (Material mat in skinnedMaterials)
 		{
 			mat.SetFloat("_ColorFillAmount", healthRatio);
-		}
+		}		
 	}
 
 	public IEnumerator DieEffect()

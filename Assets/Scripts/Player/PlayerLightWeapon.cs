@@ -31,10 +31,10 @@ namespace InTheDark.Prototypes
 			if (_weapon && _source)
 			{
 				_weapon.isRightClickHeld.OnValueChanged += OnPlayerRightClickHeld;
-				_weapon.isRecovering.OnValueChanged += OnPlayerRecovering;
+			//	_weapon.isRecovering.OnValueChanged += OnPlayerRecovering;
 
 				SetWeaponData(_weapon.isRightClickHeld.Value);
-				SetWeaponActive(_weapon.isRecovering.Value);
+			//	SetWeaponActive(_weapon.isRecovering.Value);
 			}
 		}
 
@@ -43,7 +43,7 @@ namespace InTheDark.Prototypes
 			if (_weapon)
 			{
 				_weapon.isRightClickHeld.OnValueChanged -= OnPlayerRightClickHeld;
-				_weapon.isRecovering.OnValueChanged -= OnPlayerRecovering;
+			//	_weapon.isRecovering.OnValueChanged -= OnPlayerRecovering;
 			}
 		}
 
