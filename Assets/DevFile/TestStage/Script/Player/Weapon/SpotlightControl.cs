@@ -8,8 +8,8 @@ public class SpotlightControl : WeaponSystem
     [Header("Spotlight Settings")]
     public Light firstPersonWeaponLight; // 무기 역할을 하는 조명
     public Light thirdPersonWeaponLight; // 무기 역할을 하는 조명
-    public float zoomedInnerAngle = 20f; // 우클릭 시 Inner Angle
-    public float zoomedOuterAngle = 30f; // 우클릭 시 Outer Angle
+    public float zoomedInnerAngle = 20f; // 우클릭 시 Inner Range
+    public float zoomedOuterAngle = 30f; // 우클릭 시 Outer Range
     public float zoomedIntensity = 2000f;   // 우클릭 시 Intensity
 
     public float defaultInnerAngle = 32f;

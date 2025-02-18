@@ -13,17 +13,19 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private float _limitation;
 
-		public override void OnUpdate(EnemyPrototypePawn pawn, LightSource light)
+		public override void OnUpdate(EnemyPrototypePawn pawn, SpotLight light)
 		{
-			if (_limitation < light.DamagePercent)
+			if (_limitation < light.Damage)
 			{
-				var damage = Time.deltaTime * light.DamagePercent;
-				var resistance = Mathf.Max(pawn.Resistance - damage, 0.0F);
+				//var damage =/* Time.deltaTime * */light.Damage;
+				//var resistance = Mathf.Max(pawn.Resistance - damage, 0.0F);
 				var agent = pawn.GetComponent<NavMeshAgent>();
 				var behavior = pawn.GetComponent<BehaviorTree>();
 				var player = light.GetComponent<Player>();
 
-				pawn.Resistance = resistance;
+				pawn.TakeDamage(light.Damage, pawn.hitSound);
+
+				//pawn.Resistance = resistance;
 				pawn.State = ENRAGE_STATE;
 
 				if (behavior && player)

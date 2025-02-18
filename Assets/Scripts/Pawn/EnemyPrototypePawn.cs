@@ -1,3 +1,4 @@
+using BehaviorDesigner.Runtime;
 using Cysharp.Threading.Tasks;
 using InTheDark.Prototypes;
 
@@ -10,7 +11,6 @@ using Unity.Netcode;
 
 using UnityEngine;
 using UnityEngine.AI;
-
 using UnityEngine.VFX;
 
 
@@ -30,10 +30,6 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	private Renderer objectRenderer;
 	[SerializeField]
 	private VisualEffect damagedVFXgraph;
-	[SerializeField]
-	private AudioSource damagedAudio;
-	[SerializeField]
-	private AudioSource damagedAudioClip;
 	[SerializeField]
 	private VisualEffect dieVFXgraph;
 	[SerializeField]
@@ -70,12 +66,19 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	private NetworkVariable<FixedString128Bytes> _state = new(DEFAULT_STATE);
 
 	public AudioClip attackSound;  //타격음 삽입해야해용
+	public AudioClip hitSound; // 피격음ㄴ
 
 	[SerializeField]
 	private NavMeshAgent _agent;
 
 	[SerializeField]
 	private Animator _animator;
+
+	[SerializeField]
+	private AudioSource _audioSource;
+
+	[SerializeField]
+	private BehaviorTree _behaviorTree;
 
 	[SerializeField]
 	private EnemyDeathTrigger _deathTrigger;
@@ -86,7 +89,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	[SerializeField]
 	private Loot[] _loots;
 
-	//private CancellationTokenSource _onAttack;
+	private CancellationTokenSource _onAttack;
 
 	//private List<LightSource> _sighted = new List<LightSource>();
 
@@ -195,19 +198,21 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		_cooldown.Value = Math.Max(_cooldown.Value - Time.deltaTime, 0.0F);
 	}
 
-	// 네트워크에서 못 찾을 수 있으니 완전히 끝나기 전엔 Despawn 하면 안댐
+	// 네트워크에서 못 찾을 수 있으니 (최소한 스테이지가) 완전히 끝나기 전엔 Despawn 하면 안댐
 	private void OnIsDeadChanged(bool previousValue, bool newValue)
 	{
 		if (!previousValue.Equals(newValue))
 		{
-			//if (newValue)
-			//{
-			//	gameObject.SetActive(false);
-			//}
-			//else
-			//{
-			//	gameObject.SetActive(true);
-			//}
+			if (newValue)
+			{
+				//gameObject.SetActive(false);
+				StartCoroutine(DieEffect());
+				_behaviorTree?.DisableBehavior();
+			}
+			else
+			{
+				gameObject.SetActive(true);
+			}
 
 			//gameObject.SetActive(!newValue);
 
@@ -247,7 +252,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//	//		var source = _sighted[i];
 	//	//		var direction = source.transform.position - transform.position;
 	//	//		var isOccultation = Physics.Raycast(transform.position, direction, out var hit, _distance);
-	//	//		var isSight = Vector3.Angle(direction, transform.forward) < _angle;
+	//	//		var isSight = Vector3.Range(direction, transform.forward) < _angle;
 
 	//	//		if (hit.collider == source && isOccultation && isSight && current < source)
 	//	//		{
@@ -261,7 +266,15 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//	//_sighted.Clear();
 	//}
 
+	// 피격음은 여기다 추가하면 되긴 한데... 흠...
+	// 정확히는 여기 말고... 트리거 안에다가...
 	public void OnLightInsighted(LightSource light)
+	{
+		//_sighted.Add(light);
+		//_lightInsightedTrigger.OnUpdate(this, light);
+	}
+
+	public void OnLightInsighted(SpotLight light)
 	{
 		//_sighted.Add(light);
 		_lightInsightedTrigger.OnUpdate(this, light);
@@ -269,11 +282,12 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	//데미지 받았을 때 이펙트.
 	public void DamagedEffect()
-	{ 
-		float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / _maxHealth.Value)); // 0~1 값으로 제한
+	{
+		//float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / _maxHealth.Value)); // 0~1 값으로 제한
+		float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / InitializeResistanceValue)); // 0~1 값으로 제한
 
-		Debug.Log($"Damaged : {_resistance.Value}");
-		Debug.Log($"healthRatio : {healthRatio}");
+		//Debug.Log($"Damaged : {_resistance.Value}");
+		//Debug.Log($"healthRatio : {healthRatio}");
 
 		if (dieVFXgraph != null && damagedVFXgraph != null)
 		{
@@ -284,7 +298,12 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		foreach (Material mat in skinnedMaterials)
 		{
 			mat.SetFloat("_ColorFillAmount", healthRatio);
-		}		
+		}
+
+		if (_audioSource)
+		{
+			_audioSource.PlayOneShot(hitSound);
+		}
 	}
 
 	public IEnumerator DieEffect()
@@ -314,7 +333,16 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public void TakeDamage(float amount , AudioClip hitSound)
 	{
-		throw new NotImplementedException();
+		var oldValue = _resistance.Value;
+		var newValue = Mathf.Max(oldValue - amount, 0.0F);
+
+		if (oldValue != newValue)
+		{
+			_resistance.Value = newValue;
+
+			// 여기다 피격음 넣으면 되는데 일단 넣음
+			_audioSource.PlayOneShot(hitSound);
+		}
 	}
 
 	//public void Attack(ICharacter target)
@@ -343,16 +371,22 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	private async UniTaskVoid OnAttackWithAnimaiton(IHealth target)
 	{
+		using var source = new CancellationTokenSource();
+
 		if (_animator)
 		{
 			_animator.SetTrigger(ATTACK_TRIGGER);
+			_onAttack = source;
 		}
+
 		//_animator?.SetTrigger(ATTACK_TRIGGER);
 
-		await UniTask.Delay(TimeSpan.FromSeconds(0.9F));
+		await UniTask.Delay(TimeSpan.FromSeconds(0.9F), false, PlayerLoopTiming.Update, source.Token, false);
 
 		target.TakeDamage(_damage.Value, attackSound);
 		//Debug.Log("HIT!!!");
+
+		_onAttack = default;
 	}
 
 	public void Dead()
@@ -368,10 +402,37 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public void Die()
 	{
-		//_onAttack?.Cancel();
-		//_onAttack?.Dispose();
+		StopMove();
 
-		_deathTrigger.OnUpdate(this);
+		if (_onAttack != null && !_onAttack.IsCancellationRequested)
+		{
+			_onAttack?.Cancel();
+			_onAttack?.Dispose();
+		}
+
+		//_deathTrigger.OnUpdate(this);
+
+		OnDead().Forget();
+
+		async UniTaskVoid OnDead()
+		{
+			if (_animator)
+			{
+				_animator.applyRootMotion = true;
+				_animator.Play("Dead", 0, 0.0F);
+			}
+
+			//await UniTask.WaitUntil(() => _animator.GetCurrentAnimatorStateInfo(0).IsName("Dead").);
+
+			_behaviorTree.DisableBehavior();
+			_deathTrigger.OnUpdate(this);
+
+			await UniTask.Delay(TimeSpan.FromSeconds(3.33F));
+
+			gameObject?.SetActive(false);
+
+			_animator.applyRootMotion = false;
+		}
 	}
 
 	public void StartMove()
