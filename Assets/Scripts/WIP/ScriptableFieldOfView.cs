@@ -58,7 +58,7 @@ namespace InTheDark
         //
         //         var direction = element.transform.position - transform.position;
         //         var isOccultation = Physics.Raycast(transform.position, direction, out var hit, distance);
-        //         var isSight = Vector3.Angle(direction, transform.forward) < fieldOfViewAngle;
+        //         var isSight = Vector3.Range(direction, transform.forward) < fieldOfViewAngle;
         //     
         //         OnDrawRaycastGizmo(element, hit, direction, isSight);
         //     

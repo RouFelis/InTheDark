@@ -3,7 +3,7 @@ using UnityEngine;
 namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityTransform
 {
     [TaskCategory("Unity/Transform")]
-    [TaskDescription("Gets the Angle between a GameObject's forward direction and a target. Returns Success.")]
+    [TaskDescription("Gets the Range between a GameObject's forward direction and a target. Returns Success.")]
     public class GetAngleToTarget : Action
     {
         [Tooltip("The GameObject that the task operates on. If null the task GameObject is used.")]

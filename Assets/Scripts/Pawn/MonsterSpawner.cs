@@ -48,7 +48,8 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private EnemyPrototypePawn[] _prefabs;
 
-		private float _agentHeight = 0.0F;
+		[SerializeField]
+		private float _agentHeight = 1.0F;
 
 		private NetworkList<EnemyRef> _spawned;
 
@@ -186,6 +187,8 @@ namespace InTheDark.Prototypes
 			var enemy = Instantiate(prefab, position, rotation);
 			var agent = enemy.GetComponent<NavMeshAgent>();
 			var height = UnityEngine.Random.Range(0.1F, 1.0F);
+
+			//Debug.LogError	(_agentHeight);
 
 			agent.height = _agentHeight;
 

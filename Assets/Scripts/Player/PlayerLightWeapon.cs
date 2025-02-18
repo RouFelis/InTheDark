@@ -3,13 +3,16 @@ using UnityEngine;
 
 namespace InTheDark.Prototypes
 {
-	public class PlayerLightWeapon : NetworkBehaviour
+	public class PlayerLightWeapon : SpotLight
 	{
 		[SerializeField]
 		private SpotlightControl _weapon;
 
-		[SerializeField]
-		private LightSource _source;
+		//[SerializeField]
+		//private LightSource _source;
+
+		//[SerializeField]
+		//private SpotLight _light;
 
 		//private void Update()
 		//{
@@ -23,69 +26,80 @@ namespace InTheDark.Prototypes
 				_weapon = GetComponent<SpotlightControl>();
 			}
 
-			if (!_source)
-			{
-				_source = GetComponent<LightSource>();
-			}
+			//if (!_source)
+			//{
+			//	_source = GetComponent<LightSource>();
+			//}
 
-			if (_weapon && _source)
-			{
-				_weapon.isRightClickHeld.OnValueChanged += OnPlayerRightClickHeld;
-				_weapon.isRecovering.OnValueChanged += OnPlayerRecovering;
+			//if (_weapon && _source)
+			//{
+			//	_weapon.isRightClickHeld.OnValueChanged += OnPlayerRightClickHeld;
+			//	_weapon.isRecovering.OnValueChanged += OnPlayerRecovering;
 
-				SetWeaponData(_weapon.isRightClickHeld.Value);
-				SetWeaponActive(_weapon.isRecovering.Value);
-			}
-		}
+			//	SetWeaponData(_weapon.isRightClickHeld.Value);
+			//	SetWeaponActive(_weapon.isRecovering.Value);
+			//}
 
-		public override void OnNetworkDespawn()
-		{
 			if (_weapon)
 			{
-				_weapon.isRightClickHeld.OnValueChanged -= OnPlayerRightClickHeld;
-				_weapon.isRecovering.OnValueChanged -= OnPlayerRecovering;
+				var player = GetComponent<Player>();
+				var range = Mathf.Sqrt(_weapon.defaultIntensity);
+
+				SetCauser(player);
+				SetAngle(_weapon.thirdPersonWeaponLight.spotAngle);
+				SetRange(range);
+				SetDamage(_weapon.baseDamage.Value);
 			}
 		}
 
-		private void OnPlayerRightClickHeld(bool previousValue, bool newValue)
-		{
-			if (previousValue != newValue)
-			{
-				SetWeaponData(newValue);
-			}
-		}
+		//public override void OnNetworkDespawn()
+		//{
+		//	if (_weapon)
+		//	{
+		//		_weapon.isRightClickHeld.OnValueChanged -= OnPlayerRightClickHeld;
+		//		_weapon.isRecovering.OnValueChanged -= OnPlayerRecovering;
+		//	}
+		//}
 
-		private void OnPlayerRecovering(bool previousValue, bool newValue)
-		{
-			if (previousValue != newValue)
-			{
-				SetWeaponActive(newValue);
-			}
-		}
+		//private void OnPlayerRightClickHeld(bool previousValue, bool newValue)
+		//{
+		//	if (previousValue != newValue)
+		//	{
+		//		SetWeaponData(newValue);
+		//	}
+		//}
 
-		private void SetWeaponData(bool value)
-		{
-			var intensity = value ? _weapon.zoomedIntensity : _weapon.defaultIntensity;
+		//private void OnPlayerRecovering(bool previousValue, bool newValue)
+		//{
+		//	if (previousValue != newValue)
+		//	{
+		//		SetWeaponActive(newValue);
+		//	}
+		//}
 
-			//Debug.LogError($"OnrightClicked {value}");
+		//private void SetWeaponData(bool value)
+		//{
+		//	var intensity = value ? _weapon.zoomedIntensity : _weapon.defaultIntensity;
 
-			_source.Angle = _weapon.thirdPersonWeaponLight.spotAngle;
-			_source.Distance = Mathf.Sqrt(intensity);
-			_source.DamagePercent = value ? _weapon.zoomDamage.Value : _weapon.baseDamage.Value;
-		}
+		//	//Debug.LogError($"OnrightClicked {value}");
 
-		private void SetWeaponActive(bool value)
-		{
-			//Debug.LogError($"OnRestore {value}");
+		//	_source.Angle = _weapon.thirdPersonWeaponLight.spotAngle;
+		//	_source.Distance = Mathf.Sqrt(intensity);
+		//	_source.DamagePercent = value ? _weapon.zoomDamage.Value : _weapon.baseDamage.Value;
+		//}
 
-			if (value)
-			{
-				LightManager.Instance.OnWorkLightSpanwed(_source);
-			}
-			else
-			{
-				LightManager.Instance.OnWorkLightDespawned(_source);
-			}
-		}
+		//private void SetWeaponActive(bool value)
+		//{
+		//	//Debug.LogError($"OnRestore {value}");
+
+		//	if (value)
+		//	{
+		//		LightManager.Instance.OnWorkLightSpanwed(_source);
+		//	}
+		//	else
+		//	{
+		//		LightManager.Instance.OnWorkLightDespawned(_source);
+		//	}
+		//}
 	} 
 }

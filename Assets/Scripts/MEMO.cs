@@ -1,3 +1,5 @@
+using InTheDark.Prototypes;
+
 namespace InTheDark.LoremIpsum
 {
 	/// <summary>
@@ -44,11 +46,21 @@ namespace InTheDark.LoremIpsum
 
 		// AI 몬스터 방 넘어가게 변경
 		// Player 공격 하면 감지
+		// 몬스터 사망 모션 추가
+		// 몬스터 피격 효과음 추가
+		// 몬스터 공격 모션 진행 중 플레이어가 (죽거나) 범위 밖으로 이탈하거나 몬스터 사망 시 데미지 안 들어가게 수정
+
+		// 슬슬 비즈니스 로직이랑 게임 오브젝트용 로직을 분리해야 함
 
 		// 소한 위치 조정 (플레이어 근처 X -> 시야 밖 생성)
 		// 상점 기능 대체 방법 생각하기 (티비)
 
+		// 공격 방식: 지속 피해 -> 단발 피해
+		// LightManager 제거하기
+		 
 		// 그냥 던전이 생성 안된 상태에서 위치 잡아서 그런거였네...
+
+		//LightManager.onupdate -> EnemyPrototypePawn.OnLightInsighted -> _lightInsightedTrigger.OnUpdate
 	}
 }
 

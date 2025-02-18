@@ -95,7 +95,9 @@ namespace InTheDark.Prototypes
 
 					//Debug.Log($"{name} detected {target.name} => layer: {target.gameObject.layer}");
 
-					if (hit.collider == target && isOccultation && isSight/* && !_dirties.Contains(target)*/)
+					//Debug.Log($"충돌 체크: {hit.collider.name}/{target.name}");
+
+					if (hit.collider.Equals(target) && isOccultation && isSight/* && !_dirties.Contains(target)*/)
 					{
 						var pawn = target.GetComponent<EnemyPrototypePawn>();
 

@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 
 public class EnemyAnimsTest : MonoBehaviour
@@ -8,16 +10,15 @@ public class EnemyAnimsTest : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-    }
+		Dead().Forget();
+	}
 
-    // Update is called once per frame
     void Update()
     {
         var up = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
-		var down = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
+        var down = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
         var left = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
-		var right = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+        var right = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
 
         var attack = Input.GetKeyDown(KeyCode.Space) && !_animator.GetCurrentAnimatorStateInfo(1).IsName("Attack");
 
@@ -28,8 +29,16 @@ public class EnemyAnimsTest : MonoBehaviour
         if (attack)
         {
             _animator.SetTrigger("OnAttack");
-		}
+        }
 
-		_animator.SetBool("IsWalking", move);
+        _animator.SetBool("IsWalking", move);
+    }
+
+    private async UniTaskVoid Dead()
+	{
+		await UniTask.Delay(TimeSpan.FromSeconds(5.0F));
+
+		_animator.applyRootMotion = true;
+		_animator.SetTrigger("OnDead");
 	}
 }
