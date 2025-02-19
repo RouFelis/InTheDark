@@ -16,15 +16,32 @@ public class SpotlightControl : WeaponSystem
     public float defaultOuterAngle = 70f;
     public float defaultIntensity = 600f;
 
-    public float zoomDuration = 0.5f;
-    public float flashIntensity = 5000f;
-    public float flashDuration = 0.1f;
-
-    private Coroutine zoomCoroutine;
-    private bool currentZoomState = false;
 
     public delegate void FlashEventHandler();
     public static event FlashEventHandler OnFlash; // 플래시 이벤트
+
+    [Header("Zoom Value Settings")]
+    public float maxZoomDuration = 5.0f;
+    public float zoomSpeedMultiplier = 1.0f;
+    public float resetSpeedMultiplier = 1.0f;
+
+
+    public float flashIntensity = 5000f;
+    public float flashOuterAngle = 90f;
+
+    public float flashExpandDuration = 0.01f;
+    public float flashFadeDuration = 0.5f;
+
+
+
+    private bool isResetting = false;
+    private float zoomProgress = 0f;
+    private float lastEaseT = -1f;
+    private bool hasFlashed = false;
+    private bool isFlashing = false;
+
+    public AnimationCurve zoomCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    public AnimationCurve resetCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
 
     #region 사라진 기능
@@ -128,171 +145,111 @@ public class SpotlightControl : WeaponSystem
 
     void Update()
     {
-        if (!IsOwner)
-        {
-            HandleFlash();
+        if (!IsOwner || isResetting || isFlashing) return;
 
-            return;
-        }
-
-        if (Input.GetMouseButtonDown(1) && !isZooming.Value && !player.IsDead) // 우클릭 시작
+        if (Input.GetMouseButton(1) && !isResetting)
         {
-            isRightClickHeld.Value = true;
             isZooming.Value = true;
-        }
-        else if (Input.GetMouseButtonUp(1) && isZooming.Value && !player.IsDead) // 우클릭 해제
-        {
-            isRightClickHeld.Value = false;
-            isZooming.Value = false;
-        }
-        HandleFlash();
-    }
+            zoomProgress = Mathf.Min(zoomProgress + (Time.deltaTime * zoomSpeedMultiplier), maxZoomDuration);
 
-    private void HandleFlash()
-	{
-        if (currentZoomState == isZooming.Value) return; // 상태 변화가 없으면 실행하지 않음
-
-        currentZoomState = isZooming.Value;
-
-        if (zoomCoroutine != null)
-        {
-            StopCoroutine(zoomCoroutine);
-        }
-
-        if (isZooming.Value)
-        {
-            zoomCoroutine = StartCoroutine(ZoomAndFlashEffect());
+            // 줌이 최대값에 도달하면 플래시 실행
+            if (zoomProgress >= maxZoomDuration && !hasFlashed)
+            {
+                hasFlashed = true;
+                TriggerFlashEffect();
+            }
         }
         else
         {
-            zoomCoroutine = StartCoroutine(ResetZoomEffect());
-        }
-    }
-   
-    IEnumerator ZoomAndFlashEffect()
-    {
-        yield return StartCoroutine(AdjustLight(firstPersonWeaponLight, zoomedInnerAngle, zoomedOuterAngle, zoomedIntensity, zoomDuration));
-        yield return StartCoroutine(AdjustLight(thirdPersonWeaponLight, zoomedInnerAngle, zoomedOuterAngle, zoomedIntensity, zoomDuration));
+            isZooming.Value = false;
+            zoomProgress = Mathf.Max(zoomProgress - (Time.deltaTime * resetSpeedMultiplier), 0f);
 
-        if (!isZooming.Value) // 중간에 해제되면 즉시 복귀
-        {
-            StartCoroutine(ResetZoomEffect());
-            yield break;
+            // 줌이 완전히 해제되었을 때 플래시 상태 초기화
+            if (zoomProgress <= 0.01f && !isFlashing)
+            {
+                hasFlashed = false;
+            }
         }
 
-        yield return StartCoroutine(FlashEffect(firstPersonWeaponLight));
-        yield return StartCoroutine(FlashEffect(thirdPersonWeaponLight));
+        float t = zoomProgress / maxZoomDuration;
+        t = Mathf.Clamp01(t);
+        float easeT = isZooming.Value ? zoomCurve.Evaluate(t) : resetCurve.Evaluate(t);
+
+        if (Mathf.Approximately(easeT, lastEaseT)) return;
+
+        lastEaseT = easeT;
+        ApplyZoom(easeT);
     }
 
-    IEnumerator ResetZoomEffect()
+    // 줌을 적용하는 함수
+    private void ApplyZoom(float t)
     {
-        yield return StartCoroutine(AdjustLight(firstPersonWeaponLight, defaultInnerAngle, defaultOuterAngle, defaultIntensity, zoomDuration));
-        yield return StartCoroutine(AdjustLight(thirdPersonWeaponLight, defaultInnerAngle, defaultOuterAngle, defaultIntensity, zoomDuration));
+        float targetInner = Mathf.Lerp(defaultInnerAngle, zoomedInnerAngle, t);
+        float targetOuter = Mathf.Lerp(defaultOuterAngle, zoomedOuterAngle, t);
+        float targetIntensity = Mathf.Lerp(defaultIntensity, zoomedIntensity, t);
+
+        firstPersonWeaponLight.innerSpotAngle = targetInner;
+        firstPersonWeaponLight.spotAngle = targetOuter;
+        firstPersonWeaponLight.intensity = targetIntensity;
+
+        thirdPersonWeaponLight.innerSpotAngle = targetInner;
+        thirdPersonWeaponLight.spotAngle = targetOuter;
+        thirdPersonWeaponLight.intensity = targetIntensity;
     }
 
-    IEnumerator AdjustLight(Light light, float targetInner, float targetOuter, float targetIntensity, float duration)
+    // 플래시 효과 실행
+    private void TriggerFlashEffect()
+    {
+        OnFlash?.Invoke();
+        isFlashing = true;
+        isZooming.Value = false;
+        StartCoroutine(FlashEffect(firstPersonWeaponLight));
+        StartCoroutine(FlashEffect(thirdPersonWeaponLight));
+        StartCoroutine(DisableZoomDuringFlash());
+    }
+
+    // 플래시 효과 코루틴 (밝기 증가 후 점진적 감소)
+    private IEnumerator FlashEffect(Light light)
     {
         if (light == null) yield break;
 
         float time = 0f;
-        float startInner = light.innerSpotAngle;
-        float startOuter = light.spotAngle;
-        float startIntensity = light.intensity;
-
-        while (time < duration)
+        while (time < flashExpandDuration)
         {
-            if (!isZooming.Value && targetIntensity == zoomedIntensity) yield break; // 줌 도중 해제되면 즉시 종료
-
             time += Time.deltaTime;
-            float t = time / duration;
-            float easeT = 1f - Mathf.Pow(1f - t, 3f); // 느려지는 효과 적용
-            light.innerSpotAngle = Mathf.Lerp(startInner, targetInner, easeT);
-            light.spotAngle = Mathf.Lerp(startOuter, targetOuter, easeT);
-            light.intensity = Mathf.Lerp(startIntensity, targetIntensity, easeT);
+            float t = time / flashExpandDuration;
+            light.intensity = Mathf.Lerp(defaultIntensity, flashIntensity, t);
+            light.spotAngle = Mathf.Lerp(defaultOuterAngle, flashOuterAngle, t);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        time = 0f;
+        while (time < flashFadeDuration)
+        {
+            time += Time.deltaTime;
+            float t = time / flashFadeDuration;
+            light.intensity = Mathf.Lerp(flashIntensity, defaultIntensity, t);
+            light.spotAngle = Mathf.Lerp(flashOuterAngle, defaultOuterAngle, t);
             yield return null;
         }
     }
 
-    IEnumerator FlashEffect(Light light)
+    // 플래시 도중 줌 사용을 방지하는 코루틴
+    private IEnumerator DisableZoomDuringFlash()
     {
-        if (light == null) yield break;
-        float originalIntensity = light.intensity;
-        light.intensity = flashIntensity;
-        //yield return new WaitForSeconds(flashDuration);
-        yield return null;
-        
-        light.intensity = originalIntensity;
-        OnFlash?.Invoke();
+        isResetting = true;
+        isFlashing = true;
+        yield return new WaitForSeconds(flashExpandDuration + flashFadeDuration + 0.1f);
+        zoomProgress = 0; // 줌 상태 초기화
+        hasFlashed = false; // 플래시 상태 초기화
+        isFlashing = false;
+        isResetting = false;
     }
 
 
 
-    #region 사라진 기능
-   /* private void HandleGauge()
-    {
-        if (isRightClickHeld.Value)
-        {
-            DecreaseGauge(Time.deltaTime * decreaseRate);
-        }
-        else if (!isRecovering.Value && gaugeImage.fillAmount < maxGauge)
-        {
-            recoveryDelayTimer.Value += Time.deltaTime;
-            if (recoveryDelayTimer.Value >= 0.5f) // delayBeforeRecovery
-            {
-                isRecovering.Value = true;
-            }
-        }
-
-        if (isRecovering.Value)
-        {
-            RecoverGauge(Time.deltaTime * increaseRate);
-        }
-
-        // 게이지 상태에 따른 우클릭 차단 여부 업데이트
-        if (gaugeImage.fillAmount < gaugeThreshold)
-        {
-            isClickBlocked.Value = true;
-        }
-        else if (gaugeImage.fillAmount >= gaugeThreshold && isClickBlocked.Value)
-        {
-            isClickBlocked.Value = false;
-        }
-    }
-
-    private void DecreaseGauge(float amount)
-    {
-        gaugeImage.fillAmount -= amount;
-        if (gaugeImage.fillAmount <= minGauge)
-        {
-            gaugeImage.fillAmount = 0f; // 게이지가 0 이하로는 떨어지지 않음
-            isRightClickHeld.Value = false; // 우클릭 상태 해제
-        }
-    }
-
-    private void RecoverGauge(float amount)
-    {
-        gaugeImage.fillAmount += amount;
-        if (gaugeImage.fillAmount >= maxGauge)
-        {
-            gaugeImage.fillAmount = maxGauge; // 최대값으로 제한
-            isRecovering.Value = false;
-        }
-    }*/
-    #endregion
-
-
-    /*        private void UpdateSpotlightState()
-            {
-                if (isRightClickHeld.Value)
-                {
-                    SetLightValues(zoomedInnerAngle, zoomedOuterAngle, zoomedIntensity);
-                }
-                else
-                {
-                    SetLightValues(defaultInnerAngle, defaultOuterAngle, defaultIntensity);
-                }
-            }
-    */
     private void SetLightValues(float innerAngle, float outerAngle, float intensity)
         {
             firstPersonWeaponLight.innerSpotAngle = innerAngle;
@@ -304,18 +261,6 @@ public class SpotlightControl : WeaponSystem
             thirdPersonWeaponLight.intensity = intensity;
         }
 
-/*        public void UpdateDefaultValues(float innerAngle, float outerAngle, float intensity)
-        {
-            // 강화된 무기 데이터를 받아 기본 값을 업데이트
-            defaultInnerAngle = innerAngle;
-            defaultOuterAngle = outerAngle;
-            defaultIntensity = intensity;
 
-            // 우클릭이 아닐 경우 즉시 적용
-            if (!isRightClickHeld.Value)
-            {
-                SetLightValues(defaultInnerAngle, defaultOuterAngle, defaultIntensity);
-            }
-        }*/
 
 }
