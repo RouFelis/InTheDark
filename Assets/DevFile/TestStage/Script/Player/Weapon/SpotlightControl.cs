@@ -6,42 +6,29 @@ using Unity.Netcode;
 public class SpotlightControl : WeaponSystem
 {
     [Header("Spotlight Settings")]
-    public Light firstPersonWeaponLight; // 무기 역할을 하는 조명
-    public Light thirdPersonWeaponLight; // 무기 역할을 하는 조명
-    public float zoomedInnerAngle = 20f; // 우클릭 시 Inner Range
-    public float zoomedOuterAngle = 30f; // 우클릭 시 Outer Range
-    public float zoomedIntensity = 2000f;   // 우클릭 시 Intensity
+    public Light firstPersonWeaponLight, thirdPersonWeaponLight;
 
-    public float defaultInnerAngle = 32f;
-    public float defaultOuterAngle = 70f;
-    public float defaultIntensity = 600f;
+    public float zoomedInnerAngle = 20f, zoomedOuterAngle = 30f, zoomedIntensity = 2000f;
+    public float defaultInnerAngle = 32f, defaultOuterAngle = 70f, defaultIntensity = 600f;
 
-
-    public delegate void FlashEventHandler();
-    public static event FlashEventHandler OnFlash; // 플래시 이벤트
-
-    [Header("Zoom Value Settings")]
-    public float maxZoomDuration = 5.0f;
-    public float zoomSpeedMultiplier = 1.0f;
-    public float resetSpeedMultiplier = 1.0f;
-
-
-    public float flashIntensity = 5000f;
-    public float flashOuterAngle = 90f;
-
-    public float flashExpandDuration = 0.01f;
-    public float flashFadeDuration = 0.5f;
-
-
-
-    private bool isResetting = false;
-    private float zoomProgress = 0f;
-    private float lastEaseT = -1f;
-    private bool hasFlashed = false;
-    private bool isFlashing = false;
+    public float maxZoomDuration = 5.0f, maxResetDuration = 2.0f;
+    public float zoomSpeedMultiplier = 1.0f, resetSpeedMultiplier = 1.0f;
+    public float flashIntensity = 5000f, flashOuterAngle = 180f;
+    public float flashExpandDuration = 0.2f, flashFadeDuration = 0.5f;
 
     public AnimationCurve zoomCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     public AnimationCurve resetCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
+    [Header("Audio Settings")]
+    public AudioSource audioSource;
+    public AudioClip zoomLoopClip, flashSoundClip;
+    public float minPitch = 0.8f, maxPitch = 1.5f;
+
+    public delegate void FlashEventHandler();
+    public static event FlashEventHandler OnFlash;
+
+    private bool isResetting = false, isFlashing = false, hasFlashed = false;
+    private float zoomProgress = 0f, lastEaseT = -1f;
 
 
     #region 사라진 기능
@@ -58,9 +45,6 @@ public class SpotlightControl : WeaponSystem
 
     public NetworkVariable<bool> isZooming = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> isRightClickHeld = new NetworkVariable<bool>(false, writePerm: NetworkVariableWritePermission.Owner );
-    //public NetworkVariable<bool> isRecovering = new NetworkVariable<bool>(false, writePerm: NetworkVariableWritePermission.Owner );
-    //public NetworkVariable<bool> isClickBlocked = new NetworkVariable<bool>(false, writePerm: NetworkVariableWritePermission.Owner );
-    //public NetworkVariable<float> recoveryDelayTimer = new NetworkVariable<float>(0f, writePerm: NetworkVariableWritePermission.Owner );
 
 
     public override void Start()
@@ -143,16 +127,15 @@ public class SpotlightControl : WeaponSystem
         }*/
     }
 
+
     void Update()
     {
         if (!IsOwner || isResetting || isFlashing) return;
 
-        if (Input.GetMouseButton(1) && !isResetting)
+        if (Input.GetMouseButton(1))
         {
             isZooming.Value = true;
-            zoomProgress = Mathf.Min(zoomProgress + (Time.deltaTime * zoomSpeedMultiplier), maxZoomDuration);
-
-            // 줌이 최대값에 도달하면 플래시 실행
+            zoomProgress = Mathf.Min(zoomProgress + Time.deltaTime * zoomSpeedMultiplier, maxZoomDuration);
             if (zoomProgress >= maxZoomDuration && !hasFlashed)
             {
                 hasFlashed = true;
@@ -162,61 +145,77 @@ public class SpotlightControl : WeaponSystem
         else
         {
             isZooming.Value = false;
-            zoomProgress = Mathf.Max(zoomProgress - (Time.deltaTime * resetSpeedMultiplier), 0f);
-
-            // 줌이 완전히 해제되었을 때 플래시 상태 초기화
-            if (zoomProgress <= 0.01f && !isFlashing)
-            {
-                hasFlashed = false;
-            }
+            zoomProgress = Mathf.Max(zoomProgress - Time.deltaTime * resetSpeedMultiplier, 0f);
+            if (zoomProgress <= 0.01f && !isFlashing) hasFlashed = false;
         }
 
-        float t = zoomProgress / maxZoomDuration;
-        t = Mathf.Clamp01(t);
+        float t = Mathf.Clamp01(zoomProgress / maxZoomDuration);
         float easeT = isZooming.Value ? zoomCurve.Evaluate(t) : resetCurve.Evaluate(t);
-
-        if (Mathf.Approximately(easeT, lastEaseT)) return;
-
-        lastEaseT = easeT;
-        ApplyZoom(easeT);
+        if (!Mathf.Approximately(easeT, lastEaseT))
+        {
+            lastEaseT = easeT;
+            ApplyZoom(easeT);
+            HandleZoomAudio(easeT);
+        }
     }
 
-    // 줌을 적용하는 함수
     private void ApplyZoom(float t)
     {
         float targetInner = Mathf.Lerp(defaultInnerAngle, zoomedInnerAngle, t);
         float targetOuter = Mathf.Lerp(defaultOuterAngle, zoomedOuterAngle, t);
         float targetIntensity = Mathf.Lerp(defaultIntensity, zoomedIntensity, t);
 
-        firstPersonWeaponLight.innerSpotAngle = targetInner;
-        firstPersonWeaponLight.spotAngle = targetOuter;
-        firstPersonWeaponLight.intensity = targetIntensity;
-
-        thirdPersonWeaponLight.innerSpotAngle = targetInner;
-        thirdPersonWeaponLight.spotAngle = targetOuter;
-        thirdPersonWeaponLight.intensity = targetIntensity;
+        firstPersonWeaponLight.innerSpotAngle = thirdPersonWeaponLight.innerSpotAngle = targetInner;
+        firstPersonWeaponLight.spotAngle = thirdPersonWeaponLight.spotAngle = targetOuter;
+        firstPersonWeaponLight.intensity = thirdPersonWeaponLight.intensity = targetIntensity;
     }
 
-    // 플래시 효과 실행
+    private void HandleZoomAudio(float t)
+    {
+        if (audioSource == null) return;
+
+        if (isZooming.Value)
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.clip = zoomLoopClip;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+            audioSource.pitch = Mathf.Lerp(minPitch, maxPitch, t);
+        }
+        else if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+    }
+
     private void TriggerFlashEffect()
     {
         OnFlash?.Invoke();
         isFlashing = true;
         isZooming.Value = false;
+        StartCoroutine(PlayFlashSoundAfterDelay(0.01f));
         StartCoroutine(FlashEffect(firstPersonWeaponLight));
         StartCoroutine(FlashEffect(thirdPersonWeaponLight));
         StartCoroutine(DisableZoomDuringFlash());
     }
 
-    // 플래시 효과 코루틴 (밝기 증가 후 점진적 감소)
+    private IEnumerator PlayFlashSoundAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (audioSource != null && flashSoundClip != null)
+        {
+            audioSource.PlayOneShot(flashSoundClip);
+        }
+    }
+
     private IEnumerator FlashEffect(Light light)
     {
         if (light == null) yield break;
 
-        float time = 0f;
-        while (time < flashExpandDuration)
+        for (float time = 0f; time < flashExpandDuration; time += Time.deltaTime)
         {
-            time += Time.deltaTime;
             float t = time / flashExpandDuration;
             light.intensity = Mathf.Lerp(defaultIntensity, flashIntensity, t);
             light.spotAngle = Mathf.Lerp(defaultOuterAngle, flashOuterAngle, t);
@@ -225,10 +224,8 @@ public class SpotlightControl : WeaponSystem
 
         yield return new WaitForSeconds(0.1f);
 
-        time = 0f;
-        while (time < flashFadeDuration)
+        for (float time = 0f; time < flashFadeDuration; time += Time.deltaTime)
         {
-            time += Time.deltaTime;
             float t = time / flashFadeDuration;
             light.intensity = Mathf.Lerp(flashIntensity, defaultIntensity, t);
             light.spotAngle = Mathf.Lerp(flashOuterAngle, defaultOuterAngle, t);
@@ -236,18 +233,15 @@ public class SpotlightControl : WeaponSystem
         }
     }
 
-    // 플래시 도중 줌 사용을 방지하는 코루틴
     private IEnumerator DisableZoomDuringFlash()
     {
         isResetting = true;
-        isFlashing = true;
         yield return new WaitForSeconds(flashExpandDuration + flashFadeDuration + 0.1f);
-        zoomProgress = 0; // 줌 상태 초기화
-        hasFlashed = false; // 플래시 상태 초기화
+        zoomProgress = 0;
+        hasFlashed = false;
         isFlashing = false;
         isResetting = false;
     }
-
 
 
     private void SetLightValues(float innerAngle, float outerAngle, float intensity)
