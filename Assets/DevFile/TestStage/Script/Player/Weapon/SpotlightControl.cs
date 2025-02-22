@@ -27,6 +27,7 @@ public class SpotlightControl : WeaponSystem
     public delegate void FlashEventHandler();
     public static event FlashEventHandler OnFlash;
 
+    [SerializeField]private CanvasGroup flashPanel;
     private bool isResetting = false, isFlashing = false, hasFlashed = false;
     private float zoomProgress = 0f, lastEaseT = -1f;
 
@@ -74,25 +75,21 @@ public class SpotlightControl : WeaponSystem
 */
     private IEnumerator initUI()
 	{
-/*        // PlaceableItemManager 오브젝트 찾기
-        while (gaugeImage == null)
+        while (flashPanel == null)
         {
-            GameObject obj = GameObject.Find("Battery_Icon_4_Slider");
-            if (obj == null)
-            {
-                Debug.LogError("GameObject 'Battery_Icon_4_Slider' not found!");
+			try
+			{
+                flashPanel = GameObject.Find("flashPanel").GetComponent<CanvasGroup>();
+                flashPanel.gameObject.SetActive(false);
+                Debug.Log("Find flashPanel");
             }
-            else
-            {
-                gaugeImage = obj.GetComponent<Image>();
-                Debug.Log("GameObject 'Battery_Icon_4_Slider' found!");
+            catch
+			{
+                Debug.Log("Serch flashPanel...");
             }
-            
-            Debug.LogError("Gauge Slider가 연결되지 않았습니다!");
             yield return null;
-        }*/
-
-        yield return new WaitForSeconds(0.5f);
+        }
+        Debug.Log("예예2");
 
         SetLightValues(defaultInnerAngle, defaultOuterAngle, defaultIntensity);
 
@@ -104,6 +101,7 @@ public class SpotlightControl : WeaponSystem
 		{
             firstPersonWeaponLight.gameObject.SetActive(false);
 		}
+
     }
 
     public void ToogleLight()
@@ -208,11 +206,15 @@ public class SpotlightControl : WeaponSystem
         {
             audioSource.PlayOneShot(flashSoundClip);
         }
+
+        if (audioSource.isPlaying)
+            audioSource.Stop();
     }
 
     private IEnumerator FlashEffect(Light light)
     {
         if (light == null) yield break;
+
 
         for (float time = 0f; time < flashExpandDuration; time += Time.deltaTime)
         {
@@ -221,6 +223,8 @@ public class SpotlightControl : WeaponSystem
             light.spotAngle = Mathf.Lerp(defaultOuterAngle, flashOuterAngle, t);
             yield return null;
         }
+
+        StartCoroutine(FlashEffect());
 
         yield return new WaitForSeconds(0.1f);
 
@@ -243,6 +247,23 @@ public class SpotlightControl : WeaponSystem
         isResetting = false;
     }
 
+    private IEnumerator FlashEffect()
+    {
+        float duration = 3f;
+        float elapsed = 0f;
+
+        flashPanel.gameObject.SetActive(true);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            flashPanel.alpha = Mathf.Lerp(0.5f, 0f, elapsed / duration);
+            yield return null;
+        }
+
+        flashPanel.gameObject.SetActive(false);
+        flashPanel.alpha = 0f;
+    }
 
     private void SetLightValues(float innerAngle, float outerAngle, float intensity)
         {
