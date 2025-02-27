@@ -1,10 +1,13 @@
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 public class EnterStage : InteractableObject
 {   
     [SerializeField] Transform spawnPoint;
     [SerializeField] AudioSource otherSideDoorSource;
+
+    public Action<bool> enterDoorAction;
 
     public override void Interact(ulong uerID, Transform interactingObjectTransform)
     {
@@ -14,14 +17,15 @@ public class EnterStage : InteractableObject
         }
         PlayDoorSound();
         SetEveryPlayerPosServerRPC(uerID);
+        enterDoorAction.Invoke(true);
 
-		// 2024.12.24 던전 입장 이벤트 추가
-		// 2024.12.26 던전 입장 이벤트 재배치
-		//InTheDark.Prototypes.Game.OnDungeonEnter.Invoke(new InTheDark.Prototypes.DungeonEnterEvent()
-		//{
-		//    BuildIndex = 0
-		//});
-	}
+        // 2024.12.24 던전 입장 이벤트 추가
+        // 2024.12.26 던전 입장 이벤트 재배치
+        //InTheDark.Prototypes.Game.OnDungeonEnter.Invoke(new InTheDark.Prototypes.DungeonEnterEvent()
+        //{
+        //    BuildIndex = 0
+        //});
+    }
 
 
 	private void PlayDoorSound()
@@ -29,10 +33,8 @@ public class EnterStage : InteractableObject
         if (otherSideDoorSource == null)
         {
             otherSideDoorSource = GameObject.Find("OutDoor_1_SoundSource").GetComponent<AudioSource>();
-            Debug.Log("테스트");
         }
         otherSideDoorSource.Play();
-        Debug.Log("테스트2");
     }
 
 

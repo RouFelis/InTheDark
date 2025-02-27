@@ -895,7 +895,7 @@ MonoBehaviour:
     m_InternalValue: 0
   maxHealth: 100
   currentHealth:
-    m_InternalValue: 10
+    m_InternalValue: 1000
   saveSystem: {fileID: 0}
   audioSource: {fileID: 5628609664115642516}
   firstPersonObject: {fileID: 8862689966996072030}
@@ -980,17 +980,13 @@ MonoBehaviour:
   defaultOuterAngle: 55
   defaultIntensity: 30000
   maxZoomDuration: 3
+  maxResetDuration: 2
   zoomSpeedMultiplier: 1
   resetSpeedMultiplier: 10
   flashIntensity: 5000
   flashOuterAngle: 180
   flashExpandDuration: 0.001
   flashFadeDuration: 3
-  audioSource: {fileID: 344860905703892509}
-  zoomLoopClip: {fileID: 8300000, guid: 0f741ff5620fe7c4b8f58487f8e063df, type: 3}
-  flashSoundClip: {fileID: 8300000, guid: bb97ef284290241419e856a36c4dd98b, type: 3}
-  minPitch: 0.8
-  maxPitch: 1.5
   zoomCurve:
     serializedVersion: 2
     m_Curve:
@@ -1039,6 +1035,56 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  recoveryCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.07563655
+      value: 0.4835519
+      inSlope: 4.2220845
+      outSlope: 4.2220845
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3043753
+      value: 0.9527114
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  audioSource: {fileID: 344860905703892509}
+  zoomLoopClip: {fileID: 8300000, guid: 0f741ff5620fe7c4b8f58487f8e063df, type: 3}
+  flashSoundClip: {fileID: 8300000, guid: bb97ef284290241419e856a36c4dd98b, type: 3}
+  minPitch: 0.8
+  maxPitch: 1.5
+  defaultColor: {r: 0.6981132, g: 0.57997733, b: 0.3984514, a: 1}
+  zoomedColor: {r: 0.745283, g: 0.71507365, b: 0.60817903, a: 1}
+  flashColor: {r: 1, g: 1, b: 1, a: 1}
   isZooming:
     m_InternalValue: 0
   isRightClickHeld:
@@ -1430,7 +1476,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091253990054723561}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.005, y: 1.778, z: 0.023}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0

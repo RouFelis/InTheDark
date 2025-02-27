@@ -61,6 +61,10 @@ public class Player : playerMoveController , IHealth , ICharacter
 	public bool IsDead => currentHealth.Value <= 0;
 
 
+	public delegate void DieEventHandler();
+	public static event DieEventHandler OnDie;
+
+
 	[SerializeField] private SaveSystem saveSystem;
 	[SerializeField] private AudioSource audioSource;
 
@@ -83,6 +87,12 @@ public class Player : playerMoveController , IHealth , ICharacter
 	private Coroutine hitEffectCoroutine; // 실행 중인 코루틴 저장
 	private float mag = 0.00015f;
 	private float dur = 0.3f;
+
+
+
+
+
+
 
 	public override void Start()
 	{
@@ -250,6 +260,7 @@ public class Player : playerMoveController , IHealth , ICharacter
 		ChangeLayer(thirdPersonObject, 11);
 		SetAimMode(true, DieTargetGameObject);
 		spotlightControl.ToogleLight();
+		OnDie();
 	}
 
 

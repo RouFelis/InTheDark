@@ -1,13 +1,21 @@
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 public class OutStage : InteractableObject
 {
     [SerializeField] Transform spawnPoint;
     [SerializeField] AudioSource otherSideDoorSource;
 
+    public Action<bool> outDoorAction;
 
-    public override void Interact(ulong uerID, Transform interactingObjectTransform)
+	private void OnEnable()
+	{
+        GameObject.Find("CompassManager").GetComponent<Compass>().outStage = this;
+        outDoorAction = GameObject.Find("CompassManager").GetComponent<Compass>().setDungeunBool;
+	}
+
+	public override void Interact(ulong uerID, Transform interactingObjectTransform)
     {
         if (spawnPoint == null)
         {
@@ -15,14 +23,15 @@ public class OutStage : InteractableObject
         }
         PlayDoorSound();
         SetEveryPlayerPosServerRPC(uerID);
+        outDoorAction.Invoke(false);
 
-		// 2024.12.24 던전 퇴장 이벤트 재배치
-		// 2024.12.26 던전 퇴장 이벤트 재배치
-		//InTheDark.Prototypes.Game.OnDungeonExit.Invoke(new InTheDark.Prototypes.DungeonExitEvent()
-		//{
-		//	BuildIndex = 0
-		//});
-	}
+        // 2024.12.24 던전 퇴장 이벤트 재배치
+        // 2024.12.26 던전 퇴장 이벤트 재배치
+        //InTheDark.Prototypes.Game.OnDungeonExit.Invoke(new InTheDark.Prototypes.DungeonExitEvent()
+        //{
+        //	BuildIndex = 0
+        //});
+    }
 
     private void PlayDoorSound()
     {

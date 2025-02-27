@@ -6,6 +6,7 @@ using Unity.Netcode;
 public class SpotlightControl : WeaponSystem
 {
     [Header("Spotlight Settings")]
+
     public Light firstPersonWeaponLight, thirdPersonWeaponLight;
 
     public float zoomedInnerAngle = 20f, zoomedOuterAngle = 30f, zoomedIntensity = 2000f;
@@ -18,6 +19,7 @@ public class SpotlightControl : WeaponSystem
 
     public AnimationCurve zoomCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     public AnimationCurve resetCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    public AnimationCurve recoveryCurve = AnimationCurve.EaseInOut(0, 0, 1, 1); // 추가된 부분: 색상 복귀 속도 커브
 
     [Header("Audio Settings")]
     public AudioSource audioSource;
@@ -27,7 +29,13 @@ public class SpotlightControl : WeaponSystem
     public delegate void FlashEventHandler();
     public static event FlashEventHandler OnFlash;
 
-    [SerializeField]private CanvasGroup flashPanel;
+    [Header("Color Settings")] // 추가된 부분
+    public Color defaultColor = Color.white;
+    public Color zoomedColor = Color.red;
+    public Color flashColor = Color.yellow; 
+
+
+    //private CanvasGroup flashPanel;
     private bool isResetting = false, isFlashing = false, hasFlashed = false;
     private float zoomProgress = 0f, lastEaseT = -1f;
 
@@ -74,7 +82,7 @@ public class SpotlightControl : WeaponSystem
     }
 */
     private IEnumerator initUI()
-	{
+	{/*
         while (flashPanel == null)
         {
 			try
@@ -88,9 +96,8 @@ public class SpotlightControl : WeaponSystem
                 Debug.Log("Serch flashPanel...");
             }
             yield return null;
-        }
-        Debug.Log("예예2");
-
+        }*/
+        yield return null;
         SetLightValues(defaultInnerAngle, defaultOuterAngle, defaultIntensity);
 
         if (IsOwner)
@@ -163,10 +170,21 @@ public class SpotlightControl : WeaponSystem
         float targetOuter = Mathf.Lerp(defaultOuterAngle, zoomedOuterAngle, t);
         float targetIntensity = Mathf.Lerp(defaultIntensity, zoomedIntensity, t);
 
+        Color targetColor = Color.Lerp(defaultColor, zoomedColor, t); // 추가된 부분 : 줌할 시 색상 변경
+
         firstPersonWeaponLight.innerSpotAngle = thirdPersonWeaponLight.innerSpotAngle = targetInner;
         firstPersonWeaponLight.spotAngle = thirdPersonWeaponLight.spotAngle = targetOuter;
         firstPersonWeaponLight.intensity = thirdPersonWeaponLight.intensity = targetIntensity;
+        firstPersonWeaponLight.color = thirdPersonWeaponLight.color = targetColor; // 추가된 부분 : 줌이 완료되면 색상 변경
+
+        //3인칭
+        thirdPersonWeaponLight.innerSpotAngle = thirdPersonWeaponLight.innerSpotAngle = targetInner;
+        thirdPersonWeaponLight.spotAngle = thirdPersonWeaponLight.spotAngle = targetOuter;
+        thirdPersonWeaponLight.intensity = thirdPersonWeaponLight.intensity = targetIntensity;
+        thirdPersonWeaponLight.color = thirdPersonWeaponLight.color = targetColor; 
     }
+
+
 
     private void HandleZoomAudio(float t)
     {
@@ -202,13 +220,14 @@ public class SpotlightControl : WeaponSystem
     private IEnumerator PlayFlashSoundAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+
+        if (audioSource.isPlaying)
+            audioSource.Stop();
+
         if (audioSource != null && flashSoundClip != null)
         {
             audioSource.PlayOneShot(flashSoundClip);
         }
-
-        if (audioSource.isPlaying)
-            audioSource.Stop();
     }
 
     private IEnumerator FlashEffect(Light light)
@@ -221,18 +240,22 @@ public class SpotlightControl : WeaponSystem
             float t = time / flashExpandDuration;
             light.intensity = Mathf.Lerp(defaultIntensity, flashIntensity, t);
             light.spotAngle = Mathf.Lerp(defaultOuterAngle, flashOuterAngle, t);
+            light.color = flashColor;// 추가된 부분: 플래시 확장 시 색상 변경
             yield return null;
         }
 
-        StartCoroutine(FlashEffect());
+      //  StartCoroutine(ScreenFlashEffect());
 
         yield return new WaitForSeconds(0.1f);
 
         for (float time = 0f; time < flashFadeDuration; time += Time.deltaTime)
         {
             float t = time / flashFadeDuration;
+            float colorT = recoveryCurve.Evaluate(t); // 추가된 부분: 색상 복귀 속도 조절
+
             light.intensity = Mathf.Lerp(flashIntensity, defaultIntensity, t);
             light.spotAngle = Mathf.Lerp(flashOuterAngle, defaultOuterAngle, t);
+            light.color = Color.Lerp(flashColor, defaultColor, t); // 추가된 부분: 원래 색상으로 복귀
             yield return null;
         }
     }
@@ -247,7 +270,7 @@ public class SpotlightControl : WeaponSystem
         isResetting = false;
     }
 
-    private IEnumerator FlashEffect()
+ /*   private IEnumerator ScreenFlashEffect()
     {
         float duration = 3f;
         float elapsed = 0f;
@@ -257,13 +280,13 @@ public class SpotlightControl : WeaponSystem
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            flashPanel.alpha = Mathf.Lerp(0.5f, 0f, elapsed / duration);
+            flashPanel.alpha = Mathf.Lerp(0.2f, 0f, elapsed / duration);
             yield return null;
         }
 
         flashPanel.gameObject.SetActive(false);
         flashPanel.alpha = 0f;
-    }
+    }*/
 
     private void SetLightValues(float innerAngle, float outerAngle, float intensity)
         {

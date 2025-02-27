@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public class PickupItem : NetworkBehaviour
+public class PickupItem : NetworkBehaviour , IPickupItem
 {
     public InventoryItem inventoryItem;
 
@@ -57,5 +57,8 @@ public class PickupItem : NetworkBehaviour
         }       
     }
 
-
+    public virtual void UseItem()
+	{
+        Debug.Log($"UseItem {this.gameObject.name}");
+	}
 }
