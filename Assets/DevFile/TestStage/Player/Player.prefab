@@ -895,12 +895,13 @@ MonoBehaviour:
     m_InternalValue: 0
   maxHealth: 100
   currentHealth:
-    m_InternalValue: 1000
+    m_InternalValue: 100
   saveSystem: {fileID: 0}
   audioSource: {fileID: 5628609664115642516}
   firstPersonObject: {fileID: 8862689966996072030}
   thirdPersonObject: {fileID: 2515749906003960831}
   DieTargetGameObject: {fileID: 2390800592277029028}
+  healthBar: {fileID: 0}
 --- !u!114 &5775247870652489427
 MonoBehaviour:
   m_ObjectHideFlags: 0

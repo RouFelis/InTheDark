@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 
 public class Player : playerMoveController , IHealth , ICharacter
@@ -54,8 +55,9 @@ public class Player : playerMoveController , IHealth , ICharacter
 	public NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
 	public NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
 	public NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
-	[SerializeField] private float maxHealth = 5;
+	[SerializeField] private float maxHealth = 100;
 	public NetworkVariable<float> currentHealth = new NetworkVariable<float>(value:100, writePerm: NetworkVariableWritePermission.Server);
+	public NetworkVariable<float> currentStamina = new NetworkVariable<float>(value:100, writePerm: NetworkVariableWritePermission.Server);
 
 	public float Health => currentHealth.Value; // 체력 값은 외부에서 수정 불가
 	public bool IsDead => currentHealth.Value <= 0;
@@ -74,6 +76,7 @@ public class Player : playerMoveController , IHealth , ICharacter
 
 	[Header("DieTarget")]
 	[SerializeField] private GameObject DieTargetGameObject;
+	public Image healthBar;
 
 	private SpotlightControl spotlightControl;
 
@@ -87,9 +90,6 @@ public class Player : playerMoveController , IHealth , ICharacter
 	private Coroutine hitEffectCoroutine; // 실행 중인 코루틴 저장
 	private float mag = 0.00015f;
 	private float dur = 0.3f;
-
-
-
 
 
 
@@ -181,10 +181,21 @@ public class Player : playerMoveController , IHealth , ICharacter
 			audioSource.PlayOneShot(hitSound);  // 몬스터의 타격음 재생
 		}
 
+		UpdateHealthBar();
+
 		if (IsDead)
 		{
 			Die();
 		}
+	}
+	private void UpdateHealthBar()
+	{
+		if (healthBar == null)
+		{
+			healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
+		}
+		float healthRatio = currentHealth.Value / maxHealth; // 0 ~ 1
+		healthBar.fillAmount = healthRatio * 0.5f; // 0 ~ 0.5로 변환
 	}
 
 	private IEnumerator HitEffectCoroutine()

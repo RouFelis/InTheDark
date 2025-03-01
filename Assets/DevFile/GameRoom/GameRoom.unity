@@ -37122,7 +37122,7 @@ MonoBehaviour:
   player: {fileID: 544633472}
   missionDirection: {x: 0, y: 0, z: 0, w: 0}
   missionLayer: {fileID: 2053097884}
-  missionPlace: {fileID: 1035677054}
+  missionPlace: {fileID: 0}
 --- !u!4 &355962585
 Transform:
   m_ObjectHideFlags: 0
@@ -40729,7 +40729,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -43163,14 +43163,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b0f082998e84c0e439c0ebe56ad66cd4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 58246947c54003c42ab72d76ffb72c2e, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 1
+  m_FillAmount: 0.5
   m_FillClockwise: 0
-  m_FillOrigin: 2
+  m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &998057504
@@ -43217,7 +43217,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0012461967, y: -0.028457073}
+  m_AnchoredPosition: {x: 0.0012461967, y: -0.027080435}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1004104937
@@ -43425,7 +43425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoneMixerGroup: {fileID: -966256998076031734, guid: 6cb6f74c41f9262409531ede94534227, type: 2}
-  manager: {fileID: 0}
+  manager: {fileID: 279615343}
 --- !u!65 &1027731196
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46532,7 +46532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoneMixerGroup: {fileID: 3923682070797444629, guid: 6cb6f74c41f9262409531ede94534227, type: 2}
-  manager: {fileID: 0}
+  manager: {fileID: 279615343}
 --- !u!65 &1626626722
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47516,7 +47516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -49703,20 +49703,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a2d7fbc6ed9a84143b565fab84d641aa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f2150644dff6bcd45a07df6711e6210a, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 0
-  m_FillOrigin: 2
+  m_FillAmount: 0.5
+  m_FillClockwise: 1
+  m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1950401692
@@ -49907,7 +49907,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -50223,7 +50223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -51043,6 +51043,7 @@ SceneRoots:
   - {fileID: 1337958732}
   - {fileID: 279615344}
   - {fileID: 677487173}
+  - {fileID: 355962585}
   - {fileID: 1757751448}
   - {fileID: 1418398740}
   - {fileID: 585359626}
@@ -51059,4 +51060,3 @@ SceneRoots:
   - {fileID: 478439320}
   - {fileID: 1626626723}
   - {fileID: 1027731197}
-  - {fileID: 355962585}

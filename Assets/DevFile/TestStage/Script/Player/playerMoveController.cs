@@ -13,6 +13,7 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float gravity = 20.0f;
     [SerializeField] private float jumpForce = 8.0f;
+    public float Stamina => currentStamina.Value;
 
     [Header("Camera & Head Rotation")]
     [SerializeField] protected Camera playerCamera;
@@ -30,6 +31,7 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
+    public NetworkVariable<float> currentStamina = new NetworkVariable<float>(value: 100, writePerm: NetworkVariableWritePermission.Owner);
 
     [Header("GroundChecker")]
     [SerializeField] private float groundCheckRadius = 0.2f;
@@ -71,8 +73,9 @@ public class playerMoveController : NetworkBehaviour
     private bool isJumping = false;
     private bool isFalling = false;
     private Quaternion savedHeadRotation;
-
     private Interacter interacter;
+
+
 
     private void Awake()
     {
@@ -168,10 +171,11 @@ public class playerMoveController : NetworkBehaviour
         if (inputDirection.magnitude > 1)
             inputDirection.Normalize();
 
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value >= 0);
         float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
         moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier;
         moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier;
+
 
         characterController.Move(moveDirection * Time.deltaTime);
 

@@ -20,6 +20,7 @@ public class Compass : MonoBehaviour
 	{
 		enterStage = FindAnyObjectByType<EnterStage>();
 		enterStage.enterDoorAction += setDungeunBool;
+		enterStage.enterDoorAction += FindOutDoor;
 	}
 
 	private void OnDisable()
