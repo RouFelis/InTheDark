@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3009238821570909091}
   - component: {fileID: 4743129888865985342}
   - component: {fileID: 5472505676813422237}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EscapePlace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 0
+  GlobalObjectIdHash: 3702296218
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

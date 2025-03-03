@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3156597937422283596}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: StageSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 3306470255327237989}
   - component: {fileID: 633691662670707294}
   - component: {fileID: 465192274157104410}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: OutDoor_1
   m_TagString: InteractableObject
   m_Icon: {fileID: 0}
@@ -2021,7 +2021,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2345307985787606880}
   - component: {fileID: 3378868998682930168}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: OutDoor_1_SoundSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
