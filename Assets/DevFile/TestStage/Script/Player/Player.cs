@@ -57,7 +57,6 @@ public class Player : playerMoveController , IHealth , ICharacter
 	public NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
 	[SerializeField] private float maxHealth = 100;
 	public NetworkVariable<float> currentHealth = new NetworkVariable<float>(value:100, writePerm: NetworkVariableWritePermission.Server);
-	public NetworkVariable<float> currentStamina = new NetworkVariable<float>(value:100, writePerm: NetworkVariableWritePermission.Server);
 
 	public float Health => currentHealth.Value; // 체력 값은 외부에서 수정 불가
 	public bool IsDead => currentHealth.Value <= 0;

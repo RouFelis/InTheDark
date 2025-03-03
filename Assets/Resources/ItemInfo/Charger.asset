@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Charger
   itemSpritePath: Image/Cat
-  previewPrefabPath: Prefab/Preview
-  objectPrefabPath: Prefab/Work Light
-  dropPrefabPath: Prefab/Work Light
+  previewPrefabPath: 
+  objectPrefabPath: Prefab/TestCahrge
+  dropPrefabPath: Prefab/TestCahrge
   isPlaceable: 0
   isUsable: 1
   price: 500

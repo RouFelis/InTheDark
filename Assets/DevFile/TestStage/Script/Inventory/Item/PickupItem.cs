@@ -28,7 +28,8 @@ public class PickupItem : NetworkBehaviour , IPickupItem
 	private void Start()
     {
         if (IsServer)
-        {          
+        {
+            networkInventoryItemData.Value = cloneItem.ToData();
             // 클라이언트에서 데이터가 변경될 때 아이템 로드
             networkInventoryItemData.OnValueChanged += (oldValue, newValue) =>
             {
@@ -59,6 +60,6 @@ public class PickupItem : NetworkBehaviour , IPickupItem
 
     public virtual void UseItem()
 	{
-        Debug.Log($"UseItem {this.gameObject.name}");
+        Debug.Log($"UseItem 테스트");
 	}
 }

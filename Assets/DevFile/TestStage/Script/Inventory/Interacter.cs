@@ -15,6 +15,7 @@ public class Interacter : NetworkBehaviour
     public int interactDistance = 2;
     private TextMeshProUGUI infoText;
     private NetworkObject netobject;
+    [SerializeField] private LayerMask interacterLayer;
 
     void Update()
 	{
@@ -39,7 +40,7 @@ public class Interacter : NetworkBehaviour
 	public void HandleRaycast()
     {
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, interactDistance))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, interactDistance, interacterLayer))
         {
             if (hit.transform.CompareTag("Item"))
             {

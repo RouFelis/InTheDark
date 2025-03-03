@@ -8347,15 +8347,15 @@ MonoBehaviour:
   spawnedItem: {fileID: 0}
   spawnedItemID: 0
   maxPlacementDistance: 10
+  canPlace: 1
   transparentMaterial: {fileID: 2100000, guid: 8036ca5fdfce72f40b1b0fd7672435e2, type: 2}
   validPlacementMaterial: {fileID: 2100000, guid: 0340ade0a5cb30a40ab59a5d899c6913, type: 2}
   invalidPlacementMaterial: {fileID: 2100000, guid: ab0bf8416da6b90498ff9e548f960e3f, type: 2}
   rotationSpeed: 100
-  enableLogs: 1
-  previewObject: {fileID: 0}
-  canPlace: 1
   clientRpcCompleted: 0
   networkLoading: 0
+  enableLogs: 1
+  previewObject: {fileID: 0}
 --- !u!114 &1224171602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12013,11 +12013,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5648814610244671129, guid: bbe1d7e784d8a494eba5769e1b18133b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -419.785
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5648814610244671129, guid: bbe1d7e784d8a494eba5769e1b18133b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 201.58195
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

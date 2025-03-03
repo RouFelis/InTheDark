@@ -74,7 +74,7 @@ public class GrabHelper : NetworkBehaviour
     {
         // NetworkObjectId로 playerRoot Transform을 찾습니다.
         NetworkObject playerRootNetworkObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[PlayerID];
-        Transform playerRootTransform = playerRootNetworkObject.gameObject.GetComponent<NetworkInventoryController>().garbHandTransform;
+        Transform playerRootTransform = playerRootNetworkObject.gameObject.GetComponent<NetworkInventoryController>().grabHandTransform;
 
         // Position Constraint에 Source를 추가합니다.
         ConstraintSource source = new ConstraintSource

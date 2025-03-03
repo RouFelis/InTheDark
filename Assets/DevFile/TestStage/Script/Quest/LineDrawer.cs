@@ -94,7 +94,7 @@ public class LineDrawer : NetworkBehaviour
 
     public void MissDraw()
 	{
-        isDraw = false;
+        isDraw = true;
         DestroyCableServerRpc();
     }
 

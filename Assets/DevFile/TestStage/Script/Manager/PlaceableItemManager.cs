@@ -4,28 +4,37 @@ using System.Collections;
 
 public class PlaceableItemManager : NetworkBehaviour
 {
+    // == 프리팹 및 생성된 오브젝트 ==
     public GameObject previewPrefab { get; set; } // 설치 미리보기 프리팹
     public GameObject objectPrefab { get; set; } // 설치할 오브젝트의 프리팹
-    public GameObject spawnedItem; // 설치할 오브젝트의 프리팹
-    public ulong spawnedItemID; // 설치할 오브젝트의 프리팹
+    public GameObject spawnedItem; // 생성된 오브젝트
+    public ulong spawnedItemID; // 생성된 오브젝트의 ID
+
+    // == 설치 관련 변수 ==
     public float maxPlacementDistance = 10f; // 최대 설치 거리
+    public bool canPlace; // 설치 가능 여부
+
+    // == 머티리얼 ==
     public Material transparentMaterial; // 투명한 머티리얼
     public Material validPlacementMaterial; // 설치 가능한 위치 머티리얼
     public Material invalidPlacementMaterial; // 설치 불가능한 위치 머티리얼
-    public float rotationSpeed = 100f; // 회전 속도
-    public bool enableLogs = true; // 로그 활성화 체크박스
 
-    [HideInInspector] public GameObject previewObject; // 설치 미리보기 오브젝트
-    public bool canPlace; // 설치 가능 여부
-    public bool clientRpcCompleted = false;
+    // == 회전 관련 ==
+    public float rotationSpeed = 100f; // 회전 속도
     private float currentRotation = 0f; // 현재 회전 각도
     private bool isRotating = false; // 회전 중인지 여부
-  
-    private NetworkObject spawnedObjectParent;
-    private NetworkInventoryController netInvenController; 
-    private playerMoveController playerController; // 플레이어 컨트롤러 참조
 
+    // == 네트워크 관련 ==
+    public bool clientRpcCompleted = false;
     public bool networkLoading = false;
+    private NetworkObject spawnedObjectParent;
+    private NetworkInventoryController netInvenController;
+
+    // == 기타 ==
+    public bool enableLogs = true; // 로그 활성화 체크박스
+    [HideInInspector] public GameObject previewObject; // 설치 미리보기 오브젝트
+	private playerMoveController playerController; // 플레이어 컨트롤러 참조
+
 
     void Start()
     {

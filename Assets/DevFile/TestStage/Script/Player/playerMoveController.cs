@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class playerMoveController : NetworkBehaviour
 {
@@ -13,7 +14,7 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float gravity = 20.0f;
     [SerializeField] private float jumpForce = 8.0f;
-    public float Stamina => currentStamina.Value;
+
 
     [Header("Camera & Head Rotation")]
     [SerializeField] protected Camera playerCamera;
@@ -31,7 +32,7 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
-    public NetworkVariable<float> currentStamina = new NetworkVariable<float>(value: 100, writePerm: NetworkVariableWritePermission.Owner);
+    [SerializeField] private NetworkVariable<float> currentStamina = new NetworkVariable<float>(value: 100, writePerm: NetworkVariableWritePermission.Owner);
 
     [Header("GroundChecker")]
     [SerializeField] private float groundCheckRadius = 0.2f;
@@ -75,6 +76,16 @@ public class playerMoveController : NetworkBehaviour
     private Quaternion savedHeadRotation;
     private Interacter interacter;
 
+
+    [Header("Stamina Settings")]
+    [SerializeField] private float Stamina => currentStamina.Value;
+    [SerializeField] private float maxStamina = 100f;
+    [SerializeField] private float staminaDecreaseRate = 10f; // 초당 감소량
+    [SerializeField] private float staminaRegenRate = 5f; // 초당 회복량
+    [SerializeField] private float staminaRegenDelay = 2f; // 회복 대기 시간
+    [SerializeField] private float lastRunTime;
+
+    private Image staminaBar;
 
 
     private void Awake()
@@ -171,10 +182,26 @@ public class playerMoveController : NetworkBehaviour
         if (inputDirection.magnitude > 1)
             inputDirection.Normalize();
 
-        bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value >= 0);
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value > 0);
         float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
         moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier;
         moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier;
+
+
+        if (isRunning)
+        {
+            currentStamina.Value -= staminaDecreaseRate * Time.deltaTime;
+            currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
+            lastRunTime = Time.time; // 마지막으로 달린 시간 업데이트
+            UpdateSteaminaBar();
+        }
+        else if (Time.time > lastRunTime + staminaRegenDelay)
+        {
+            currentStamina.Value += staminaRegenRate * Time.deltaTime;
+            currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
+            UpdateSteaminaBar();
+        }
+
 
 
         characterController.Move(moveDirection * Time.deltaTime);
@@ -213,6 +240,7 @@ public class playerMoveController : NetworkBehaviour
 
         HandleAim();
         HeadBobbing();
+        UpdateSteaminaBar();
     }
 
     private void EventPlayingStop()
@@ -221,6 +249,15 @@ public class playerMoveController : NetworkBehaviour
         SetPlayerAimPos(new Vector3(0, 2f, 10f));
     }
 
+    private void UpdateSteaminaBar()
+    {
+        if (staminaBar == null)
+        {
+            staminaBar = GameObject.Find("StaminaBar").GetComponent<Image>();
+        }
+        float healthRatio = currentStamina.Value / maxStamina; // 0 ~ 1
+        staminaBar.fillAmount = healthRatio * 0.5f; // 0 ~ 0.5로 변환
+    }
 
     //걸을때 머리 덜렁이기 ㅋㅋ
     private void HeadBobbing()
