@@ -28,6 +28,8 @@ public class WithinSight : Conditional
     
     public override TaskStatus OnUpdate()
     {
+		var self = GetComponent<EnemyPrototypePawn>();
+
 		for (var i = 0; i < size; i++)
 		{
 			colliders[i] = default;
@@ -43,17 +45,21 @@ public class WithinSight : Conditional
 			var isSight = Vector3.Angle(direction, transform.forward) < fieldOfViewAngle;
 			var distance = isSight ? sightDistance : aroundDistance;
 			var isOccultation = Physics.Raycast(transform.position, direction, out var hit, distance);
+			var player = element.GetComponent<Player>();
 
 			OnDrawRaycastGizmo(element, hit, direction/*, isSight*/);
 
-			if (hit.collider == element && isOccultation/* && isSight*/)
+			if (hit.collider == element && isOccultation/* && isSight*/ && !player.IsDead)
 			{
+				var aggroHandler = element.GetComponent<EnemyAggroHandler>();
+
 				NavMesh.SamplePosition(element.transform.position, out var destination, 5.0f, NavMesh.AllAreas);
 
 				// Set the target so other tasks will know which transform is within sight
 				//target.Value = element.transform.position;
 				target.Value = destination.position;
-				pawn.Value = element.GetComponent<NetworkBehaviour>();
+				//pawn.Value = element.GetComponent<NetworkBehaviour>();
+				self.Target = player;
 
 				return TaskStatus.Success;
 			}

@@ -26,16 +26,18 @@ namespace InTheDark.Prototypes
 				pawn.TakeDamage(light.Damage, pawn.hitSound);
 
 				//pawn.Resistance = resistance;
-				pawn.State = ENRAGE_STATE;
+				//pawn.State = ENRAGE_STATE;
 
-				if (behavior && player)
+				if (behavior && player && pawn.State.Equals(EnemyPrototypePawn.DEFAULT_STATE))
 				{
+					pawn.State = ENRAGE_STATE;
+
 					behavior.SetVariableValue("TargetPawn", player);
+
+					agent.speed = 11.25F;
 
 					//Debug.Log("³ª È­³µ¾û!");
 				}
-
-				agent.speed = 11.25F;
 			}
 		}
 	}

@@ -9,6 +9,8 @@ using UnityEngine;
 namespace InTheDark.Prototypes
 {
 	// TODO: 감지 기능 별도 스크립트 분리
+	// 사용 중지된 스크립트인데 일단 킵
+	[Obsolete]
 	public class LightSource : NetworkBehaviour
 	{
 		[SerializeField]
@@ -59,24 +61,24 @@ namespace InTheDark.Prototypes
 			}
 		}
 
-		public static LightSource operator >(LightSource a, LightSource b)
-		{
-			return a._damagePercent > b._damagePercent ? a : b;
-		}
+		//public static LightSource operator >(LightSource a, LightSource b)
+		//{
+		//	return a._damagePercent > b._damagePercent ? a : b;
+		//}
 
-		public static LightSource operator <(LightSource a, LightSource b)
-		{
-			return a._damagePercent < b._damagePercent ? b : a;
-		}
+		//public static LightSource operator <(LightSource a, LightSource b)
+		//{
+		//	return a._damagePercent < b._damagePercent ? b : a;
+		//}
 
-		public override void OnNetworkSpawn()
-		{
-			LightManager.Instance.OnWorkLightSpanwed(this);
-		}
+		//public override void OnNetworkSpawn()
+		//{
+		//	LightManager.Instance.OnWorkLightSpanwed(this);
+		//}
 
-		public override void OnNetworkDespawn()
-		{
-			LightManager.Instance.OnWorkLightDespawned(this);
-		}
+		//public override void OnNetworkDespawn()
+		//{
+		//	LightManager.Instance.OnWorkLightDespawned(this);
+		//}
 	}
 }

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponName: 
   level: 1
-  baseDamage: 1
-  zoomDamage: 8
+  baseDamage: 8
+  zoomDamage: 15
   baseUpgarde: 1.1
   zoomUpgarde: 1.1
+  batteryCapacity: 3
   upgradeCost: 100

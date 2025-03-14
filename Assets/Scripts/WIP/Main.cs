@@ -25,17 +25,19 @@ namespace InTheDark.Prototypes
 {
 	public sealed class Main : MonoBehaviour
 	{
+
+
 		private void Awake()
 		{
 			OnAwake();
 
-			SpotLight light = default;
+			//SpotLight light = default;
 
-			light.SetCauser(FindAnyObjectByType<Player>())
-				.SetAngle(25.0F)
-				.SetRange(16.0F)
-				.SetDamage(9.0F)
-				.Tick();
+			//light.SetCauser(FindAnyObjectByType<Player>())
+			//	.SetAngle(25.0F)
+			//	.SetRange(16.0F)
+			//	.SetDamage(9.0F)
+			//	.Tick();
 		}
 
 		private void OnAwake()

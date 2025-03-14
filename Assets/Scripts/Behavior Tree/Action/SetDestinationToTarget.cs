@@ -5,15 +5,16 @@ using BehaviorDesigner.Runtime.Tasks;
 public class SetDestinationToTarget : Action
 {
 	public SharedVector3 target;
-	public SharedNetworkBehaviour pawn;
+	//public SharedNetworkBehaviour pawn;
 
 	public override TaskStatus OnUpdate()
 	{
-		var result = pawn.Value ? TaskStatus.Success : TaskStatus.Failure;
+		var self = gameObject.GetComponent<EnemyPrototypePawn>();
+		var result = self.Target ? TaskStatus.Success : TaskStatus.Failure;
 
-		if (pawn.Value)
+		if (self.Target)
 		{
-			target.Value = pawn.Value.transform.position;
+			target.Value = self.Target.transform.position;
 		}
 
 		return result;

@@ -16,7 +16,11 @@ GameObject:
   - component: {fileID: -6386649275116767646}
   - component: {fileID: 4201312871343358130}
   - component: {fileID: 1433858302028618446}
+  - component: {fileID: 7313576750832366103}
+  - component: {fileID: 5292787852574790084}
   - component: {fileID: 982930836932718898}
+  - component: {fileID: -3425913087709133334}
+  - component: {fileID: 4743749463560970572}
   m_Layer: 7
   m_Name: Enemy 5
   m_TagString: Untagged
@@ -59,8 +63,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 3
+  m_Radius: 0.75
+  m_Height: 4
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4103529408529700921
@@ -238,6 +242,7 @@ MonoBehaviour:
   InitializeCooldownValue: 5
   InitializeHealthValue: 100
   InitializeResistanceValue: 20
+  InitializeMoveSpeed: 0
   objectRenderer: {fileID: 6368315079064182521}
   damagedVFXgraph: {fileID: 6282305715552553252}
   dieVFXgraph: {fileID: 1984531242961318529}
@@ -403,6 +408,36 @@ MonoBehaviour:
   _lightInsightedTrigger: {fileID: 11400000, guid: e3029e7a3b60ff74a94892dd565492d3, type: 2}
   _loots:
   - {fileID: 11400000, guid: cb98219c2ef743244bc6f8071018cdfe, type: 2}
+--- !u!114 &7313576750832366103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2695831898451501490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a824abd3fad31254e8139e86a5858b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _target:
+    m_InternalValue: {x: 0, y: 0, z: 0}
+  _agent: {fileID: -6386649275116767646}
+  _pawn: {fileID: 1433858302028618446}
+--- !u!114 &5292787852574790084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2695831898451501490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cf789300bf10154b856a1a47aba7c69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!82 &982930836932718898
 AudioSource:
   m_ObjectHideFlags: 0
@@ -500,6 +535,52 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-3425913087709133334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2695831898451501490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06d79eaf33bee3a4f994f9a5f146add6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _damage: 5
+  _range: 3
+  _cooldown:
+    m_InternalValue: 0
+  _pawn: {fileID: 1433858302028618446}
+  _animator: {fileID: 4453662768508219377}
+--- !u!54 &4743749463560970572
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2695831898451501490}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &3008994728963801929
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,15 +825,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
       propertyPath: m_LocalPosition.x

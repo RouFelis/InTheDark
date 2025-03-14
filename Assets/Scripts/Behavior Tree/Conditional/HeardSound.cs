@@ -13,7 +13,7 @@ public class HeardSound : Conditional
 	// Set the target variable when a target has been found so the subsequent tasks know which object is the target
 	public SharedVector3 target;
 
-	public SharedNetworkBehaviour pawn;
+	//public SharedNetworkBehaviour pawn;
 
 	private int size;
 
@@ -21,6 +21,8 @@ public class HeardSound : Conditional
 
 	public override TaskStatus OnUpdate()
 	{
+		var self = GetComponent<EnemyPrototypePawn>();
+
 		for (var i = 0; i < size; i++)
 		{
 			colliders[i] = default;
@@ -40,15 +42,16 @@ public class HeardSound : Conditional
 				// Set the target so other tasks will know which transform is within sight
 				//target.Value = element.transform.position;
 				target.Value = destination.position;
-				pawn.Value = element.GetComponent<NetworkBehaviour>();
+				//pawn.Value = element.GetComponent<NetworkBehaviour>();
+				self.Target = element.GetComponent<Player>();
 
-				Debug.Log($"{pawn}... I Heard You...");
+				Debug.Log($"{self.Target}... I Heard You...");
 
 				return TaskStatus.Success;
 			}
 		}
 
-		pawn.Value = default;
+		//self.Target = default;
 
 		return TaskStatus.Failure;
 	}

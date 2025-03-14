@@ -6,15 +6,22 @@ public class AttackableNearby : Conditional
 {
 	public float distance;
 
-	public SharedNetworkBehaviour pawn;
+	//public SharedNetworkBehaviour pawn;
 
 	// 어후 시야 감지 클래스 따로 만드는 게 낫겠네 차라리 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
 	public override TaskStatus OnUpdate()
 	{
-		var networkPawn = pawn.Value;
+		//var self = GetComponent<EnemyPrototypePawn>();
+		////var networkPawn = pawn.Value;
+		//var networkPawn = self.Target;
 
-		var isNearBy = networkPawn ? Vector3.Distance(networkPawn.transform.position, transform.position) <= distance : false;
-		var isAttackable = isNearBy ? TaskStatus.Success : TaskStatus.Failure;
+		//var isNearBy = networkPawn ? Vector3.Distance(networkPawn.transform.position, transform.position) <= distance : false;
+		//var isAttackable = isNearBy ? TaskStatus.Success : TaskStatus.Failure;
+
+		//return isAttackable;
+
+		var weapon = GetComponent<EnemyWeapon>();
+		var isAttackable = weapon.IsTargetNearby ? TaskStatus.Success : TaskStatus.Failure;
 
 		return isAttackable;
 	}

@@ -13,7 +13,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.VFX;
 
-
 public class EnemyPrototypePawn : NetworkPawn, IHealth
 {
 	public const string DEFAULT_STATE = "Normal";
@@ -24,6 +23,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public float InitializeCooldownValue;
 	public int InitializeHealthValue;
 	[Obsolete] public float InitializeResistanceValue;
+	public float InitializeMoveSpeed;
 
 	//추가. 24 2 14
 	[SerializeField]
@@ -89,6 +89,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	[SerializeField]
 	private Loot[] _loots;
 
+	private NetworkVariable<NetworkBehaviourReference> _target = new NetworkVariable<NetworkBehaviourReference>();
+
 	private CancellationTokenSource _onAttack;
 
 	//private List<LightSource> _sighted = new List<LightSource>();
@@ -126,6 +128,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		set => _health.Value = value;
 	}
 
+	[Obsolete("InitializeHealthValue 값을 사용!")]
 	public float MaxHealth
 	{
 		get => _maxHealth.Value;
@@ -160,9 +163,36 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
+	public Player Target
+	{
+		get
+		{
+			var isEnable = _target.Value.TryGet(out Player value);
+
+			return value;
+		}
+
+		set
+		{
+			//var isEnable = _target.Value.TryGet(out Player target);
+
+			//if (!isEnable && IsServer)
+			//{
+			//	Player.OnDie += OnTargetDie;
+			//}
+
+			_target.Value = value;
+		}
+	}
+
 	private void Start()
 	{
 		skinnedMaterials = objectRenderer.materials;
+
+		if (_behaviorTree && IsServer)
+		{
+			_behaviorTree.EnableBehavior();
+		}
 	}
 
 	public override void OnDestroy()
@@ -181,6 +211,29 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		_resistance.OnValueChanged += OnResistanceChanged;
 
 		UpdateManager.OnUpdate += OnUpdate;
+
+		// 이렇게 하면 server에서만 작동하게 할 수 있나
+		//if (_behaviorTree && IsServer)
+		//{
+		//	_behaviorTree.EnableBehavior();
+		//}
+
+		//if (ServerPermissionHandler.Instance.IsSpawned)
+		//{
+		//	Debug.Log($"{ServerPermissionHandler.Instance.IsServer} sjhdjhdhskshdkd~");
+		//}
+
+		//if (NetworkManager.Singleton && ServerPermissionHandler.Instance.IsServer)
+		//{
+		//	Debug.Log($"{ServerPermissionHandler.Instance.IsServer} 좋았으~");
+
+		//	Player.OnDie += OnTargetDie;
+		//}
+
+		if (NetworkManager.Singleton && IsServer)
+		{
+			Player.OnDie += OnTargetDie;
+		}
 	}
 
 	public override void OnNetworkDespawn()
@@ -191,6 +244,16 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		_resistance.OnValueChanged -= OnResistanceChanged;
 
 		UpdateManager.OnUpdate -= OnUpdate;
+
+		//if (NetworkManager.Singleton && ServerPermissionHandler.Instance.IsServer)
+		//{
+		//	Player.OnDie -= OnTargetDie;
+		//}
+
+		if (NetworkManager.Singleton && IsServer)
+		{
+			Player.OnDie -= OnTargetDie;
+		}
 	}
 
 	private void OnUpdate()
@@ -265,6 +328,18 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	//	//_sighted.Clear();
 	//}
+
+	public void OnTargetDie()
+	{
+		var isEnable = _target.Value.TryGet(out Player player);
+
+		if (isEnable && player.IsDead)
+		{
+			Debug.Log($"타겟 사망확인");
+
+			_target.Value = default;
+		}
+	}
 
 	// 피격음은 여기다 추가하면 되긴 한데... 흠...
 	// 정확히는 여기 말고... 트리거 안에다가...
@@ -345,12 +420,12 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
-	//public void Attack(ICharacter target)
+	//public void Attack(ICharacter value)
 	//{
 	//	throw new NotImplementedException();
 	//}
 
-	//public void AttackPrototype(NetworkPawn target)
+	//public void AttackPrototype(NetworkPawn value)
 	//{
 	//	// 대충 공격했다고 이벤트 알림^^
 	//}
@@ -362,13 +437,14 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		{
 			_cooldown.Value = InitializeCooldownValue;
 
-			//target.TakeDamage(_damage.Value , attackSound);
+			//value.TakeDamage(_damage.Value , attackSound);
 			//_animator?.SetTrigger("OnAttack");
 
 			OnAttackWithAnimaiton(target).Forget();
 		}
 	}
 
+	// 아 근데 이거 생각해보면 근접 공격에만 쓸수 있는 코드인데
 	private async UniTaskVoid OnAttackWithAnimaiton(IHealth target)
 	{
 		using var source = new CancellationTokenSource();
@@ -389,16 +465,16 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		_onAttack = default;
 	}
 
-	public void Dead()
-	{
-		//_isDead.Value = true;
+	//public void Dead()
+	//{
+	//	//_isDead.Value = true;
 
-		//NetworkObject.Despawn();
+	//	//NetworkObject.Despawn();
 
-		//Destroy(gameObject);
+	//	//Destroy(gameObject);
 
-		//_deathTrigger.OnUpdate(this);
-	}
+	//	//_deathTrigger.OnUpdate(this);
+	//}
 
 	public void Die()
 	{
@@ -427,7 +503,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 			_behaviorTree.DisableBehavior();
 			_deathTrigger.OnUpdate(this);
 
-			await UniTask.Delay(TimeSpan.FromSeconds(3.33F));
+			await UniTask.Delay(TimeSpan.FromSeconds(3.67F));
 
 			gameObject?.SetActive(false);
 

@@ -29,12 +29,15 @@ namespace InTheDark.LoremIpsum
 		// Context
 
 		// IsHost, IsClient, IsServer, IsOwner 다 true 들어옴 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+		// 그 이외에는 IsClient만!
 
 		// logistics
 
 		// IUpStream<TSource>
 		// IDownStream<TSource>
 		// IStreamHandler
+
+		// RIS
 
 		// ServerRpc() == Rpc(SendTo.Server) == 서버에게!
 		// ClientRpc() == Rpc(SendTo.NotServer) == 다른 유저에게!
@@ -48,7 +51,6 @@ namespace InTheDark.LoremIpsum
 		// Player 공격 하면 감지
 		// 몬스터 사망 모션 추가
 		// 몬스터 피격 효과음 추가
-		// 몬스터 공격 모션 진행 중 플레이어가 (죽거나) 범위 밖으로 이탈하거나 몬스터 사망 시 데미지 안 들어가게 수정
 
 		// 슬슬 비즈니스 로직이랑 게임 오브젝트용 로직을 분리해야 함
 
@@ -57,10 +59,13 @@ namespace InTheDark.LoremIpsum
 
 		// 공격 방식: 지속 피해 -> 단발 피해
 		// LightManager 제거하기
-		 
+
 		// 그냥 던전이 생성 안된 상태에서 위치 잡아서 그런거였네...
 
-		//LightManager.onupdate -> EnemyPrototypePawn.OnLightInsighted -> _lightInsightedTrigger.OnUpdate
+		// 몬스터 공격 모션 진행 중 플레이어가 (죽거나) 범위 밖으로 이탈하거나 몬스터 사망 시 데미지 안 들어가게 수정
+		// 플레이어 사망 시 대상 해제
+
+		// 몬스터 돌진 후 벽 충돌 시 튕기기
 	}
 }
 

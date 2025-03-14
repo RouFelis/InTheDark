@@ -6,6 +6,8 @@ namespace InTheDark.Prototypes
 	[CreateAssetMenu(fileName = "new take damage", menuName = "trigger/insighted/damage")]
 	public class TakeDamageOnLightInsighted : EnemyLightInsightedTrigger
 	{
+		public const string TAUNTED_STATE = "Taunted";
+
 		public override void OnUpdate(EnemyPrototypePawn pawn, SpotLight light)
 		{
 			//var damage = /*Time.deltaTime * */light.Damage;
@@ -17,8 +19,10 @@ namespace InTheDark.Prototypes
 
 			//pawn.Resistance = resistance;
 
-			if (behavior && player)
+			if (behavior && player && pawn.State.Equals(EnemyPrototypePawn.DEFAULT_STATE))
 			{
+				pawn.State = TAUNTED_STATE;
+
 				behavior.SetVariableValue("TargetPawn", player);
 
 				//Debug.Log("³ª È­³µ¾û!");

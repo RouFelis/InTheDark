@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace InTheDark.Prototypes
 {
-	public class PlayerLightWeapon : NetworkBehaviour
+	public class PlayerLightWeapon : SpotLight
 	{
 		[SerializeField]
 		private SpotlightControl _weapon;
 
-		[SerializeField]
-		private LightSource _source;
+		//[SerializeField]
+		//private LightSource _source;
 
 		//private void Update()
 		//{
@@ -23,69 +23,90 @@ namespace InTheDark.Prototypes
 				_weapon = GetComponent<SpotlightControl>();
 			}
 
-			if (!_source)
+			if (_weapon)
 			{
-				_source = GetComponent<LightSource>();
-			}
+				var player = GetComponent<Player>();
+				var range = Mathf.Sqrt(_weapon.defaultIntensity);
 
-			if (_weapon && _source)
-			{
-				_weapon.isRightClickHeld.OnValueChanged += OnPlayerRightClickHeld;
-			//	_weapon.isRecovering.OnValueChanged += OnPlayerRecovering;
+				SetCauser(player);
+				SetAngle(_weapon.thirdPersonWeaponLight.spotAngle);
+				SetRange(range);
+				SetDamage(_weapon.baseDamage.Value);
 
-				SetWeaponData(_weapon.isRightClickHeld.Value);
-			//	SetWeaponActive(_weapon.isRecovering.Value);
+				if (player.IsOwner)
+				{
+					Debug.Log("할당 중인디, 쭈인 맞아여!");
+					SpotlightControl.OnFlash += OnFlash;
+				}
+				else
+				{
+					Debug.Log("할당 중인디, 쭈인 아니에여...");
+				}
 			}
 		}
 
 		public override void OnNetworkDespawn()
 		{
-			if (_weapon)
+			if (NetworkManager.Singleton && _weapon)
 			{
-				_weapon.isRightClickHeld.OnValueChanged -= OnPlayerRightClickHeld;
-			//	_weapon.isRecovering.OnValueChanged -= OnPlayerRecovering;
+				var player = GetComponent<Player>();
+
+				if (player.IsOwner)
+				{
+					Debug.Log("할당 해제중인디, 쭈인 맞아여!");
+					SpotlightControl.OnFlash -= OnFlash;
+				}
+				else
+				{
+					Debug.Log("할당 해제중인디, 쭈인 아니에여...");
+				}
 			}
 		}
 
-		private void OnPlayerRightClickHeld(bool previousValue, bool newValue)
+		private void OnFlash()
 		{
-			if (previousValue != newValue)
-			{
-				SetWeaponData(newValue);
-			}
+			Tick();
 		}
 
-		private void OnPlayerRecovering(bool previousValue, bool newValue)
-		{
-			if (previousValue != newValue)
-			{
-				SetWeaponActive(newValue);
-			}
-		}
+		//private void OnPlayerRightClickHeld(bool previousValue, bool newValue)
+		//{
+		//	if (previousValue != newValue)
+		//	{
+		//		SetWeaponData(newValue);
+		//	}
+		//}
 
-		private void SetWeaponData(bool value)
-		{
-			var intensity = value ? _weapon.zoomedIntensity : _weapon.defaultIntensity;
+		//private void OnPlayerRecovering(bool previousValue, bool newValue)
+		//{
+		//	if (previousValue != newValue)
+		//	{
+		//		SetWeaponActive(newValue);
+		//	}
+		//}
 
-			//Debug.LogError($"OnrightClicked {value}");
+		//private void SetWeaponData(bool value)
+		//{
+		//	var intensity = value ? _weapon.zoomedIntensity : _weapon.defaultIntensity;
 
-			_source.Angle = _weapon.thirdPersonWeaponLight.spotAngle;
-			_source.Distance = Mathf.Sqrt(intensity);
-			_source.DamagePercent = value ? _weapon.zoomDamage.Value : _weapon.baseDamage.Value;
-		}
+		//	//Debug.LogError($"OnrightClicked {value}");
 
-		private void SetWeaponActive(bool value)
-		{
-			//Debug.LogError($"OnRestore {value}");
+		//	_source.Angle = _weapon.thirdPersonWeaponLight.spotAngle;
+		//	_source.Distance = Mathf.Sqrt(intensity);
+		//	_source.DamagePercent = value ? _weapon.zoomDamage.Value : _weapon.baseDamage.Value;
+		//}
 
-			if (value)
-			{
-				LightManager.Instance.OnWorkLightSpanwed(_source);
-			}
-			else
-			{
-				LightManager.Instance.OnWorkLightDespawned(_source);
-			}
-		}
+		//private void SetWeaponActive(bool value)
+		//{
+		//	//Debug.LogError($"OnRestore {value}");
+
+		//	if (value)
+		//	{
+		//		LightManager.Instance.OnWorkLightSpanwed(_source);
+		//	}
+		//	else
+		//	{
+		//		LightManager.Instance.OnWorkLightDespawned(_source);
+		//	}
+		//}
 	} 
 }
