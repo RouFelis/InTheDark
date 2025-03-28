@@ -98,6 +98,8 @@ namespace InTheDark.Prototypes
 
 				if (_isLocked.Value)
 				{
+					Debug.Log("jdhfjdsfjdhfj");
+
 					foreach (var enemyRef in _spawned)
 					{
 						SpawnInternal(enemyRef, GetRandomPositionInNavMesh(), Quaternion.identity);
@@ -133,6 +135,8 @@ namespace InTheDark.Prototypes
 		[Rpc(SendTo.Everyone)]
 		private void SpawnEnemyClientRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
 		{
+			Debug.Log("ytyeuhvn");
+
 			SpawnInternal(enemyRef, position, rotation);
 		}
 
@@ -194,7 +198,17 @@ namespace InTheDark.Prototypes
 
 			_agentHeight += height;
 
-			enemy.NetworkObject.Spawn(true);
+			//enemy.NetworkObject.Spawn(true);
+			OnEnemyPawnSpawnRPC(enemy);
+		}
+
+		[Rpc(SendTo.Server)]
+		private void OnEnemyPawnSpawnRPC(NetworkBehaviourReference reference)
+		{
+			if (reference.TryGet<EnemyPrototypePawn>(out var enemy) && !enemy.IsSpawned)
+			{
+				enemy.NetworkObject.Spawn(true);
+			}
 		}
 
 		private void OnDungeonExit(DungeonExitEvent received)
