@@ -15,7 +15,7 @@ using InTheDark.Prototypes;
 
 public class TestRelay : MonoBehaviour
 {
-	public static TestRelay Instance { get; set; }
+	public static TestRelay Instance { get; private set; }
 
 	[SerializeField]
 	private string enviromnet = "production";
@@ -23,15 +23,37 @@ public class TestRelay : MonoBehaviour
 	[SerializeField]
 	private int maxConnections = 10;
 
+
 	private void Awake()
 	{
-		Instance = this;
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else
+		{
+			Destroy(gameObject);
+			return;
+		}
 	}
 
 	public bool IsRelayEnabled => Transport != null &&
 		Transport.Protocol == UnityTransport.ProtocolType.RelayUnityTransport;
 
-	public UnityTransport Transport => NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
+	//public UnityTransport Transport => NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
+
+	public UnityTransport Transport
+	{
+		get
+		{
+			if (NetworkManager.Singleton == null)
+			{
+				Debug.LogError("NetworkManager.Singleton is null!");
+				return null;
+			}
+			return NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
+		}
+	}
 
 	public async Task<RelayHostData> SetupRelay()
 	{
@@ -74,7 +96,7 @@ public class TestRelay : MonoBehaviour
 		return relayHostData;
 	}
 		
-	public async Task<RelayJoinData> JoinRelay(string joinCode)
+	public async Task<RelayJoinData?> JoinRelay(string joinCode)
 	{
 		InitializationOptions options = new InitializationOptions().SetEnvironmentName(enviromnet);
 
@@ -98,6 +120,14 @@ public class TestRelay : MonoBehaviour
 			IPv4Address = allocation.RelayServer.IpV4,
 			JoinCode = joinCode
 		};
+
+
+		if (Transport == null)
+		{
+			Debug.LogError("Transport is null! Relay join failed.");
+			return null;
+		}
+
 
 		Transport.SetRelayServerData(relayJoinData.IPv4Address , relayJoinData.Port, relayJoinData.AllocationIDBytes, relayJoinData.Key, relayJoinData.ConnectionData, relayJoinData.HostConnectionData);
 

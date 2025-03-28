@@ -58,6 +58,8 @@ public class LobbyUI : NetworkBehaviour
 			{
 				Logger.Instance?.LogInfo("Client started...");
 				NetworkManager.Singleton.SceneManager.LoadScene("GameRoom", LoadSceneMode.Single);
+
+				//PlayersManager.Instance.AddEvent();
 			}
 			else
 			{

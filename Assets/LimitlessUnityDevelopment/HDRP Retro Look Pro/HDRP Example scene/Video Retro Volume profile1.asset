@@ -1,0 +1,2338 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9090184425406734865
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aec9469ec3070046b632052b10a89a8, type: 3}
+  m_Name: LowRes_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  downscale:
+    m_OverrideState: 1
+    m_Value: 0.874
+  referenceWidth: 1920
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-9053893459250152934
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905bf1e6ec7a95d479de58b30d1af33f, type: 3}
+  m_Name: CustomTexture_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  texture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 555c0235bde7b1149a4650530e3db23c, type: 3}
+    dimension: 1
+  alpha:
+    m_OverrideState: 0
+    m_Value: 1
+  fade:
+    m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &-9030791347038331383
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96dfee264aae354cb494a1c4fcf12f1, type: 3}
+  m_Name: Artefacts_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 0
+    m_Value: 0
+  cutOff:
+    m_OverrideState: 0
+    m_Value: 0.5
+  amount:
+    m_OverrideState: 0
+    m_Value: 1
+  fade:
+    m_OverrideState: 0
+    m_Value: 0.5
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
+  debugArtefacts:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-7476598909083840391
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c46c91cebc20b140b77ed2d6e8803b1, type: 3}
+  m_Name: Glitch1_RLPro_HDRP
+  m_EditorClassIdentifier: 
+  active: 1
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  amount:
+    m_OverrideState: 0
+    m_Value: 0.6
+  stretch:
+    m_OverrideState: 0
+    m_Value: 0.06
+  speed:
+    m_OverrideState: 0
+    m_Value: 0.5
+  rMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  gMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  bMultiplier:
+    m_OverrideState: 0
+    m_Value: 1
+  x:
+    m_OverrideState: 0
+    m_Value: 127.1
+  y:
+    m_OverrideState: 0
+    m_Value: 43758.547
+  angleY:
+    m_OverrideState: 0
+    m_Value: 311.7
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-7288123714919548458
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a04df0bc9fda65c4ead3a48de59e11f5, type: 3}
+  m_Name: Negative_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  luminosity:
+    m_OverrideState: 1
+    m_Value: 0
+  vignette:
+    m_OverrideState: 1
+    m_Value: 1
+  contrast:
+    m_OverrideState: 1
+    m_Value: 0.7
+  negative:
+    m_OverrideState: 1
+    m_Value: 1
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-7153515129537651729
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c3f796f909aa7a438cd6fe6dbc23e26, type: 3}
+  m_Name: Warp_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  warpMode:
+    m_OverrideState: 1
+    m_Value: 0
+  warp:
+    m_OverrideState: 1
+    m_Value: {x: 0.22, y: 0}
+  scale:
+    m_OverrideState: 1
+    m_Value: 0.5
+  clampSampler:
+    m_OverrideState: 0
+    m_Value: 1
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-6812131471049422991
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbbd6d53d2a11ed44a4c4e02bd6ec7f3, type: 3}
+  m_Name: VHS_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  colorOffset:
+    m_OverrideState: 1
+    m_Value: 5.6
+  colorOffsetAngle:
+    m_OverrideState: 1
+    m_Value: 0.27
+  verticalOffsetFrequency:
+    m_OverrideState: 1
+    m_Value: 0
+  verticalOffset:
+    m_OverrideState: 1
+    m_Value: 0
+  offsetDistortion:
+    m_OverrideState: 1
+    m_Value: 0
+  noiseTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 555c0235bde7b1149a4650530e3db23c, type: 3}
+    dimension: 1
+  blendMode:
+    m_OverrideState: 1
+    m_Value: 15
+  tile:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1}
+  _textureIntensity:
+    m_OverrideState: 1
+    m_Value: 1
+  smoothCut:
+    m_OverrideState: 1
+    m_Value: 1
+  iterations:
+    m_OverrideState: 1
+    m_Value: 5
+  smoothSize:
+    m_OverrideState: 1
+    m_Value: 0.1
+  deviation:
+    m_OverrideState: 1
+    m_Value: 0.1
+  _textureCutOff:
+    m_OverrideState: 1
+    m_Value: 0.9
+  stripes:
+    m_OverrideState: 1
+    m_Value: 0.163
+  unscaledTime:
+    m_OverrideState: 1
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-6506305085538148725
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a5243f4ded6ed4ba29468ea029713a, type: 3}
+  m_Name: NTSCEncode_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  blur:
+    m_OverrideState: 0
+    m_Value: 3
+  brigtness:
+    m_OverrideState: 0
+    m_Value: 3
+  lineSpeed:
+    m_OverrideState: 0
+    m_Value: 10
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-4240709011073800437
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0cbd84360923854fa4064ecdaf56ec3, type: 3}
+  m_Name: Glitch3_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  MaxDisplace:
+    m_OverrideState: 1
+    m_Value: 0
+  Density:
+    m_OverrideState: 0
+    m_Value: 1
+  speed:
+    m_OverrideState: 1
+    m_Value: 5
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-4119731869115913504
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a5243f4ded6ed4ba29468ea029713a, type: 3}
+  m_Name: NTSCEncode_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  blur:
+    m_OverrideState: 1
+    m_Value: 2
+  brigtness:
+    m_OverrideState: 1
+    m_Value: 10.4
+  lineSpeed:
+    m_OverrideState: 1
+    m_Value: 0.18
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-4021156373414300809
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96dfee264aae354cb494a1c4fcf12f1, type: 3}
+  m_Name: Artefacts_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 0
+    m_Value: 0
+  cutOff:
+    m_OverrideState: 0
+    m_Value: 0.5
+  amount:
+    m_OverrideState: 0
+    m_Value: 1
+  fade:
+    m_OverrideState: 0
+    m_Value: 0.5
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
+  debugArtefacts:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-3791541432256142239
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6164ae001d2d3694bbaba8a7bd31ef83, type: 3}
+  m_Name: TV_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  maskDark:
+    m_OverrideState: 0
+    m_Value: 0.5
+  maskLight:
+    m_OverrideState: 0
+    m_Value: 1.5
+  hardScan:
+    m_OverrideState: 0
+    m_Value: -8
+  ScaleWithActualScreenSize:
+    m_OverrideState: 0
+    m_Value: 0
+  resScale:
+    m_OverrideState: 0
+    m_Value: 4
+  referenceWidth: 1920
+  hardPix:
+    m_OverrideState: 0
+    m_Value: -3
+  warpMode:
+    m_OverrideState: 0
+    m_Value: 0
+  warp:
+    m_OverrideState: 0
+    m_Value: {x: 0.03125, y: 0.04166}
+  scale:
+    m_OverrideState: 0
+    m_Value: 1
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-2977226253334881376
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a002da3a41ac12409546f80a986cef3, type: 3}
+  m_Name: BottomStretch_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  left:
+    m_OverrideState: 0
+    m_Value: 0
+  right:
+    m_OverrideState: 0
+    m_Value: 0
+  top:
+    m_OverrideState: 0
+    m_Value: 0
+  bottom:
+    m_OverrideState: 0
+    m_Value: 1
+  height:
+    m_OverrideState: 1
+    m_Value: 0.064
+  distort:
+    m_OverrideState: 1
+    m_Value: 1
+  frequency:
+    m_OverrideState: 1
+    m_Value: 100
+  amplitude:
+    m_OverrideState: 1
+    m_Value: 43
+  speed:
+    m_OverrideState: 0
+    m_Value: 0.2
+  distortRandomly:
+    m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &-2109818796249167647
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598e2d32e2c7b0c418e030c3236d663a, type: 3}
+  m_Name: ChromaticAberration
+  m_EditorClassIdentifier: 
+  active: 0
+  quality:
+    m_OverrideState: 0
+    m_Value: 3
+  spectralLut:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.225
+  m_MaxSamples:
+    m_OverrideState: 0
+    m_Value: 8
+--- !u!114 &-1810019209138822251
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01aa872d2446e754ba7e795984d515e3, type: 3}
+  m_Name: Jitter_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  twitchHorizontal:
+    m_OverrideState: 1
+    m_Value: 1
+  horizontalFreq:
+    m_OverrideState: 1
+    m_Value: 5
+  twitchVertical:
+    m_OverrideState: 1
+    m_Value: 1
+  verticalFreq:
+    m_OverrideState: 1
+    m_Value: 1
+  stretch:
+    m_OverrideState: 1
+    m_Value: 1
+  stretchResolution:
+    m_OverrideState: 1
+    m_Value: 640
+  jitterHorizontal:
+    m_OverrideState: 1
+    m_Value: 0
+  jitterHorizontalAmount:
+    m_OverrideState: 1
+    m_Value: 1
+  jitterVertical:
+    m_OverrideState: 1
+    m_Value: 1
+  jitterVerticalAmount:
+    m_OverrideState: 1
+    m_Value: 1
+  jitterVerticalSpeed:
+    m_OverrideState: 1
+    m_Value: 1
+  unscaledTime:
+    m_OverrideState: 1
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-1534604781520822962
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ef33d7d6999ef4d9c853e7f0407ab8, type: 3}
+  m_Name: Bleed_RLPRO_HDRP
+  m_EditorClassIdentifier: 
+  active: 1
+  bleedMode:
+    m_OverrideState: 1
+    m_Value: 0
+  bleedAmount:
+    m_OverrideState: 1
+    m_Value: 0.73
+  bleedLength:
+    m_OverrideState: 1
+    m_Value: 11
+  bleedDebug:
+    m_OverrideState: 1
+    m_Value: 0
+  editCurves:
+    m_OverrideState: 1
+    m_Value: 0
+  syncYQ:
+    m_OverrideState: 1
+    m_Value: 0
+  curveY:
+    m_OverrideState: 1
+    m_Value:
+      <length>k__BackingField: 2
+      m_Loop: 0
+      m_ZeroValue: 0
+      m_Range: 5
+      m_Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0.46136093
+          value: 2.0596185
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.7401695
+          value: 2.1653695
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  curveI:
+    m_OverrideState: 1
+    m_Value:
+      <length>k__BackingField: 2
+      m_Loop: 0
+      m_ZeroValue: 0
+      m_Range: 5
+      m_Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0.071712494
+          value: 0.016143799
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  curveQ:
+    m_OverrideState: 1
+    m_Value:
+      <length>k__BackingField: 2
+      m_Loop: 0
+      m_ZeroValue: 0
+      m_Range: 5
+      m_Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0.087120056
+          value: 0.5506592
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1.0358276
+          value: 0.7687416
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+  resolutionFactor:
+    m_OverrideState: 0
+    m_Value: 1
+  bleedModeIndex: 0
+--- !u!114 &-1418188169792389381
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c46c91cebc20b140b77ed2d6e8803b1, type: 3}
+  m_Name: Glitch1_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  amount:
+    m_OverrideState: 1
+    m_Value: 8.5
+  stretch:
+    m_OverrideState: 1
+    m_Value: 0.06
+  speed:
+    m_OverrideState: 1
+    m_Value: 0.5
+  rMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  gMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  bMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  x:
+    m_OverrideState: 1
+    m_Value: 127.1
+  y:
+    m_OverrideState: 1
+    m_Value: 43758.547
+  angleY:
+    m_OverrideState: 1
+    m_Value: 311.7
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &-925598453849631806
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8782244c75a8d94fb0818f8b71e73db, type: 3}
+  m_Name: CinematicBars_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Amount:
+    m_OverrideState: 1
+    m_Value: 0
+  fade:
+    m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Video Retro Volume profile1
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: 8711377374188185572}
+  - {fileID: 6640133647794636954}
+  - {fileID: 396278178000043239}
+  - {fileID: -2109818796249167647}
+  - {fileID: -4119731869115913504}
+  - {fileID: 3831890712480704821}
+  - {fileID: 6750991805375851314}
+  - {fileID: 296608097671485771}
+  - {fileID: 7270924200308760207}
+  - {fileID: -1418188169792389381}
+  - {fileID: 1422003853107401632}
+  - {fileID: 3291712021532029417}
+  - {fileID: -6812131471049422991}
+  - {fileID: 9106887382739456243}
+--- !u!114 &296608097671485771
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70dcbe075734ba24eae35b52c4c176c9, type: 3}
+  m_Name: CRTAperture_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Fade:
+    m_OverrideState: 0
+    m_Value: 0
+  GlowHalation:
+    m_OverrideState: 1
+    m_Value: 4.27
+  GlowDifusion:
+    m_OverrideState: 1
+    m_Value: 0.83
+  MaskColors:
+    m_OverrideState: 1
+    m_Value: 0.57
+  MaskStrength:
+    m_OverrideState: 1
+    m_Value: 0.318
+  GammaInput:
+    m_OverrideState: 1
+    m_Value: 1.12
+  GammaOutput:
+    m_OverrideState: 1
+    m_Value: 0.89
+  Brightness:
+    m_OverrideState: 1
+    m_Value: 0.85
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &339963476826259978
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b06bbc6929d87740b1bd0234db4d436, type: 3}
+  m_Name: Glitch2_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  Amount:
+    m_OverrideState: 1
+    m_Value: 0
+  speed:
+    m_OverrideState: 1
+    m_Value: 0.156
+  ColorIntencity:
+    m_OverrideState: 1
+    m_Value: 0.108
+  resolutionMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  stretchMultiplier:
+    m_OverrideState: 1
+    m_Value: 0.887
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+--- !u!114 &396278178000043239
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b51a78e223a2e504bb88a059b55229ea, type: 3}
+  m_Name: WhiteBalance
+  m_EditorClassIdentifier: 
+  active: 0
+  temperature:
+    m_OverrideState: 1
+    m_Value: -16.7
+  tint:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &438953192065367919
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dd5b39b84bc4484292fc55f993f8561, type: 3}
+  m_Name: VHSScanlines_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  scanLinesColor:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
+  scanLines:
+    m_OverrideState: 1
+    m_Value: 4.3
+  speed:
+    m_OverrideState: 1
+    m_Value: 19.49
+  horizontal:
+    m_OverrideState: 1
+    m_Value: 1
+  distortion:
+    m_OverrideState: 1
+    m_Value: 0.356
+  distortion1:
+    m_OverrideState: 1
+    m_Value: 1.77
+  distortion2:
+    m_OverrideState: 1
+    m_Value: 0.54
+  scale:
+    m_OverrideState: 1
+    m_Value: 28.99
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &797493567251069237
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ef33d7d6999ef4d9c853e7f0407ab8, type: 3}
+  m_Name: Bleed_RLPRO_HDRP
+  m_EditorClassIdentifier: 
+  active: 1
+  bleedMode:
+    m_OverrideState: 1
+    m_Value: 3
+  bleedAmount:
+    m_OverrideState: 1
+    m_Value: 2.02
+  bleedLength:
+    m_OverrideState: 1
+    m_Value: 0
+  bleedDebug:
+    m_OverrideState: 1
+    m_Value: 0
+  editCurves:
+    m_OverrideState: 1
+    m_Value: 0
+  syncYQ:
+    m_OverrideState: 1
+    m_Value: 0
+  curveY:
+    m_OverrideState: 1
+    m_Value:
+      <length>k__BackingField: 0
+      m_Loop: 1
+      m_ZeroValue: -1
+      m_Range: 2.236068
+      m_Curve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  curveI:
+    m_OverrideState: 1
+    m_Value:
+      <length>k__BackingField: 0
+      m_Loop: 1
+      m_ZeroValue: -1
+      m_Range: 2.236068
+      m_Curve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  curveQ:
+    m_OverrideState: 1
+    m_Value:
+      <length>k__BackingField: 0
+      m_Loop: 1
+      m_ZeroValue: -1
+      m_Range: 2.236068
+      m_Curve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+  resolutionFactor:
+    m_OverrideState: 0
+    m_Value: 1
+  bleedModeIndex: 0
+--- !u!114 &1422003853107401632
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a04df0bc9fda65c4ead3a48de59e11f5, type: 3}
+  m_Name: Negative_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  luminosity:
+    m_OverrideState: 1
+    m_Value: 0.033
+  vignette:
+    m_OverrideState: 1
+    m_Value: 0.825
+  contrast:
+    m_OverrideState: 1
+    m_Value: 0.585
+  negative:
+    m_OverrideState: 1
+    m_Value: 0.91
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &2755693204278911077
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96dfee264aae354cb494a1c4fcf12f1, type: 3}
+  m_Name: Artefacts_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 0
+    m_Value: 0
+  cutOff:
+    m_OverrideState: 0
+    m_Value: 0.5
+  amount:
+    m_OverrideState: 0
+    m_Value: 1
+  fade:
+    m_OverrideState: 0
+    m_Value: 0.5
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
+  debugArtefacts:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &2774954915925358277
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96dfee264aae354cb494a1c4fcf12f1, type: 3}
+  m_Name: Artefacts_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 0
+    m_Value: 0
+  cutOff:
+    m_OverrideState: 0
+    m_Value: 0.5
+  amount:
+    m_OverrideState: 0
+    m_Value: 1
+  fade:
+    m_OverrideState: 0
+    m_Value: 0.5
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
+  debugArtefacts:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &3291712021532029417
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905bf1e6ec7a95d479de58b30d1af33f, type: 3}
+  m_Name: CustomTexture_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  texture:
+    m_OverrideState: 1
+    m_Value: {fileID: 8400000, guid: 88ff32eb3d2b49c4991bb4f096eb1225, type: 2}
+    dimension: 1
+  alpha:
+    m_OverrideState: 1
+    m_Value: 1
+  fade:
+    m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &3806539482985976302
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d795e4bf4a5574cae5da76c93cc87d, type: 3}
+  m_Name: PulsatingVignette_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Amount:
+    m_OverrideState: 1
+    m_Value: 0
+  speed:
+    m_OverrideState: 1
+    m_Value: 15.7
+--- !u!114 &3831890712480704821
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b8f341bcb0fbf49a37e772b8f54e6d, type: 3}
+  m_Name: Noise_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  stretchResolution:
+    m_OverrideState: 1
+    m_Value: 480
+  VerticalResolution:
+    m_OverrideState: 1
+    m_Value: 480
+  Granularity:
+    m_OverrideState: 1
+    m_Value: 0
+  GranularityAmount:
+    m_OverrideState: 1
+    m_Value: 0.5
+  TapeNoise:
+    m_OverrideState: 1
+    m_Value: 1
+  TapeNoiseSignalProcessing:
+    m_OverrideState: 1
+    m_Value: 1
+  TapeNoiseFade:
+    m_OverrideState: 1
+    m_Value: 1
+  TapeNoiseAmount:
+    m_OverrideState: 1
+    m_Value: 0.341
+  tapeLinesAmount:
+    m_OverrideState: 1
+    m_Value: 0.594
+  TapeNoiseSpeed:
+    m_OverrideState: 1
+    m_Value: 0.5
+  LineNoise:
+    m_OverrideState: 1
+    m_Value: 0
+  LineNoiseAmount:
+    m_OverrideState: 1
+    m_Value: 1
+  LineNoiseSpeed:
+    m_OverrideState: 1
+    m_Value: 1
+  SignalNoise:
+    m_OverrideState: 1
+    m_Value: 0
+  SignalNoisePower:
+    m_OverrideState: 1
+    m_Value: 0.9
+  SignalNoiseAmount:
+    m_OverrideState: 1
+    m_Value: 1
+  unscaledTime:
+    m_OverrideState: 1
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &3843988148460366592
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbbd6d53d2a11ed44a4c4e02bd6ec7f3, type: 3}
+  m_Name: VHS_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 0
+    m_Value: 0
+  colorOffset:
+    m_OverrideState: 0
+    m_Value: 0
+  colorOffsetAngle:
+    m_OverrideState: 0
+    m_Value: 0
+  verticalOffsetFrequency:
+    m_OverrideState: 0
+    m_Value: 1
+  verticalOffset:
+    m_OverrideState: 0
+    m_Value: 0.1
+  offsetDistortion:
+    m_OverrideState: 0
+    m_Value: 3499
+  noiseTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  blendMode:
+    m_OverrideState: 0
+    m_Value: 0
+  tile:
+    m_OverrideState: 0
+    m_Value: {x: 1, y: 1}
+  _textureIntensity:
+    m_OverrideState: 0
+    m_Value: 1
+  smoothCut:
+    m_OverrideState: 0
+    m_Value: 0
+  iterations:
+    m_OverrideState: 0
+    m_Value: 5
+  smoothSize:
+    m_OverrideState: 0
+    m_Value: 0.1
+  deviation:
+    m_OverrideState: 0
+    m_Value: 0.1
+  _textureCutOff:
+    m_OverrideState: 0
+    m_Value: 1
+  stripes:
+    m_OverrideState: 0
+    m_Value: 0.5
+  unscaledTime:
+    m_OverrideState: 0
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &5161423401193128055
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fca6621e474f2d44860cb35d3842539, type: 3}
+  m_Name: AnalogTVNoise_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  fade:
+    m_OverrideState: 1
+    m_Value: 0
+  staticNoise:
+    m_OverrideState: 1
+    m_Value: 0
+  Horizontal:
+    m_OverrideState: 1
+    m_Value: 1
+  barWidth:
+    m_OverrideState: 0
+    m_Value: 21
+  tile:
+    m_OverrideState: 1
+    m_Value: {x: 8.63, y: 4.93}
+  textureAngle:
+    m_OverrideState: 1
+    m_Value: 0.22
+  edgeCutOff:
+    m_OverrideState: 1
+    m_Value: 25.6
+  CutOff:
+    m_OverrideState: 1
+    m_Value: 0.53
+  barSpeed:
+    m_OverrideState: 1
+    m_Value: 6.6
+  texture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 555c0235bde7b1149a4650530e3db23c, type: 3}
+    dimension: 1
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &5240466874238269021
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d931570c0c4deab4e8cad0cd396c592b, type: 3}
+  m_Name: Phosphor_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  width:
+    m_OverrideState: 0
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &5421989807283231375
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbbd6d53d2a11ed44a4c4e02bd6ec7f3, type: 3}
+  m_Name: VHS_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  colorOffset:
+    m_OverrideState: 1
+    m_Value: 6
+  colorOffsetAngle:
+    m_OverrideState: 1
+    m_Value: -0.74
+  verticalOffsetFrequency:
+    m_OverrideState: 1
+    m_Value: 11.5
+  verticalOffset:
+    m_OverrideState: 1
+    m_Value: 0
+  offsetDistortion:
+    m_OverrideState: 1
+    m_Value: 0
+  noiseTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 555c0235bde7b1149a4650530e3db23c, type: 3}
+    dimension: 1
+  blendMode:
+    m_OverrideState: 1
+    m_Value: 0
+  tile:
+    m_OverrideState: 1
+    m_Value: {x: 6, y: 0.5}
+  _textureIntensity:
+    m_OverrideState: 1
+    m_Value: 0.115
+  smoothCut:
+    m_OverrideState: 1
+    m_Value: 1
+  iterations:
+    m_OverrideState: 1
+    m_Value: 3
+  smoothSize:
+    m_OverrideState: 1
+    m_Value: 0.288
+  deviation:
+    m_OverrideState: 1
+    m_Value: 0.076
+  _textureCutOff:
+    m_OverrideState: 1
+    m_Value: 0.05
+  stripes:
+    m_OverrideState: 1
+    m_Value: 0.038
+  unscaledTime:
+    m_OverrideState: 1
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &5483149824859496047
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ec1528d7d6db145a072f2bef835b66, type: 3}
+  m_Name: ColormapPalette_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Opacity:
+    m_OverrideState: 0
+    m_Value: 0
+  pixelSize:
+    m_OverrideState: 1
+    m_Value: 1
+  dither:
+    m_OverrideState: 1
+    m_Value: 0.371
+  presetsList:
+    m_OverrideState: 1
+    m_Value: {fileID: 11400000, guid: dd7382c28c09da7428be888044bba323, type: 2}
+  presetIndex:
+    m_OverrideState: 1
+    m_Value: 0
+  bluenoise:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 3f2fd211b66c6450a887c4136e6f0b88, type: 3}
+    dimension: 1
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+  tempPresetIndex: 0
+  referenceWidth: 1920
+--- !u!114 &5701751557213499118
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a00e4c14d74d09647bdf9a7b071975df, type: 3}
+  m_Name: Fisheye_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  fisheyeType:
+    m_OverrideState: 1
+    m_Value: 0
+  bend:
+    m_OverrideState: 1
+    m_Value: 1.4
+  cutOffX:
+    m_OverrideState: 1
+    m_Value: 11.9
+  cutOffY:
+    m_OverrideState: 1
+    m_Value: 14.6
+  fadeX:
+    m_OverrideState: 1
+    m_Value: 8.9
+  fadeY:
+    m_OverrideState: 1
+    m_Value: 8.1
+  size:
+    m_OverrideState: 1
+    m_Value: 6.4
+--- !u!114 &5839917146894110291
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Glitch1_RLPro_HDRP
+  m_EditorClassIdentifier: Assembly-CSharp::Glitch1_RLPro_HDRP
+  active: 1
+  <displayName>k__BackingField: 
+  m_AdvancedMode: 0
+  isInitialized: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+    max: 1
+  x:
+    m_OverrideState: 1
+    m_Value: 127.1
+    min: -2
+    max: 127.1
+  y:
+    m_OverrideState: 1
+    m_Value: 43758.547
+    min: -2
+    max: 43758.547
+  angleY:
+    m_OverrideState: 1
+    m_Value: 311.7
+    min: -2
+    max: 311.7
+  amount:
+    m_OverrideState: 1
+    m_Value: 0.6
+    min: 0
+    max: 20
+  stretch:
+    m_OverrideState: 1
+    m_Value: 0.06
+    min: 0
+    max: 4
+  speed:
+    m_OverrideState: 1
+    m_Value: 0.5
+    min: 0
+    max: 1
+  fade:
+    m_OverrideState: 1
+    m_Value: 0.5
+    min: 0
+    max: 1
+  rMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+    min: -1
+    max: 2
+  gMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+    min: -1
+    max: 2
+  bMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+    min: -1
+    max: 2
+  m_Material: {fileID: 0}
+  T: 0
+--- !u!114 &6470319548881032329
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7432d552beea81c468f928be099f6aba, type: 3}
+  m_Name: BottomNoise_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  left:
+    m_OverrideState: 0
+    m_Value: 0
+  right:
+    m_OverrideState: 0
+    m_Value: 0
+  top:
+    m_OverrideState: 0
+    m_Value: 0
+  bottom:
+    m_OverrideState: 0
+    m_Value: 1
+  height:
+    m_OverrideState: 1
+    m_Value: 0.038
+  tile:
+    m_OverrideState: 1
+    m_Value: {x: 9.87, y: 11.55}
+  noiseTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 555c0235bde7b1149a4650530e3db23c, type: 3}
+    dimension: 1
+--- !u!114 &6546428693060133949
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96dfee264aae354cb494a1c4fcf12f1, type: 3}
+  m_Name: Artefacts_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  cutOff:
+    m_OverrideState: 1
+    m_Value: 0
+  amount:
+    m_OverrideState: 1
+    m_Value: 2.72
+  fade:
+    m_OverrideState: 1
+    m_Value: 0.13
+  color:
+    m_OverrideState: 1
+    m_Value: {r: 1, g: 0, b: 0.31770992, a: 0}
+  debugArtefacts:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &6640133647794636954
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d08ce26990eb1a4a9177b860541e702, type: 3}
+  m_Name: Exposure
+  m_EditorClassIdentifier: 
+  active: 0
+  mode:
+    m_OverrideState: 1
+    m_Value: 0
+  meteringMode:
+    m_OverrideState: 0
+    m_Value: 2
+  luminanceSource:
+    m_OverrideState: 0
+    m_Value: 1
+  fixedExposure:
+    m_OverrideState: 1
+    m_Value: 8.5
+  compensation:
+    m_OverrideState: 0
+    m_Value: 0
+  limitMin:
+    m_OverrideState: 0
+    m_Value: -10
+  limitMax:
+    m_OverrideState: 1
+    m_Value: 8.5
+  curveMap:
+    m_OverrideState: 0
+    m_Value:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -10
+        value: -10
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 20
+        value: 20
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  limitMinCurveMap:
+    m_OverrideState: 0
+    m_Value:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -10
+        value: -12
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 20
+        value: 18
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  limitMaxCurveMap:
+    m_OverrideState: 0
+    m_Value:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -10
+        value: -8
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 20
+        value: 22
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  adaptationMode:
+    m_OverrideState: 0
+    m_Value: 1
+  adaptationSpeedDarkToLight:
+    m_OverrideState: 0
+    m_Value: 3
+  adaptationSpeedLightToDark:
+    m_OverrideState: 0
+    m_Value: 1
+  weightTextureMask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  histogramPercentages:
+    m_OverrideState: 0
+    m_Value: {x: 40, y: 90}
+  histogramUseCurveRemapping:
+    m_OverrideState: 0
+    m_Value: 0
+  targetMidGray:
+    m_OverrideState: 0
+    m_Value: 0
+  centerAroundExposureTarget:
+    m_OverrideState: 0
+    m_Value: 0
+  proceduralCenter:
+    m_OverrideState: 0
+    m_Value: {x: 0.5, y: 0.5}
+  proceduralRadii:
+    m_OverrideState: 0
+    m_Value: {x: 0.3, y: 0.3}
+  maskMinIntensity:
+    m_OverrideState: 0
+    m_Value: -30
+  maskMaxIntensity:
+    m_OverrideState: 0
+    m_Value: 30
+  proceduralSoftness:
+    m_OverrideState: 0
+    m_Value: 0.5
+--- !u!114 &6750991805375851314
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c3f796f909aa7a438cd6fe6dbc23e26, type: 3}
+  m_Name: Warp_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  warpMode:
+    m_OverrideState: 1
+    m_Value: 1
+  warp:
+    m_OverrideState: 1
+    m_Value: {x: 0.03125, y: 0.04166}
+  scale:
+    m_OverrideState: 1
+    m_Value: 1.06
+  clampSampler:
+    m_OverrideState: 1
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &7053851807416242723
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c46c91cebc20b140b77ed2d6e8803b1, type: 3}
+  m_Name: Glitch1_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  amount:
+    m_OverrideState: 1
+    m_Value: 0.6
+  stretch:
+    m_OverrideState: 1
+    m_Value: 0.06
+  speed:
+    m_OverrideState: 1
+    m_Value: 0.277
+  rMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  gMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  bMultiplier:
+    m_OverrideState: 1
+    m_Value: 1
+  x:
+    m_OverrideState: 1
+    m_Value: 127.1
+  y:
+    m_OverrideState: 1
+    m_Value: 43758.547
+  angleY:
+    m_OverrideState: 1
+    m_Value: 311.7
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &7142148175285166105
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e9405fc54906749afc0b02cf6761bf, type: 3}
+  m_Name: PictureCorrection_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  signalAdjustY:
+    m_OverrideState: 1
+    m_Value: 0.093
+  signalAdjustI:
+    m_OverrideState: 1
+    m_Value: -0.069
+  signalAdjustQ:
+    m_OverrideState: 1
+    m_Value: 0.002
+  signalShiftY:
+    m_OverrideState: 1
+    m_Value: 1.71
+  signalShiftI:
+    m_OverrideState: 1
+    m_Value: -0.9
+  signalShiftQ:
+    m_OverrideState: 1
+    m_Value: -0.04
+  gammaCorection:
+    m_OverrideState: 1
+    m_Value: 1.353
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &7184769385006049842
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b8f341bcb0fbf49a37e772b8f54e6d, type: 3}
+  m_Name: Noise_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+  stretchResolution:
+    m_OverrideState: 1
+    m_Value: 480
+  VerticalResolution:
+    m_OverrideState: 0
+    m_Value: 480
+  Granularity:
+    m_OverrideState: 0
+    m_Value: 0
+  GranularityAmount:
+    m_OverrideState: 0
+    m_Value: 0.5
+  TapeNoise:
+    m_OverrideState: 0
+    m_Value: 0
+  TapeNoiseSignalProcessing:
+    m_OverrideState: 0
+    m_Value: 1
+  TapeNoiseFade:
+    m_OverrideState: 0
+    m_Value: 1
+  TapeNoiseAmount:
+    m_OverrideState: 0
+    m_Value: 1
+  tapeLinesAmount:
+    m_OverrideState: 1
+    m_Value: 0
+  TapeNoiseSpeed:
+    m_OverrideState: 0
+    m_Value: 0.5
+  LineNoise:
+    m_OverrideState: 0
+    m_Value: 0
+  LineNoiseAmount:
+    m_OverrideState: 0
+    m_Value: 1
+  LineNoiseSpeed:
+    m_OverrideState: 0
+    m_Value: 1
+  SignalNoise:
+    m_OverrideState: 0
+    m_Value: 0
+  SignalNoisePower:
+    m_OverrideState: 0
+    m_Value: 0.9
+  SignalNoiseAmount:
+    m_OverrideState: 0
+    m_Value: 1
+  unscaledTime:
+    m_OverrideState: 1
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &7195378403729813814
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70dcbe075734ba24eae35b52c4c176c9, type: 3}
+  m_Name: CRTAperture_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Fade:
+    m_OverrideState: 0
+    m_Value: 0
+  GlowHalation:
+    m_OverrideState: 0
+    m_Value: 0.1
+  GlowDifusion:
+    m_OverrideState: 0
+    m_Value: 0.05
+  MaskColors:
+    m_OverrideState: 0
+    m_Value: 2
+  MaskStrength:
+    m_OverrideState: 0
+    m_Value: 0.3
+  GammaInput:
+    m_OverrideState: 0
+    m_Value: 2.4
+  GammaOutput:
+    m_OverrideState: 0
+    m_Value: 2.4
+  Brightness:
+    m_OverrideState: 0
+    m_Value: 1.5
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &7270924200308760207
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d795e4bf4a5574cae5da76c93cc87d, type: 3}
+  m_Name: PulsatingVignette_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Amount:
+    m_OverrideState: 1
+    m_Value: 0
+  speed:
+    m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &7401235483281245137
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Glitch2_RLPro_HDRP
+  m_EditorClassIdentifier: Assembly-CSharp::Glitch2_RLPro_HDRP
+  active: 1
+  <displayName>k__BackingField: 
+  m_AdvancedMode: 0
+  isInitialized: 0
+  intensity:
+    m_OverrideState: 1
+    m_Value: 1
+    min: 0
+    max: 1
+  intencity:
+    m_OverrideState: 1
+    m_Value: 0.235
+  resolutionMultiplier:
+    m_OverrideState: 1
+    m_Value: 1.221
+  stretchMultiplier:
+    m_OverrideState: 1
+    m_Value: 0.426
+  m_Material: {fileID: 0}
+  T: 0
+  _noiseTexture: {fileID: 0}
+--- !u!114 &8711377374188185572
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c1be1b6c95cd2e41b27903b9270817f, type: 3}
+  m_Name: Vignette
+  m_EditorClassIdentifier: 
+  active: 0
+  mode:
+    m_OverrideState: 0
+    m_Value: 0
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+  center:
+    m_OverrideState: 0
+    m_Value: {x: 0.5, y: 0.5}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.25
+  smoothness:
+    m_OverrideState: 0
+    m_Value: 0.2
+  roundness:
+    m_OverrideState: 0
+    m_Value: 1
+  rounded:
+    m_OverrideState: 0
+    m_Value: 0
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+  opacity:
+    m_OverrideState: 0
+    m_Value: 1
+--- !u!114 &8902767032692968251
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e8140967962e134b9975ce45694b4c9, type: 3}
+  m_Name: UltimateVignette_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  vignetteAmount:
+    m_OverrideState: 1
+    m_Value: 50
+  vignetteShape:
+    m_OverrideState: 1
+    m_Value: 1
+  center:
+    m_OverrideState: 1
+    m_Value: {x: 0.5, y: 0.5}
+  vignetteFineTune:
+    m_OverrideState: 1
+    m_Value: -72.7
+  edgeSoftness:
+    m_OverrideState: 1
+    m_Value: 24.6
+  edgeBlend:
+    m_OverrideState: 1
+    m_Value: 52.1
+  innerColorAlpha:
+    m_OverrideState: 1
+    m_Value: 139.3
+  innerColor:
+    m_OverrideState: 1
+    m_Value: {r: 0.9716981, g: 0, b: 0, a: 0}
+--- !u!114 &9088159876994235703
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b036bd40a565dd143aa6ddad832977ca, type: 3}
+  m_Name: OldFilm_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  Fade:
+    m_OverrideState: 1
+    m_Value: 0
+  fps:
+    m_OverrideState: 1
+    m_Value: 50.6
+  contrast:
+    m_OverrideState: 1
+    m_Value: 1.2
+  burn:
+    m_OverrideState: 1
+    m_Value: 1.63
+  sceneCut:
+    m_OverrideState: 1
+    m_Value: 1
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &9106887382739456243
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fca6621e474f2d44860cb35d3842539, type: 3}
+  m_Name: AnalogTVNoise_RLPRO
+  m_EditorClassIdentifier: 
+  active: 0
+  fade:
+    m_OverrideState: 1
+    m_Value: 1
+  staticNoise:
+    m_OverrideState: 1
+    m_Value: 0
+  Horizontal:
+    m_OverrideState: 1
+    m_Value: 1
+  barWidth:
+    m_OverrideState: 1
+    m_Value: 10.8
+  tile:
+    m_OverrideState: 1
+    m_Value: {x: 1, y: 1}
+  textureAngle:
+    m_OverrideState: 1
+    m_Value: 0.604
+  edgeCutOff:
+    m_OverrideState: 1
+    m_Value: 68.9
+  CutOff:
+    m_OverrideState: 1
+    m_Value: 1
+  barSpeed:
+    m_OverrideState: 1
+    m_Value: 35.8
+  texture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 3176b84c751bb0a41bfd45e4b6830b64, type: 3}
+    dimension: 1
+  mask:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 0
+    m_Value: 0
+--- !u!114 &9202268873970337645
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96dfee264aae354cb494a1c4fcf12f1, type: 3}
+  m_Name: Artefacts_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 0
+    m_Value: 0
+  cutOff:
+    m_OverrideState: 0
+    m_Value: 0.5
+  amount:
+    m_OverrideState: 0
+    m_Value: 1
+  fade:
+    m_OverrideState: 0
+    m_Value: 0.5
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 0, b: 0, a: 0}
+  debugArtefacts:
+    m_OverrideState: 0
+    m_Value: 0

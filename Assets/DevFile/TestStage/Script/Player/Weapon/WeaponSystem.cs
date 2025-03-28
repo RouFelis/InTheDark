@@ -53,7 +53,7 @@ public class WeaponSystem : NetworkBehaviour
         zoomDamage.OnValueChanged += (oldData, newdata) => ZoomDamageValueChaged();
         batteryCapacity.OnValueChanged += (oldData, newdata) => BatteryCapacityValueChaged();
 
-        initWeaponInstance(saveSystem.LoadWeaponData(player.playerName.Value.ToString()));
+        initWeaponInstance(saveSystem.LoadWeaponData(player.PlayerName));
         Debug.Log("WeaponSystem Init complete");
     }
 
@@ -70,17 +70,17 @@ public class WeaponSystem : NetworkBehaviour
     private void BaseDamageValueChaged()
 	{
         weaponInstance.baseDamage = baseDamage.Value;
-        saveSystem.SaveWeaponData(weaponInstance , player.playerName.Value.ToString());
+        saveSystem.SaveWeaponData(weaponInstance , player.PlayerName);
     }
     private void ZoomDamageValueChaged()
     {
         weaponInstance.baseDamage = baseDamage.Value;
-        saveSystem.SaveWeaponData(weaponInstance, player.playerName.Value.ToString());
+        saveSystem.SaveWeaponData(weaponInstance, player.PlayerName);
     }
     private void BatteryCapacityValueChaged()
     {
         weaponInstance.baseDamage = baseDamage.Value;
-        saveSystem.SaveWeaponData(weaponInstance, player.playerName.Value.ToString());
+        saveSystem.SaveWeaponData(weaponInstance, player.PlayerName);
     }
 
 

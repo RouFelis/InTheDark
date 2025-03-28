@@ -56,10 +56,10 @@ public class EnterGame : InteractableObject
     private void RequestSceneChangeClientRpc(string sceneName)
     {
         // 클라이언트에서 씬 로드 (Additive)
-        if (!NetworkManager.Singleton.IsServer)
+      /*  if (!NetworkManager.Singleton.IsServer)
         {
             SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        }
+        }*/
         colider.enabled = false;
     }
 

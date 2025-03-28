@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
 using UnityEngine.UI;
@@ -17,13 +18,21 @@ public class playerMoveController : NetworkBehaviour
 
 
     [Header("Camera & Head Rotation")]
-    [SerializeField] protected Camera playerCamera;
+    [SerializeField] private GameObject firstPersonCameraPrefab;
+    [SerializeField] protected Camera firstPersonCamera;
+    [SerializeField] private GameObject thirdPersonCameraPrefab;
     [SerializeField] protected Camera thirdPersonCamera;
+    [SerializeField] private GameObject camTargetPrefab;
+    [SerializeField] protected Transform camTarget;
     [SerializeField] protected CinemachineVirtualCamera virtualCamera;
-    [SerializeField] private Transform headTarget;
-    [SerializeField] private Transform camTarget;
+
+    public Camera FirstPersonCamera { get => firstPersonCamera; }
+    public Camera ThirdPersonCamera { get => thirdPersonCamera; }
+    public CinemachineVirtualCamera VirtualCamera { get => virtualCamera; }
+
     [SerializeField] private float lookSpeed = 2.0f;
     [SerializeField] private float lookXLimit = 60.0f;
+    [SerializeField] private float smoothSpeed = 1f;
 
     [Header("Animation")]
     [SerializeField] protected Animator animator;
@@ -32,6 +41,7 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
+    [SerializeField] private NetworkVariable<bool> isGrabItem = new NetworkVariable<bool>(value: false, writePerm: NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<float> currentStamina = new NetworkVariable<float>(value: 100, writePerm: NetworkVariableWritePermission.Owner);
 
     [Header("GroundChecker")]
@@ -41,14 +51,17 @@ public class playerMoveController : NetworkBehaviour
 
     [Header("PlayerAim")]
     [SerializeField] private GameObject handAimTargetPrefab;
-    [SerializeField] private GameObject spawnedObject;
     [SerializeField] private Transform handAimTarget;
+    [SerializeField] private NetworkVariable<ulong> handAimTargetulong = new NetworkVariable<ulong>();
     [SerializeField] private List<ConstraintConfig> playerConstraints = new List<ConstraintConfig>();
     [SerializeField] private float distanceFromCamera = 1f;
     [SerializeField] private float aimMaxDistance = 100f;
+
     [SerializeField] private RigBuilder rigBuilder_firstPerson;
     [SerializeField] private RigBuilder rigBuilder_thridPerson;
+
     [SerializeField] private float smoothTime = 0.1f; // 이동 감속 속도
+
 
     public LayerMask layerMask;
 
@@ -91,27 +104,116 @@ public class playerMoveController : NetworkBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        StartCoroutine(InitCamera());
+    }
+
+
+    private IEnumerator InitCamera()
+    {
+        // PlaceableItemManager 오브젝트 찾기
+        while (firstPersonCamera == null)
+        {
+            if (firstPersonCamera = GetComponentInChildren<Camera>())
+            {
+                Debug.Log("Find firstPersonCamera");
+                break;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+
+
+        while (camTarget == null)
+        {
+            if (camTarget = transform.Find("CamPos(Clone)"))
+            {
+                Debug.Log("Find CamTarget");
+                break;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+
     }
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+
+        SpawnSetCameraServerRpc(OwnerClientId);
+
         if (IsOwner)
         {
-            playerCamera.gameObject.SetActive(true);
-            virtualCamera.gameObject.SetActive(true);
-            thirdPersonCamera.gameObject.SetActive(false);
             FixedMouse();
             interacter = GetComponent<Interacter>();
             MenuManager.Instance.OnPause += FreeMouse;
             MenuManager.Instance.OnResume += FixedMouse;
         }
         else
-        {
-            playerCamera.gameObject.SetActive(false);
+        {/*
+            firstPersonCamera.gameObject.SetActive(false);
             virtualCamera.gameObject.SetActive(false);
-            thirdPersonCamera.gameObject.SetActive(false);
+            thirdPersonCamera.gameObject.SetActive(false);*/
         }
     }
+
+
+    [ServerRpc]
+    private void SpawnSetCameraServerRpc(ulong clientID)
+    {
+        if (!IsServer) return; // 서버에서만 실행
+
+        firstPersonCamera = Instantiate(firstPersonCameraPrefab).GetComponent<Camera>();
+        camTarget = Instantiate(camTargetPrefab).transform;
+
+        NetworkObject cameraNetworkObject = firstPersonCamera.GetComponent<NetworkObject>();
+        NetworkObject camTargetNetworkObject = camTarget.GetComponent<NetworkObject>();
+
+        camTargetNetworkObject.SpawnWithOwnership(clientID);
+        camTargetNetworkObject.transform.SetParent(this.transform);
+
+        cameraNetworkObject.SpawnWithOwnership(clientID);
+        cameraNetworkObject.transform.SetParent(camTargetNetworkObject.transform);
+
+        cameraNetworkObject.transform.localPosition = Vector3.zero;
+        cameraNetworkObject.transform.localRotation = Quaternion.identity;
+
+        // 새로 들어온 클라이언트가 기존 카메라 정보를 받을 수 있도록 ClientRpc 호출
+        SyncCameraClientRpc(cameraNetworkObject.NetworkObjectId, camTargetNetworkObject.NetworkObjectId);
+    }
+
+    [ClientRpc]
+    private void SyncCameraClientRpc(ulong cameraId, ulong camTargetId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(cameraId, out NetworkObject cameraNetObj) &&
+            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(camTargetId, out NetworkObject camTargetNetObj))
+        {
+            firstPersonCamera = cameraNetObj.GetComponent<Camera>();
+            camTarget = camTargetNetObj.transform;
+
+            /*camTarget.transform.SetParent(firstPersonCamera.transform);
+            camTarget.transform.localPosition = Vector3.zero;
+            camTarget.transform.localRotation = Quaternion.identity;*/
+
+
+            if (IsOwner)
+            {
+                virtualCamera.Follow = camTarget.transform;
+                firstPersonCamera.enabled = true;
+                camTarget.gameObject.SetActive(true);
+                virtualCamera.gameObject.SetActive(true);
+                thirdPersonCamera.gameObject.SetActive(false);
+            }
+            else
+            {
+                firstPersonCamera.enabled = false;
+                camTarget.gameObject.SetActive(false);
+                virtualCamera.gameObject.SetActive(false);
+                thirdPersonCamera.gameObject.SetActive(false);
+            }
+        }
+    }
+
+
+
 
     public virtual void Start()
     {
@@ -128,7 +230,8 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
-    public virtual void LateUpdate()
+    //public virtual void LateUpdate()
+    public virtual void FixedUpdate()
     {
         if (IsOwner)
         {
@@ -233,6 +336,7 @@ public class playerMoveController : NetworkBehaviour
             // 마우스 회전 입력
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
 
+            //firstPersonCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
             camTarget.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
@@ -267,15 +371,15 @@ public class playerMoveController : NetworkBehaviour
             // 걷는 중일 때만 흔들림
             timer += Time.deltaTime * bobbingSpeed;
             float bobbingOffset = Mathf.Sin(timer) * bobbingAmount; // 사인파로 흔들림 계산
-            Vector3 newPosition = new Vector3(playerCamera.transform.localPosition.x, midpoint + bobbingOffset, playerCamera.transform.localPosition.z);
-            playerCamera.transform.localPosition = newPosition;
+            Vector3 newPosition = new Vector3(firstPersonCamera.transform.localPosition.x, midpoint + bobbingOffset, firstPersonCamera.transform.localPosition.z);
+            firstPersonCamera.transform.localPosition = newPosition;
         }
         else
         {
             // 멈출 때는 Y축 위치를 초기화
             timer = 0f;
-            Vector3 resetPosition = new Vector3(playerCamera.transform.localPosition.x, midpoint, playerCamera.transform.localPosition.z);
-            playerCamera.transform.localPosition = resetPosition;
+            Vector3 resetPosition = new Vector3(firstPersonCamera.transform.localPosition.x, midpoint, firstPersonCamera.transform.localPosition.z);
+            firstPersonCamera.transform.localPosition = resetPosition;
         }
     }
 
@@ -283,9 +387,9 @@ public class playerMoveController : NetworkBehaviour
     private void HandleAim()
 	{
         //허리 각도 조절이랑 에임 조절용
-        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, aimMaxDistance, layerMask))
+        if (Physics.Raycast(firstPersonCamera.transform.position, firstPersonCamera.transform.forward, out hit, aimMaxDistance, layerMask))
         {
-            Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * hit.distance, Color.red, 0.1f);
+            Debug.DrawRay(firstPersonCamera.transform.position, firstPersonCamera.transform.forward * hit.distance, Color.red, 0.1f);
 
             // 충돌한 경우 hit.point로 설정
             aimTargetPosition = hit.point;
@@ -294,15 +398,15 @@ public class playerMoveController : NetworkBehaviour
         }
         else
         {
-            Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * hit.distance, Color.red, 0.1f);
+            Debug.DrawRay(firstPersonCamera.transform.position, firstPersonCamera.transform.forward * hit.distance, Color.red, 0.1f);
             // 충돌하지 않은 경우, maxDistance 지점으로 설정
-            aimTargetPosition = playerCamera.transform.position + playerCamera.transform.forward * aimMaxDistance;
+            aimTargetPosition = firstPersonCamera.transform.position + firstPersonCamera.transform.forward * aimMaxDistance;
         }
 
         handAimTarget.transform.position = Vector3.SmoothDamp(handAimTarget.transform.position, aimTargetPosition, ref velocity, smoothTime);
 
-        Vector3 cameraForward = playerCamera.transform.forward.normalized;
-        Vector3 cameraPosition = playerCamera.transform.position;
+        Vector3 cameraForward = firstPersonCamera.transform.forward.normalized;
+        Vector3 cameraPosition = firstPersonCamera.transform.position;
     }
 
     private void UpdateAnimator()
@@ -425,7 +529,11 @@ public class playerMoveController : NetworkBehaviour
     //Ragdoll 초기화
     public void InitRagdolls()
     {
-        handAimTarget = this.transform.Find("HandTarget(Clone)");
+		if (!getAimTarget())
+		{
+            return;
+		}
+
 
         // 모든 MultiAimConstraint에 대해 소스 오브젝트 추가
         foreach (var config in playerConstraints)
@@ -445,26 +553,40 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
+    private bool getAimTarget()
+	{
+		if (handAimTarget != null)
+		{
+            return true;
+		}
+
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(handAimTargetulong.Value , out var aimTargetNetobject))
+		{
+            handAimTarget = aimTargetNetobject.transform;
+            return true;
+		}
+
+
+        return false;
+    }
+
 
     [ServerRpc(RequireOwnership = false)]
     public void SpawnAndNotifyServerRpc(ulong clientId)
     {
-        spawnedObject = Instantiate(handAimTargetPrefab);
-
-        NetworkObject networkObject = spawnedObject.GetComponent<NetworkObject>();
+        NetworkObject networkObject = Instantiate(handAimTargetPrefab).GetComponent<NetworkObject>();
 
         // 부모 설정: 서버에서 변경
-        spawnedObject.transform.SetParent(this.transform);
-
         networkObject.SpawnWithOwnership(clientId);
+        networkObject.transform.SetParent(this.transform);
+
 
         // 오브젝트를 관리 리스트에 추가
-        handAimTarget = spawnedObject.transform;
-
+        handAimTarget = networkObject.transform;
+        handAimTargetulong.Value = networkObject.NetworkObjectId;
 
         // 클라이언트들에게 스폰 정보 전달
         NotifyClientsOfSpawnClientRpc(networkObject.NetworkObjectId, clientId);
-
 
         Debug.Log($"Spawned object for client {clientId}");
     }
@@ -499,11 +621,18 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
+
     private void AddSourceObject(MultiAimConstraint constraint, Transform source, float weight)
     {
-        if (constraint == null || source == null)
+        if (constraint == null)
         {
-            Debug.LogError("Constraint or Source Object is null!");
+            Debug.LogError("Constraint is null!");
+            return;
+        }
+
+        if (source == null)
+        {
+            Debug.LogError("Source Object is null!");
             return;
         }
 

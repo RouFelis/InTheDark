@@ -36,7 +36,7 @@ public class SpotlightControl : WeaponSystem
 
 
     //private CanvasGroup flashPanel;
-    private bool isResetting = false, isFlashing = false, hasFlashed = false;
+    private bool isResetting = false,  hasFlashed = false;
     private float zoomProgress = 0f, lastEaseT = -1f;
 
 
@@ -53,6 +53,7 @@ public class SpotlightControl : WeaponSystem
 
 
     public NetworkVariable<bool> isZooming = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<bool> isFlashing = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<bool> isRightClickHeld = new NetworkVariable<bool>(false, writePerm: NetworkVariableWritePermission.Owner );
 
 
@@ -68,10 +69,13 @@ public class SpotlightControl : WeaponSystem
         {
             Debug.LogError("Weapon Light가 연결되지 않았습니다!");
         }
-        if (IsOwner)
+        //if (IsOwner)
           StartCoroutine(initUI());
+        if (!IsOwner)
+            isFlashing.OnValueChanged += OtherClientTriggerFlashEffect;
     }
 
+    //방식 바꿔서 폐기
 /*    void Update()
     {
         if (IsOwner&& !player.IsDead)
@@ -81,6 +85,7 @@ public class SpotlightControl : WeaponSystem
        // UpdateSpotlightState();
     }
 */
+
     private IEnumerator initUI()
 	{/*
         while (flashPanel == null)
@@ -97,6 +102,7 @@ public class SpotlightControl : WeaponSystem
             }
             yield return null;
         }*/
+
         yield return null;
         SetLightValues(defaultInnerAngle, defaultOuterAngle, defaultIntensity);
 
@@ -104,10 +110,10 @@ public class SpotlightControl : WeaponSystem
         {
             thirdPersonWeaponLight.gameObject.SetActive(false);
         }
-		else
-		{
+        else
+        {
             firstPersonWeaponLight.gameObject.SetActive(false);
-		}
+        }
 
     }
 
@@ -117,9 +123,9 @@ public class SpotlightControl : WeaponSystem
         firstPersonWeaponLight.gameObject.SetActive(!firstPersonWeaponLight.gameObject.activeInHierarchy);
     }
 
-    private void HandleRightClickInput()
+/*    private void HandleRightClickInput()
     {
-/*        if (Input.GetMouseButtonDown(1) && !isClickBlocked.Value) // 우클릭
+        if (Input.GetMouseButtonDown(1) && !isClickBlocked.Value) // 우클릭
         {
             isRightClickHeld.Value = true;
          //   isRecovering.Value = false;
@@ -129,13 +135,65 @@ public class SpotlightControl : WeaponSystem
         if (Input.GetMouseButtonUp(1)) // 우클릭 해제
         {
             isRightClickHeld.Value = false;
-        }*/
-    }
+        }
+    }*/
 
 
     void Update()
     {
-        if (!IsOwner || isResetting || isFlashing) return;
+        OtherClientZoomHandle();
+        ZoomHandle();
+
+        float t = Mathf.Clamp01(zoomProgress / maxZoomDuration);
+        float easeT = isZooming.Value ? zoomCurve.Evaluate(t) : resetCurve.Evaluate(t);
+        if (!Mathf.Approximately(easeT, lastEaseT))
+        {
+            lastEaseT = easeT;
+            ApplyZoom(easeT);
+            HandleZoomAudio(easeT);
+        }
+    }
+
+
+
+    private void OtherClientZoomHandle()
+	{
+        if (!IsOwner)
+        {
+            if (isResetting || isFlashing.Value) return;
+
+            if (isZooming.Value)
+            {
+                zoomProgress = Mathf.Min(zoomProgress + Time.deltaTime * zoomSpeedMultiplier, maxZoomDuration);
+                if (zoomProgress >= maxZoomDuration && !hasFlashed)
+                {
+                    hasFlashed = true;
+                    
+                }
+            }
+            else
+            {
+                zoomProgress = Mathf.Max(zoomProgress - Time.deltaTime * resetSpeedMultiplier, 0f);
+                if (zoomProgress <= 0.01f && !isFlashing.Value) hasFlashed = false;
+            }
+        }
+    }
+
+    private void OtherClientTriggerFlashEffect(bool previous, bool current)
+    {
+        if (!current)
+            return;
+
+        OnFlash?.Invoke();
+        StartCoroutine(PlayFlashSoundAfterDelay(0.01f));
+        StartCoroutine(FlashEffect(firstPersonWeaponLight));
+        StartCoroutine(FlashEffect(thirdPersonWeaponLight));
+    }
+
+
+    private void ZoomHandle()
+	{
+        if (!IsOwner || isResetting || isFlashing.Value) return;
 
         if (Input.GetMouseButton(1))
         {
@@ -151,18 +209,11 @@ public class SpotlightControl : WeaponSystem
         {
             isZooming.Value = false;
             zoomProgress = Mathf.Max(zoomProgress - Time.deltaTime * resetSpeedMultiplier, 0f);
-            if (zoomProgress <= 0.01f && !isFlashing) hasFlashed = false;
+            if (zoomProgress <= 0.01f && !isFlashing.Value) hasFlashed = false;
         }
 
-        float t = Mathf.Clamp01(zoomProgress / maxZoomDuration);
-        float easeT = isZooming.Value ? zoomCurve.Evaluate(t) : resetCurve.Evaluate(t);
-        if (!Mathf.Approximately(easeT, lastEaseT))
-        {
-            lastEaseT = easeT;
-            ApplyZoom(easeT);
-            HandleZoomAudio(easeT);
-        }
     }
+
 
     private void ApplyZoom(float t)
     {
@@ -209,7 +260,7 @@ public class SpotlightControl : WeaponSystem
     private void TriggerFlashEffect()
     {
         OnFlash?.Invoke();
-        isFlashing = true;
+        isFlashing.Value = true;
         isZooming.Value = false;
         StartCoroutine(PlayFlashSoundAfterDelay(0.01f));
         StartCoroutine(FlashEffect(firstPersonWeaponLight));
@@ -266,7 +317,7 @@ public class SpotlightControl : WeaponSystem
         yield return new WaitForSeconds(flashExpandDuration + flashFadeDuration + 0.1f);
         zoomProgress = 0;
         hasFlashed = false;
-        isFlashing = false;
+        isFlashing.Value = false;
         isResetting = false;
     }
 
@@ -289,15 +340,15 @@ public class SpotlightControl : WeaponSystem
     }*/
 
     private void SetLightValues(float innerAngle, float outerAngle, float intensity)
-        {
-            firstPersonWeaponLight.innerSpotAngle = innerAngle;
-            firstPersonWeaponLight.spotAngle = outerAngle;
-            firstPersonWeaponLight.intensity = intensity;
+    {
+        firstPersonWeaponLight.innerSpotAngle = innerAngle;
+        firstPersonWeaponLight.spotAngle = outerAngle;
+        firstPersonWeaponLight.intensity = intensity;
 
-            thirdPersonWeaponLight.innerSpotAngle = innerAngle;
-            thirdPersonWeaponLight.spotAngle = outerAngle;
-            thirdPersonWeaponLight.intensity = intensity;
-        }
+        thirdPersonWeaponLight.innerSpotAngle = innerAngle;
+        thirdPersonWeaponLight.spotAngle = outerAngle;
+        thirdPersonWeaponLight.intensity = intensity;
+    }
 
 
 

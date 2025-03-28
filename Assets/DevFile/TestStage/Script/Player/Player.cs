@@ -10,13 +10,13 @@ using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 
-public class Player : playerMoveController , IHealth , ICharacter
+public class Player : playerMoveController, IHealth, ICharacter
 {
 	public event Action OnDataChanged;
 
 	#region 저장해야할 정보
-	public string Name 
-	{ 
+	public string Name
+	{
 		get => playerName.Value.ToString(); set
 		{
 			if (playerName.Value != value)
@@ -48,23 +48,29 @@ public class Player : playerMoveController , IHealth , ICharacter
 			}
 		}
 	}
+
+	public bool IsDead { get => currentHealth.Value <= 0;}
 	#endregion
 	
 
 	[Header("PlayerState")]
-	public NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
-	public NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
-	public NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
+	[SerializeField] private NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
+	[SerializeField] private NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
+	[SerializeField] private NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
 	[SerializeField] private float maxHealth = 100;
 	public NetworkVariable<float> currentHealth = new NetworkVariable<float>(value:100, writePerm: NetworkVariableWritePermission.Server);
 
+
+	//public bool IsDead => currentHealth.Value <= 0;
+	public string PlayerName => playerName.Value.ToString();
 	public float Health => currentHealth.Value; // 체력 값은 외부에서 수정 불가
-	public bool IsDead => currentHealth.Value <= 0;
+
 
 
 	public delegate void DieEventHandler();
 	public static event DieEventHandler OnDie;
-
+	public event DieEventHandler OnDieLocal;
+	public event DieEventHandler OnReviveLocal;
 
 	[SerializeField] private SaveSystem saveSystem;
 	[SerializeField] private AudioSource audioSource;
@@ -75,9 +81,9 @@ public class Player : playerMoveController , IHealth , ICharacter
 
 	[Header("DieTarget")]
 	[SerializeField] private GameObject DieTargetGameObject;
+	[SerializeField] private SpotlightControl spotlightControl;
 	public Image healthBar;
 
-	private SpotlightControl spotlightControl;
 
 	//Hit Volume
 	private Volume volume;
@@ -91,8 +97,6 @@ public class Player : playerMoveController , IHealth , ICharacter
 	private float dur = 0.3f;
 
 
-
-
 	public override void Start()
 	{
 		base.Start();
@@ -101,6 +105,15 @@ public class Player : playerMoveController , IHealth , ICharacter
 			StartCoroutine(InitSaveSystem());
 			ChangeLayer(firstPersonObject , 11);
 			ChangeLayer(thirdPersonObject, 12);
+
+			currentHealth.OnValueChanged += (oldValue, newValue) =>
+			{
+				Debug.Log($"체력 변경 감지: {oldValue} -> {newValue}");
+				if (newValue <= 0)
+				{
+					Die();
+				}
+			};
 		}
 		else
 		{
@@ -110,12 +123,11 @@ public class Player : playerMoveController , IHealth , ICharacter
 		//AudioManager.Instance.SetbuttonSorce(audioSource);
 	}
 
-	public override void LateUpdate()
+	public override void FixedUpdate()
 	{
 		if(!IsDead)
-			base.LateUpdate();
+			base.FixedUpdate();
 	}
-
 
 
 	private IEnumerator InitSaveSystem()
@@ -126,26 +138,28 @@ public class Player : playerMoveController , IHealth , ICharacter
 			if(saveSystem = FindAnyObjectByType<SaveSystem>())
 			{
 				if (IsOwner)
-					LoadPlayerDataServerRPC();
+				{
+					//LoadPlayerDataServerRPC();
+				}
 			}
 			yield return null;
 		}
 
 		volume = GameObject.Find("Sky and Fog Global Volume").GetComponent<Volume>();
 
-
 		if (volume.profile.TryGet(out vignette))
 		{
 			defaultVignette = vignette.intensity.value;
 		}
 
-		spotlightControl = GetComponent<SpotlightControl>();
-		originalCameraPosition = playerCamera.transform.localPosition;
+		originalCameraPosition = FirstPersonCamera.transform.localPosition;
 		KeySettingsManager.Instance.localPlayer = this;
 		playerName.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 		experience.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 		level.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
 	}
+
+
 
 	// 특정 오브젝트와 자식 오브젝트의 레이어를 변경하는 함수
 	public void ChangeLayer(GameObject parentObject, int newLayer)
@@ -158,11 +172,13 @@ public class Player : playerMoveController , IHealth , ICharacter
 		{
 			ChangeLayer(child.gameObject, newLayer);
 		}
+
+		Debug.Log($"LayerChange : {newLayer}");
 	}
 
 	public void TakeDamage(float amount , AudioClip hitSound)
 	{
-		if (IsDead) return;
+		if (IsDead) return;	
 
 		currentHealth.Value -= amount;
 		Debug.Log($"플레이어 체력: {currentHealth.Value}");
@@ -180,13 +196,9 @@ public class Player : playerMoveController , IHealth , ICharacter
 			audioSource.PlayOneShot(hitSound);  // 몬스터의 타격음 재생
 		}
 
-		UpdateHealthBar();
-
-		if (IsDead)
-		{
-			Die();
-		}
+		UpdateHealthBar();		
 	}
+
 	private void UpdateHealthBar()
 	{
 		if (healthBar == null)
@@ -242,11 +254,11 @@ public class Player : playerMoveController , IHealth , ICharacter
 			float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
 			float z = UnityEngine.Random.Range(-1f, 1f) * magnitude;
 
-			playerCamera.transform.localPosition = originalCameraPosition + new Vector3(x, y, z);
+			FirstPersonCamera.transform.localPosition = originalCameraPosition + new Vector3(x, y, z);
 			yield return null;
 		}
 
-		playerCamera.transform.localPosition = originalCameraPosition; // 원래 위치로 복귀
+		FirstPersonCamera.transform.localPosition = originalCameraPosition; // 원래 위치로 복귀
 	}
 
 	public void Die()
@@ -266,11 +278,15 @@ public class Player : playerMoveController , IHealth , ICharacter
 			rb.useGravity = true;
 		}
 
-		firstPersonObject.gameObject.SetActive(false);
+
+		//firstPersonObject.gameObject.SetActive(false);
 		ChangeLayer(thirdPersonObject, 11);
-		SetAimMode(true, DieTargetGameObject);
+		ChangeLayer(firstPersonObject, 12);
+		//SetAimMode(true, DieTargetGameObject);
 		spotlightControl.ToogleLight();
-		OnDie();
+
+		OnDieLocal?.Invoke();
+		OnDie?.Invoke();
 	}
 
 
@@ -291,6 +307,42 @@ public class Player : playerMoveController , IHealth , ICharacter
 			this.playerName.Value = playerData.playerName;
 			this.experience.Value = playerData.experience;
 			this.level.Value = playerData.level;
+		}
+	}
+
+	public void SetPlayerDieView(bool value)
+	{/*
+		firstPersonObject.gameObject.SetActive(!firstPersonObject.activeInHierarchy);
+		thirdPersonObject.gameObject.SetActive(!thirdPersonObject.activeInHierarchy);
+*/
+		if (spotlightControl == null)
+		{
+			Debug.LogError("spotlightControl이 null입니다! 확인해주세요.");
+			return;
+		}
+		if (spotlightControl.firstPersonWeaponLight == null)
+		{
+			Debug.LogError("firstPersonWeaponLight가 null입니다!");
+		}
+		if (spotlightControl.thirdPersonWeaponLight == null)
+		{
+			Debug.LogError("thirdPersonWeaponLight가 null입니다!");
+		}
+		camTarget.gameObject.SetActive(value);
+		spotlightControl.firstPersonWeaponLight.gameObject.SetActive(value);
+		spotlightControl.thirdPersonWeaponLight.gameObject.SetActive(!value);
+
+
+
+		if (value)
+		{
+			ChangeLayer(thirdPersonObject, 12);
+			ChangeLayer(firstPersonObject, 11);
+		}
+		else
+		{
+			ChangeLayer(firstPersonObject, 12);
+			ChangeLayer(thirdPersonObject, 11);
 		}
 	}
 

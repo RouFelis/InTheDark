@@ -32,7 +32,7 @@ public sealed class Sobel : CustomPostProcessVolumeComponent, IPostProcessCompon
     public bool IsActive() => m_Material != null && intensity.value > 0f;
 
     // Do not forget to add this post process in the Custom Post Process Orders list (Project Settings > Graphics > HDRP Settings).
-    public override CustomPostProcessInjectionPoint injectionPoint => CustomPostProcessInjectionPoint.AfterPostProcess;
+    public override CustomPostProcessInjectionPoint injectionPoint => CustomPostProcessInjectionPoint.BeforePostProcess;
 
     const string kShaderName = "Hidden/Shader/Sobel";
 

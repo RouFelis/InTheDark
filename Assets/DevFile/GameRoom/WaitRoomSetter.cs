@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class WaitRoomSetter : NetworkBehaviour
 {
     [SerializeField] List<Transform> spawnPoint;
+
+
     private void Awake()
     {
         // 클라이언트가 접속할 때 실행되는 콜백 등록
@@ -22,7 +24,7 @@ public class WaitRoomSetter : NetworkBehaviour
 
     private void OnClientConnected(ulong clientId)
     {
-        if (clientId == NetworkManager.Singleton.LocalClientId) // 서버에서만 처리
+        if (IsServer) // 서버에서만 처리
         {
             Debug.Log($"클라이언트 {clientId} 접속!");
             SetUserPosServerRPC(clientId);

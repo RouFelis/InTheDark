@@ -1,5 +1,5 @@
 
 public interface IPickupItem
 {
-    public void UseItem();
+    public void UseItem(NetworkInventoryController controller);
 }

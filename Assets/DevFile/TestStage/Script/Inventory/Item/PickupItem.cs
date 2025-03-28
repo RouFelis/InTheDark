@@ -25,7 +25,7 @@ public class PickupItem : NetworkBehaviour , IPickupItem
 
     public NetworkVariable<InventoryItemData> networkInventoryItemData = new NetworkVariable<InventoryItemData>();
 
-	private void Start()
+	protected virtual void Start()
     {
         if (IsServer)
         {
@@ -58,8 +58,11 @@ public class PickupItem : NetworkBehaviour , IPickupItem
         }       
     }
 
-    public virtual void UseItem()
+    public virtual void UseItem(NetworkInventoryController controller)
 	{
         Debug.Log($"UseItem 테스트");
-	}
+
+        //아이템 제거하기.
+        controller.RequestRemoveItemFromInventoryServerRpc(controller.selectedSlot.Value);
+    }
 }

@@ -268,13 +268,55 @@ MonoBehaviour:
           m_InjectionPoint: 1
           m_CustomPostProcessTypesAsString:
           - ToonShadingPP, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Sobel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         m_AfterPostProcessBlursCustomPostProcesses:
           m_InjectionPoint: 4
           m_CustomPostProcessTypesAsString: []
         m_AfterPostProcessCustomPostProcesses:
           m_InjectionPoint: 2
           m_CustomPostProcessTypesAsString:
-          - Sobel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Warp_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - EdgeNoise_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Glitch2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - RLProVHSRewind, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Noise_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Noise2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Negative_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - VHSScanlines_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - UltimateVignette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - PulsatingVignette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - Jitter_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Artefacts_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - CustomTexture_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - VHS_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Glitch3_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Fisheye_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Bleed_RLPRO_HDRP, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - EdgeStretch_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - NTSCEncode_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - LowRes_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Phosphor_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - TV_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - CinematicBars_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - AnalogTVNoise_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - OldFilm2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - ColormapPalette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - CRTAperture_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - OldFilm_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Glitch1_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - PictureCorrection_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
     - rid: 3671807161102761990
       type: {class: RenderGraphSettings, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
       data:

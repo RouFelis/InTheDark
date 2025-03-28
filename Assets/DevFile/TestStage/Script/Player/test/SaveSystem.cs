@@ -160,9 +160,9 @@ public class SaveSystem : MonoBehaviour
         Debug.Log(2);
         PlayerData playerData = new PlayerData
         {
-            playerName = player.playerName.Value.ToString(),
-            experience = player.experience.Value,
-            level = player.level.Value
+            playerName = player.PlayerName,
+            experience = player.Experience,
+            level = player.Level
         };
 
         string json = JsonUtility.ToJson(playerData, true);

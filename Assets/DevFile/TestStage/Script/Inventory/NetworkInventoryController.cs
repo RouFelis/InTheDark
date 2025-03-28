@@ -42,6 +42,7 @@ public class NetworkInventoryController : NetworkBehaviour
     // == 아이템 및 상호작용 관련 ==
     [SerializeField] private InventoryItem currentSelectedItem = null; // 현재 선택된 아이템
     [SerializeField] private PickupItem Test = null;
+    [SerializeField] private InventoryItemData Test2;
     private bool invenLoading = false; // 인벤토리 로딩 여부
     [SerializeField] private LayerMask interacterLayer; // 상호작용 가능한 레이어
     [SerializeField] private float grabDistance = 3f; // 아이템을 잡을 수 있는 거리
@@ -254,6 +255,7 @@ public class NetworkInventoryController : NetworkBehaviour
             );
 
             networkItems[slotIndex] = newItem;
+            Test2 = newItem;
 
             // 클라이언트 측에서 아이템 로드
             LoadItemClientRpc(slotIndex, newItem);
@@ -641,17 +643,21 @@ public class NetworkInventoryController : NetworkBehaviour
 
     public void HandleUseItem()
     {
-		if (Input.GetKeyDown(useItemKey))
+		if (Input.GetKey(useItemKey))
 		{
             InventoryItem currentItem = items[selectedSlot.Value];
-            Test.UseItem();
+
+            if (currentItem == null)
+                return;
+
+
+            Test.UseItem(this);
+
             Debug.Log("Use item: " + currentItem.ItemSprite.name);
 
-            //currentSelectedItem.use
-
             // 아이템 사용 후 인벤토리에서 제거
-            RequestRemoveItemFromInventoryServerRpc(selectedSlot.Value);
-        }       
+            //RequestRemoveItemFromInventoryServerRpc(selectedSlot.Value);
+        }
     }
 
 

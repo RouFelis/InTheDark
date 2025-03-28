@@ -32,8 +32,11 @@ public class Interacter : NetworkBehaviour
     }
 
 	private void OnDisable()
-	{
-        infoText.gameObject.SetActive(false);
+    {
+        if (IsOwner)
+        {
+            infoText.gameObject.SetActive(false);
+        }
     }
 
 	//아이템 오브젝트 확인 (Item Object Check)

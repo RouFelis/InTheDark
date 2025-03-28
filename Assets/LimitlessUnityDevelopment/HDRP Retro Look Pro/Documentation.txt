@@ -1,0 +1,123 @@
+Retro Look Pro v3.1.3 Manual. 
+
+
+THANK YOU
+
+Thank you for purchasing Retro Look Pro - you've made my day! Take your time to play with it, but
+please take a moment, when you're ready to return to store and add a short Review or rating on
+the product page - taking just a couple of minutes to help with this will be greatly appreciated!
+Your review will help others make informed decisions and help to support me in the development! "https://assetstore.unity.com/packages/slug/133193"
+
+///
+[Intro]
+
+Retro Look Pro is a Post-processing effect. It emulates screen bleeding , artefacts , noise , interlacing, shake, glitches and other effects.
+It is the best and complete solution for retro like games and apps, 80's/90's/Retro/VHS/Glitch/TV look, security cameras.
+///
+
+[HDRP Effect SETUP]
+
+To setup Retro Look Pro effects for HDRP :
+
+    ! Note that by default, your Retro Look Pro effects do not run if you just add them to a Volume.
+
+    1. Go to Edit > Project Settings and select the HDRP Default Settings tab.
+
+    2. Scroll down until you find the Custom Post Process Orders section. This section contains three lists, one for each injection point.
+
+    3. Add Retro Look Pro effects to "After Post Process" list so that HDRP can render them.
+
+    4. HDRP allows you to customize the order of your post-processing effects to achieve the most authentic look you want.
+   
+    5.To use effects in your Post-processing volume  "Add Override/Post-processing/RetroLookPro/any effect you want"
+///
+Effects ordering for Example scenes :
+         <Glitch1> 
+         <Glitch2> 
+         <Glitch3> 
+         <PictureCorrection_RLPRO> 
+         <Negative_RLPRO> 
+         <Noise2_RLPRO> 
+         <Noise_RLPRO> 
+         <Phosphor_RLPRO> 
+         <Jitter_RLPRO> 
+         <VHSScanlines_RLPRO> 
+         <AnalogTVNoise_RLPRO> 
+         <EdgeNoise_RLPRO> 
+         <EdgeStretch_RLPRO> 
+         <UltimateVignette_RLPRO> 
+         <PulsatingVignette_RLPRO> 
+         <Fisheye_RLPRO> 
+         <RLProVHSRewind> 
+         <VHS_RLPRO> 
+         <TV_RLPRO> 
+         <OldFilm_RLPRO> 
+         <OldFilm2_RLPRO> 
+         <CRTAperture_RLPRO> 
+         <NTSCEncode_RLPRO> 
+         <ColormapPalette_RLPRO> 
+         <Warp_RLPRO> 
+         <LowRes_RLPRO> 
+         <Bleed_RLPRO> 
+         <Artefacts_RLPRO> 
+         <CinematicBars_RLPRO> 
+         <CustomTexture_RLPRO> 
+
+         Also you can find example presets in "HDRP Retro Look Pro\Resources\Example Presets" folder
+///
+
+Color Palette IMPORTANT NOTE : To use presets please open "\Assets\LimitlessUnityDevelopment\RetroLookPro\Resources\ColormapPresets.unitypackage" and import it. Then fill RetroLookProColorPaletePresetsList\presetslist with all presets from "\Assets\LimitlessUnityDevelopment\RetroLookPro\Resources\Colormap Presets".
+For proper work in "blue noise" field search and select "blue_noise" texture.
+Also you can find more blue noise textures in "\Assets\LimitlessUnityDevelopment\RetroLookPro\Resources\Noise Textures\Dither noise textures" folder.
+///
+
+[Clean project]
+
+If you want keep your project assets clean and reduce package size, you have following options:
+
+1. Open RetroLookProColorPaletePresetsList.asset ("\Assets\LimitlessUnityDevelopment\Resources") and remove unnecessary items from the list. Then remove unneeded colormap presets from  "\Assets\LimitlessUnityDevelopment\Resources\Colormap Presets".
+2. Resources folder (Assets\LimitlessUnityDevelopment\Resources) remove unneeded Noise Textures.
+3. readme folder and asset can be removed.
+4. ThirdPartyAssets folder can be removed.
+5. Example Scenes folder can be removed.
+
+///
+
+
+[Manipulating Retro look pro effects variables]
+
+Online API and Manipulating effects script examples - https://limitless-development.xyz/documentation
+
+Also you can find effects manipulation example script in "Retro Look Pro HDRP\HDRP Example scene""
+
+///
+
+[Mask separate layers to apply Retro Look Pro ]
+1. Create Render Texture
+2. Create new Camera that will render needed layer and insert render texture in Target Texture field.
+3. Insert in your Volume component in needed effect in "Mask" field recently created render texture and select Mask Channel - red channel.
+
+
+[Contact]
+///
+
+If you want to leave a feedback or ask for new feature, use Asset related forum thread.
+https://forum.unity.com/threads/released-retro-look.583285/
+
+If you run into any issues or have questions, please do not hesitate to reach out ! I will do my best to respond as soon as I can.
+
+Contact email: limitlessunitydevelopment@gmail.com
+
+Please keep in mind that I’m in the UTC+5 timezone and usually reserve weekends for personal time.
+///
+
+Credits: 
+
+used Assets:
+Measured Materials Library
+https://github.com/Unity-Technologies/MeasuredMaterialLibraryHDRP/tree/master/Assets/Measured%20Materials%20Library
+Noise textures :
+https://www.deviantart.com/hxwlett/art/01-TEXTURES-PACK-VHS-601861083
+https://www.deviantart.com/xpegasvs/art/Pack-VHS-Vol-01-520737993
+https://www.deviantart.com/natieditions00/art/-VHS-TEXTURES-5--543052599
+Shader Calibration Scene - https://assetstore.unity.com/packages/essentials/tutorial-projects/shader-calibration-scene-25422
