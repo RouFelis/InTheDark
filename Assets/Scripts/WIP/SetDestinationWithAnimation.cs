@@ -49,5 +49,12 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 			targetGameObject = null;
 			destination = Vector3.zero;
 		}
+
+		//public override void OnEnd()
+		//{
+		//	base.OnEnd();
+
+		//	Debug.Log($"{gameObject.name} ³ª ³¡³µ¾î!");
+		//}
 	}
 }
