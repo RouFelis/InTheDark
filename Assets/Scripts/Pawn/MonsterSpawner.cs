@@ -205,6 +205,8 @@ namespace InTheDark.Prototypes
 		[Rpc(SendTo.Server)]
 		private void OnEnemyPawnSpawnRPC(NetworkBehaviourReference reference)
 		{
+			Debug.Log($"{reference}...");
+
 			if (reference.TryGet<EnemyPrototypePawn>(out var enemy) && !enemy.IsSpawned)
 			{
 				enemy.NetworkObject.Spawn(true);
