@@ -1591,9 +1591,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   userPlayer: {fileID: 0}
   playersNetworkObject: []
-  playersCam: []
+  players: []
   isUserDie: 0
   cinemachineCamera: {fileID: 0}
+  currentCameraIndex: 0
 --- !u!4 &240959409
 Transform:
   m_ObjectHideFlags: 0
@@ -43110,7 +43111,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0012461967, y: -0.018720467}
+  m_AnchoredPosition: {x: 0.0012461967, y: -0.017505175}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1004104937
@@ -44941,7 +44942,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1348205030
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -70,6 +70,7 @@ public class Player : playerMoveController, IHealth, ICharacter
 	public delegate void DieEventHandler();
 	public static event DieEventHandler OnDie;
 	public event DieEventHandler OnDieLocal;
+	public event DieEventHandler OnDieEffects;
 	public event DieEventHandler OnReviveLocal;
 
 	[SerializeField] private SaveSystem saveSystem;
@@ -84,6 +85,8 @@ public class Player : playerMoveController, IHealth, ICharacter
 	[SerializeField] private SpotlightControl spotlightControl;
 	public Image healthBar;
 
+	[Header("DieSequnceRequirements")]
+	public NetworkRagdollController netRagdollController;
 
 	//Hit Volume
 	private Volume volume;
@@ -97,6 +100,7 @@ public class Player : playerMoveController, IHealth, ICharacter
 	private float dur = 0.3f;
 
 
+
 	public override void Start()
 	{
 		base.Start();
@@ -105,21 +109,23 @@ public class Player : playerMoveController, IHealth, ICharacter
 			StartCoroutine(InitSaveSystem());
 			ChangeLayer(firstPersonObject , 11);
 			ChangeLayer(thirdPersonObject, 12);
-
-			currentHealth.OnValueChanged += (oldValue, newValue) =>
-			{
-				Debug.Log($"체력 변경 감지: {oldValue} -> {newValue}");
-				if (newValue <= 0)
-				{
-					Die();
-				}
-			};
 		}
 		else
 		{
 			ChangeLayer(firstPersonObject, 12);
 			ChangeLayer(thirdPersonObject , 11);
 		}
+
+		currentHealth.OnValueChanged += (oldValue, newValue) =>
+		{
+			Debug.Log($"체력 변경 감지: {oldValue} -> {newValue}");
+			if (newValue <= 0)
+			{
+				Die();
+			}
+		};
+
+		OnDieEffects += DieEffect;
 		//AudioManager.Instance.SetbuttonSorce(audioSource);
 	}
 
@@ -261,32 +267,47 @@ public class Player : playerMoveController, IHealth, ICharacter
 		FirstPersonCamera.transform.localPosition = originalCameraPosition; // 원래 위치로 복귀
 	}
 
+
+	// 다른곳에서 죽음 호출하도록 함.
 	public void Die()
 	{
-		Debug.Log("플레이어 사망!");
-		// 기존 애니메이션 정지
-		if (animator != null)
-		{
-			animator.enabled = false;
-		}
-
-		// Ragdoll 본들의 Rigidbody 활성화
-		Rigidbody[] ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
-		foreach (Rigidbody rb in ragdollRigidbodies)
-		{
-			rb.isKinematic = false;
-			rb.useGravity = true;
-		}
+		StartCoroutine(DieCoroutine());
+	}
 
 
-		//firstPersonObject.gameObject.SetActive(false);
+	private void DieEffect()
+	{
+		SetAimMode(true, DieTargetGameObject);
+
+		Debug.Log("테스트");
+
 		ChangeLayer(thirdPersonObject, 11);
 		ChangeLayer(firstPersonObject, 12);
-		//SetAimMode(true, DieTargetGameObject);
-		spotlightControl.ToogleLight();
+	}
 
-		OnDieLocal?.Invoke();
-		OnDie?.Invoke();
+	//죽기 코루틴 실행.
+	private IEnumerator DieCoroutine()
+	{
+		Debug.Log("플레이어 사망!");
+
+		// 죽고 연출 효과 재생하기.
+		OnDieEffects.Invoke();
+
+		yield return new WaitForSeconds(4f); // 끝나면 실행하도록 지연 추가하기,,,
+		netRagdollController.DieServerRpc(this.transform.position);
+
+		if (IsOwner)
+		{
+			//SetAimMode();
+
+			//firstPersonObject.gameObject.SetActive(false);
+			ChangeLayer(thirdPersonObject, 11);
+			ChangeLayer(firstPersonObject, 12);
+			//SetAimMode(true, DieTargetGameObject);
+			spotlightControl.ToogleLight();
+			//OnDieLocal.Invoke();
+			OnDie?.Invoke();
+		}
 	}
 
 
@@ -315,19 +336,7 @@ public class Player : playerMoveController, IHealth, ICharacter
 		firstPersonObject.gameObject.SetActive(!firstPersonObject.activeInHierarchy);
 		thirdPersonObject.gameObject.SetActive(!thirdPersonObject.activeInHierarchy);
 */
-		if (spotlightControl == null)
-		{
-			Debug.LogError("spotlightControl이 null입니다! 확인해주세요.");
-			return;
-		}
-		if (spotlightControl.firstPersonWeaponLight == null)
-		{
-			Debug.LogError("firstPersonWeaponLight가 null입니다!");
-		}
-		if (spotlightControl.thirdPersonWeaponLight == null)
-		{
-			Debug.LogError("thirdPersonWeaponLight가 null입니다!");
-		}
+
 		camTarget.gameObject.SetActive(value);
 		spotlightControl.firstPersonWeaponLight.gameObject.SetActive(value);
 		spotlightControl.thirdPersonWeaponLight.gameObject.SetActive(!value);

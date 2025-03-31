@@ -18,11 +18,8 @@ public class playerMoveController : NetworkBehaviour
 
 
     [Header("Camera & Head Rotation")]
-    [SerializeField] private GameObject firstPersonCameraPrefab;
     [SerializeField] protected Camera firstPersonCamera;
-    [SerializeField] private GameObject thirdPersonCameraPrefab;
     [SerializeField] protected Camera thirdPersonCamera;
-    [SerializeField] private GameObject camTargetPrefab;
     [SerializeField] protected Transform camTarget;
     [SerializeField] protected CinemachineVirtualCamera virtualCamera;
 
@@ -101,13 +98,6 @@ public class playerMoveController : NetworkBehaviour
     private Image staminaBar;
 
 
-    private void Awake()
-    {
-        characterController = GetComponent<CharacterController>();
-        StartCoroutine(InitCamera());
-    }
-
-
     private IEnumerator InitCamera()
     {
         // PlaceableItemManager 오브젝트 찾기
@@ -132,14 +122,21 @@ public class playerMoveController : NetworkBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
+		if (IsOwner)
+		{
+            virtualCamera.gameObject.SetActive(true);
+            FirstPersonCamera.gameObject.SetActive(true);
+        }
+		else
+		{
+            FirstPersonCamera.gameObject.SetActive(false);
+		}
     }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-
-        SpawnSetCameraServerRpc(OwnerClientId);
-
+       
         if (IsOwner)
         {
             FixedMouse();
@@ -156,42 +153,31 @@ public class playerMoveController : NetworkBehaviour
     }
 
 
-    [ServerRpc]
+ /*   [ServerRpc]
     private void SpawnSetCameraServerRpc(ulong clientID)
     {
         if (!IsServer) return; // 서버에서만 실행
 
-        firstPersonCamera = Instantiate(firstPersonCameraPrefab).GetComponent<Camera>();
         camTarget = Instantiate(camTargetPrefab).transform;
 
-        NetworkObject cameraNetworkObject = firstPersonCamera.GetComponent<NetworkObject>();
         NetworkObject camTargetNetworkObject = camTarget.GetComponent<NetworkObject>();
 
         camTargetNetworkObject.SpawnWithOwnership(clientID);
         camTargetNetworkObject.transform.SetParent(this.transform);
 
-        cameraNetworkObject.SpawnWithOwnership(clientID);
-        cameraNetworkObject.transform.SetParent(camTargetNetworkObject.transform);
-
-        cameraNetworkObject.transform.localPosition = Vector3.zero;
-        cameraNetworkObject.transform.localRotation = Quaternion.identity;
-
         // 새로 들어온 클라이언트가 기존 카메라 정보를 받을 수 있도록 ClientRpc 호출
-        SyncCameraClientRpc(cameraNetworkObject.NetworkObjectId, camTargetNetworkObject.NetworkObjectId);
+        SyncCameraClientRpc(camTargetNetworkObject.NetworkObjectId);
     }
 
     [ClientRpc]
-    private void SyncCameraClientRpc(ulong cameraId, ulong camTargetId)
+    private void SyncCameraClientRpc(ulong camTargetId)
     {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(cameraId, out NetworkObject cameraNetObj) &&
-            NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(camTargetId, out NetworkObject camTargetNetObj))
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(camTargetId, out NetworkObject camTargetNetObj))
         {
-            firstPersonCamera = cameraNetObj.GetComponent<Camera>();
             camTarget = camTargetNetObj.transform;
-
-            /*camTarget.transform.SetParent(firstPersonCamera.transform);
+            *//*camTarget.transform.SetParent(firstPersonCamera.transform);
             camTarget.transform.localPosition = Vector3.zero;
-            camTarget.transform.localRotation = Quaternion.identity;*/
+            camTarget.transform.localRotation = Quaternion.identity;*//*
 
 
             if (IsOwner)
@@ -211,7 +197,7 @@ public class playerMoveController : NetworkBehaviour
             }
         }
     }
-
+*/
 
 
 
@@ -219,11 +205,14 @@ public class playerMoveController : NetworkBehaviour
     {
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
+        characterController = GetComponent<CharacterController>();
+
 
         if (IsOwner)
         {
             SpawnAndNotifyServerRpc(OwnerClientId);
-		}
+            StartCoroutine(InitCamera());
+        }
 		else
 		{
             InitRagdolls();

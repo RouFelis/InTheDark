@@ -21,7 +21,7 @@ public class SpectatorManager : MonoBehaviour
 		if (NetworkManager.Singleton.ConnectedClients.TryGetValue(localClientId, out var client))
 		{
 			userPlayer = client.PlayerObject.GetComponent<Player>();
-			cinemachineCamera = userPlayer.gameObject.GetComponentInChildren<CinemachineVirtualCamera>();
+			cinemachineCamera = userPlayer.VirtualCamera;
 			Debug.Log($"내 플레이어 오브젝트: {userPlayer.name}");
 		}
 
@@ -83,17 +83,11 @@ public class SpectatorManager : MonoBehaviour
 		if (players.Count > 1)
 		{
 			players[0].SetPlayerDieView(false);
-			Debug.Log("죽음 2");
 			currentCameraIndex = 1; // 플레이어 제외한 첫 번째 카메라로 변경
-			Debug.Log("죽음 3");
 			cinemachineCamera.Follow = players[currentCameraIndex].FirstPersonCamera.transform;
-			Debug.Log("죽음 4");
 			//cinemachineCamera.LookAt = players[currentCameraIndex].transform;
 			players[currentCameraIndex].SetPlayerDieView(true);
-			Debug.Log("죽음 5");
 		}
-
-		Debug.Log("죽음 1");
 	}
 
 	private void SetRevive()
