@@ -16,7 +16,10 @@ namespace InTheDark.Prototypes
 	public class ChargeSkillManager : NetworkBehaviour
 	{
 		[SerializeField]
-		private float _time;
+		private float _duration;
+		
+		[SerializeField]
+		private NetworkVariable<float> _time;
 
 		[SerializeField]
 		private float _speed;
@@ -43,6 +46,11 @@ namespace InTheDark.Prototypes
 		//{
 		//	collision.gameObject.CompareTag("");
 		//}
+
+		private void Awake()
+		{
+			_time = new();
+		}
 
 		private void Update()
 		{
@@ -96,8 +104,11 @@ namespace InTheDark.Prototypes
 
 			if (target)
 			{
+				var time = _time.Value;
+
+				var lerped = Mathf.Lerp(time, _speed, time + _duration);
 				var direction = target.transform.position - transform.position;
-				var velocity = direction.normalized * _speed;
+				var velocity = direction.normalized * lerped;
 
 				Debug.Log($"2번 포트 + {velocity}"); 
 
@@ -112,7 +123,7 @@ namespace InTheDark.Prototypes
 
 				Debug.Log($"3번 포트 + {_velocity} + {_isRunning}");
 
-				await UniTask.Delay(TimeSpan.FromSeconds(_time), false, PlayerLoopTiming.Update, token, false);
+				await UniTask.Delay(TimeSpan.FromSeconds(_duration), false, PlayerLoopTiming.Update, token, false);
 
 				Debug.Log("4번 포트");
 

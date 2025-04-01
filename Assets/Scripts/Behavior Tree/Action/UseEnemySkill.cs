@@ -74,7 +74,7 @@ namespace InTheDark.Prototypes
 
 			OnCompleted();
 
-			_executionStatus = TaskStatus.Success;
+			_executionStatus = TaskStatus.Failure;
 		}
 
 		private void OnCompleted(bool isPause = false)

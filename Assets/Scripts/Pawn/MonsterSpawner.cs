@@ -198,8 +198,13 @@ namespace InTheDark.Prototypes
 
 			_agentHeight += height;
 
+			if (!enemy.IsSpawned)
+			{
+				enemy.NetworkObject.Spawn(true);
+			}
+
 			//enemy.NetworkObject.Spawn(true);
-			OnEnemyPawnSpawnRPC(enemy);
+			//OnEnemyPawnSpawnRPC(enemy);
 		}
 
 		[Rpc(SendTo.Server)]
