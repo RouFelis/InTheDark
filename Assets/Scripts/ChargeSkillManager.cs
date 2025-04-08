@@ -54,7 +54,7 @@ namespace InTheDark.Prototypes
 
 		private void Update()
 		{
-			if (_isRunning)
+			if (_isRunning && IsServer)
 			{
 				Debug.Log($"µÕ + {name}");
 				_controller.Move(_velocity * Time.deltaTime);

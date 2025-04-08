@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,9 +10,16 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 		[SharedRequired]
 		public SharedVector3 destination;
 
+		public EnemyPrototypePawn NetworkObjectBase;
+
 		// cache the navmeshagent component
 		private NavMeshAgent navMeshAgent;
 		private GameObject prevGameObject;
+
+		public override void OnAwake()
+		{
+			NetworkObjectBase = GetComponent<EnemyPrototypePawn>();
+		}
 
 		public override void OnStart()
 		{
@@ -25,21 +33,43 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 
 		public override TaskStatus OnUpdate()
 		{
-			if (navMeshAgent == null)
+			var result = TaskStatus.Failure;
+
+			if (NetworkObjectBase.IsServer)
 			{
-				Debug.LogWarning("NavMeshAgent is null");
-				return TaskStatus.Failure;
+				if (navMeshAgent == null)
+				{
+					Debug.LogWarning("NavMeshAgent is null");
+					return TaskStatus.Failure;
+				}
+
+				var isEnable = navMeshAgent.SetDestination(destination.Value);
+				
+				result = isEnable ? TaskStatus.Success : TaskStatus.Failure;
+
+				if (isEnable)
+				{
+					var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
+
+					pawn?.StartMove();
+				}
 			}
 
-			var isEnable = navMeshAgent.SetDestination(destination.Value);
-			var result = isEnable ? TaskStatus.Success : TaskStatus.Failure;
+			//if (navMeshAgent == null)
+			//{
+			//	Debug.LogWarning("NavMeshAgent is null");
+			//	return TaskStatus.Failure;
+			//}
 
-			if (isEnable)
-			{
-				var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
+			//var isEnable = navMeshAgent.SetDestination(destination.Value);
+			//var result = isEnable ? TaskStatus.Success : TaskStatus.Failure;
 
-				pawn?.StartMove();
-			}
+			//if (isEnable)
+			//{
+			//	var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
+
+			//	pawn?.StartMove();
+			//}
 
 			return result;
 		}

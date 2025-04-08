@@ -52,9 +52,9 @@ namespace InTheDark.Prototypes
 			}
 		}
 
-		public async UniTaskVoid Attack()
+		public virtual async UniTaskVoid Attack()
 		{
-			if (_cooldown.Value < 0.0F || Mathf.Approximately(_cooldown.Value, 0.0F))
+			if (_cooldown.Value < 0.0F || Mathf.Approximately(_cooldown.Value, 0.0F) && IsServer)
 			{
 				var target = _pawn.Target;
 

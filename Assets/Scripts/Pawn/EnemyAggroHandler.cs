@@ -20,7 +20,10 @@ namespace InTheDark.Prototypes
 
             set
             {
-				_target.Value = value;
+                if (IsServer)
+                {
+					_target.Value = value;
+				}
 			}
         }
 	} 

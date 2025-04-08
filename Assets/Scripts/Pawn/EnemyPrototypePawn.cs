@@ -167,9 +167,14 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	{
 		get
 		{
-			var isEnable = _target.Value.TryGet(out Player value);
+			if (NetworkManager.Singleton)
+			{
+				var isEnable = _target.Value.TryGet(out Player value);
 
-			return value;
+				return value;
+			}
+
+			return null;
 		}
 
 		set
@@ -181,7 +186,10 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 			//	Player.OnDie += OnTargetDie;
 			//}
 
-			_target.Value = value;
+			if (IsServer)
+			{
+				_target.Value = value;
+			}
 		}
 	}
 
@@ -210,7 +218,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		_isDead.OnValueChanged += OnIsDeadChanged;
 		_resistance.OnValueChanged += OnResistanceChanged;
 
-		UpdateManager.OnUpdate += OnUpdate;
+		//UpdateManager.OnUpdate += OnUpdate;
 
 		// 이렇게 하면 server에서만 작동하게 할 수 있나
 		//if (_behaviorTree && IsServer)
@@ -243,7 +251,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		_isDead.OnValueChanged -= OnIsDeadChanged;
 		_resistance.OnValueChanged -= OnResistanceChanged;
 
-		UpdateManager.OnUpdate -= OnUpdate;
+		//UpdateManager.OnUpdate -= OnUpdate;
 
 		//if (NetworkManager.Singleton && ServerPermissionHandler.Instance.IsServer)
 		//{
@@ -256,10 +264,10 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
-	private void OnUpdate()
-	{
-		_cooldown.Value = Math.Max(_cooldown.Value - Time.deltaTime, 0.0F);
-	}
+	//private void OnUpdate()
+	//{
+	//	_cooldown.Value = Math.Max(_cooldown.Value - Time.deltaTime, 0.0F);
+	//}
 
 	// 네트워크에서 못 찾을 수 있으니 (최소한 스테이지가) 완전히 끝나기 전엔 Despawn 하면 안댐
 	private void OnIsDeadChanged(bool previousValue, bool newValue)

@@ -192,13 +192,13 @@ namespace InTheDark.Prototypes
 			var agent = enemy.GetComponent<NavMeshAgent>();
 			var height = UnityEngine.Random.Range(0.1F, 1.0F);
 
-			//Debug.LogError	(_agentHeight);
+			Debug.LogError(_agentHeight + "dnfjdnfjdnjfndsjfndsjnk");
 
 			agent.height = _agentHeight;
 
 			_agentHeight += height;
 
-			if (!enemy.IsSpawned)
+			if (IsServer && !enemy.IsSpawned)
 			{
 				enemy.NetworkObject.Spawn(true);
 			}
@@ -207,16 +207,16 @@ namespace InTheDark.Prototypes
 			//OnEnemyPawnSpawnRPC(enemy);
 		}
 
-		[Rpc(SendTo.Server)]
-		private void OnEnemyPawnSpawnRPC(NetworkBehaviourReference reference)
-		{
-			Debug.Log($"{reference}...");
+		//[Rpc(SendTo.Server)]
+		//private void OnEnemyPawnSpawnRPC(NetworkBehaviourReference reference)
+		//{
+		//	Debug.Log($"{reference}...");
 
-			if (reference.TryGet<EnemyPrototypePawn>(out var enemy) && !enemy.IsSpawned)
-			{
-				enemy.NetworkObject.Spawn(true);
-			}
-		}
+		//	if (reference.TryGet<EnemyPrototypePawn>(out var enemy) && !enemy.IsSpawned)
+		//	{
+		//		enemy.NetworkObject.Spawn(true);
+		//	}
+		//}
 
 		private void OnDungeonExit(DungeonExitEvent received)
 		{
