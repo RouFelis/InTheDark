@@ -122,8 +122,10 @@ namespace InTheDark.Prototypes
 				BuildIndex = buildIndex
 			};
 
-			SpawnEnemyServerRPC(enemyRef);
-			SpawnEnemyClientRPC(enemyRef, position, rotation);
+			//SpawnEnemyServerRPC(enemyRef);
+			//SpawnEnemyClientRPC(enemyRef, position, rotation);
+
+			SpawnEnemyServerRPC(enemyRef, position, rotation);
 		}
 
 		[Rpc(SendTo.Server)]
@@ -132,10 +134,17 @@ namespace InTheDark.Prototypes
 			_spawned.Add(enemyRef);
 		}
 
+		[Rpc(SendTo.Server)]
+		private void SpawnEnemyServerRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
+		{
+			_spawned.Add(enemyRef);
+			SpawnInternal(enemyRef, position, rotation);
+		}
+
 		[Rpc(SendTo.Everyone)]
 		private void SpawnEnemyClientRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
 		{
-			Debug.Log("ytyeuhvn");
+			Debug.Log("ytyeuhvn"); ;
 
 			SpawnInternal(enemyRef, position, rotation);
 		}
