@@ -568,8 +568,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _time: 12
+  _duration: 4
+  _initialCooldown: 15
+  _time:
+    m_InternalValue: 0
+  _cooldown:
+    m_InternalValue: 0
+  _minSpeed: 3
   _speed: 6
+  _magnification: 4
+  _speedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.33333334
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _pawn: {fileID: 1433858302028618446}
   _controller: {fileID: 7614236128885380916}
   _agent: {fileID: -6386649275116767646}
