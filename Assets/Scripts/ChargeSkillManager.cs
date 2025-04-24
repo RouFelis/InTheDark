@@ -27,11 +27,11 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private NetworkVariable<float> _cooldown;
 
-		[SerializeField]
-		private float _minSpeed;
+		//[SerializeField]
+		//private float _minSpeed;
 
-		[SerializeField]
-		private float _speed;
+		//[SerializeField]
+		//private float _speed;
 
 		[SerializeField]
 		private float _magnification;
@@ -54,8 +54,8 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private bool _isRunning = false;
 
-		[SerializeField]
-		private Vector3 _velocity;
+		//[SerializeField]
+		//private Vector3 _velocity;
 
 		//public float Cooldown
 		//{
@@ -205,7 +205,7 @@ namespace InTheDark.Prototypes
 		{
 			var target = _pawn.Target;
 
-			Debug.Log($"1번 포트 + {target.name} + {target.transform.position}");
+			Debug.Log($"1번 포트 + {target.name} + {target.transform.position} // {transform.position}");
 
 			if (target && IsServer)
 			{
