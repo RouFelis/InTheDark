@@ -238,7 +238,7 @@ MonoBehaviour:
   _radius: 30
   _stage:
   - Triggers:
-    - {fileID: 11400000, guid: 7020b7c4a173dab42a1112b299ede465, type: 2}
+    - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
   _prefabs:
   - {fileID: 808785113655335579, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
   - {fileID: 808785113655335579, guid: cb6c9a952d86fa349ac1f084ed08ac97, type: 3}
@@ -362,8 +362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57def7d5ba474e84093d8a22ae27e049, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _spawner: {fileID: 397843531}
 --- !u!1 &1570900749
 GameObject:
   m_ObjectHideFlags: 0

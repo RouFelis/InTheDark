@@ -4323,6 +4323,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThirdPerson
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 379b2a4f8e91e004393c6fa4b5b0694d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1348745848486535777, guid: 379b2a4f8e91e004393c6fa4b5b0694d, type: 3}
       propertyPath: m_IsActive
       value: 0
