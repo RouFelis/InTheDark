@@ -1,12 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Netcode;
+using System;
 
 public class QuestManager : NetworkBehaviour
 {
+
 	public static QuestManager inst { get; set; }
 	public List<QuestBase> questList;
+	public int mustClearQuestTotal = 0;
+	public int nowClearedQuestTotal = 0;
 	QuestBase selectedQuest;
+
+	public Action QuestFailAction;
 
 
 	private void Awake()
@@ -34,6 +40,7 @@ public class QuestManager : NetworkBehaviour
 		}
 
 		int index = questList.IndexOf(quest);
+		nowClearedQuestTotal += 1;
 
 		if (index != -1)
 		{
@@ -45,4 +52,12 @@ public class QuestManager : NetworkBehaviour
 		}
 	}
 
+	public void QuestReset()
+	{
+		nowClearedQuestTotal = 0;
+		mustClearQuestTotal = 0;
+		questList.Clear();
+	}
+
+	
 }

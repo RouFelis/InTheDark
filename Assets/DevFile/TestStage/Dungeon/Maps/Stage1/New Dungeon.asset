@@ -15,11 +15,11 @@ MonoBehaviour:
   globalPropGroupID_obsolete: 
   globalPropRanges_obsolete: []
   Length:
-    Min: 4
+    Min: 5
     Max: 5
-  BranchMode: 0
+  BranchMode: 1
   BranchCount:
-    Min: 1
+    Min: 2
     Max: 5
   GlobalProps: []
   KeyManager: {fileID: 11400000, guid: 5ccf0f6fc8ee25a4e8af60f511c148ae, type: 2}
@@ -40,6 +40,18 @@ MonoBehaviour:
       id: 0
     TagB:
       id: 1
+  - TagA:
+      id: 2
+    TagB:
+      id: 1
+  - TagA:
+      id: 2
+    TagB:
+      id: 0
+  - TagA:
+      id: 2
+    TagB:
+      id: 2
   BranchTagPruneMode: 1
   BranchPruneTags: []
   Nodes:

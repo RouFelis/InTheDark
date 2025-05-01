@@ -169,7 +169,7 @@ MonoBehaviour:
   scanKey: 0
   lightKey: 0
   sprintKey: 0
-  keySenstive: 2
+  mouseSenstive: 2
   minSensitivity: 0.1
   maxSensitivity: 10
   sensitivityInput: {fileID: 0}
@@ -202,6 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29a78bd160b8ae14ea459c1d404f2dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyInScenes: 
 --- !u!1 &20972610
 GameObject:
   m_ObjectHideFlags: 0
@@ -3008,6 +3009,76 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!1 &748455756
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 748455758}
+  - component: {fileID: 748455757}
+  m_Layer: 0
+  m_Name: InjectionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &748455757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748455756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6512723afeb01f741a212815705caeca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSetPairs:
+  - tileA:
+      tileSet: {fileID: 11400000, guid: db7d2f3425c6d36419943c04af9483de, type: 2}
+      isOnMainPath: 1
+      isRequired: 1
+      pathDepth: 0
+      branchDepth: 0
+    tileB:
+      tileSet: {fileID: 0}
+      isOnMainPath: 0
+      isRequired: 0
+      pathDepth: 0
+      branchDepth: 0
+  - tileA:
+      tileSet: {fileID: 11400000, guid: 7eb160c0de3905345b5af5b39e40123c, type: 2}
+      isOnMainPath: 1
+      isRequired: 1
+      pathDepth: 0
+      branchDepth: 0
+    tileB:
+      tileSet: {fileID: 11400000, guid: a6eea298ea95d704894ea7df98a30da3, type: 2}
+      isOnMainPath: 1
+      isRequired: 1
+      pathDepth: 0
+      branchDepth: 0
+  numberOfSetsToInject: 2
+--- !u!4 &748455758
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748455756}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -133.32767, y: -0.71496034, z: 30.5887}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &793243429
 GameObject:
   m_ObjectHideFlags: 0
@@ -3340,15 +3411,15 @@ MonoBehaviour:
   spawnedItem: {fileID: 0}
   spawnedItemID: 0
   maxPlacementDistance: 10
+  canPlace: 1
   transparentMaterial: {fileID: 2100000, guid: 8036ca5fdfce72f40b1b0fd7672435e2, type: 2}
   validPlacementMaterial: {fileID: 2100000, guid: 0340ade0a5cb30a40ab59a5d899c6913, type: 2}
   invalidPlacementMaterial: {fileID: 2100000, guid: ab0bf8416da6b90498ff9e548f960e3f, type: 2}
   rotationSpeed: 100
-  enableLogs: 1
-  previewObject: {fileID: 0}
-  canPlace: 1
   clientRpcCompleted: 0
   networkLoading: 0
+  enableLogs: 1
+  previewObject: {fileID: 0}
 --- !u!4 &842778125
 Transform:
   m_ObjectHideFlags: 0
@@ -3376,6 +3447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29a78bd160b8ae14ea459c1d404f2dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyInScenes: 
 --- !u!1 &850294654
 GameObject:
   m_ObjectHideFlags: 0
@@ -6405,6 +6477,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  playersInGame:
+    m_InternalValue: 0
+  playersList: []
+  uiAniManager: {fileID: 0}
+  allPlayersDead: 0
 --- !u!4 &1769590224
 Transform:
   m_ObjectHideFlags: 0
@@ -6447,6 +6524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29a78bd160b8ae14ea459c1d404f2dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyInScenes: 
 --- !u!1 &1816455821
 GameObject:
   m_ObjectHideFlags: 0
@@ -8037,6 +8115,7 @@ SceneRoots:
   - {fileID: 11559153}
   - {fileID: 842778125}
   - {fileID: 586395264}
+  - {fileID: 748455758}
   - {fileID: 326466199}
   - {fileID: 50799335}
   - {fileID: 87464236}

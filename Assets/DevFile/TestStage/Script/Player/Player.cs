@@ -1,367 +1,448 @@
-﻿using System.Collections;
-using Unity.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Unity.Netcode;
-using System;
+﻿using System;
 using System.IO;
-using UnityEngine.Rendering.HighDefinition;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Collections;
+using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
+using Unity.Netcode;
+using SaintsField;
+using SaintsField.Playa;
 
-
+[RequireComponent(typeof(NetworkObject))]
 public class Player : playerMoveController, IHealth, ICharacter
 {
-	public event Action OnDataChanged;
+    private const int Renderable = 11;
+    private const int DisRenderable = 12;
+    private const float DefaultVignetteIntensity = 0f;
 
-	#region 저장해야할 정보
-	public string Name
-	{
-		get => playerName.Value.ToString(); set
-		{
-			if (playerName.Value != value)
+    [Header("Network Settings")]
+    [LayoutStart("Network Settings", ELayout.FoldoutBox)]
+    [SerializeField] private NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
+    [SerializeField] private NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
+    [SerializeField] private NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
+    [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>(100f, writePerm:NetworkVariableWritePermission.Server);
+
+    [Header("Player Settings")]
+    [LayoutStart("Player Settings", ELayout.FoldoutBox)]
+    public float maxHealth = 100f;
+     public float cameraShakeMagnitude = 0.00015f;
+     public float cameraShakeDuration = 0.3f;
+
+    [Header("References")]
+    [LayoutStart("References", ELayout.FoldoutBox)]
+    [SerializeField] private SaveSystem saveSystem;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private Rigidbody rigidbody;
+    [SerializeField] private GameObject firstPersonObject;
+    [SerializeField] private GameObject thirdPersonObject;
+    [SerializeField] private GameObject dieTargetGameObject;
+    [SerializeField] private SpotlightControl spotlightControl;
+    [SerializeField] private NetworkRagdollController netRagdollController;
+    [SerializeField] private List<MonoBehaviour> dieEnableMonoBehaviorScripts;
+    [SerializeField] private List<NetworkBehaviour> dieEnableNetworkBehaviorScripts;
+    [SerializeField] private UIAnimationManager uiAniManager;
+
+
+    private HashSet<string> destroySceneNames;
+
+    private Volume postProcessingVolume;
+    private Vignette vignette;
+    private Coroutine activeHitEffect;
+    private Vector3 originalCameraPosition;
+    private Image healthBar;
+
+
+    public event Action OnDataChanged;
+    public event Action OnDieLocal;
+    public event Action OnDieEffects;
+    public event Action OnReviveLocal;
+    public static event Action OnDie;
+
+    public string Name
+    {
+        get => playerName.Value.ToString();
+        set
+        {
+            if (playerName.Value != value)
+            {
+                playerName.Value = value;
+                OnDataChanged?.Invoke();
+            }
+        }
+    }
+
+    public int Level
+    {
+        get => level.Value;
+        set
+        {
+            if (level.Value != value)
+            {
+                level.Value = value;
+                OnDataChanged?.Invoke();
+            }
+        }
+    }
+
+    public int Experience
+    {
+        get => experience.Value;
+        set
+        {
+            if (experience.Value != value)
+            {
+                experience.Value = value;
+                OnDataChanged?.Invoke();
+            }
+        }
+    }
+
+    public bool IsDead => currentHealth.Value <= 0;
+    public string PlayerName => playerName.Value.ToString();
+    public float Health => currentHealth.Value;
+
+    public override void Start()
+    {
+        base.Start();
+        InitializePlayerLayers();
+        currentHealth.OnValueChanged += HandleHealthChanged;
+
+
+        OnReviveLocal += () => { SetDieScirpt(true); Revive(); };
+        OnDieEffects += DieEffect;
+
+        rigidbody.isKinematic = true;
+    }
+
+    public override void FixedUpdate()
+    {
+        if (!IsDead) base.FixedUpdate();
+    }
+
+
+    /// <summary>
+    /// 플레이어 레이어 초기 설정
+    /// </summary>
+    private void InitializePlayerLayers()
+    {
+        if (IsOwner)
+        {
+            SetLayers(firstPersonObject, Renderable);
+            SetLayers(thirdPersonObject, DisRenderable);
+            StartCoroutine(InitializeSaveSystem());
+            StartCoroutine(InitializeUI());
+            StartCoroutine(InitializeAniSystem());
+        }
+        else
+        {
+            SetLayers(firstPersonObject, DisRenderable);
+            SetLayers(thirdPersonObject, Renderable);
+        }
+    }
+
+
+    private IEnumerator InitializeUI()
+    {
+        while (healthBar == null)
+        {
+            try
+            {
+                healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
+            }
+            catch
+            {
+                Debug.Log("HealthBar Serching");
+            }
+            yield return null;
+        }
+    }
+
+    private IEnumerator InitializeAniSystem()
+    {
+        while (uiAniManager == null)
+        {
+            try
+            {
+                uiAniManager = FindAnyObjectByType<UIAnimationManager>();
+            }
+            catch
+            {
+                Debug.Log("UIAnimationManager Serching...");
+            }
+            yield return null;
+        }
+    }
+
+
+    /// <summary>
+    /// 저장 시스템 초기화 코루틴
+    /// </summary>
+    private IEnumerator InitializeSaveSystem()
+    {
+        while (saveSystem == null)
+        {
+            try
+            {
+                saveSystem = FindAnyObjectByType<SaveSystem>();
+            }
+            catch
+            {
+                Debug.Log("SaveSystem Serching");
+            }
+            yield return null;
+        }
+
+        postProcessingVolume = GameObject.Find("Sky and Fog Global Volume")?.GetComponent<Volume>();
+        if (postProcessingVolume?.profile.TryGet(out vignette) == true)
+        {
+            vignette.intensity.value = DefaultVignetteIntensity;
+        }
+
+        originalCameraPosition = FirstPersonCamera.transform.localPosition;
+        KeySettingsManager.Instance.localPlayer = this;
+
+        playerName.OnValueChanged += (newValue, oldValue) => saveSystem.SavePlayerData(this);
+        experience.OnValueChanged += (newValue, oldValue) => saveSystem.SavePlayerData(this);
+        level.OnValueChanged += (newValue, oldValue) => saveSystem.SavePlayerData(this);
+    }
+
+
+    /// <summary>
+    /// 체력 변경 이벤트 핸들러
+    /// </summary>
+    private void HandleHealthChanged(float previous, float current)
+    {
+        Debug.Log($"Health changed: {previous} -> {current}");
+        if (current <= 0) Die();
+    }
+
+
+    /// <summary>
+    /// 데미지 처리 메서드
+    /// </summary>
+    public void TakeDamage(float amount, AudioClip hitSound)
+    {
+        if (IsDead) return;
+
+        currentHealth.Value -= amount;
+        UpdateHealthDisplay();
+
+        if (hitSound != null) audioSource.PlayOneShot(hitSound);
+    }
+
+
+    /// <summary>
+    /// 체력 관련 시각 효과 업데이트
+    /// </summary>
+    private void UpdateHealthDisplay()
+    {
+        StartCoroutine(CameraShake());
+        StartHitEffect();
+        UpdateHealthBar();
+    }
+
+    /// <summary>
+    /// 피격 효과 시작
+    /// </summary>
+    private void StartHitEffect()
+    {
+        if (activeHitEffect != null) StopCoroutine(activeHitEffect);
+        activeHitEffect = StartCoroutine(HitEffectCoroutine());
+    }
+
+    /// <summary>
+    /// 카메라 흔들림 효과 코루틴
+    /// </summary>
+    private IEnumerator CameraShake()
+    {
+        var elapsed = 0f;
+        while (elapsed < cameraShakeDuration)
+        {
+            elapsed += Time.deltaTime;
+            var offset = UnityEngine.Random.insideUnitSphere * cameraShakeMagnitude;
+            FirstPersonCamera.transform.localPosition = originalCameraPosition + offset;
+            yield return null;
+        }
+        FirstPersonCamera.transform.localPosition = originalCameraPosition;
+    }
+
+
+    /// <summary>
+    /// 화면 비네팅 효과 코루틴
+    /// </summary>
+    private IEnumerator HitEffectCoroutine()
+    {
+        const float peakIntensity = 0.6f;
+        const float attackDuration = 0.1f;
+        const float decayDuration = 1f;
+        const float holdTime = 2f;
+
+        yield return AdjustVignette(DefaultVignetteIntensity, peakIntensity, attackDuration);
+        yield return new WaitForSeconds(holdTime);
+        yield return AdjustVignette(peakIntensity, DefaultVignetteIntensity, decayDuration);
+    }
+
+
+    /// <summary>
+    /// 비네팅 효과 점진적 변경 코루틴
+    /// </summary>
+    private IEnumerator AdjustVignette(float start, float end, float duration)
+    {
+        var elapsed = 0f;
+        while (elapsed < duration && vignette != null)
+        {
+            elapsed += Time.deltaTime;
+            vignette.intensity.value = Mathf.Lerp(start, end, elapsed / duration);
+            yield return null;
+        }
+    }
+
+
+    /// <summary>
+    /// 체력바 업데이트
+    /// </summary>
+    private void UpdateHealthBar()
+    {
+        if (healthBar == null || maxHealth <= 0) return;
+        healthBar.fillAmount = Mathf.Clamp01(currentHealth.Value / maxHealth) * 0.5f;
+    }
+
+	#region Die
+	public void Die() => StartCoroutine(DieSequence());
+
+
+    /// <summary>
+    /// 사망 시퀀스 코루틴
+    /// </summary>
+    private IEnumerator DieSequence()
+    {
+        OnDieEffects?.Invoke();
+        OnDie?.Invoke();
+
+        if (IsOwner)
+        {
+			if (PlayersManager.Instance.allPlayersDead)
+			{        
+                uiAniManager.DieAnimation();
+            }
+			else
 			{
-				playerName.Value = value;
-				OnDataChanged?.Invoke();
-			}
-		}
-	}
-	public int Level
+                uiAniManager.AllDieAnimation();
+            }
+            SetDieScirpt(false);
+        }
+
+        yield return new WaitForSeconds(6f);
+        if (IsOwner)
+        {
+            SetAimMode();
+            OnDieLocal?.Invoke();            
+        }
+    }
+
+    private void SetDieScirpt(bool Value)
 	{
-		get => experience.Value; set
+		foreach (MonoBehaviour monoScirpt in dieEnableMonoBehaviorScripts)
 		{
-			if (experience.Value != value)
-			{
-				experience.Value = value;
-				OnDataChanged?.Invoke();
-			}
-		}
-	}
-	public int Experience
-	{
-		get => level.Value; set
-		{
-			if (level.Value != value)
-			{
-				level.Value = value;
-				OnDataChanged?.Invoke();
-			}
-		}
-	}
+            monoScirpt.enabled = Value;
+        }
 
-	public bool IsDead { get => currentHealth.Value <= 0;}
-	#endregion
-	
-
-	[Header("PlayerState")]
-	[SerializeField] private NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
-	[SerializeField] private NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
-	[SerializeField] private NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
-	[SerializeField] private float maxHealth = 100;
-	public NetworkVariable<float> currentHealth = new NetworkVariable<float>(value:100, writePerm: NetworkVariableWritePermission.Server);
+        foreach (NetworkBehaviour monoScirpt in dieEnableNetworkBehaviorScripts)
+        {
+            monoScirpt.enabled = Value;
+        }
 
 
-	//public bool IsDead => currentHealth.Value <= 0;
-	public string PlayerName => playerName.Value.ToString();
-	public float Health => currentHealth.Value; // 체력 값은 외부에서 수정 불가
+        characterController.enabled = Value;
+        bodyCollider.enabled = Value;
+    }
 
 
+    /// <summary>
+    /// 사망 시 특수 효과 적용
+    /// </summary>
+    private void DieEffect()
+    {
+        SetAimMode(true, dieTargetGameObject);
+        SetLayers(thirdPersonObject, Renderable);
+        SetLayers(firstPersonObject, DisRenderable);
 
-	public delegate void DieEventHandler();
-	public static event DieEventHandler OnDie;
-	public event DieEventHandler OnDieLocal;
-	public event DieEventHandler OnDieEffects;
-	public event DieEventHandler OnReviveLocal;
-
-	[SerializeField] private SaveSystem saveSystem;
-	[SerializeField] private AudioSource audioSource;
-
-	[Header("Player Layer Object")]
-	[SerializeField] private GameObject firstPersonObject;
-	[SerializeField] private GameObject thirdPersonObject;
-
-	[Header("DieTarget")]
-	[SerializeField] private GameObject DieTargetGameObject;
-	[SerializeField] private SpotlightControl spotlightControl;
-	public Image healthBar;
-
-	[Header("DieSequnceRequirements")]
-	public NetworkRagdollController netRagdollController;
-
-	//Hit Volume
-	private Volume volume;
-	private Vignette vignette;
-
-	private float defaultVignette = 0f;
-	private Vector3 originalCameraPosition;
-
-	private Coroutine hitEffectCoroutine; // 실행 중인 코루틴 저장
-	private float mag = 0.00015f;
-	private float dur = 0.3f;
-
-
-
-	public override void Start()
-	{
-		base.Start();
 		if (IsOwner)
-		{
-			StartCoroutine(InitSaveSystem());
-			ChangeLayer(firstPersonObject , 11);
-			ChangeLayer(thirdPersonObject, 12);
-		}
-		else
-		{
-			ChangeLayer(firstPersonObject, 12);
-			ChangeLayer(thirdPersonObject , 11);
-		}
+        {
+            spotlightControl.ToogleLight();
+        }
 
-		currentHealth.OnValueChanged += (oldValue, newValue) =>
-		{
-			Debug.Log($"체력 변경 감지: {oldValue} -> {newValue}");
-			if (newValue <= 0)
-			{
-				Die();
-			}
-		};
-
-		OnDieEffects += DieEffect;
-		//AudioManager.Instance.SetbuttonSorce(audioSource);
-	}
-
-	public override void FixedUpdate()
-	{
-		if(!IsDead)
-			base.FixedUpdate();
-	}
+        netRagdollController.DieServerRpc(transform.position);
+    }
 
 
-	private IEnumerator InitSaveSystem()
-	{
-		// PlaceableItemManager 오브젝트 찾기
-		while (saveSystem == null)
-		{			
-			if(saveSystem = FindAnyObjectByType<SaveSystem>())
-			{
-				if (IsOwner)
-				{
-					//LoadPlayerDataServerRPC();
-				}
-			}
-			yield return null;
-		}
-
-		volume = GameObject.Find("Sky and Fog Global Volume").GetComponent<Volume>();
-
-		if (volume.profile.TryGet(out vignette))
-		{
-			defaultVignette = vignette.intensity.value;
-		}
-
-		originalCameraPosition = FirstPersonCamera.transform.localPosition;
-		KeySettingsManager.Instance.localPlayer = this;
-		playerName.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
-		experience.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
-		level.OnValueChanged += (oldData, newdata) => saveSystem.SavePlayerData(this);
-	}
-
-
-
-	// 특정 오브젝트와 자식 오브젝트의 레이어를 변경하는 함수
-	public void ChangeLayer(GameObject parentObject, int newLayer)
-	{
-		// 부모 오브젝트의 레이어를 변경
-		parentObject.layer = newLayer;
-
-		// 모든 자식 오브젝트의 레이어를 변경
-		foreach (Transform child in parentObject.transform)
-		{
-			ChangeLayer(child.gameObject, newLayer);
-		}
-
-		Debug.Log($"LayerChange : {newLayer}");
-	}
-
-	public void TakeDamage(float amount , AudioClip hitSound)
-	{
-		if (IsDead) return;	
-
-		currentHealth.Value -= amount;
-		Debug.Log($"플레이어 체력: {currentHealth.Value}");
-
-		StartCoroutine(CameraShake(dur, mag)); // 흔들림 효과
-		if (hitEffectCoroutine != null)
-		{
-			StopCoroutine(hitEffectCoroutine); // 코루틴 실행중인거 종료
-		}
-
-		hitEffectCoroutine = StartCoroutine(HitEffectCoroutine()); // 화면 벌겋게
-
-		if (hitSound != null)
-		{
-			audioSource.PlayOneShot(hitSound);  // 몬스터의 타격음 재생
-		}
-
-		UpdateHealthBar();		
-	}
-
-	private void UpdateHealthBar()
-	{
-		if (healthBar == null)
-		{
-			healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
-		}
-		float healthRatio = currentHealth.Value / maxHealth; // 0 ~ 1
-		healthBar.fillAmount = healthRatio * 0.5f; // 0 ~ 0.5로 변환
-	}
-
-	private IEnumerator HitEffectCoroutine()
-	{
-		float duration_first = 0.1f; // 변화 속도
-		float duration_second = 1f; // 변화 속도
-		float holdTime = 2f; // 유지 시간
-		float targetVignette = 0.6f; // 피격 시 비네팅 증가
-
-		float elapsed = 0f;
-
-		// 피격 순간: 화면 밝아지고 비네팅 증가
-		while (elapsed < duration_first)
-		{
-			elapsed += Time.deltaTime;
-			vignette.intensity.value = Mathf.Lerp(defaultVignette, targetVignette, elapsed / duration_first);
-			yield return null;
-		}
-
-		// 잠시 유지
-		yield return new WaitForSeconds(holdTime);
-
-		elapsed = 0f;
-
-		// 원래대로 복귀
-		while (elapsed < duration_second)
-		{
-			elapsed += Time.deltaTime;		
-			vignette.intensity.value = Mathf.Lerp(targetVignette, defaultVignette, elapsed / duration_second);
-			yield return null;
-		}
-
-		// 값 원래대로 설정
-		vignette.intensity.value = defaultVignette;
-	}
-
-	private IEnumerator CameraShake(float duration, float magnitude)
-	{
-		float elapsed = 0f;
-
-		while (elapsed < duration)
-		{
-			elapsed += Time.deltaTime;
-			float x = UnityEngine.Random.Range(-1f, 1f) * magnitude;
-			float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
-			float z = UnityEngine.Random.Range(-1f, 1f) * magnitude;
-
-			FirstPersonCamera.transform.localPosition = originalCameraPosition + new Vector3(x, y, z);
-			yield return null;
-		}
-
-		FirstPersonCamera.transform.localPosition = originalCameraPosition; // 원래 위치로 복귀
-	}
-
-
-	// 다른곳에서 죽음 호출하도록 함.
-	public void Die()
-	{
-		StartCoroutine(DieCoroutine());
-	}
-
-
-	private void DieEffect()
-	{
-		SetAimMode(true, DieTargetGameObject);
-
-		Debug.Log("테스트");
-
-		ChangeLayer(thirdPersonObject, 11);
-		ChangeLayer(firstPersonObject, 12);
-	}
-
-	//죽기 코루틴 실행.
-	private IEnumerator DieCoroutine()
-	{
-		Debug.Log("플레이어 사망!");
-
-		// 죽고 연출 효과 재생하기.
-		OnDieEffects.Invoke();
-
-		yield return new WaitForSeconds(4f); // 끝나면 실행하도록 지연 추가하기,,,
-		netRagdollController.DieServerRpc(this.transform.position);
-
-		if (IsOwner)
-		{
-			//SetAimMode();
-
-			//firstPersonObject.gameObject.SetActive(false);
-			ChangeLayer(thirdPersonObject, 11);
-			ChangeLayer(firstPersonObject, 12);
-			//SetAimMode(true, DieTargetGameObject);
-			spotlightControl.ToogleLight();
-			//OnDieLocal.Invoke();
-			OnDie?.Invoke();
-		}
-	}
-
-
-	[ServerRpc(RequireOwnership =false)]
-	public void LoadPlayerDataServerRPC()
-	{
-		string path = Application.persistentDataPath + "/playerdata.json";
-		if (File.Exists(path))
-		{
-			string json = File.ReadAllText(path);
-
-			if (saveSystem.useEncryption)
-			{
-				json = saveSystem.EncryptDecrypt(json);
-			}
-			PlayerData playerData = JsonUtility.FromJson<PlayerData>(json);
-
-			this.playerName.Value = playerData.playerName;
-			this.experience.Value = playerData.experience;
-			this.level.Value = playerData.level;
-		}
-	}
-
-	public void SetPlayerDieView(bool value)
-	{/*
+    public void SetPlayerDieView(bool value)
+    {/*
 		firstPersonObject.gameObject.SetActive(!firstPersonObject.activeInHierarchy);
 		thirdPersonObject.gameObject.SetActive(!thirdPersonObject.activeInHierarchy);
 */
 
-		camTarget.gameObject.SetActive(value);
-		spotlightControl.firstPersonWeaponLight.gameObject.SetActive(value);
-		spotlightControl.thirdPersonWeaponLight.gameObject.SetActive(!value);
+        camTarget.gameObject.SetActive(value);
+        spotlightControl.firstPersonWeaponLight.gameObject.SetActive(value);
+        spotlightControl.thirdPersonWeaponLight.gameObject.SetActive(!value);
 
 
 
-		if (value)
-		{
-			ChangeLayer(thirdPersonObject, 12);
-			ChangeLayer(firstPersonObject, 11);
-		}
-		else
-		{
-			ChangeLayer(firstPersonObject, 12);
-			ChangeLayer(thirdPersonObject, 11);
-		}
-	}
+        if (value)
+        {
+            SetLayers(thirdPersonObject, DisRenderable);
+            SetLayers(firstPersonObject, Renderable);
+        }
+        else
+        {
+            SetLayers(firstPersonObject, DisRenderable );
+            SetLayers(thirdPersonObject, Renderable);
+        }
+    }
 
+    private void Revive()
+    {
+        healthBar.gameObject.SetActive(true);
+    }
+#endregion
+
+	/// <summary>
+	/// 플레이어 데이터 로드 서버 RPC
+	/// </summary>
+	[ServerRpc(RequireOwnership = false)]
+    public void LoadPlayerDataServerRPC()
+    {
+        var path = $"{Application.persistentDataPath}/playerdata.json";
+        if (!File.Exists(path)) return;
+
+        var json = saveSystem.useEncryption
+            ? saveSystem.EncryptDecrypt(File.ReadAllText(path))
+            : File.ReadAllText(path);
+
+        var data = JsonUtility.FromJson<PlayerData>(json);
+        playerName.Value = data.playerName;
+        experience.Value = data.experience;
+        level.Value = data.level;
+    }
+
+    private static void SetLayers(GameObject target, int layer)
+    {
+        target.layer = layer;
+        foreach (Transform child in target.transform)
+        {
+            SetLayers(child.gameObject, layer);
+        }
+    }
 }
 
-[System.Serializable]
+[Serializable]
 public struct PlayerData
 {
-	public string playerName;
-	public int experience;
-	public int level;
-	public WeaponInstance weaponInstance; // 플레이어의 무기 데이터
+    public string playerName;
+    public int experience;
+    public int level;
+    public WeaponInstance weaponInstance;
 }

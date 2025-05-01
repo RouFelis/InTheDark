@@ -16,14 +16,7 @@ public class GrabHelper : NetworkBehaviour
 
     private void Start()
     {
-        // Position Constraint 컴포넌트를 가져옵니다.
-   /*     positionConstraint = GetComponent<PositionConstraint>();
-        networkTransform = GetComponent<NetworkTransform>();
-        networkRigidbody = GetComponent<NetworkRigidbody>();
 
-
-        // 시작할 때는 Position Constraint를 비활성화합니다.
-        positionConstraint.constraintActive = false;*/
     }
 
     /*private void Update()
@@ -49,20 +42,6 @@ public class GrabHelper : NetworkBehaviour
 
         this.gameObject.transform.position = new Vector3(0,0,0);
         this.gameObject.transform.rotation = Quaternion.identity;
-
-/*        source.sourceTransform = playerInven.transform;
-        source.weight = 1;*/
-
-/*        if (positionConstraint == null)
-		{
-            positionConstraint = GetComponent<PositionConstraint>();
-        }
-
-        positionConstraint.AddSource(source);
-        positionConstraint.constraintActive = true; // Position Constraint 활성화
-
-        networkTransform.enabled = false;
-        networkRigidbody.enabled = false;*/
 
         this.tag = "Untagged";
         isPickedUp = true;

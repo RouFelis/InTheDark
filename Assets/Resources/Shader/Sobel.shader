@@ -188,7 +188,7 @@ Shader "Hidden/Shader/Sobel"
 
             ZWrite Off
             ZTest Always
-            Blend Off
+            Blend SrcAlpha OneMinusSrcAlpha
             Cull Off
 
             HLSLPROGRAM

@@ -1,15 +1,19 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
+using SaintsField.Playa;
+using SaintsField;
 
-public class WeaponSystem : NetworkBehaviour
+public class WeaponSystem : SaintsNetworkBehaviour
 {
     [Header("Weapon Data")]
+    [LayoutStart("Weapon Data", ELayout.FoldoutBox)]
     public WeaponData baseWeaponData; // ScriptableObject (무기의 기본값)
     public WeaponInstance weaponInstance; // 플레이어별 고유 무기 인스턴스
  
 
     [Header("Weapon Net Data")]
+    [LayoutStart("Weapon Net Data", ELayout.FoldoutBox)]
     public NetworkVariable<float> currentLevel = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
     public NetworkVariable<float> baseDamage = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
     public NetworkVariable<float> zoomDamage = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);

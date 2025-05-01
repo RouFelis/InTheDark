@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultSocket: {fileID: 8631021752119330125}
   tagManager:
-    keys: 0000000001000000
+    keys: 000000000100000002000000
     values:
     - Room
     - corridor
+    - Special
 --- !u!114 &8631021752119330125
 MonoBehaviour:
   m_ObjectHideFlags: 0

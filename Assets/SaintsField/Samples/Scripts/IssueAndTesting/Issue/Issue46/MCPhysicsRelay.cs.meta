@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 4bb1d5873a3e443bbceea066b1780e84
+timeCreated: 1720579186
+AssetOrigin:
+  serializedVersion: 1
+  productId: 269741
+  packageName: Saints Field
+  packageVersion: 4.5.2
+  assetPath: Assets/SaintsField/Samples/Scripts/IssueAndTesting/Issue/Issue46/MCPhysicsRelay.cs
+  uploadId: 749945

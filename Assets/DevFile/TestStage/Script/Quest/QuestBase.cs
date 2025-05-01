@@ -13,9 +13,10 @@ public class QuestBase : NetworkBehaviour
     public Transform spawnPoint;
 
     public NetworkVariable<bool> isCompleted = new NetworkVariable<bool>(false);
+    public NetworkVariable<int> failTime = new NetworkVariable<int>(value: 0);
+	[SerializeField] private int MaxFailTime = 3;
 
-
-	protected virtual void Start()
+    protected virtual void Start()
 	{
         isCompleted.OnValueChanged += QuestComplete;
         QuestManager.inst.QuestInsert(this);
@@ -23,15 +24,32 @@ public class QuestBase : NetworkBehaviour
 
 	public virtual void QuestComplete(bool oldValue , bool newValue)
 	{
-        SpawnClearRewardServerRpc();
+		if (newValue)
+        {
+            SpawnClearRewardServerRpc();
+        }
 
     }
 
     [ServerRpc(RequireOwnership = false)]
+    protected void QuestFailedServerRpc()
+	{
+        failTime.Value += 1;
+
+        if (MaxFailTime <= failTime.Value)
+		{
+            QuestManager.inst.QuestFailAction.Invoke();
+        }
+	}
+
+    [ServerRpc(RequireOwnership = false)]
     public void SpawnClearRewardServerRpc()
     {
-        GameObject spawned = Instantiate(rewardPrefab, spawnPoint.position, Quaternion.identity);
-        spawned.GetComponent<NetworkObject>().Spawn();
+		if (rewardPrefab != null)
+        {
+            GameObject spawned = Instantiate(rewardPrefab, spawnPoint.position, Quaternion.identity);
+            spawned.GetComponent<NetworkObject>().Spawn();
+		}
         ClearRewardClientRpc();
     }   
     

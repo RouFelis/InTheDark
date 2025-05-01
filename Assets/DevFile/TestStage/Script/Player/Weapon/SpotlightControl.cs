@@ -2,10 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using Unity.Netcode;
+using SaintsField.Playa;
+using SaintsField;
 
 public class SpotlightControl : WeaponSystem
 {
     [Header("Spotlight Settings")]
+    [LayoutStart("Spotlight Settings", ELayout.FoldoutBox)]
 
     public Light firstPersonWeaponLight, thirdPersonWeaponLight;
 
@@ -22,6 +25,7 @@ public class SpotlightControl : WeaponSystem
     public AnimationCurve recoveryCurve = AnimationCurve.EaseInOut(0, 0, 1, 1); // 추가된 부분: 색상 복귀 속도 커브
 
     [Header("Audio Settings")]
+    [LayoutStart("Audio Settings", ELayout.FoldoutBox)]
     public AudioSource audioSource;
     public AudioClip zoomLoopClip, flashSoundClip;
     public float minPitch = 0.8f, maxPitch = 1.5f;
@@ -30,6 +34,7 @@ public class SpotlightControl : WeaponSystem
     public static event FlashEventHandler OnFlash;
 
     [Header("Color Settings")] // 추가된 부분
+    [LayoutStart("Color Settings", ELayout.FoldoutBox)]
     public Color defaultColor = Color.white;
     public Color zoomedColor = Color.red;
     public Color flashColor = Color.yellow; 

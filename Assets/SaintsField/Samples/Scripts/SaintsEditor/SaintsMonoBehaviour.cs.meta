@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: dc02934cd992d0441a15f4ac27d4f38d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 269741
+  packageName: Saints Field
+  packageVersion: 4.5.2
+  assetPath: Assets/SaintsField/Samples/Scripts/SaintsEditor/SaintsMonoBehaviour.cs
+  uploadId: 749945

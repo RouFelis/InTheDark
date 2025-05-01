@@ -10,7 +10,6 @@ public class Quest2 : QuestBase
     public AudioClip startSound;
     public AudioClip endSound;
     [SerializeField] private AudioSource audioSource;
-    public NetworkVariable<bool> isUsed = new NetworkVariable<bool>(false);
 
     LineDrawer lineDrawer;
     [SerializeField]Checker startChecker;    
@@ -18,7 +17,11 @@ public class Quest2 : QuestBase
     [SerializeField] List<Checker> checkerList;
     [SerializeField] List<Checker> startCheckerList;
 
-	protected override void Start()
+    [Header("기타 옵션")]
+    public NetworkVariable<bool> isUsed = new NetworkVariable<bool>(false);
+
+
+    protected override void Start()
 	{
         base.Start();
 
@@ -89,6 +92,7 @@ public class Quest2 : QuestBase
             lineDrawer.MissDraw();
             WireSetNull();
             UsedBoolChangeServerRpc(false);
+            QuestFailedServerRpc();
         }
     }
 

@@ -47,11 +47,11 @@ public class KeySettingsManager : MonoBehaviour
     [SerializeField]private KeyCode sprintKey;
 
     [Header("Senstive")]
-    [SerializeField] private float keySenstive = 2f;
+    [SerializeField] private float mouseSenstive = 2f;
     [SerializeField] private float minSensitivity = 0.1f;
     [SerializeField] private float maxSensitivity = 10f;
     [SerializeField] private TMP_InputField sensitivityInput; // 감도 입력 필드 (TMP_InputField 사용)
-    [SerializeField] private Slider sensitivitySlider; // 슬라이더 연결
+    [SerializeField] public Slider sensitivitySlider; // 슬라이더 연결
     public Player localPlayer;
 
     private bool isPaused = false;
@@ -193,6 +193,7 @@ public class KeySettingsManager : MonoBehaviour
 
         MenuManager.Instance.CloseCurrentMenu();
         SaveKeySettings(); // 키 설정 저장
+        KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
         SetKey(); // 키 변경 적용
     }
 
@@ -330,16 +331,17 @@ public class KeySettingsManager : MonoBehaviour
         // 슬라이더 초기화
         if (sensitivitySlider != null)
         {
-            sensitivitySlider.value = keySenstive;
+            sensitivitySlider.value = mouseSenstive;
             sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
         }
 
         // 플레이어 컨트롤러 초기화
         if (localPlayer != null)
         {
-            localPlayer.SetMouseSensitivity(keySenstive);
+            localPlayer.SetMouseSensitivity(mouseSenstive);
         }
     }
+
     public void SetSensitivity(float sensitivity)
     {
         if (localPlayer != null)

@@ -6,10 +6,14 @@ using System.Collections;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
 using UnityEngine.UI;
+using UnityEngine.Animations;
+using SaintsField.Playa;
+using SaintsField;
 
-public class playerMoveController : NetworkBehaviour
+public class playerMoveController : SaintsNetworkBehaviour
 {
     [Header("Movement Settings")]
+    [LayoutStart("Movement Settings", ELayout.FoldoutBox)]
     [SerializeField] private float walkSpeed = 5.0f;
     [SerializeField] private float runSpeedMultiplier = 1.5f;
     [SerializeField] private float rotationSpeed = 2.0f;
@@ -18,13 +22,25 @@ public class playerMoveController : NetworkBehaviour
 
 
     [Header("Camera & Head Rotation")]
+    [LayoutStart("Camera & Head Rotation", ELayout.FoldoutBox)]
     [SerializeField] protected Camera firstPersonCamera;
     [SerializeField] protected Camera thirdPersonCamera;
     [SerializeField] protected Transform camTarget;
     [SerializeField] protected CinemachineVirtualCamera virtualCamera;
+    [SerializeField] protected GameObject ThirdpersonConstraintPrefab;
+    [SerializeField] protected Transform ThirdpersonCameraTransform;
+    [SerializeField] private Vector3 positionOffset = new Vector3(0, 0, 0); // 이동 감속 속도
+
 
     public Camera FirstPersonCamera { get => firstPersonCamera; }
-    public Camera ThirdPersonCamera { get => thirdPersonCamera; }
+    public Transform ThirdPersonTransform
+    { 
+        get { 
+            if(ThirdpersonCameraTransform == null)
+                SpawnWithConstraint();
+            return ThirdpersonCameraTransform; 
+        } 
+    }
     public CinemachineVirtualCamera VirtualCamera { get => virtualCamera; }
 
     [SerializeField] private float lookSpeed = 2.0f;
@@ -35,6 +51,7 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] protected Animator animator;
 
     [Header("Networking")]
+    [LayoutStart("Networking", ELayout.FoldoutBox)]
     [SerializeField] private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
@@ -42,39 +59,43 @@ public class playerMoveController : NetworkBehaviour
     [SerializeField] private NetworkVariable<float> currentStamina = new NetworkVariable<float>(value: 100, writePerm: NetworkVariableWritePermission.Owner);
 
     [Header("GroundChecker")]
+    [LayoutStart("GroundChecker", ELayout.FoldoutBox)]
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheckPosition;
 
     [Header("PlayerAim")]
+    [LayoutStart("PlayerAim", ELayout.FoldoutBox)]
     [SerializeField] private GameObject handAimTargetPrefab;
     [SerializeField] private Transform handAimTarget;
     [SerializeField] private NetworkVariable<ulong> handAimTargetulong = new NetworkVariable<ulong>();
     [SerializeField] private List<ConstraintConfig> playerConstraints = new List<ConstraintConfig>();
     [SerializeField] private float distanceFromCamera = 1f;
     [SerializeField] private float aimMaxDistance = 100f;
-
     [SerializeField] private RigBuilder rigBuilder_firstPerson;
     [SerializeField] private RigBuilder rigBuilder_thridPerson;
-
     [SerializeField] private float smoothTime = 0.1f; // 이동 감속 속도
 
 
-    public LayerMask layerMask;
 
+    [LayoutStart("MoveReference", ELayout.FoldoutBox)]
+    public LayerMask layerMask;
     private Vector3 aimTargetPosition; // 에임타겟 포지션
     private Vector3 velocity = Vector3.zero;
-    private CharacterController characterController;
-    private Vector3 moveDirection = Vector3.zero;
-    private float rotationX = 0.0f;
+    protected CharacterController characterController;
+    [SerializeField]protected CapsuleCollider bodyCollider;
+    [SerializeField] private Vector3 moveDirection = Vector3.zero;
+    [SerializeField] private float rotationX = 0.0f;
     private RaycastHit hit;
 
     [Header("Head Bobbing Settings")]
+    [LayoutStart("Head Bobbing Settings", ELayout.FoldoutBox)]
     public float bobbingSpeed = 14f; // 머리 흔들림 속도
     public float bobbingAmount = 0.05f; // 머리 흔들림 강도
     public float walkBobbingAmount = 0.05f; // 머리 흔들림 강도
     public float RunningBobbingAmount = 0.05f; // 머리 흔들림 강도
     public float midpoint = 0f; // 기본 카메라 높이 (플레이어 머리 위치)
+    [LayoutEnd]
 
     private float timer = 0f; // 시간 값을 추적
     private bool pause = false; //퍼즈
@@ -89,6 +110,7 @@ public class playerMoveController : NetworkBehaviour
 
     [Header("Stamina Settings")]
     [SerializeField] private float Stamina => currentStamina.Value;
+    [LayoutStart("Stamina Settings", ELayout.FoldoutBox)]
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float staminaDecreaseRate = 10f; // 초당 감소량
     [SerializeField] private float staminaRegenRate = 5f; // 초당 회복량
@@ -152,52 +174,85 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
-
- /*   [ServerRpc]
-    private void SpawnSetCameraServerRpc(ulong clientID)
+    void SpawnWithConstraint()
     {
-        if (!IsServer) return; // 서버에서만 실행
+        // 프리팹 인스턴스 생성
+        GameObject spawnedObj = Instantiate(ThirdpersonConstraintPrefab);
+        ThirdpersonCameraTransform = spawnedObj.transform;
 
-        camTarget = Instantiate(camTargetPrefab).transform;
-
-        NetworkObject camTargetNetworkObject = camTarget.GetComponent<NetworkObject>();
-
-        camTargetNetworkObject.SpawnWithOwnership(clientID);
-        camTargetNetworkObject.transform.SetParent(this.transform);
-
-        // 새로 들어온 클라이언트가 기존 카메라 정보를 받을 수 있도록 ClientRpc 호출
-        SyncCameraClientRpc(camTargetNetworkObject.NetworkObjectId);
-    }
-
-    [ClientRpc]
-    private void SyncCameraClientRpc(ulong camTargetId)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(camTargetId, out NetworkObject camTargetNetObj))
+        // ParentConstraint 컴포넌트 가져오기
+        ParentConstraint parentConstraint = spawnedObj.GetComponent<ParentConstraint>();
+        if (parentConstraint == null)
         {
-            camTarget = camTargetNetObj.transform;
-            *//*camTarget.transform.SetParent(firstPersonCamera.transform);
-            camTarget.transform.localPosition = Vector3.zero;
-            camTarget.transform.localRotation = Quaternion.identity;*//*
-
-
-            if (IsOwner)
-            {
-                virtualCamera.Follow = camTarget.transform;
-                firstPersonCamera.enabled = true;
-                camTarget.gameObject.SetActive(true);
-                virtualCamera.gameObject.SetActive(true);
-                thirdPersonCamera.gameObject.SetActive(false);
-            }
-            else
-            {
-                firstPersonCamera.enabled = false;
-                camTarget.gameObject.SetActive(false);
-                virtualCamera.gameObject.SetActive(false);
-                thirdPersonCamera.gameObject.SetActive(false);
-            }
+            Debug.LogError("ParentConstraint 컴포넌트를 찾을 수 없습니다.");
+            return;
         }
+
+        // 소스 만들기
+        ConstraintSource source = new ConstraintSource
+        {
+            sourceTransform = this.transform,
+            weight = 1f
+        };
+
+        // 소스 추가 (인덱스 저장해두기)
+        int sourceIndex = parentConstraint.AddSource(source);
+
+        // 오프셋 적용
+        parentConstraint.SetTranslationOffset(sourceIndex, positionOffset);
+
+        // 옵션: 유지 오프셋 false로 설정 (원하는 경우 true로 변경 가능)
+        parentConstraint.translationAtRest = Vector3.zero;
+        parentConstraint.rotationAtRest = Vector3.zero;
+        parentConstraint.constraintActive = true;
+        parentConstraint.locked = false; // 위치/회전 고정
     }
-*/
+
+    /*   [ServerRpc]
+       private void SpawnSetCameraServerRpc(ulong clientID)
+       {
+           if (!IsServer) return; // 서버에서만 실행
+
+           camTarget = Instantiate(camTargetPrefab).transform;
+
+           NetworkObject camTargetNetworkObject = camTarget.GetComponent<NetworkObject>();
+
+           camTargetNetworkObject.SpawnWithOwnership(clientID);
+           camTargetNetworkObject.transform.SetParent(this.transform);
+
+           // 새로 들어온 클라이언트가 기존 카메라 정보를 받을 수 있도록 ClientRpc 호출
+           SyncCameraClientRpc(camTargetNetworkObject.NetworkObjectId);
+       }
+
+       [ClientRpc]
+       private void SyncCameraClientRpc(ulong camTargetId)
+       {
+           if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(camTargetId, out NetworkObject camTargetNetObj))
+           {
+               camTarget = camTargetNetObj.transform;
+               *//*camTarget.transform.SetParent(firstPersonCamera.transform);
+               camTarget.transform.localPosition = Vector3.zero;
+               camTarget.transform.localRotation = Quaternion.identity;*//*
+
+
+               if (IsOwner)
+               {
+                   virtualCamera.Follow = camTarget.transform;
+                   firstPersonCamera.enabled = true;
+                   camTarget.gameObject.SetActive(true);
+                   virtualCamera.gameObject.SetActive(true);
+                   thirdPersonCamera.gameObject.SetActive(false);
+               }
+               else
+               {
+                   firstPersonCamera.enabled = false;
+                   camTarget.gameObject.SetActive(false);
+                   virtualCamera.gameObject.SetActive(false);
+                   thirdPersonCamera.gameObject.SetActive(false);
+               }
+           }
+       }
+   */
 
 
 
@@ -471,6 +526,7 @@ public class playerMoveController : NetworkBehaviour
                 virtualCamera.AddCinemachineComponent<CinemachineComposer>();
             }
             virtualCamera.LookAt = target.transform; // 카메라가 타겟을 바라보도록 설정
+            Debug.Log("에임 변경");
 
         }
         else
@@ -478,6 +534,7 @@ public class playerMoveController : NetworkBehaviour
             // Do Nothing 설정 (LookAt 무시)
             virtualCamera.DestroyCinemachineComponent<CinemachineComposer>();
             virtualCamera.LookAt = null; // 비우기
+            Debug.Log("에임 초기화");
         }
     }
 

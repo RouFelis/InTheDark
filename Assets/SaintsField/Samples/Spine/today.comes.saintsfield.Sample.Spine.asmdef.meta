@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d1d488c14bf853a47b8774b00ae88555
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 269741
+  packageName: Saints Field
+  packageVersion: 4.5.2
+  assetPath: Assets/SaintsField/Samples/Spine/today.comes.saintsfield.Sample.Spine.asmdef
+  uploadId: 749945

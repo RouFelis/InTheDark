@@ -260,7 +260,8 @@ MonoBehaviour:
         m_Version: 0
         m_BeforeTransparentCustomPostProcesses:
           m_InjectionPoint: 0
-          m_CustomPostProcessTypesAsString: []
+          m_CustomPostProcessTypesAsString:
+          - Sobel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         m_BeforeTAACustomPostProcesses:
           m_InjectionPoint: 3
           m_CustomPostProcessTypesAsString: []
@@ -268,7 +269,6 @@ MonoBehaviour:
           m_InjectionPoint: 1
           m_CustomPostProcessTypesAsString:
           - ToonShadingPP, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - Sobel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         m_AfterPostProcessBlursCustomPostProcesses:
           m_InjectionPoint: 4
           m_CustomPostProcessTypesAsString: []

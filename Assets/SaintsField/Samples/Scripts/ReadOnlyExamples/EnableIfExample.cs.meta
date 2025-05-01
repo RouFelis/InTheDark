@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 48ae80edbf0f4dc68a5ca2b62dc05081
+timeCreated: 1710325953
+AssetOrigin:
+  serializedVersion: 1
+  productId: 269741
+  packageName: Saints Field
+  packageVersion: 4.5.2
+  assetPath: Assets/SaintsField/Samples/Scripts/ReadOnlyExamples/EnableIfExample.cs
+  uploadId: 749945

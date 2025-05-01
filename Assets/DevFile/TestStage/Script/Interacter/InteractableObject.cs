@@ -17,6 +17,7 @@ public class InteractableObject : NetworkBehaviour
     bool hasInteracted = false; // 이미 오브젝트와 상호작용했는지 여부
     public string objectName;
     public LocalizedString localizedString;
+    public bool IsDragable = false;
 
     public virtual void Start()
     {

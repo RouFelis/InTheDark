@@ -348,10 +348,10 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0.6
+    m_Value: 2.38
   intensity:
     m_OverrideState: 1
-    m_Value: 0.7
+    m_Value: 0.722
   scatter:
     m_OverrideState: 0
     m_Value: 0.709
@@ -400,7 +400,7 @@ MonoBehaviour:
     m_Value: 3.9
   multiplier:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 1.5
   upperHemisphereLuxValue:
     m_OverrideState: 1
     m_Value: 0.54058415
@@ -748,7 +748,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c1be1b6c95cd2e41b27903b9270817f, type: 3}
   m_Name: Vignette
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   mode:
     m_OverrideState: 1
     m_Value: 0
@@ -831,7 +831,7 @@ MonoBehaviour:
     m_Value: {r: 0, g: 0, b: 0, a: 1}
   outlineThickness:
     m_OverrideState: 1
-    m_Value: 1.1
+    m_Value: 1.5
   depthMultiplier:
     m_OverrideState: 1
     m_Value: 1.48
@@ -965,7 +965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8615557f396f346a3aeb8df3454971, type: 3}
   m_Name: ToonShadingPP
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   _posterizeAmount:
     m_OverrideState: 1
     m_Value: 500

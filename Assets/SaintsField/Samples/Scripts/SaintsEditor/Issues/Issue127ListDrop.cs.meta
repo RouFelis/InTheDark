@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: a671af54d5015494b83edf5accd7bdec
+timeCreated: 1738077098
+AssetOrigin:
+  serializedVersion: 1
+  productId: 269741
+  packageName: Saints Field
+  packageVersion: 4.5.2
+  assetPath: Assets/SaintsField/Samples/Scripts/SaintsEditor/Issues/Issue127ListDrop.cs
+  uploadId: 749945

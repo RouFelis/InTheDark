@@ -592,7 +592,7 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 4.81017
+    m_Value: 5
   compensation:
     m_OverrideState: 1
     m_Value: 0.1
@@ -1084,13 +1084,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4d795e4bf4a5574cae5da76c93cc87d, type: 3}
   m_Name: PulsatingVignette_RLPRO
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   Amount:
     m_OverrideState: 1
-    m_Value: 2.1
+    m_Value: 0.4
   speed:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.001
 --- !u!114 &-635338128803255503
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1624,7 +1624,7 @@ MonoBehaviour:
   active: 0
   Amount:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   speed:
     m_OverrideState: 1
     m_Value: 0.59
@@ -2335,7 +2335,7 @@ MonoBehaviour:
     m_Value: 1
   distortion:
     m_OverrideState: 1
-    m_Value: 0.2
+    m_Value: 0.153
   distortion1:
     m_OverrideState: 1
     m_Value: 0
