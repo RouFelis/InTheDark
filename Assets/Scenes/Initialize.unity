@@ -239,8 +239,6 @@ MonoBehaviour:
   _stage:
   - Triggers:
     - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
-    - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
-    - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
   _prefabs:
   - {fileID: 808785113655335579, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
   - {fileID: 808785113655335579, guid: cb6c9a952d86fa349ac1f084ed08ac97, type: 3}
@@ -248,6 +246,7 @@ MonoBehaviour:
   - {fileID: 808785113655335579, guid: e989c7fad7b413e46800b60a33598e6b, type: 3}
   - {fileID: 808785113655335579, guid: ba75bd1aa7fd3fd4d94d6e092475c058, type: 3}
   - {fileID: 1433858302028618446, guid: 43cdb5ef002b2be4ba64d6a54dcec8be, type: 3}
+  - {fileID: 1433858302028618446, guid: 87c71c59920755a41943d0f1390f258e, type: 3}
   _agentHeight: 1
 --- !u!1 &697649707
 GameObject:
@@ -363,8 +362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57def7d5ba474e84093d8a22ae27e049, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _spawner: {fileID: 397843531}
 --- !u!1 &1570900749
 GameObject:
   m_ObjectHideFlags: 0

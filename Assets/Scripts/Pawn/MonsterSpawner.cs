@@ -98,6 +98,7 @@ namespace InTheDark.Prototypes
 
 				if (_isLocked.Value)
 				{
+					Debug.Log("jdhfjdsfjdhfj");
 
 					foreach (var enemyRef in _spawned)
 					{
@@ -121,8 +122,10 @@ namespace InTheDark.Prototypes
 				BuildIndex = buildIndex
 			};
 
-			SpawnEnemyServerRPC(enemyRef);
-			SpawnEnemyClientRPC(enemyRef, position, rotation);
+			//SpawnEnemyServerRPC(enemyRef);
+			//SpawnEnemyClientRPC(enemyRef, position, rotation);
+
+			SpawnEnemyServerRPC(enemyRef, position, rotation);
 		}
 
 		[Rpc(SendTo.Server)]
@@ -131,9 +134,18 @@ namespace InTheDark.Prototypes
 			_spawned.Add(enemyRef);
 		}
 
+		[Rpc(SendTo.Server)]
+		private void SpawnEnemyServerRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
+		{
+			_spawned.Add(enemyRef);
+			SpawnInternal(enemyRef, position, rotation);
+		}
+
 		[Rpc(SendTo.Everyone)]
 		private void SpawnEnemyClientRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
 		{
+			Debug.Log("ytyeuhvn"); ;
+
 			SpawnInternal(enemyRef, position, rotation);
 		}
 
@@ -189,6 +201,7 @@ namespace InTheDark.Prototypes
 			var agent = enemy.GetComponent<NavMeshAgent>();
 			var height = UnityEngine.Random.Range(0.1F, 1.0F);
 
+			Debug.LogError(_agentHeight + "dnfjdnfjdnjfndsjfndsjnk");
 
 			agent.height = _agentHeight;
 

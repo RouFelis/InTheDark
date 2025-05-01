@@ -35,12 +35,12 @@ namespace InTheDark.Prototypes
 
 				if (player.IsOwner)
 				{
-					Debug.Log("할당 중인디, 쭈인 맞아여!");
+					//Debug.Log("할당 중인디, 쭈인 맞아여!");
 					SpotlightControl.OnFlash += OnFlash;
 				}
 				else
 				{
-					Debug.Log("할당 중인디, 쭈인 아니에여...");
+					//Debug.Log("할당 중인디, 쭈인 아니에여...");
 				}
 			}
 		}
@@ -53,12 +53,12 @@ namespace InTheDark.Prototypes
 
 				if (player.IsOwner)
 				{
-					Debug.Log("할당 해제중인디, 쭈인 맞아여!");
+					//Debug.Log("할당 해제중인디, 쭈인 맞아여!");
 					SpotlightControl.OnFlash -= OnFlash;
 				}
 				else
 				{
-					Debug.Log("할당 해제중인디, 쭈인 아니에여...");
+					//Debug.Log("할당 해제중인디, 쭈인 아니에여...");
 				}
 			}
 		}

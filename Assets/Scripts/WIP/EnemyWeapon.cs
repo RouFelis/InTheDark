@@ -9,19 +9,19 @@ namespace InTheDark.Prototypes
 	public class EnemyWeapon : NetworkBehaviour
 	{
 		[SerializeField]
-		private float _damage;
+		protected float _damage;
 
 		[SerializeField]
-		private float _range;
+		protected float _range;
 
 		[SerializeField]
-		private NetworkVariable<float> _cooldown = new NetworkVariable<float>();
+		protected NetworkVariable<float> _cooldown = new NetworkVariable<float>();
 
 		[SerializeField]
-		private EnemyPrototypePawn _pawn;
+		protected EnemyPrototypePawn _pawn;
 
 		[SerializeField]
-		private Animator _animator;
+		protected Animator _animator;
 
 		public bool IsTargetNearby
 		{
@@ -63,11 +63,11 @@ namespace InTheDark.Prototypes
 				//value.TakeDamage(_damage.Value , attackSound);
 				//_animator?.SetTrigger("OnAttack");
 
-				await OnAttackWithAnimaiton(_pawn.Target);
+				await OnAttack(_pawn.Target);
 			}
 		}
 
-		private async UniTask OnAttackWithAnimaiton(IHealth target)
+		protected virtual async UniTask OnAttack(IHealth target)
 		{
 			using var source = new CancellationTokenSource();
 

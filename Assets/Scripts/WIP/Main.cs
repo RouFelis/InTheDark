@@ -25,46 +25,19 @@ namespace InTheDark.Prototypes
 {
 	public sealed class Main : MonoBehaviour
 	{
+		[SerializeField]
+		private NetworkVariable<int> _dsmd;
+
 		private void Awake()
 		{
 			OnAwake();
+
+			_dsmd = new();
 		}
 
 		private void OnAwake()
 		{
-			//// 1
-			//var observer = NC0566.GetBuilder<int>()
-			//	.OnCompleted(() => Debug.Log("Completed."))
-			//	.OnNext(x => Debug.Log(x))
-			//	.Build();
 
-			//var observable = new NC3066<int>();
-
-			//observable.Subscribe(observer);
-
-			//new List<int>()
-			//	.Select(x => x.ToString());
-
-			//// 2
-			//observable
-			//	.Where(x => x > 10)
-			//	.Select(x => x.ToString())
-			//	.Repeat(2)
-			//	.Distinct()
-			//	.Subscribe(NC0566.GetBuilder<string>()
-			//	.OnCompleted(() => Debug.Log("Completed."))
-			//	.OnNext(x => Debug.Log(x))
-			//	.Build());
-
-			//// 3
-			//observable
-			//	.Where(x => x > 10)
-			//	.Select(x => x.ToString())
-			//	.Repeat(2)
-			//	.Distinct()
-			//	.Subscribe(
-			//	(x) => Debug.Log(x),
-			//	() => Debug.Log("Completed."));
 		}
 	}
 }
