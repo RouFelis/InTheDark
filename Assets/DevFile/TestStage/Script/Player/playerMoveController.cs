@@ -67,7 +67,7 @@ public class playerMoveController : SaintsNetworkBehaviour
     [Header("PlayerAim")]
     [LayoutStart("PlayerAim", ELayout.FoldoutBox)]
     [SerializeField] private GameObject handAimTargetPrefab;
-    [SerializeField] private Transform handAimTarget;
+    [SerializeField] protected Transform handAimTarget;
     [SerializeField] private NetworkVariable<ulong> handAimTargetulong = new NetworkVariable<ulong>();
     [SerializeField] private List<ConstraintConfig> playerConstraints = new List<ConstraintConfig>();
     [SerializeField] private float distanceFromCamera = 1f;

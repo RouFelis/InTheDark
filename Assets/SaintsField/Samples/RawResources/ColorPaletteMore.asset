@@ -16,7 +16,7 @@ MonoBehaviour:
   colors:
   - color: {r: 0.48584697, g: 0.7169812, b: 0.32805273, a: 1}
     displayName: 
-  - color: {r: 0.32941177, g: 0.7176471, b: 0.5785706, a: 1}
+  - color: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 1}
     displayName: 
   - color: {r: 0.32941177, g: 0.54172593, b: 0.7176471, a: 1}
     displayName: 
