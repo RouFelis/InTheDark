@@ -2965,15 +2965,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 298024633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70e084a4eda9ccb44a4c79b2f1d2fd0e, type: 3}
+  m_Script: {fileID: 11500000, guid: 258940151ec08c9419100c6751adff06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   vfx: {fileID: 298024635}
   origin: {fileID: 298024636}
-  maxDistance: 10
+  maxDistance: 100
   hitLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  target: {fileID: 883064694}
 --- !u!43 &302016255
 Mesh:
   m_ObjectHideFlags: 0
@@ -44162,6 +44163,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 875985344}
   m_CullTransparentMesh: 1
+--- !u!1 &883064693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 883064694}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &883064694
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883064693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.990188, y: 198.24043, z: -42.950764}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &905436976
 GameObject:
   m_ObjectHideFlags: 0
@@ -44665,7 +44697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0012461967, y: -0.02408694}
+  m_AnchoredPosition: {x: 0.0012461967, y: -0.029979609}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1004104937
@@ -52462,7 +52494,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 53347799}
   m_HandleRect: {fileID: 53347798}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.9999958
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -53702,3 +53734,4 @@ SceneRoots:
   - {fileID: 1986917564}
   - {fileID: 298024636}
   - {fileID: 35682122}
+  - {fileID: 883064694}
