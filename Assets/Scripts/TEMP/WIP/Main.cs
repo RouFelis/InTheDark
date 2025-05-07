@@ -25,19 +25,14 @@ namespace InTheDark.Prototypes
 {
 	public sealed class Main : MonoBehaviour
 	{
-		[SerializeField]
-		private NetworkVariable<int> _dsmd;
-
 		private void Awake()
 		{
 			OnAwake();
-
-			_dsmd = new();
 		}
 
 		private void OnAwake()
 		{
-
+			
 		}
 	}
 }

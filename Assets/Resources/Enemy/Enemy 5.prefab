@@ -931,6 +931,10 @@ PrefabInstance:
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 3802392452450634905, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802392452450634905, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 4d6c306a63041384ea26d1264d42ff4f, type: 2}
