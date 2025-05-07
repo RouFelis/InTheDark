@@ -20,6 +20,7 @@ namespace InTheDark.Prototypes
 	// TODO: Enemy Manager 등으로 일부 기능 이동 및 분리, Spawner는 Factory의 역할
 	public class MonsterSpawner : NetworkBehaviour
 	{
+		// 뭔가 필요없는 데이터가 되버린 느낌
 		[Serializable]
 		private struct EnemyRef : IEquatable<EnemyRef>, INetworkSerializable
 		{
@@ -98,7 +99,7 @@ namespace InTheDark.Prototypes
 
 				if (_isLocked.Value)
 				{
-					Debug.Log("jdhfjdsfjdhfj");
+					//Debug.Log("jdhfjdsfjdhfj");
 
 					foreach (var enemyRef in _spawned)
 					{
@@ -128,11 +129,11 @@ namespace InTheDark.Prototypes
 			SpawnEnemyServerRPC(enemyRef, position, rotation);
 		}
 
-		[Rpc(SendTo.Server)]
-		private void SpawnEnemyServerRPC(EnemyRef enemyRef)
-		{
-			_spawned.Add(enemyRef);
-		}
+		//[Rpc(SendTo.Server)]
+		//private void SpawnEnemyServerRPC(EnemyRef enemyRef)
+		//{
+		//	_spawned.Add(enemyRef);
+		//}
 
 		[Rpc(SendTo.Server)]
 		private void SpawnEnemyServerRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
@@ -141,13 +142,13 @@ namespace InTheDark.Prototypes
 			SpawnInternal(enemyRef, position, rotation);
 		}
 
-		[Rpc(SendTo.Everyone)]
-		private void SpawnEnemyClientRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
-		{
-			Debug.Log("ytyeuhvn"); ;
+		//[Rpc(SendTo.Everyone)]
+		//private void SpawnEnemyClientRPC(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
+		//{
+		//	//Debug.Log("ytyeuhvn"); ;
 
-			SpawnInternal(enemyRef, position, rotation);
-		}
+		//	SpawnInternal(enemyRef, position, rotation);
+		//}
 
 		//private EnemyRef SpawnRandomRef()
 		//{
@@ -201,7 +202,7 @@ namespace InTheDark.Prototypes
 			var agent = enemy.GetComponent<NavMeshAgent>();
 			var height = UnityEngine.Random.Range(0.1F, 1.0F);
 
-			Debug.LogError(_agentHeight + "dnfjdnfjdnjfndsjfndsjnk");
+			//Debug.LogError(_agentHeight + "dnfjdnfjdnjfndsjfndsjnk");
 
 			agent.height = _agentHeight;
 
