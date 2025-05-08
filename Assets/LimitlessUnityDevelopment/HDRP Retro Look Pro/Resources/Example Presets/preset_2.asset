@@ -583,7 +583,7 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   meteringMode:
     m_OverrideState: 1
     m_Value: 1
@@ -598,7 +598,7 @@ MonoBehaviour:
     m_Value: 0.1
   limitMin:
     m_OverrideState: 1
-    m_Value: 0.84406793
+    m_Value: 3.5350323
   limitMax:
     m_OverrideState: 1
     m_Value: 15

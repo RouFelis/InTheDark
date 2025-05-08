@@ -67,46 +67,6 @@ namespace InTheDark.Prototypes
 		{
 			Tick();
 		}
-
-		//private void OnPlayerRightClickHeld(bool previousValue, bool newValue)
-		//{
-		//	if (previousValue != newValue)
-		//	{
-		//		SetWeaponData(newValue);
-		//	}
-		//}
-
-		//private void OnPlayerRecovering(bool previousValue, bool newValue)
-		//{
-		//	if (previousValue != newValue)
-		//	{
-		//		SetWeaponActive(newValue);
-		//	}
-		//}
-
-		//private void SetWeaponData(bool value)
-		//{
-		//	var intensity = value ? _weapon.zoomedIntensity : _weapon.defaultIntensity;
-
-		//	//Debug.LogError($"OnrightClicked {value}");
-
-		//	_source.Angle = _weapon.thirdPersonWeaponLight.spotAngle;
-		//	_source.Distance = Mathf.Sqrt(intensity);
-		//	_source.DamagePercent = value ? _weapon.zoomDamage.Value : _weapon.baseDamage.Value;
-		//}
-
-		//private void SetWeaponActive(bool value)
-		//{
-		//	//Debug.LogError($"OnRestore {value}");
-
-		//	if (value)
-		//	{
-		//		LightManager.Instance.OnWorkLightSpanwed(_source);
-		//	}
-		//	else
-		//	{
-		//		LightManager.Instance.OnWorkLightDespawned(_source);
-		//	}
-		//}
+	
 	} 
 }

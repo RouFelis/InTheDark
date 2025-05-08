@@ -45,6 +45,14 @@ public class Player : playerMoveController, IHealth, ICharacter
     [SerializeField] private List<NetworkBehaviour> dieEnableNetworkBehaviorScripts;
     [SerializeField] private UIAnimationManager uiAniManager;
 
+    [LayoutStart("Fall, Bump, Damaged", ELayout.FoldoutBox)]
+    public float fallThreshold = -10f; // 데미지를 입기 시작하는 y속도
+    public float damageMultiplier = 1f;
+    public float minImpactForce = 3f;
+
+    public LayerMask damageLayers;
+    private float lastYVelocity;
+    private bool isGrounded;
 
     private HashSet<string> destroySceneNames;
 
@@ -130,6 +138,9 @@ public class Player : playerMoveController, IHealth, ICharacter
     {
         if (!IsDead) base.FixedUpdate();
 
+        if (!IsOwner) return;
+
+        //lastYVelocity = rigidbody.linearVelocity.y;
         // 마우스 좌클릭 중일 때만 발사
         if (Input.GetMouseButton(0))
         {
@@ -141,21 +152,17 @@ public class Player : playerMoveController, IHealth, ICharacter
                 vfx.Play(); // VFX Graph 시작
             }
 
-            Vector3 direction = origin.forward;
             float distance = maxDistance;
 
             // 1. 거리 계산
             distance = Vector3.Distance(transform.position, handAimTarget.position);
-            Debug.Log("Distance: " + distance);
 
-            // 2. 방향 계산 (현재 오브젝트 → 대상 오브젝트)
-            direction = (handAimTarget.position - origin.transform.position);
             //direction = handAimTarget.position;
 
             Vector3 TargetPos = origin.transform.InverseTransformPoint(handAimTarget.position);
 
             // VFX Graph 파라미터 설정
-            vfx.SetVector3("Direction", direction.normalized);
+            vfx.SetVector3("Direction", TargetPos.normalized);
             vfx.SetFloat("Length", distance);
             vfx.SetVector3("TargetPos", TargetPos);
         }
@@ -484,6 +491,42 @@ public class Player : playerMoveController, IHealth, ICharacter
             SetLayers(child.gameObject, layer);
         }
     }
+
+/*	private void OnTriggerEnter(Collider other)
+	{
+        int otherLayer = other.gameObject.layer;
+
+        Debug.Log("Collided with: " + other.gameObject.name + ", Layer: " + LayerMask.LayerToName(otherLayer));
+
+        if (((1 << otherLayer) & damageLayers) != 0)
+        {
+            Rigidbody myRb = GetComponent<Rigidbody>();
+            Rigidbody otherRb = other.attachedRigidbody;
+
+            // If either Rigidbody is missing, bail out
+            if (myRb == null || otherRb == null)
+            {
+                Debug.LogWarning("Missing Rigidbody on one of the objects; cannot compute impact.");
+                return;
+            }
+
+            // Compute relative velocity manually
+            Vector3 relativeVel = myRb.linearVelocity - otherRb.linearVelocity;
+            float impactForce = relativeVel.magnitude;
+            Debug.Log($"Impact force: {impactForce}");
+
+            if (impactForce >= minImpactForce)
+            {
+                float damage = Mathf.Pow(impactForce, 2) * damageMultiplier;
+                Debug.Log($"Applying damage: {damage}");
+                TakeDamage(damage, null);
+            }
+        }
+
+        Debug.Log("테스트 22");
+    }
+*/
+
 }
 
 [Serializable]

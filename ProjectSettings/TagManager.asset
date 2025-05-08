@@ -22,7 +22,7 @@ TagManager:
   - Ground
   - RenderablePlayer
   - DisRenderablePlayer
-  - 
+  - NoTrigger
   - 
   - 
   - 

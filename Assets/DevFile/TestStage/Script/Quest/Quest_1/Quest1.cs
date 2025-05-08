@@ -104,6 +104,4 @@ public class Quest1 : QuestBase
         netObjToDespawn.Despawn(true);
     }
 
-
-
 }

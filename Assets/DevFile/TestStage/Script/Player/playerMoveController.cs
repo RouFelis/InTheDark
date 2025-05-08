@@ -349,8 +349,6 @@ public class playerMoveController : SaintsNetworkBehaviour
             UpdateSteaminaBar();
         }
 
-
-
         characterController.Move(moveDirection * Time.deltaTime);
 
         // 점프 처리

@@ -10977,6 +10977,7 @@ MonoBehaviour:
     inputField: {fileID: 585869190}
     name: UIVolume
   buttonAudioSource: {fileID: 1617512073}
+  fallDamged: {fileID: 0}
 --- !u!4 &1617512072
 Transform:
   m_ObjectHideFlags: 0

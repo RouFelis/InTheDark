@@ -24,6 +24,10 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private AudioSource buttonAudioSource;
 
+
+    [Header("오디오 클립")]
+    public AudioClip fallDamged;
+
     private void Awake()
     {
         // 싱글톤 패턴 적용
@@ -208,6 +212,9 @@ public class AudioManager : MonoBehaviour
     #endregion
 
 }
+
+
+
 [System.Serializable]
 public struct AudioUI
 {
