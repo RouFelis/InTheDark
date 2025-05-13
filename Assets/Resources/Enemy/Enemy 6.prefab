@@ -153,18 +153,32 @@ MonoBehaviour:
     TransitionIndex: 1
   - IsCrossFadeExit: 0
     Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: 1080829965
+    TransitionDuration: 0.25
+    TriggerNameHash: -1078415042
+    TransitionIndex: 2
+  - IsCrossFadeExit: 0
+    Layer: 0
     OriginatingState: 1748754976
     DestinationState: 1293411866
     TransitionDuration: 0.25
     TriggerNameHash: 94234928
     TransitionIndex: 1
   - IsCrossFadeExit: 0
-    Layer: 1
-    OriginatingState: 2081823275
+    Layer: 0
+    OriginatingState: 1748754976
     DestinationState: 1080829965
     TransitionDuration: 0.25
     TriggerNameHash: -1078415042
-    TransitionIndex: 0
+    TransitionIndex: 2
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1080829965
+    DestinationState: 1293411866
+    TransitionDuration: 0.25
+    TriggerNameHash: 94234928
+    TransitionIndex: 1
   m_Animator: {fileID: 4453662768508219377}
 --- !u!195 &-6386649275116767646
 NavMeshAgent:
@@ -241,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  InitializeCooldownValue: 10
+  InitializeCooldownValue: 5
   InitializeHealthValue: 100
   InitializeResistanceValue: 20
   InitializeMoveSpeed: 0
@@ -544,7 +558,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2695831898451501490}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d848e66d5c5a42f468d68c11f04b4677, type: 3}
   m_Name: 
@@ -586,16 +600,12 @@ MonoBehaviour:
     m_InternalValue: 0
   _pawn: {fileID: 1433858302028618446}
   _animator: {fileID: 4453662768508219377}
-  duration: 0.65
-  IsFiring: 0
+  Delay: 0.65
+  duration: 0.75
   maxDistance: 16
-  width: 0.5
-  laserColor: {r: 0, g: 1, b: 1, a: 1}
+  IsFiring: 0
   LaserVFX: {fileID: 7618524491936103534}
   LaserTransform: {fileID: 7493593654663402941}
-  TargetLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!143 &7614236128885380916
 CharacterController:
   m_ObjectHideFlags: 0
@@ -882,7 +892,7 @@ Transform:
   m_GameObject: {fileID: 7533569978787460589}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0.5}
+  m_LocalPosition: {x: 0, y: 1.75, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1054,7 +1064,11 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 20baf7d51f07c424f972f0bef56a4891, type: 2}
+      objectReference: {fileID: 9100000, guid: 7d13815bb0d75a14797dec8bccf78063, type: 2}
+    - target: {fileID: 5866666021909216657, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
+      propertyPath: m_WarningMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c9f3eb92d19b25e49a79bc0736c53a26, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
