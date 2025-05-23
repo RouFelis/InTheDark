@@ -15,6 +15,9 @@ namespace InTheDark.Prototypes
 		protected float _range;
 
 		[SerializeField]
+		protected float _delay = 0.9F;
+
+		[SerializeField]
 		protected NetworkVariable<float> _cooldown = new NetworkVariable<float>();
 
 		[SerializeField]
@@ -79,7 +82,7 @@ namespace InTheDark.Prototypes
 
 			//_animator?.SetTrigger(ATTACK_TRIGGER);
 
-			await UniTask.Delay(TimeSpan.FromSeconds(0.9F));
+			await UniTask.Delay(TimeSpan.FromSeconds(_delay));
 
 			if (IsTargetNearby)
 			{

@@ -568,13 +568,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _duration: 4
+  _duration: 6
   _initialCooldown: 15
   _time:
     m_InternalValue: 0
   _cooldown:
     m_InternalValue: 0
-  _magnification: 6
+  _magnification: 1
   _speedCurve:
     serializedVersion: 2
     m_Curve:
@@ -589,7 +589,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 1
+      value: 4
       inSlope: 0
       outSlope: 0
       tangentMode: 0

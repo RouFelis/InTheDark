@@ -22,7 +22,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public float InitializeCooldownValue;
 	public int InitializeHealthValue;
-	[Obsolete] public float InitializeResistanceValue;
+	//[Obsolete] public float InitializeResistanceValue;
 	public float InitializeMoveSpeed;
 
 	//추가. 24 2 14
@@ -43,8 +43,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	[SerializeField]
 	private NetworkVariable<bool> _isDead = new NetworkVariable<bool>(false);
 
-	[SerializeField]
-	private NetworkVariable<bool> _isActive = new NetworkVariable<bool>(true);
+	//[SerializeField]
+	//private NetworkVariable<bool> _isActive = new NetworkVariable<bool>(true);
 
 	[SerializeField]
 	private NetworkVariable<float> _health = new NetworkVariable<float>();
@@ -53,14 +53,14 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	private NetworkVariable<float> _maxHealth = new NetworkVariable<float>();
 
 	// Health로 기능 이전 예정
-	[SerializeField, Obsolete]
-	private NetworkVariable<float> _resistance = new NetworkVariable<float>();
+	//[SerializeField, Obsolete]
+	//private NetworkVariable<float> _resistance = new NetworkVariable<float>();
 
-	[SerializeField]
-	private NetworkVariable<int> _damage = new NetworkVariable<int>();
+	//[SerializeField]
+	//private NetworkVariable<int> _damage = new NetworkVariable<int>();
 
-	[SerializeField]
-	private NetworkVariable<float> _cooldown = new NetworkVariable<float>();
+	//[SerializeField]
+	//private NetworkVariable<float> _cooldown = new NetworkVariable<float>();
 
 	[SerializeField]
 	private NetworkVariable<FixedString128Bytes> _state = new(DEFAULT_STATE);
@@ -91,7 +91,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	private NetworkVariable<NetworkBehaviourReference> _target = new NetworkVariable<NetworkBehaviourReference>();
 
-	private CancellationTokenSource _onAttack;
+	//private CancellationTokenSource _onAttack;
 
 	//private List<LightSource> _sighted = new List<LightSource>();
 
@@ -108,18 +108,18 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
-	public bool IsActive
-	{
-		get
-		{
-			return _isActive.Value;
-		}
+	//public bool IsActive
+	//{
+	//	get
+	//	{
+	//		return _isActive.Value;
+	//	}
 
-		set
-		{
-			_isActive.Value = value;
-		}
-	}
+	//	set
+	//	{
+	//		_isActive.Value = value;
+	//	}
+	//}
 
 	public float Health 
 	{
@@ -128,27 +128,27 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		set => _health.Value = value;
 	}
 
-	[Obsolete("InitializeHealthValue 값을 사용!")]
-	public float MaxHealth
-	{
-		get => _maxHealth.Value;
+	//[Obsolete("InitializeHealthValue 값을 사용!")]
+	//public float MaxHealth
+	//{
+	//	get => _maxHealth.Value;
 
-		set => _maxHealth.Value = value;
-	}
+	//	set => _maxHealth.Value = value;
+	//}
 
-	[Obsolete]
-	public float Resistance
-	{
-		get
-		{
-			return _resistance.Value;
-		}
+	//[Obsolete]
+	//public float Resistance
+	//{
+	//	get
+	//	{
+	//		return _resistance.Value;
+	//	}
 
-		set
-		{
-			_resistance.Value = value;
-		}
-	}
+	//	set
+	//	{
+	//		_resistance.Value = value;
+	//	}
+	//}
 
 	public string State
 	{
@@ -216,7 +216,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		//base.OnNetworkSpawn();
 
 		_isDead.OnValueChanged += OnIsDeadChanged;
-		_resistance.OnValueChanged += OnResistanceChanged;
+		//_resistance.OnValueChanged += OnResistanceChanged;
 
 		//UpdateManager.OnUpdate += OnUpdate;
 
@@ -249,7 +249,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		//base.OnNetworkDespawn();
 
 		_isDead.OnValueChanged -= OnIsDeadChanged;
-		_resistance.OnValueChanged -= OnResistanceChanged;
+		//_resistance.OnValueChanged -= OnResistanceChanged;
 
 		//UpdateManager.OnUpdate -= OnUpdate;
 
@@ -307,35 +307,9 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 		if (!_isDead.Value && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
 		{
-			//Dead();
 			Die();
 		}
 	}
-
-	//public void OnLightInsighted()
-	//{
-	//	//var current = _sighted[0];
-
-	//	//if (_sighted.Count > 1)
-	//	//{
-	//	//	for (var i = 1; i < _sighted.Count; i++)
-	//	//	{
-	//	//		var source = _sighted[i];
-	//	//		var direction = source.transform.position - transform.position;
-	//	//		var isOccultation = Physics.Raycast(transform.position, direction, out var hit, _distance);
-	//	//		var isSight = Vector3.Range(direction, transform.forward) < _angle;
-
-	//	//		if (hit.collider == source && isOccultation && isSight && current < source)
-	//	//		{
-	//	//			current = source;
-	//	//		}
-	//	//	}
-	//	//}
-
-	//	//_resistance.Value -= Time.deltaTime * current.DamagePercent;
-
-	//	//_sighted.Clear();
-	//}
 
 	public void OnTargetDie()
 	{
@@ -349,14 +323,6 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
-	// 피격음은 여기다 추가하면 되긴 한데... 흠...
-	// 정확히는 여기 말고... 트리거 안에다가...
-	public void OnLightInsighted(LightSource light)
-	{
-		//_sighted.Add(light);
-		//_lightInsightedTrigger.OnUpdate(this, light);
-	}
-
 	public void OnLightInsighted(SpotLight light)
 	{
 		//_sighted.Add(light);
@@ -367,7 +333,10 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public void DamagedEffect()
 	{
 		//float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / _maxHealth.Value)); // 0~1 값으로 제한
-		float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / InitializeResistanceValue)); // 0~1 값으로 제한
+		//float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / InitializeResistanceValue)); // 0~1 값으로 제한
+		//float healthRatio = Mathf.Clamp01(1 - (_health.Value / InitializeHealthValue)); // 0~1 값으로 제한
+
+		float healthRatio = Mathf.InverseLerp(InitializeHealthValue, 0.0F, _health.Value); // 0~1 값으로 제한
 
 		//Debug.Log($"Damaged : {_resistance.Value}");
 		//Debug.Log($"healthRatio : {healthRatio}");
@@ -416,83 +385,27 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public void TakeDamage(float amount , AudioClip hitSound)
 	{
-		var oldValue = _resistance.Value;
+		var oldValue = _health.Value;
 		var newValue = Mathf.Max(oldValue - amount, 0.0F);
 
 		if (oldValue != newValue)
 		{
-			_resistance.Value = newValue;
+			_health.Value = newValue;
 
 			// 여기다 피격음 넣으면 되는데 일단 넣음
 			_audioSource.PlayOneShot(hitSound);
 		}
 	}
 
-	//public void Attack(ICharacter value)
-	//{
-	//	throw new NotImplementedException();
-	//}
-
-	//public void AttackPrototype(NetworkPawn value)
-	//{
-	//	// 대충 공격했다고 이벤트 알림^^
-	//}
-
-	// 갸아아악
-	public void AttackPrototype(IHealth target)
-	{
-		if (_cooldown.Value < 0.0F || Mathf.Approximately(_cooldown.Value, 0.0F))
-		{
-			_cooldown.Value = InitializeCooldownValue;
-
-			//value.TakeDamage(_damage.Value , attackSound);
-			//_animator?.SetTrigger("OnAttack");
-
-			OnAttackWithAnimaiton(target).Forget();
-		}
-	}
-
-	// 아 근데 이거 생각해보면 근접 공격에만 쓸수 있는 코드인데
-	private async UniTaskVoid OnAttackWithAnimaiton(IHealth target)
-	{
-		using var source = new CancellationTokenSource();
-
-		if (_animator)
-		{
-			_animator.SetTrigger(ATTACK_TRIGGER);
-			_onAttack = source;
-		}
-
-		//_animator?.SetTrigger(ATTACK_TRIGGER);
-
-		await UniTask.Delay(TimeSpan.FromSeconds(0.9F), false, PlayerLoopTiming.Update, source.Token, false);
-
-		target.TakeDamage(_damage.Value, attackSound);
-		//Debug.Log("HIT!!!");
-
-		_onAttack = default;
-	}
-
-	//public void Dead()
-	//{
-	//	//_isDead.Value = true;
-
-	//	//NetworkObject.Despawn();
-
-	//	//Destroy(gameObject);
-
-	//	//_deathTrigger.OnUpdate(this);
-	//}
-
 	public void Die()
 	{
 		StopMove();
 
-		if (_onAttack != null && !_onAttack.IsCancellationRequested)
-		{
-			_onAttack?.Cancel();
-			_onAttack?.Dispose();
-		}
+		//if (_onAttack != null && !_onAttack.IsCancellationRequested)
+		//{
+		//	_onAttack?.Cancel();
+		//	_onAttack?.Dispose();
+		//}
 
 		//_deathTrigger.OnUpdate(this);
 
