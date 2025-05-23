@@ -112,10 +112,10 @@ MonoBehaviour:
     m_Value: 64
   m_VolumetricFogBudget:
     m_OverrideState: 0
-    m_Value: 0.5
+    m_Value: 0.33
   m_ResolutionDepthRatio:
     m_OverrideState: 0
-    m_Value: 0.5
+    m_Value: 0.666
   directionalLightsOnly:
     m_OverrideState: 0
     m_Value: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d08ce26990eb1a4a9177b860541e702, type: 3}
   m_Name: Exposure
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   mode:
     m_OverrideState: 1
     m_Value: 0
@@ -168,7 +168,7 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 15
+    m_Value: 10.777777
   compensation:
     m_OverrideState: 1
     m_Value: 9
@@ -376,6 +376,52 @@ MonoBehaviour:
   m_HighQualityFiltering:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &-4333545222144138846
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aec9469ec3070046b632052b10a89a8, type: 3}
+  m_Name: LowRes_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.244
+  downscale:
+    m_OverrideState: 1
+    m_Value: 0.263
+  referenceWidth: 1920
+  mask:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-4219785702637165122
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d795e4bf4a5574cae5da76c93cc87d, type: 3}
+  m_Name: PulsatingVignette_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  Amount:
+    m_OverrideState: 1
+    m_Value: 0.4
+  speed:
+    m_OverrideState: 1
+    m_Value: 0.001
 --- !u!114 &-2341740892264699086
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -646,6 +692,47 @@ MonoBehaviour:
   planetCenterPosition:
     m_OverrideState: 0
     m_Value: {x: 0, y: -6378100, z: 0}
+--- !u!114 &-1143297975336896362
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90ec1528d7d6db145a072f2bef835b66, type: 3}
+  m_Name: ColormapPalette_RLPRO
+  m_EditorClassIdentifier: 
+  active: 1
+  Opacity:
+    m_OverrideState: 1
+    m_Value: 0.465
+  pixelSize:
+    m_OverrideState: 1
+    m_Value: 4
+  dither:
+    m_OverrideState: 1
+    m_Value: 0
+  presetsList:
+    m_OverrideState: 1
+    m_Value: {fileID: 11400000, guid: dd7382c28c09da7428be888044bba323, type: 2}
+  presetIndex:
+    m_OverrideState: 1
+    m_Value: 1
+  bluenoise:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 3f2fd211b66c6450a887c4136e6f0b88, type: 3}
+    dimension: 1
+  mask:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+    dimension: 1
+  maskChannel:
+    m_OverrideState: 1
+    m_Value: 0
+  tempPresetIndex: 0
+  referenceWidth: 1920
 --- !u!114 &-963701063234166803
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -661,7 +748,7 @@ MonoBehaviour:
   active: 1
   skyType:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   cloudType:
     m_OverrideState: 1
     m_Value: 0
@@ -736,6 +823,9 @@ MonoBehaviour:
   - {fileID: 5972430389968117337}
   - {fileID: -8611810905597652686}
   - {fileID: -5059218968807000778}
+  - {fileID: -1143297975336896362}
+  - {fileID: -4333545222144138846}
+  - {fileID: -4219785702637165122}
 --- !u!114 &380944318542684308
 MonoBehaviour:
   m_ObjectHideFlags: 3

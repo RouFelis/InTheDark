@@ -44,15 +44,23 @@ public class Player : playerMoveController, IHealth, ICharacter
     [SerializeField] private List<MonoBehaviour> dieEnableMonoBehaviorScripts;
     [SerializeField] private List<NetworkBehaviour> dieEnableNetworkBehaviorScripts;
     [SerializeField] private UIAnimationManager uiAniManager;
+    [SerializeField] private AnimationRelay animationRelay;
 
-    [LayoutStart("Fall, Bump, Damaged", ELayout.FoldoutBox)]
-    public float fallThreshold = -10f; // 데미지를 입기 시작하는 y속도
-    public float damageMultiplier = 1f;
-    public float minImpactForce = 3f;
 
-    public LayerMask damageLayers;
-    private float lastYVelocity;
-    private bool isGrounded;
+    [LayoutStart("FallDamage", ELayout.FoldoutBox)]
+    public float fallThreshold = 5f;       // 데미지 발생 최소 낙하 거리
+    public float damageMultiplier = 10f;   // 거리당 데미지 배율
+    public float groundCheckDistance = 0.2f;
+
+    public float collisionSpeedThreshold = 8f; //이 속도 이상으로 오브젝트에 충돌하면 데미지 적용 (m/s)
+    public float collisionDamageMultiplier = 5f; // 충돌 속도 초과분당 데미지 계수
+
+    // 상태 추적
+    private bool wasGrounded = true;
+    private bool isFalling = false;
+    private float peakY;
+
+
 
     private HashSet<string> destroySceneNames;
 
@@ -69,14 +77,6 @@ public class Player : playerMoveController, IHealth, ICharacter
     public event Action OnReviveLocal;
 	public static event Action OnDie;
 
-
-
-    public VisualEffect vfx;          // VFX Graph 컴포넌트
-    public Transform origin;          // 레이저 시작 지점
-    public float maxDistance = 100f;  // 레이저 최대 거리
-    public LayerMask hitLayers;       // 충돌 감지 레이어
-
-    private bool isFiring = false;
 
     public string Name
     {
@@ -134,54 +134,86 @@ public class Player : playerMoveController, IHealth, ICharacter
         rigidbody.isKinematic = true;
     }
 
-    public override void FixedUpdate()
-    {
-        if (!IsDead) base.FixedUpdate();
+	public override void FixedUpdate()
+	{
+		if (!IsDead) base.FixedUpdate();
 
-        if (!IsOwner) return;
+		if (!IsOwner) return;
 
-        //lastYVelocity = rigidbody.linearVelocity.y;
-        // 마우스 좌클릭 중일 때만 발사
-        if (Input.GetMouseButton(0))
-        {
-            if (!isFiring)
-            {
-                isFiring = true;
-                vfx.Reinit();
-                vfx.SetBool("isFiring", isFiring);
-                vfx.Play(); // VFX Graph 시작
-            }
-
-            float distance = maxDistance;
-
-            // 1. 거리 계산
-            distance = Vector3.Distance(transform.position, handAimTarget.position);
-
-            //direction = handAimTarget.position;
-
-            Vector3 TargetPos = origin.transform.InverseTransformPoint(handAimTarget.position);
-
-            // VFX Graph 파라미터 설정
-            vfx.SetVector3("Direction", TargetPos.normalized);
-            vfx.SetFloat("Length", distance);
-            vfx.SetVector3("TargetPos", TargetPos);
+		if (Input.GetKeyDown(KeyCode.Mouse0))
+		{
+            firstpersonAnimator.SetTrigger("AttackTrigger");
+            thirdpersonAnimator.SetTrigger("AttackTrigger");
+            Debug.Log("테스트");
+            //animationRelay.OnAttackHit();
         }
-        else
-        {
-            if (isFiring)
-            {
-                isFiring = false;
-                vfx.SetBool("isFiring", isFiring);
-                vfx.Stop(); // VFX Graph 정지
-            }
-        }
+
+        FallDamage();
     }
 
 
-    /// <summary>
-    /// 플레이어 레이어 초기 설정
-    /// </summary>
-    private void InitializePlayerLayers()
+	#region 부딛힐 떄 데미지 추가해봄.
+	private void FallDamage()
+    {
+        // 1) 그라운드 판정 (CharacterController.isGrounded 우선)
+        bool grounded = IsGrounded();
+
+        // 2) “지면 → 공중” 순간: 최고 지점 저장
+        if (wasGrounded && !grounded)
+        {
+            peakY = transform.position.y;
+        }
+
+        // 3) 공중에서 아래로 향하는 순간에만 하강 플래그 켜기
+        if (!grounded && !isFalling && characterController.velocity.y < -0.1f)
+        {
+            isFalling = true;
+        }
+
+        // 4) “공중 → 지면” 순간: 실제 하강했을 때만 데미지 계산
+        if (grounded && !wasGrounded && isFalling)
+        {
+            isFalling = false;
+
+            float fallDistance = peakY - transform.position.y;
+            float effective = Mathf.Max(0f, fallDistance - fallThreshold);
+
+            if (effective > 0f)
+            {
+                float dmg = effective * damageMultiplier;
+                TakeDamage(dmg, null);
+            }
+        }
+
+        wasGrounded = grounded;
+    }
+
+
+    // CharacterController 충돌 이벤트 핸들러
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        // 지면(ground)과 부딪힌 것은 제외하려면, 노멀 벡터로 필터링
+        // hit.normal.y > 0.5f 이면 거의 바닥(또는 완만한 경사)이므로 무시
+        if (hit.normal.y > 0.5f) return;
+
+        // 현재 속도 크기 (magnitude) 확인
+        float speed = characterController.velocity.magnitude;
+
+        if (speed >= collisionSpeedThreshold)
+        {
+            float excess = speed - collisionSpeedThreshold;
+            float dmg = excess * collisionDamageMultiplier;
+            TakeDamage(dmg, null);
+        }
+    }
+
+	#endregion
+
+
+	/// <summary>
+	/// 플레이어 레이어 초기 설정
+	/// </summary>
+	private void InitializePlayerLayers()
     {
         if (IsOwner)
         {
@@ -491,41 +523,6 @@ public class Player : playerMoveController, IHealth, ICharacter
             SetLayers(child.gameObject, layer);
         }
     }
-
-/*	private void OnTriggerEnter(Collider other)
-	{
-        int otherLayer = other.gameObject.layer;
-
-        Debug.Log("Collided with: " + other.gameObject.name + ", Layer: " + LayerMask.LayerToName(otherLayer));
-
-        if (((1 << otherLayer) & damageLayers) != 0)
-        {
-            Rigidbody myRb = GetComponent<Rigidbody>();
-            Rigidbody otherRb = other.attachedRigidbody;
-
-            // If either Rigidbody is missing, bail out
-            if (myRb == null || otherRb == null)
-            {
-                Debug.LogWarning("Missing Rigidbody on one of the objects; cannot compute impact.");
-                return;
-            }
-
-            // Compute relative velocity manually
-            Vector3 relativeVel = myRb.linearVelocity - otherRb.linearVelocity;
-            float impactForce = relativeVel.magnitude;
-            Debug.Log($"Impact force: {impactForce}");
-
-            if (impactForce >= minImpactForce)
-            {
-                float damage = Mathf.Pow(impactForce, 2) * damageMultiplier;
-                Debug.Log($"Applying damage: {damage}");
-                TakeDamage(damage, null);
-            }
-        }
-
-        Debug.Log("테스트 22");
-    }
-*/
 
 }
 

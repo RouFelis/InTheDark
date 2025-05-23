@@ -12,7 +12,7 @@ public class KeySettingsManager : MonoBehaviour
 {
     public static KeySettingsManager Instance { get; private set; }
 
-    public enum KeyName { Interact, Drop, UseItem, ScanKey, Light };
+    public enum KeyName { Interact, Drop, UseItem, ScanKey, Light , Sprint, Shop };
 
     [System.Serializable]
     public class KeySettingField
@@ -45,6 +45,7 @@ public class KeySettingsManager : MonoBehaviour
     [SerializeField]private KeyCode scanKey;
     [SerializeField]private KeyCode lightKey;
     [SerializeField]private KeyCode sprintKey;
+    [SerializeField]private KeyCode shopKey;
 
     [Header("Senstive")]
     [SerializeField] private float mouseSenstive = 2f;
@@ -126,6 +127,19 @@ public class KeySettingsManager : MonoBehaviour
             }
         }
     }
+    public KeyCode ShopKey
+    {
+        get { return shopKey; }
+        set
+        {
+            if (shopKey != value)
+            {
+                shopKey = value;
+                KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
+            }
+        }
+    }
+
     #endregion
 
     private void Start()
@@ -171,8 +185,9 @@ public class KeySettingsManager : MonoBehaviour
         DropKey = GetKey("Drop");
         UseItemKey = GetKey("UseItem");
         ScanKey = GetKey("ScanKey");
-        lightKey = GetKey("Light");
-        sprintKey = GetKey("Sprint");
+        LightKey = GetKey("Light");
+        SprintKey = GetKey("Sprint");
+        ShopKey = GetKey("Shop");
         Debug.Log("KeySetting2 를 찾았습니다.");
     }
 
@@ -209,24 +224,66 @@ public class KeySettingsManager : MonoBehaviour
 
     private void LoadKeySettings()
     {
+        /*        if (File.Exists(settingsFilePath))
+                {
+                    string json = File.ReadAllText(settingsFilePath); // 파일에서 JSON 읽기
+                    KeySettingList keySettingList = JsonUtility.FromJson<KeySettingList>(json); // JSON을 객체로 변환
+                    keySettings = new Dictionary<string, KeyCode>(); // 딕셔너리 초기화
+                    foreach (var keySetting in keySettingList.keySettings)
+                    {
+                        keySettings[keySetting.name] = keySetting.key; // 키 설정 로드
+                    }
+                }
+                else
+                {
+                    // 기본 키 설정 추가
+                    keySettings["Interact"] = KeyCode.F;
+                    keySettings["Drop"] = KeyCode.Q;
+                    keySettings["UseItem"] = KeyCode.E;
+                    keySettings["ScanKey"] = KeyCode.T;
+                    keySettings["Light"] = KeyCode.R;
+                    keySettings["Sprint"] = KeyCode.LeftShift;
+                    keySettings["Shop"] = KeyCode.Tab;
+                }*/
+
+        // 기본 키 설정을 미리 정의
+        Dictionary<string, KeyCode> defaultKeySettings = new Dictionary<string, KeyCode>
+    {
+        { "Interact", KeyCode.F },
+        { "Drop", KeyCode.Q },
+        { "UseItem", KeyCode.E },
+        { "ScanKey", KeyCode.T },
+        { "Light", KeyCode.R },
+        { "Sprint", KeyCode.LeftShift },
+        { "Shop", KeyCode.Tab }
+    };
+
+        keySettings = new Dictionary<string, KeyCode>();
+
         if (File.Exists(settingsFilePath))
         {
-            string json = File.ReadAllText(settingsFilePath); // 파일에서 JSON 읽기
-            KeySettingList keySettingList = JsonUtility.FromJson<KeySettingList>(json); // JSON을 객체로 변환
-            keySettings = new Dictionary<string, KeyCode>(); // 딕셔너리 초기화
-            foreach (var keySetting in keySettingList.keySettings)
+            string json = File.ReadAllText(settingsFilePath);
+            KeySettingList keySettingList = JsonUtility.FromJson<KeySettingList>(json);
+
+            foreach (var entry in defaultKeySettings)
             {
-                keySettings[keySetting.name] = keySetting.key; // 키 설정 로드
+                // 해당 키가 JSON에 존재하는지 확인하고, 존재하면 사용
+                var loadedSetting = keySettingList.keySettings.Find(k => k.name == entry.Key);
+                if (loadedSetting != null && loadedSetting.key != KeyCode.None)
+                {
+                    keySettings[entry.Key] = loadedSetting.key;
+                }
+                else
+                {
+                    // 없거나 None이면 기본값 사용
+                    keySettings[entry.Key] = entry.Value;
+                }
             }
         }
         else
         {
-            // 기본 키 설정 추가
-            keySettings["Interact"] = KeyCode.F;
-            keySettings["Drop"] = KeyCode.Q;
-            keySettings["UseItem"] = KeyCode.E;
-            keySettings["ScanKey"] = KeyCode.Tab;
-            keySettings["Light"] = KeyCode.R;
+            // 파일이 없으면 기본값 사용
+            keySettings = new Dictionary<string, KeyCode>(defaultKeySettings);
         }
     }
 

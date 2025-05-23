@@ -7,8 +7,12 @@ public class GrabbableObject : InteractableObject
     public float followDistance = 2f;
     public float baseFollowSpeed = 10f;
     public float maxDistanceBeforeDrop = 5f;
+    public bool isSlowed = true;
+    public bool isPermanent = true;
+    public float slowDuration = 0f;
 
     [SerializeField] private bool isFollowing = false;
+    [SerializeField] private ulong usingUserID = 1000;
     [SerializeField] private ulong followingClientId;
     [SerializeField] private Rigidbody rb;
 
@@ -23,12 +27,12 @@ public class GrabbableObject : InteractableObject
         if (isFollowing && userId == followingClientId)
         {
             Debug.Log("[SERVER] Already grabbed, dropping now.");
-            StopGrab();
+            StopGrab(userId);
         }
         else
         {
             Debug.Log("[SERVER] Interacted by " + interactingObjectTransform.name + ", grabbing now.");
-            StartGrab(userId);
+            StartGrab(userId);            
         }
     }
 
@@ -37,6 +41,17 @@ public class GrabbableObject : InteractableObject
         followingClientId = clientId;
         isFollowing = true;
 
+        Debug.Log($"[SERVER] Start Grab. ID:{clientId}");
+        
+
+		if (isSlowed)
+        {
+            NetworkObject networkObject = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
+            networkObject.GetComponent<StatusEffect>().ApplySlowServerRpc(isPermanent, slowDuration);
+        }
+
+        usingUserID = clientId;
+
         if (rb != null)
         {
             rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -44,11 +59,19 @@ public class GrabbableObject : InteractableObject
         }
     }
 
-    public void StopGrab()
+    public void StopGrab(ulong clientId)
     {
-        Debug.Log("[SERVER] Stopping Grab");
+        Debug.Log($"[SERVER] Stopping Grab. ID:{clientId}");
 
         isFollowing = false;
+
+		if (isSlowed)
+        {
+            NetworkObject networkObject = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
+            networkObject.GetComponent<StatusEffect>().RemoveSlowServerRpc();
+        }
+
+        usingUserID = 1000;
 
         if (rb != null)
         {
@@ -80,7 +103,7 @@ public class GrabbableObject : InteractableObject
         if (distance > maxDistanceBeforeDrop)
         {
             Debug.LogWarning("[SERVER] Auto-drop: player too far.");
-            StopGrab();
+            StopGrab(usingUserID);
             return;
         }
 
