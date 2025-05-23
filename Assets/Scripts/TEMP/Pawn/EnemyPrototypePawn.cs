@@ -419,12 +419,17 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		var oldValue = _resistance.Value;
 		var newValue = Mathf.Max(oldValue - amount, 0.0F);
 
+		Debug.Log($"테스트 1번 데미지 : {amount}");
+
 		if (oldValue != newValue)
 		{
 			_resistance.Value = newValue;
 
-			// 여기다 피격음 넣으면 되는데 일단 넣음
-			_audioSource.PlayOneShot(hitSound);
+			if (_audioSource != null)
+			{
+				// 여기다 피격음 넣으면 되는데 일단 넣음
+				_audioSource.PlayOneShot(hitSound);
+			}
 		}
 	}
 

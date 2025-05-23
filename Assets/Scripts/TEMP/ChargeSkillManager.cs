@@ -213,33 +213,19 @@ namespace InTheDark.Prototypes
 				var normalized = direction.normalized;
 
 				_time.Value = 0.0F;
-				_isRunning = true;
-				_agent.isStopped = true;
 
 				transform.LookAt(target.transform.position);
 
 				//Debug.Log($"3번 포트 + {_velocity} + {_isRunning}");
 
-				while (_time.Value < _duration)
+				//while (_time.Value < _duration)
 				{
-					//_time.Value += Time.deltaTime; // 시간 흐름은 로직 전? 후?
-
-					var t = _time.Value / _duration;
-					var speed = _magnification * _speedCurve.Evaluate(t);
-
-					Debug.Log($"3번 포트 + {speed * normalized * Time.deltaTime}");
-
-					_controller.Move(speed * normalized * Time.deltaTime);
-
-					_time.Value += Time.deltaTime; // 시간 흐름은 로직 전? 후?
-
-					yield return null;
+					_agent.isStopped = false;
+					_agent.speed = 10f;                // 돌진 속도
+					_agent.acceleration = 2f;  // 원하는 경우 가속도도 설정
+					_agent.SetDestination(target.transform.position);
 				}
-
-				Debug.Log("4번 포트");
-
-				_agent.isStopped = false;
-				_isRunning = false;
+				
 				_cooldown.Value = _initialCooldown;
 			}
 

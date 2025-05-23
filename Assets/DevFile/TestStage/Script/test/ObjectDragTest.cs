@@ -67,7 +67,7 @@ public class ObjectDragTest : NetworkBehaviour
            /* var follower = netObj.GetComponent<NetworkObjectFollower>();
             if (follower != null)
             {
-                follower.AlignRotationToPlayer(camForward); // 💡 정방향 회전 맞추기
+                follower.AlignRotationToPlayer(camForward); // 정방향 회전 맞추기
                 follower.StartFollow(OwnerClientId);
             }*/
         }

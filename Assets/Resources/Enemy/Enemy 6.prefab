@@ -587,15 +587,10 @@ MonoBehaviour:
   _pawn: {fileID: 1433858302028618446}
   _animator: {fileID: 4453662768508219377}
   duration: 0.65
-  IsFiring: 0
   maxDistance: 16
-  width: 0.5
-  laserColor: {r: 0, g: 1, b: 1, a: 1}
+  IsFiring: 0
   LaserVFX: {fileID: 7618524491936103534}
   LaserTransform: {fileID: 7493593654663402941}
-  TargetLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!143 &7614236128885380916
 CharacterController:
   m_ObjectHideFlags: 0

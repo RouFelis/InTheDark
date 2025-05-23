@@ -19,6 +19,7 @@ public class playerMoveController : SaintsNetworkBehaviour
     [SerializeField] private float rotationSpeed = 2.0f;
     [SerializeField] private float gravity = 20.0f;
     [SerializeField] private float jumpForce = 8.0f;
+    public float SlowMultiplier = 1.0f;
 
 
     [Header("Camera & Head Rotation")]
@@ -48,7 +49,8 @@ public class playerMoveController : SaintsNetworkBehaviour
     [SerializeField] private float smoothSpeed = 1f;
 
     [Header("Animation")]
-    [SerializeField] protected Animator animator;
+    [SerializeField] protected Animator firstpersonAnimator;
+    [SerializeField] protected Animator thirdpersonAnimator;
 
     [Header("Networking")]
     [LayoutStart("Networking", ELayout.FoldoutBox)]
@@ -70,6 +72,7 @@ public class playerMoveController : SaintsNetworkBehaviour
     [SerializeField] protected Transform handAimTarget;
     [SerializeField] private NetworkVariable<ulong> handAimTargetulong = new NetworkVariable<ulong>();
     [SerializeField] private List<ConstraintConfig> playerConstraints = new List<ConstraintConfig>();
+    [SerializeField] private List<ConstraintConfig> playerConstraints_Item = new List<ConstraintConfig>();
     [SerializeField] private float distanceFromCamera = 1f;
     [SerializeField] private float aimMaxDistance = 100f;
     [SerializeField] private RigBuilder rigBuilder_firstPerson;
@@ -103,7 +106,6 @@ public class playerMoveController : SaintsNetworkBehaviour
 
     private bool mouseControl = true;
     private bool isJumping = false;
-    private bool isFalling = false;
     private Quaternion savedHeadRotation;
     private Interacter interacter;
 
@@ -118,7 +120,6 @@ public class playerMoveController : SaintsNetworkBehaviour
     [SerializeField] private float lastRunTime;
 
     private Image staminaBar;
-
 
     private IEnumerator InitCamera()
     {
@@ -208,54 +209,7 @@ public class playerMoveController : SaintsNetworkBehaviour
         parentConstraint.locked = false; // 위치/회전 고정
     }
 
-    /*   [ServerRpc]
-       private void SpawnSetCameraServerRpc(ulong clientID)
-       {
-           if (!IsServer) return; // 서버에서만 실행
-
-           camTarget = Instantiate(camTargetPrefab).transform;
-
-           NetworkObject camTargetNetworkObject = camTarget.GetComponent<NetworkObject>();
-
-           camTargetNetworkObject.SpawnWithOwnership(clientID);
-           camTargetNetworkObject.transform.SetParent(this.transform);
-
-           // 새로 들어온 클라이언트가 기존 카메라 정보를 받을 수 있도록 ClientRpc 호출
-           SyncCameraClientRpc(camTargetNetworkObject.NetworkObjectId);
-       }
-
-       [ClientRpc]
-       private void SyncCameraClientRpc(ulong camTargetId)
-       {
-           if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(camTargetId, out NetworkObject camTargetNetObj))
-           {
-               camTarget = camTargetNetObj.transform;
-               *//*camTarget.transform.SetParent(firstPersonCamera.transform);
-               camTarget.transform.localPosition = Vector3.zero;
-               camTarget.transform.localRotation = Quaternion.identity;*//*
-
-
-               if (IsOwner)
-               {
-                   virtualCamera.Follow = camTarget.transform;
-                   firstPersonCamera.enabled = true;
-                   camTarget.gameObject.SetActive(true);
-                   virtualCamera.gameObject.SetActive(true);
-                   thirdPersonCamera.gameObject.SetActive(false);
-               }
-               else
-               {
-                   firstPersonCamera.enabled = false;
-                   camTarget.gameObject.SetActive(false);
-                   virtualCamera.gameObject.SetActive(false);
-                   thirdPersonCamera.gameObject.SetActive(false);
-               }
-           }
-       }
-   */
-
-
-
+  
     public virtual void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -287,7 +241,7 @@ public class playerMoveController : SaintsNetworkBehaviour
 			else
 			{
                 EventPlayingStop();
-			}
+            }
         }
 		else
 		{
@@ -297,6 +251,7 @@ public class playerMoveController : SaintsNetworkBehaviour
             FindAimTargetObject();*/
         UpdateAnimator();
     }
+
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -331,8 +286,8 @@ public class playerMoveController : SaintsNetworkBehaviour
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value > 0);
         float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
-        moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier;
-        moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier;
+        moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier * SlowMultiplier;
+        moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier * SlowMultiplier;
 
 
         if (isRunning)
@@ -365,7 +320,8 @@ public class playerMoveController : SaintsNetworkBehaviour
             {
                 moveDirection.y = jumpForce;
                 isJumping = true;
-                animator.speed = 1.0f; // 점프 중에는 기본 속도
+                firstpersonAnimator.speed = 1.0f; // 점프 중에는 기본 속도
+                thirdpersonAnimator.speed = 1.0f; // 점프 중에는 기본 속도
             }
         }
         else
@@ -459,9 +415,11 @@ public class playerMoveController : SaintsNetworkBehaviour
             isRunning.Value = isWalking.Value && Input.GetKey(KeyCode.LeftShift);
         }
 
-        animator.SetBool("IsWalking", isWalking.Value);
+        firstpersonAnimator.SetBool("IsWalking", isWalking.Value);
+        thirdpersonAnimator.SetBool("IsWalking", isWalking.Value);
         //  animator.SetBool("IsRunning", isRunning);
-        animator.SetBool("IsJumping", isJumping);
+        firstpersonAnimator.SetBool("IsJumping", isJumping);
+        thirdpersonAnimator.SetBool("IsJumping", isJumping);
         //animator.SetBool("IsJumping", isFalling);
 
         // 애니메이션 속도 및 사운드 동기화
@@ -469,20 +427,23 @@ public class playerMoveController : SaintsNetworkBehaviour
         {
 			if (isRunning.Value)
 			{
-                animator.speed = 1.4f;
+                firstpersonAnimator.speed = 1.4f;
+                thirdpersonAnimator.speed = 1.4f;
                 bobbingSpeed = 18f; // 걷기 속도
                 bobbingAmount = RunningBobbingAmount; // 걷기 흔들림 강도
             }
 			else
 			{
-                animator.speed = 1f;
+                firstpersonAnimator.speed = 1f;
+                thirdpersonAnimator.speed = 1f;
                 bobbingSpeed = 13f; // 달리기 속도
                 bobbingAmount = walkBobbingAmount; // 달리기 흔들림 강도
             }
         }
         else
         {
-            animator.speed = 1.0f; // 기본 속도
+            firstpersonAnimator.speed = 1.0f; // 기본 속도
+            thirdpersonAnimator.speed = 1.0f; // 기본 속도
         }
     }
 

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class UIAnimationManager : MonoBehaviour
 {
+	#region DieProperty
 	[Header("AllDieAnime")]
 	[SerializeField] private UIAnimation dieAnime;
 	[SerializeField] private UIAnimation allDieCameraEffect1;
@@ -16,6 +17,8 @@ public class UIAnimationManager : MonoBehaviour
 
 	[Header("Close Object")]
 	[SerializeField] private GameObject healthBar;
+	#endregion
+
 
 	#region AllDieAni
 	public void AllDieAnimation()

@@ -14,10 +14,6 @@ public class GrabHelper : NetworkBehaviour
     [SerializeField] NetworkTransform networkTransform;
     [SerializeField] NetworkRigidbody networkRigidbody;
 
-    private void Start()
-    {
-
-    }
 
     /*private void Update()
     {

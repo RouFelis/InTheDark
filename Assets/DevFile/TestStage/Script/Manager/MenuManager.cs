@@ -15,10 +15,11 @@ public class MenuManager : MonoBehaviour
     public event PauseEvent OnResume;
 
 
-    private bool isEvenet = false;
-    private bool isPaused = false;
+    [SerializeField]private bool isEvenet = false;
+    [SerializeField]private bool isPaused = false;
 
-    public bool IsEvenet { get => isEvenet; set => IsEvenet = value;  }
+    public bool IsEvenet { get => isEvenet; set => isEvenet = value;  }
+    public bool IsPaused { get => isPaused; set => isPaused = value;  }
 
     private Stack<GameObject> menuStack = new Stack<GameObject>();
 
