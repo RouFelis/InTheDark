@@ -568,7 +568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _duration: 4
+  _duration: 6
   _initialCooldown: 15
   _time:
     m_InternalValue: 0
@@ -589,7 +589,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 6
+      value: 4
       inSlope: 0
       outSlope: 0
       tangentMode: 0

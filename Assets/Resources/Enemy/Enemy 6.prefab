@@ -153,32 +153,18 @@ MonoBehaviour:
     TransitionIndex: 1
   - IsCrossFadeExit: 0
     Layer: 0
+    OriginatingState: 1748754976
+    DestinationState: 1293411866
+    TransitionDuration: 0.25
+    TriggerNameHash: 94234928
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 1
     OriginatingState: 2081823275
     DestinationState: 1080829965
     TransitionDuration: 0.25
     TriggerNameHash: -1078415042
-    TransitionIndex: 2
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1748754976
-    DestinationState: 1293411866
-    TransitionDuration: 0.25
-    TriggerNameHash: 94234928
-    TransitionIndex: 1
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1748754976
-    DestinationState: 1080829965
-    TransitionDuration: 0.25
-    TriggerNameHash: -1078415042
-    TransitionIndex: 2
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1080829965
-    DestinationState: 1293411866
-    TransitionDuration: 0.25
-    TriggerNameHash: 94234928
-    TransitionIndex: 1
+    TransitionIndex: 0
   m_Animator: {fileID: 4453662768508219377}
 --- !u!195 &-6386649275116767646
 NavMeshAgent:
@@ -600,8 +586,8 @@ MonoBehaviour:
     m_InternalValue: 0
   _pawn: {fileID: 1433858302028618446}
   _animator: {fileID: 4453662768508219377}
-  Delay: 0.65
-  duration: 0.75
+  Delay: 1
+  duration: 1.15
   maxDistance: 16
   IsFiring: 0
   LaserVFX: {fileID: 7618524491936103534}
