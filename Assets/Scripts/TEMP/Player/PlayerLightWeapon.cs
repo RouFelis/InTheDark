@@ -8,14 +8,6 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private SpotlightControl _weapon;
 
-		//[SerializeField]
-		//private LightSource _source;
-
-		//private void Update()
-		//{
-		//	Debug.Log($"{_controller.weaponLight.spotAngle}: 앵글, {_controller.weaponLight.range}: 거리");
-		//}
-
 		public override void OnNetworkSpawn()
 		{
 			if (!_weapon)
@@ -35,12 +27,7 @@ namespace InTheDark.Prototypes
 
 				if (player.IsOwner)
 				{
-					//Debug.Log("할당 중인디, 쭈인 맞아여!");
 					SpotlightControl.OnFlash += OnFlash;
-				}
-				else
-				{
-					//Debug.Log("할당 중인디, 쭈인 아니에여...");
 				}
 			}
 		}
@@ -53,12 +40,7 @@ namespace InTheDark.Prototypes
 
 				if (player.IsOwner)
 				{
-					//Debug.Log("할당 해제중인디, 쭈인 맞아여!");
 					SpotlightControl.OnFlash -= OnFlash;
-				}
-				else
-				{
-					//Debug.Log("할당 해제중인디, 쭈인 아니에여...");
 				}
 			}
 		}
@@ -67,6 +49,5 @@ namespace InTheDark.Prototypes
 		{
 			Tick();
 		}
-	
 	} 
 }

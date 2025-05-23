@@ -39,7 +39,7 @@ namespace InTheDark.Prototypes
 			//	StartCoroutine(OnSkillStart());
 			//}
 
-			Debug.Log($"{_pawn.Target} 있는거...맞지?");
+			//Debug.Log($"{_pawn.Target} 있는거...맞지?");
 
 			//isActivated = true;
 			//_executionStatus = TaskStatus.Running;

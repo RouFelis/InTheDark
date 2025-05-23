@@ -12,6 +12,8 @@ namespace InTheDark.Prototypes
 	{
 		private const string VFX_IS_FIRING = "isFiring";
 
+		public float Delay = 0.5F;
+
 		public float duration;
 		public float maxDistance = 100f;
 
@@ -37,6 +39,17 @@ namespace InTheDark.Prototypes
 		protected override async UniTask OnAttack(IHealth target)
 		{
 			var time = 0.0F;
+			var targetPos = _pawn.Target.transform.position;
+
+			var tempPos = LaserTransform.transform.position + new Vector3(0.0F, 0.05F, 0.0F);
+
+			var chargingDis = Vector3.Distance(LaserTransform.position, tempPos);
+			var chargingPos = LaserTransform.transform.InverseTransformPoint(tempPos);
+
+			if (IsFiring)
+			{
+				return;
+			}
 
 			IsFiring = true;
 
@@ -44,40 +57,46 @@ namespace InTheDark.Prototypes
 			LaserVFX.SetBool(VFX_IS_FIRING, IsFiring);
 			LaserVFX.Play();
 
-			transform.LookAt(_pawn.Target.transform.position);
+			transform.LookAt(targetPos);
 
-			while (1.0F > time && !_pawn.IsDead)
+			_animator?.SetTrigger("OnAttack");
+
+			LaserVFX.SetVector3("Direction", transform.up);
+			LaserVFX.SetFloat("Length", chargingDis);
+			LaserVFX.SetVector3("TargetPos", chargingPos);
+
+			while (duration + Delay > time && !_pawn.IsDead)
 			{
-				time = Mathf.Min(time + Time.deltaTime, 1.0F);
-
-				LaserVFX.SetVector3("Direction", Vector3.zero);
-				LaserVFX.SetFloat("Length", 0.0F);
-				LaserVFX.SetVector3("TargetPos", new Vector3(3.0F, 0.0F, 0.0F));
-			}
-
-			time = 0.0F;
-
-			while (duration > time && !_pawn.IsDead)
-			{
-				var targetPosition =  Physics.Raycast(LaserTransform.position, LaserTransform.forward.normalized, out RaycastHit hit, maxDistance)
-					? hit.point // (O)
-					: transform.position + transform.forward * maxDistance; // (X)
-
-				var distance = Vector3.Distance(LaserTransform.position, targetPosition);
-				var position = LaserTransform.transform.InverseTransformPoint(targetPosition);
-				var direction = targetPosition - LaserTransform.transform.position;
-
-				time = Mathf.Min(time + Time.deltaTime, duration);
-
-				//LaserVFX.SetVector3("Direction", LaserTransform.forward.normalized);
-				LaserVFX.SetVector3("Direction", direction.normalized);
-				LaserVFX.SetFloat("Length", distance);
-				LaserVFX.SetVector3("TargetPos", position);
-
-				if (IsTargetNearby)
+				if (time > Delay)
 				{
-					target.TakeDamage(_damage, _pawn.attackSound);
+					var raycast = Physics.Raycast(transform.position, LaserTransform.forward, out var hit, maxDistance);
+					var player = hit.collider?.GetComponent<Player>();
+
+					//Debug.Log($"playerPos: {player?.transform.position}, cameraPos: {player?.FirstPersonCamera.transform.position}");
+
+					var targetPosition = raycast
+						? player
+							? player.FirstPersonCamera.transform.position
+							: hit.point
+						: transform.position + transform.forward * maxDistance;
+
+					var distance = Vector3.Distance(LaserTransform.position, targetPosition);
+					var position = LaserTransform.transform.InverseTransformPoint(targetPosition);
+					var direction = targetPosition - LaserTransform.transform.position;
+
+					LaserVFX.SetVector3("Direction", direction.normalized);
+					LaserVFX.SetFloat("Length", distance);
+					LaserVFX.SetVector3("TargetPos", position);
+
+					Debug.Log($"player: {player}, target: {target}, hit: {hit.collider}/{hit.collider?.name}");
+
+					if (IsTargetNearby && player && player.Equals(target))
+					{
+						target.TakeDamage(_damage, _pawn.attackSound);
+					}
 				}
+
+				time = Mathf.Min(time + Time.deltaTime, duration + Delay);
 
 				await UniTask.NextFrame();
 			}
@@ -89,6 +108,43 @@ namespace InTheDark.Prototypes
 				LaserVFX.SetBool(VFX_IS_FIRING, IsFiring);
 				LaserVFX.Stop();
 			}
+
+			//while (Delay > time && !_pawn.IsDead)
+			//{
+			//	time = Mathf.Min(time + Time.deltaTime, Delay);
+
+			//	await UniTask.NextFrame();
+			//}
+
+			//time = 0.0F;
+
+			//while (duration > time && !_pawn.IsDead)
+			//{
+			//	var targetPosition = Physics.Raycast(LaserTransform.position, LaserTransform.forward.normalized, out RaycastHit hit, maxDistance)
+			//		? hit.point
+			//		: transform.position + transform.forward * maxDistance;
+
+			//	var distance = Vector3.Distance(LaserTransform.position, targetPosition);
+			//	var position = LaserTransform.transform.InverseTransformPoint(targetPosition);
+			//	var direction = targetPosition - LaserTransform.transform.position;
+
+			//	var player = hit.collider?.GetComponent<Player>();
+
+			//	LaserVFX.SetVector3("Direction", direction.normalized);
+			//	LaserVFX.SetFloat("Length", distance);
+			//	LaserVFX.SetVector3("TargetPos", position);
+
+			//	//Debug.Log($"player: {player}, target: {target}, 혹시...{hit.collider.name}/{hit.collider}");
+
+			//	if (IsTargetNearby && player && player.Equals(target))
+			//	{
+			//		target.TakeDamage(_damage, _pawn.attackSound);
+			//	}
+
+			//	time = Mathf.Min(time + Time.deltaTime, duration);
+
+			//	await UniTask.NextFrame();
+			//}
 
 			//Debug.Log("끼에에에에에에에에에엑");
 		}
