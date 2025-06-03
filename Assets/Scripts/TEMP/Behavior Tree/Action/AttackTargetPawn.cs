@@ -1,5 +1,6 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
+using DG.Tweening;
 using InTheDark.Prototypes;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,6 +39,8 @@ public class AttackTargetPawn : Action
 		// 대충 공격하는 스크립트
 		if (target != null)
 		{
+			//transform.LookAt(target.FirstPersonCamera.transform);
+
 			//_self.AttackPrototype(target);
 			_weapon.Attack().Forget();
 		}

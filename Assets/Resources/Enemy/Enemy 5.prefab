@@ -144,20 +144,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   TransitionStateInfoList:
   - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 2081823275
-    DestinationState: 1293411866
-    TransitionDuration: 0.25
-    TriggerNameHash: 94234928
-    TransitionIndex: 1
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 1748754976
-    DestinationState: 1293411866
-    TransitionDuration: 0.25
-    TriggerNameHash: 94234928
-    TransitionIndex: 1
-  - IsCrossFadeExit: 0
     Layer: 1
     OriginatingState: 2081823275
     DestinationState: 1080829965
@@ -242,7 +228,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   InitializeCooldownValue: 5
   InitializeHealthValue: 100
-  InitializeResistanceValue: 20
   InitializeMoveSpeed: 0
   objectRenderer: {fileID: 6368315079064182521}
   damagedVFXgraph: {fileID: 6282305715552553252}
@@ -250,18 +235,10 @@ MonoBehaviour:
   skinnedMaterials: []
   _isDead:
     m_InternalValue: 0
-  _isActive:
-    m_InternalValue: 1
   _health:
     m_InternalValue: 100
   _maxHealth:
     m_InternalValue: 20
-  _resistance:
-    m_InternalValue: 20
-  _damage:
-    m_InternalValue: 5
-  _cooldown:
-    m_InternalValue: 0
   _state:
     m_InternalValue:
       utf8LengthInBytes: 6
@@ -550,7 +527,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _damage: 5
-  _range: 3
+  _range: 2.3
+  _delay: 0.9
   _cooldown:
     m_InternalValue: 0
   _pawn: {fileID: 1433858302028618446}

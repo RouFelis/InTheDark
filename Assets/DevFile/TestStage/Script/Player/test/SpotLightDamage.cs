@@ -33,7 +33,7 @@ public class SpotlightDamage : MonoBehaviour
                 {
                    /* if (hit.collider == target)
                     {
-                        Health health = target.GetComponent<Health>();
+                        CurrentHealth health = target.GetComponent<CurrentHealth>();
                         if (health != null)
                         {
                             health.TakeDamage(damageAmount);

@@ -87,7 +87,7 @@ namespace InTheDark.Prototypes
 
 			if (isBehaviourAttached)
 			{
-				pawn.Health = pawn.InitializeHealthValue;
+				pawn.CurrentHealth = pawn.InitializeHealthValue;
 				//pawn.MaxHealth = pawn.InitializeResistanceValue;
 				//pawn.Resistance = pawn.InitializeResistanceValue;
 				pawn.IsDead = false;	
