@@ -121,6 +121,13 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//	}
 	//}
 
+	public float Health
+	{
+		get => _health.Value;
+
+		set => _health.Value = value;
+	}
+
 	public float CurrentHealth 
 	{
 		get=> _health.Value; 

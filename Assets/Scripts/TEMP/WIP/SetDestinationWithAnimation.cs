@@ -55,13 +55,13 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 				}
 			}
 
-			//if (navMeshAgent == null)
+			//if (NavMeshAgent == null)
 			//{
 			//	Debug.LogWarning("NavMeshAgent is null");
 			//	return TaskStatus.Failure;
 			//}
 
-			//var isEnable = navMeshAgent.SetDestination(destination.Value);
+			//var isEnable = NavMeshAgent.SetDestination(destination.Value);
 			//var result = isEnable ? TaskStatus.Success : TaskStatus.Failure;
 
 			//if (isEnable)

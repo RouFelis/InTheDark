@@ -73,6 +73,12 @@ namespace InTheDark
 		/// 
 		/// </summary>
 		[SerializeField]
+		private Collider _collider;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[SerializeField]
         private Renderer _renderer;
 
 		/// <summary>
@@ -159,6 +165,24 @@ namespace InTheDark
 				_animator = value;
 			}
         }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public Collider Collider
+		{
+			get
+			{
+				var value = _collider;
+
+				return value;
+			}
+
+			protected set
+			{
+				_collider = value;
+			}
+		}
 
 		/// <summary>
 		/// 

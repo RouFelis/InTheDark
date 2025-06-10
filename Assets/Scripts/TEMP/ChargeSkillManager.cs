@@ -58,6 +58,11 @@ namespace InTheDark.Prototypes
 			}
 		}
 
+		private void OnCollisionEnter(Collision collision)
+		{
+			
+		}
+
 		private void OnUpdate()
 		{
 			var c = _cooldown.Value;

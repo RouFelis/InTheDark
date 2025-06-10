@@ -16,7 +16,6 @@ namespace InTheDark
 		{
 			get;
 		}
-
 	}
 
 	/// <summary>
