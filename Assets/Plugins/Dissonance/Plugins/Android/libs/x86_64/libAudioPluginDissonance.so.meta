@@ -94,6 +94,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 70078
   packageName: Dissonance Voice Chat
-  packageVersion: 9.0.6
+  packageVersion: 9.0.7
   assetPath: Assets/Plugins/Dissonance/Plugins/Android/libs/x86_64/libAudioPluginDissonance.so
-  uploadId: 702399
+  uploadId: 721753

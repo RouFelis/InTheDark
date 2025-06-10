@@ -10,7 +10,6 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance { get; set; } // 싱글톤 인스턴스
 
     [SerializeField] private AudioMixer audioMixer;
-    [SerializeField] private Button applyButton; // 적용 버튼
     [SerializeField] private AudioUI masterUI;
     [SerializeField] private AudioUI musicUI;
     [SerializeField] private AudioUI sfxUI;
@@ -44,7 +43,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        applyButton.onClick.AddListener(SaveAudioSettings); // 적용 버튼에 리스너 추가
+        KeySettingsManager.Instance.applyButton.onClick.AddListener(SaveAudioSettings); // 적용 버튼에 리스너 추가
 
         // 초기 슬라이더 값을 AudioMixer에서 가져오기
         masterUI.slider.value = DbToLinear(GetMixerVolume("MasterVolume"));
@@ -174,13 +173,13 @@ public class AudioManager : MonoBehaviour
 
 
     // 슬라이더 값이 변경되면 InputField 업데이트
-    private void UpdateInputField(AudioUI audioUI, float value)
+    public void UpdateInputField(AudioUI audioUI, float value)
     {
         audioUI.inputField.text = value.ToString("0.0"); // 소수점 한 자리까지 표시
     }
 
     // InputField 값이 변경되면 슬라이더 값 업데이트
-    private void UpdateSliderFromInput(AudioUI audioUI, string input)
+    public void UpdateSliderFromInput(AudioUI audioUI, string input)
     {
         if (float.TryParse(input, out float value))
         {

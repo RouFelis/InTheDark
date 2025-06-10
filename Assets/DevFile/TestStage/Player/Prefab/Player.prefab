@@ -463,10 +463,10 @@ GameObject:
   - component: {fileID: 344860905703892509}
   - component: {fileID: -2362926755301820054}
   - component: {fileID: 4967549593802716169}
-  - component: {fileID: 5806558996473286547}
-  - component: {fileID: 2747101026506741475}
   - component: {fileID: 3044497667356731293}
   - component: {fileID: 2392780955633626093}
+  - component: {fileID: 2816544151119313986}
+  - component: {fileID: 2999762689314916600}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -582,7 +582,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 1
+    OriginatingState: -1028202203
+    DestinationState: -1028202203
+    TransitionDuration: 0.25
+    TriggerNameHash: -1742204373
+    TransitionIndex: 0
   m_Animator: {fileID: 5073388931812896167}
 --- !u!114 &2740562399230657829
 MonoBehaviour:
@@ -1863,51 +1870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &5806558996473286547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1441098053676493550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a76c0688e4bd80499ffa3b6a2aed3f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _range: 20
-  _roomName: Global
-  _useTrigger: 0
-  _roomExpanded: 1
-  _metadataExpanded: 1
-  _activationModeExpanded: 1
-  _tokensExpanded: 1
-  _inputName: 
-  _mode: 1
-  _muted: 0
-  _prority: 0
---- !u!114 &2747101026506741475
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1441098053676493550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ced1b68963272494b9b3d3bed1584a33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _range: 20
-  _roomName: Global
-  _useTrigger: 0
-  _roomExpanded: 1
-  _tokensExpanded: 0
-  _colliderExpanded: 0
+  _playerIdString: 
 --- !u!114 &3044497667356731293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1985,6 +1948,61 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2816544151119313986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441098053676493550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokens:
+    _tokens: []
+  _channelTypeExpanded: 0
+  _metadataExpanded: 0
+  _activationModeExpanded: 0
+  _tokensExpanded: 0
+  _ampExpanded: 0
+  _activationFaderSettings:
+    _volume: 1
+    _fadeInTicks: 0
+    _fadeOutTicks: 1500000
+  _triggerFaderSettings:
+    _volume: 1
+    _fadeInTicks: 7500000
+    _fadeOutTicks: 11500000
+  _broadcastPosition: 1
+  _channelType: 0
+  _inputName: PushToTalk
+  _mode: 1
+  _muted: 0
+  _playerId: 
+  _useTrigger: 0
+  _roomName: Global
+  _priority: 0
+--- !u!114 &2999762689314916600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441098053676493550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3737438748cf23f448d18cd2c6192e95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokens:
+    _tokens: []
+  _roomExpanded: 1
+  _tokensExpanded: 1
+  _colliderExpanded: 1
+  _roomName: Global
+  _useTrigger: 0
 --- !u!1 &1595425553284540487
 GameObject:
   m_ObjectHideFlags: 0

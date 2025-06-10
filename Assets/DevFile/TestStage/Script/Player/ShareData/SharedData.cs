@@ -6,7 +6,9 @@ public class SharedData : NetworkBehaviour
 
 	public NetworkVariable<int> Money = new NetworkVariable<int>(0);
 	public NetworkVariable<int> networkSeed = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-
+	public NetworkVariable<int> area = new NetworkVariable<int>(0);
+	public NetworkVariable<int> questQuota = new NetworkVariable<int>(0);
+	public NetworkVariable<int> moneyQuota = new NetworkVariable<int>(0);
 
 	public override void OnNetworkSpawn()
 	{

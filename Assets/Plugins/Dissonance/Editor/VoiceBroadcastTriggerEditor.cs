@@ -253,6 +253,11 @@ namespace Dissonance.Editor
                     a => transmitter.InputName = a
                 );
 
+                // For some reason `Input.GetAxis` breaks the UI layout in Unity 6, even when it's wrapped in the try/catch!
+                // Workaround that by always displaying a tip, instead of contextually displaying an error.
+#if UNITY_6000_0_OR_NEWER
+                EditorGUILayout.HelpBox($"Ensure axis '{transmitter.InputName}' exists in the Input Manager (Edit > Project Settings > Input Manager)", MessageType.Info);
+#else
                 try
                 {
                     Input.GetAxis(transmitter.InputName);
@@ -261,6 +266,7 @@ namespace Dissonance.Editor
                 {
                     EditorGUILayout.HelpBox($"Input axis '{transmitter.InputName}' does not exist. Create it in the Input Manager (Edit > Project Settings > Input Manager)", MessageType.Error);
                 }
+#endif
             }
         }
 

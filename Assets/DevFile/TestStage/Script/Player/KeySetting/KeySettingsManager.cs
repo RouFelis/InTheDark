@@ -12,7 +12,7 @@ public class KeySettingsManager : MonoBehaviour
 {
     public static KeySettingsManager Instance { get; private set; }
 
-    public enum KeyName { Interact, Drop, UseItem, ScanKey, Light , Sprint, Shop };
+    public enum KeyName { Interact, Drop, UseItem, ScanKey, Light , Sprint, Shop, Mic };
 
     [System.Serializable]
     public class KeySettingField
@@ -46,6 +46,7 @@ public class KeySettingsManager : MonoBehaviour
     [SerializeField]private KeyCode lightKey;
     [SerializeField]private KeyCode sprintKey;
     [SerializeField]private KeyCode shopKey;
+    [SerializeField]private KeyCode micKey;
 
     [Header("Senstive")]
     [SerializeField] private float mouseSenstive = 2f;
@@ -139,7 +140,18 @@ public class KeySettingsManager : MonoBehaviour
             }
         }
     }
-
+    public KeyCode MicKey
+    {
+        get { return micKey; }
+        set
+        {
+            if (micKey != value)
+            {
+                micKey = value;
+                KeyCodeChanged?.Invoke();  // 값 변경 시 이벤트 호출
+            }
+        }
+    }
     #endregion
 
     private void Start()
@@ -151,11 +163,12 @@ public class KeySettingsManager : MonoBehaviour
         LoadKeySettings(); // 키 설정 로드
         InitializeKeySettingUI(); // 키 설정 UI 초기화
 
-        applyButton.onClick.AddListener(ApplyKeySettings); // 적용 버튼에 리스너 추가
+        applyButton.onClick.AddListener(ApplyKeySettings); // 적용 버튼 리스너 추가
         cancelButton.onClick.AddListener(CancelKeySettings); // 취소 버튼에 리스너 추가
 
         sensitivitySlider.onValueChanged.AddListener(UpdateInputField); //슬라이더 이벤트 추가
         sensitivityInput.onEndEdit.AddListener(UpdateSliderFromInput); //슬라이더 이벤트 추가
+        senestiveInit();
 
         keySettingsPanel.SetActive(false); // 초기 상태는 비활성화
         SetLanguage();
@@ -188,7 +201,7 @@ public class KeySettingsManager : MonoBehaviour
         LightKey = GetKey("Light");
         SprintKey = GetKey("Sprint");
         ShopKey = GetKey("Shop");
-        Debug.Log("KeySetting2 를 찾았습니다.");
+        MicKey = GetKey("Mic");
     }
 
     private void ApplyKeySettings()
@@ -255,7 +268,8 @@ public class KeySettingsManager : MonoBehaviour
         { "ScanKey", KeyCode.T },
         { "Light", KeyCode.R },
         { "Sprint", KeyCode.LeftShift },
-        { "Shop", KeyCode.Tab }
+        { "Shop", KeyCode.Tab },
+        { "Mic", KeyCode.M }
     };
 
         keySettings = new Dictionary<string, KeyCode>();
@@ -277,7 +291,16 @@ public class KeySettingsManager : MonoBehaviour
                 {
                     // 없거나 None이면 기본값 사용
                     keySettings[entry.Key] = entry.Value;
+
+                    Debug.Log($"NonKeyCode : {entry.Key} , Value : {entry.Value}");
                 }
+            }
+
+            // 마우스 감도 적용
+            mouseSenstive = Mathf.Clamp(keySettingList.mouseSensitivity, minSensitivity, maxSensitivity);
+            if (sensitivitySlider != null)
+            {
+                sensitivitySlider.value = mouseSenstive;
             }
         }
         else
@@ -292,7 +315,8 @@ public class KeySettingsManager : MonoBehaviour
         // 키 설정 리스트 객체 생성
         KeySettingList keySettingList = new KeySettingList
         {
-            keySettings = new List<KeySetting>()
+            keySettings = new List<KeySetting>(),
+            mouseSensitivity = sensitivitySlider.value // 슬라이더의 현재 감도 저장
         };
 
         // 딕셔너리의 키 설정을 리스트에 추가
@@ -390,6 +414,7 @@ public class KeySettingsManager : MonoBehaviour
         {
             sensitivitySlider.value = mouseSenstive;
             sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+            UpdateInputField(mouseSenstive);
         }
 
         // 플레이어 컨트롤러 초기화
@@ -446,7 +471,8 @@ public class KeySettingsManager : MonoBehaviour
     private class KeySettingList
     {
         public List<KeySetting> keySettings; // 키 설정 리스트
+        public float mouseSensitivity;       // 마우스 감도 추가
     }
 
-	#endregion
+    #endregion
 }

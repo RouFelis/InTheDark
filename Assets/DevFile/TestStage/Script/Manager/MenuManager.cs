@@ -61,15 +61,28 @@ public class MenuManager : MonoBehaviour
        
         if (isPaused && !isEvenet)
         {
-            OnPause?.Invoke();
+            SetPause(true);
             ShowMenu(menuPanel);
         }
         else
         {
-            OnResume?.Invoke();
+            SetPause(false);
             CloseCurrentMenu();
         }
     }
+
+    public void SetPause(bool value)
+	{
+		if (value)
+        {
+            OnPause?.Invoke();
+        }
+		else
+        {
+            OnResume?.Invoke();
+        }
+    }
+
 
     public void HandleEscapeKey()
     {

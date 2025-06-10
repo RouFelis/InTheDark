@@ -19,6 +19,7 @@ public class UIToggleSlide : MonoBehaviour
     private bool isTransitioning = false;
     private KeyCode interacteKey;
 
+
     void Start()
     {
         originalScale = uiTransform.localScale;
@@ -60,6 +61,8 @@ public class UIToggleSlide : MonoBehaviour
         if (tvOnClip && audioSource)
             audioSource.PlayOneShot(tvOnClip);
 
+        MenuManager.Instance.SetPause(true);
+
         // Flash
         float timer = 0f;
         while (timer < flashDuration)
@@ -93,6 +96,8 @@ public class UIToggleSlide : MonoBehaviour
 
         if (tvOffClip && audioSource)
             audioSource.PlayOneShot(tvOffClip);
+
+        MenuManager.Instance.SetPause(false);
 
         // Shrink
         float timer = 0f;

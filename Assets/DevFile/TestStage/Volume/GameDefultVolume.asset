@@ -168,7 +168,7 @@ MonoBehaviour:
     m_Value: 1
   fixedExposure:
     m_OverrideState: 1
-    m_Value: 10.777777
+    m_Value: -1.6077738
   compensation:
     m_OverrideState: 1
     m_Value: 9
@@ -437,7 +437,7 @@ MonoBehaviour:
   active: 1
   rotation:
     m_OverrideState: 0
-    m_Value: 330
+    m_Value: 0
   skyIntensityMode:
     m_OverrideState: 1
     m_Value: 2
@@ -493,7 +493,7 @@ MonoBehaviour:
       multiplyValue: 1
   sunInitialRotation:
     m_OverrideState: 0
-    m_Value: -330
+    m_Value: 0
   lockSun:
     m_OverrideState: 1
     m_Value: 1
@@ -1055,7 +1055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b8615557f396f346a3aeb8df3454971, type: 3}
   m_Name: ToonShadingPP
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   _posterizeAmount:
     m_OverrideState: 1
     m_Value: 500

@@ -44,6 +44,7 @@ public class QuestManager : NetworkBehaviour
 
 		if (index != -1)
 		{
+			SharedData.Instance.questQuota.Value += 1;
 			Debug.Log("Quest Complete");
 		}
 		else

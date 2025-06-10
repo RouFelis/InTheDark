@@ -69,6 +69,7 @@ public class SpectatorManager : MonoBehaviour
 
         // 새로운 플레이어가 추가되었을 때 호출될 델리게이트에 SetPlayersCam 메서드 등록
         PlayersManager.Instance.OnPlayerAdded += SetPlayersCam;
+        PlayersManager.Instance.OnPlayerRemoved += RemovePlayersCam;
         KeySettingsManager.Instance.sensitivitySlider.onValueChanged.AddListener(SetMouseSensitivity);
     }
 
@@ -118,6 +119,27 @@ public class SpectatorManager : MonoBehaviour
         Player temptCam = temptPlayer.GetComponent<Player>();
         players.Add(temptCam);
     }
+
+
+    // 새 플레이어가 삭제되었을 때 호출되는 함수입니다.
+    // networkLong: 삭제된 플레이어의 네트워크 아이디
+    private void RemovePlayersCam(ulong networkLong)
+    {
+        NetworkObject temptPlayer = null;
+
+        // 추가된 플레이어의 네트워크 객체를 찾아 temptPlayer에 할당
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(networkLong, out var netobject))
+        {
+            temptPlayer = netobject.PlayerObject;
+            Debug.Log($"추가 할 오브젝트: {temptPlayer.name} , Ulong {networkLong}");
+        }
+
+        // 네트워크 객체 리스트와 플레이어 리스트에 새 플레이어 추가
+        playersNetworkObject.Remove(temptPlayer);
+        Player temptCam = temptPlayer.GetComponent<Player>();
+        players.Remove(temptCam);
+    }
+
 
     // 로컬 플레이어 사망 시 호출되는 메서드
     private void SetDie()

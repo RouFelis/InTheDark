@@ -11,7 +11,8 @@ Material:
   m_Shader: {fileID: 4800000, guid: 14eb328de4b8eb245bb7cea29e4ac00b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - GLOW_ON
   m_InvalidKeywords:
   - _ALPHATEST_ON
   - _DISABLE_SSR_TRANSPARENT
@@ -183,7 +184,7 @@ Material:
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _FaceText_ST: {r: 1, g: 1, b: 0, a: 0}
     - _FaceUVSpeed: {r: 0, g: 0, b: 0, a: 0}
-    - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
+    - _GlowColor: {r: 0.31167677, g: 0.572636, b: 0.6415094, a: 0.5}
     - _IsoPerimeter: {r: 0, g: 0, b: 0, a: 0}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}

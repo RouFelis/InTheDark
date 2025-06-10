@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+using System.Linq;
 
 public class PurchaseController : NetworkBehaviour 
 {
@@ -23,6 +24,7 @@ public class PurchaseController : NetworkBehaviour
 
     [Header("플레이어 정보 받기위한 Shopinterecter")]
     public ShopInteracter shopInteracter;
+    [SerializeField] private TMP_Text LogTMP;
 
     private WeaponSystem weaponSystem;
     private NetworkObject spawnedObjectParent;
@@ -70,14 +72,16 @@ public class PurchaseController : NetworkBehaviour
 			if (!purchase.upgrade)
             {
                 purchase.name.text = purchase.price.ToString() + "TK";
-                purchase.purchaseButton.onClick.AddListener(() => { PurchaseObjectServerRpc(purchase.objectPath, purchase.price); });
+                purchase.purchaseButton.onClick.AddListener(() => {
+                    PurchaseObjectServerRpc(PlayersManager.Instance.playersList[0].Name, purchase.name.text, purchase.objectPath, purchase.price);                     
+                });
             }
         }
     }
 
 
 	[ServerRpc(RequireOwnership = false)] // 소유권이 필요하지 않도록 설정
-    void PurchaseObjectServerRpc(NetworkString path, int price ,ServerRpcParams rpcParams = default)
+    void PurchaseObjectServerRpc(NetworkString playerName, NetworkString itemName, NetworkString path, int price ,ServerRpcParams rpcParams = default)
     {
 		if (price > SharedData.Instance.Money.Value)
 		{
@@ -125,6 +129,19 @@ public class PurchaseController : NetworkBehaviour
         temptItem.networkInventoryItemData.Value = updatedItemData;
 
         networkObject.transform.SetParent(parentObject.transform, true);
+        PerchaseClientRpc(playerName, itemName);
     }
 
+    [ClientRpc]
+    void PerchaseClientRpc(string playerName, string itemName)
+	{
+        LogTMP.text += $"\n {playerName} is Buy {itemName}";
+
+        // 줄 수 초과 시 앞에서부터 제거
+        string[] lines = LogTMP.text.Split('\n');
+        if (lines.Length > 30)
+        {
+            LogTMP.text = string.Join("\n", lines.Skip(lines.Length - 30));
+        }
+    }
 }

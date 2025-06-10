@@ -54,7 +54,7 @@ public class playerMoveController : SaintsNetworkBehaviour
 
     [Header("Networking")]
     [LayoutStart("Networking", ELayout.FoldoutBox)]
-    [SerializeField] private NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
+    [SerializeField] protected NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isGrabItem = new NetworkVariable<bool>(value: false, writePerm: NetworkVariableWritePermission.Owner);
@@ -101,7 +101,7 @@ public class playerMoveController : SaintsNetworkBehaviour
     [LayoutEnd]
 
     private float timer = 0f; // 시간 값을 추적
-    private bool pause = false; //퍼즈
+    protected bool pause = false; //퍼즈
 
 
     private bool mouseControl = true;
@@ -242,6 +242,7 @@ public class playerMoveController : SaintsNetworkBehaviour
 			{
                 EventPlayingStop();
             }
+            JumpHandle();
         }
 		else
 		{
@@ -306,10 +307,36 @@ public class playerMoveController : SaintsNetworkBehaviour
 
         characterController.Move(moveDirection * Time.deltaTime);
 
+
+        if (mouseControl)
+        {
+            // 마우스 회전 입력
+            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+
+            //firstPersonCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
+            camTarget.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
+            rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
+        }
+
+        HandleAim();
+        HeadBobbing();
+        UpdateSteaminaBar();
+    }
+
+    private void JumpHandle()
+	{
+
         // 점프 처리
         // if (characterController.isGrounded)
         if (IsGrounded())
         {
+/*            if (!isEventPlaying.Value && !pause)
+			{
+                moveDirection.y -= gravity * Time.deltaTime;
+                return;
+            }*/
+
             if (isJumping)
             {
                 moveDirection.y = 0;
@@ -328,21 +355,6 @@ public class playerMoveController : SaintsNetworkBehaviour
         {
             moveDirection.y -= gravity * Time.deltaTime;
         }
-
-        if (mouseControl)
-        {
-            // 마우스 회전 입력
-            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-
-            //firstPersonCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
-            camTarget.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
-            rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
-            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
-        }
-
-        HandleAim();
-        HeadBobbing();
-        UpdateSteaminaBar();
     }
 
     private void EventPlayingStop()

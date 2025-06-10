@@ -15,6 +15,7 @@ public class Interacter : NetworkBehaviour
     public int interactDistance = 2;
     private TextMeshProUGUI infoText;
     private NetworkObject netobject;
+    private GrabbableObject nowInteractableObject;
     [SerializeField] private LayerMask interacterLayer;
 
     void Update()
@@ -71,11 +72,20 @@ public class Interacter : NetworkBehaviour
 				if (Input.GetKeyDown(KeySettingsManager.Instance.InteractKey))
 				{
                     hit.transform.gameObject.GetComponent<InteractableObject>().Interact(netobject.OwnerClientId , this.transform);
+
+                    nowInteractableObject = hit.transform.gameObject.GetComponent<GrabbableObject>();
 				}
                 infoText.gameObject.SetActive(true);
                 return;
             }
         }
+
+        if (nowInteractableObject != null && Input.GetKeyDown(KeySettingsManager.Instance.InteractKey))
+		{
+            nowInteractableObject.Interact(netobject.OwnerClientId, this.transform);
+            nowInteractableObject = null;
+        }
+
         infoText.gameObject.SetActive(false);
     }
 

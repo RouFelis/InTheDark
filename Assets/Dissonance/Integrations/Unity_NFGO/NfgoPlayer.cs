@@ -30,7 +30,7 @@ namespace Dissonance.Integrations.Unity_NFGO
 
         public bool IsTracking { get; private set; }
 
-        private string _playerIdString;
+        [SerializeField] private string _playerIdString;
         private readonly NetworkVariable<FixedString64Bytes> _playerId = new NetworkVariable<FixedString64Bytes>(new FixedString64Bytes(""));
 
         public string PlayerId
@@ -75,7 +75,6 @@ namespace Dissonance.Integrations.Unity_NFGO
                 else
                 {
                     _playerId.OnValueChanged += OnNetworkVariablePlayerIdChanged;
-                     Debug.Log("완료");
                 }
                 yield return new WaitForSeconds(0.1f);
             }

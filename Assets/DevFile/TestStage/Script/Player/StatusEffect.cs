@@ -33,7 +33,7 @@ public class StatusEffect : NetworkBehaviour
             netIsSlowed.OnValueChanged += OnSlowDebuffChanged;
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void ApplySlowServerRpc(bool isPermanent = false, float duration = 0f)
     {
         if (netIsSlowed.Value) return;

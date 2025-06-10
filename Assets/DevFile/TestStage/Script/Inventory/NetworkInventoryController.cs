@@ -649,7 +649,8 @@ public class NetworkInventoryController : NetworkBehaviour
 
             if (currentItem == null)
                 return;
-
+            if (!currentItem.isUsable)
+                return;
 
             Test.UseItem(this);
 

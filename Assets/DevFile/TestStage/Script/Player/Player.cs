@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.UI;
 using Unity.Netcode;
-using UnityEngine.VFX;
+using Dissonance;
 using SaintsField.Playa;
 
 [RequireComponent(typeof(NetworkObject))]
@@ -20,7 +20,7 @@ public class Player : playerMoveController, IHealth, ICharacter
 
     [Header("Network Settings")]
     [LayoutStart("Network Settings", ELayout.FoldoutBox)]
-    [SerializeField] private NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>();
+    [SerializeField] private NetworkVariable<FixedString32Bytes> playerName = new NetworkVariable<FixedString32Bytes>(writePerm: NetworkVariableWritePermission.Server);
     [SerializeField] private NetworkVariable<int> experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
     [SerializeField] private NetworkVariable<int> level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
     [SerializeField] private NetworkVariable<float> currentHealth = new NetworkVariable<float>(100f, writePerm:NetworkVariableWritePermission.Server);
@@ -60,8 +60,6 @@ public class Player : playerMoveController, IHealth, ICharacter
     private bool isFalling = false;
     private float peakY;
 
-
-
     private HashSet<string> destroySceneNames;
 
     private Volume postProcessingVolume;
@@ -69,6 +67,7 @@ public class Player : playerMoveController, IHealth, ICharacter
     private Coroutine activeHitEffect;
     private Vector3 originalCameraPosition;
     private Image healthBar;
+
 
 
     public event Action OnDataChanged;
@@ -85,7 +84,7 @@ public class Player : playerMoveController, IHealth, ICharacter
         {
             if (playerName.Value != value)
             {
-                playerName.Value = value;
+                SubmitIdServerRpc(value);
                 OnDataChanged?.Invoke();
             }
         }
@@ -127,6 +126,10 @@ public class Player : playerMoveController, IHealth, ICharacter
         InitializePlayerLayers();
         currentHealth.OnValueChanged += HandleHealthChanged;
 
+		if (IsOwner)
+        {
+            Name = FindAnyObjectByType<PlayerIDManager>().PlayerName;
+        }
 
         OnReviveLocal += () => { SetDieScirpt(true); Revive(); };
         OnDieEffects += DieEffect;
@@ -134,11 +137,24 @@ public class Player : playerMoveController, IHealth, ICharacter
         rigidbody.isKinematic = true;
     }
 
-	public override void FixedUpdate()
+    public override void OnNetworkSpawn()
+	{
+        base.OnNetworkSpawn();
+
+        playerName.OnValueChanged += (oldValue, newValue) =>
+        {
+            Debug.Log($"User ID updated: {newValue}");
+        };
+    }
+
+
+    public override void FixedUpdate()
 	{
 		if (!IsDead) base.FixedUpdate();
 
 		if (!IsOwner) return;
+
+        if (isEventPlaying.Value && pause) return;
 
 		if (Input.GetKeyDown(KeyCode.Mouse0))
 		{
@@ -147,6 +163,7 @@ public class Player : playerMoveController, IHealth, ICharacter
             Debug.Log("테스트");
             //animationRelay.OnAttackHit();
         }
+
 
         FallDamage();
     }
@@ -502,7 +519,7 @@ public class Player : playerMoveController, IHealth, ICharacter
 	[ServerRpc(RequireOwnership = false)]
     public void LoadPlayerDataServerRPC()
     {
-        var path = $"{Application.persistentDataPath}/playerdata.json";
+        var path = $"{Application.persistentDataPath}/{FindAnyObjectByType<PlayerIDManager>().PlayerName}.json";
         if (!File.Exists(path)) return;
 
         var json = saveSystem.useEncryption
@@ -524,6 +541,12 @@ public class Player : playerMoveController, IHealth, ICharacter
         }
     }
 
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SubmitIdServerRpc(string id)
+    {
+        playerName.Value = id;
+    }
 }
 
 [Serializable]

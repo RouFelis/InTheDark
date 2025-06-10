@@ -19,7 +19,7 @@ namespace InTheDark.Prototypes
 			// 네트워크 오브젝트 유지하려면 이거로 해야하나?
 			//NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
 
-			await SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single);
+			await SceneManager.LoadSceneAsync("MainScene", LoadSceneMode.Single);
 		}
 	} 
 }
