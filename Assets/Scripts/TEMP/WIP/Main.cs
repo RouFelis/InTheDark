@@ -14,6 +14,7 @@ using System.Transactions;
 
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using Unity.Services.Core;
 
 using UnityEngine;

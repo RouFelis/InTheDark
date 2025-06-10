@@ -121,7 +121,14 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//	}
 	//}
 
-	public float Health 
+	public float Health
+	{
+		get => _health.Value;
+
+		set => _health.Value = value;
+	}
+
+	public float CurrentHealth 
 	{
 		get=> _health.Value; 
 
@@ -193,6 +200,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
+	public Animator animator => _animator;
+
 	private void Start()
 	{
 		skinnedMaterials = objectRenderer.materials;
@@ -203,20 +212,29 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
-	public override void OnDestroy()
+	private void Update()
 	{
-		base.OnDestroy();
-
-		//_onAttack?.Cancel();
-		//_onAttack?.Dispose();
+		//if (Target)
+		//{
+		//	Debug.Log($"{name}.{GetInstanceID()}의 타겟은 {Target}");
+		//}
 	}
+
+	//public override void OnDestroy()
+	//{
+	//	base.OnDestroy();
+
+	//	//_onAttack?.Cancel();
+	//	//_onAttack?.Dispose();
+	//}
 
 	public override void OnNetworkSpawn()
 	{
 		//base.OnNetworkSpawn();
 
 		_isDead.OnValueChanged += OnIsDeadChanged;
-		//_resistance.OnValueChanged += OnResistanceChanged;
+		//_resistance.OnValueChanged += OnHealthChanged;
+		_health.OnValueChanged += OnHealthChanged;
 
 		//UpdateManager.OnUpdate += OnUpdate;
 
@@ -249,7 +267,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		//base.OnNetworkDespawn();
 
 		_isDead.OnValueChanged -= OnIsDeadChanged;
-		//_resistance.OnValueChanged -= OnResistanceChanged;
+		//_resistance.OnValueChanged -= OnHealthChanged;
+		_health.OnValueChanged -= OnHealthChanged;
 
 		//UpdateManager.OnUpdate -= OnUpdate;
 
@@ -270,6 +289,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//}
 
 	// 네트워크에서 못 찾을 수 있으니 (최소한 스테이지가) 완전히 끝나기 전엔 Despawn 하면 안댐
+	// 아닌가
 	private void OnIsDeadChanged(bool previousValue, bool newValue)
 	{
 		if (!previousValue.Equals(newValue))
@@ -301,7 +321,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
-	private void OnResistanceChanged(float oldValue, float newValue)
+	private void OnHealthChanged(float oldValue, float newValue)
 	{
 		DamagedEffect();
 
@@ -334,7 +354,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	{
 		//float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / _maxHealth.Value)); // 0~1 값으로 제한
 		//float healthRatio = Mathf.Clamp01(1 - (_resistance.Value / InitializeResistanceValue)); // 0~1 값으로 제한
-		//float healthRatio = Mathf.Clamp01(1 - (_health.Value / InitializeHealthValue)); // 0~1 값으로 제한
+		//float healthRatio = Mathf.Clamp01(1 - (_currentHealth.Value / InitializeHealthValue)); // 0~1 값으로 제한
 
 		float healthRatio = Mathf.InverseLerp(InitializeHealthValue, 0.0F, _health.Value); // 0~1 값으로 제한
 
@@ -421,7 +441,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 			if (_animator)
 			{
 				_animator.applyRootMotion = true;
-				_animator.Play("Dead", 0, 0.0F);
+				//_animator.Play("Dead", 0, 0.0F);
+				_animator.SetBool("IsDead", true);
 			}
 
 			//await UniTask.WaitUntil(() => _animator.GetCurrentAnimatorStateInfo(0).IsName("Dead").);

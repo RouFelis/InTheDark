@@ -91,5 +91,11 @@ namespace InTheDark.Prototypes
 
 			//Debug.Log("HIT!!!");
 		}
+
+		private void OnDrawGizmos()
+		{
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine(transform.position, transform.position + transform.forward * _range);
+		}
 	} 
 }

@@ -30,7 +30,7 @@ public class NetworkRagdollController : NetworkBehaviour
     {
         // 초기 랙돌 상태 비활성화
         ToggleRagdoll(false);
-        //networkTransform.enabled = false;
+        //NetworkTransform.enabled = false;
     }
 
     // 랙돌 활성화/비활성화 메인 메서드
