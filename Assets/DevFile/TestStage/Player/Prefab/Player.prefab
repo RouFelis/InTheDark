@@ -1728,7 +1728,7 @@ MonoBehaviour:
   _range: 0
   _target:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   _causer: {fileID: 0}
   _weapon: {fileID: 2664938574842109991}
 --- !u!114 &7236338420078833990
@@ -5580,6 +5580,10 @@ PrefabInstance:
     - target: {fileID: -3441559818764997359, guid: 379b2a4f8e91e004393c6fa4b5b0694d, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.001036659
+      objectReference: {fileID: 0}
+    - target: {fileID: -3196511607817033700, guid: 379b2a4f8e91e004393c6fa4b5b0694d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -3050895055062153227, guid: 379b2a4f8e91e004393c6fa4b5b0694d, type: 3}
       propertyPath: m_LocalPosition.x

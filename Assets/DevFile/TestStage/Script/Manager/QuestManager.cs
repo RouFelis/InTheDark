@@ -14,6 +14,12 @@ public class QuestManager : NetworkBehaviour
 
 	public Action QuestFailAction;
 
+	// [[25.06.24]] 이벤트 임시 추가
+	// QuestBase에 이벤트 연결하는게 제일 좋아 보이긴 한데...
+	public delegate void OnQuestCompleted(QuestBase quest, int requireQuestCount, int currentQuestCount);
+
+	public static OnQuestCompleted OnQuestComplete;
+
 
 	private void Awake()
 	{
@@ -46,6 +52,9 @@ public class QuestManager : NetworkBehaviour
 		{
 			SharedData.Instance.questQuota.Value += 1;
 			Debug.Log("Quest Complete");
+
+			// [[25.06.24]] 이벤트 임시 추가
+			OnQuestComplete?.Invoke(quest, mustClearQuestTotal, nowClearedQuestTotal);
 		}
 		else
 		{
