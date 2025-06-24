@@ -20,6 +20,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public const string WALKING_STATE = "IsWalking";
 	public const string ATTACK_TRIGGER = "OnAttack";
 
+	public delegate void EnemyDieDelegate(NetworkBehaviourReference reference);
+
 	public float InitializeCooldownValue;
 	public int InitializeHealthValue;
 	//[Obsolete] public float InitializeResistanceValue;
@@ -97,6 +99,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//private CancellationTokenSource _onAttack;
 
 	//private List<LightSource> _sighted = new List<LightSource>();
+
+	public static event EnemyDieDelegate OnEnemyDie;
 
 	public bool IsDead
 	{
@@ -467,6 +471,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 			_behaviorTree.DisableBehavior();
 			_deathTrigger.OnUpdate(this);
+
+			OnEnemyDie?.Invoke(this);
 
 			await UniTask.Delay(TimeSpan.FromSeconds(3.67F));
 
