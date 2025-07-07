@@ -367,7 +367,7 @@ public class playerMoveController : SaintsNetworkBehaviour
             staminaBar = GameObject.Find("StaminaBar").GetComponent<Image>();
         }
         float healthRatio = currentStamina.Value / maxStamina; // 0 ~ 1
-        staminaBar.fillAmount = healthRatio * 0.5f; // 0 ~ 0.5로 변환
+        staminaBar.fillAmount = healthRatio; // 0 ~ 0.5로 변환
     }
 
     //걸을때 머리 덜렁이기 ㅋㅋ
