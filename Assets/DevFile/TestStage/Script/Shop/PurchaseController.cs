@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
-using System.Linq;
+using System;
 
 public class PurchaseController : NetworkBehaviour 
 {
@@ -24,7 +24,8 @@ public class PurchaseController : NetworkBehaviour
 
     [Header("플레이어 정보 받기위한 Shopinterecter")]
     public ShopInteracter shopInteracter;
-    [SerializeField] private TMP_Text LogTMP;
+    [SerializeField] private TMP_Text logTMP;
+    public int maxLines = 10;
 
     private WeaponSystem weaponSystem;
     private NetworkObject spawnedObjectParent;
@@ -93,14 +94,14 @@ public class PurchaseController : NetworkBehaviour
         GameObject loadObject = Resources.Load<GameObject>(path);
 
         //랜덤 좌표(한점과 한점 사이에 랜덤으로 스폰되게 함. 최대한 다양하게 보이려고)
-        float spawnX = Random.Range(SpawnPosition[0].position.x , SpawnPosition[1].position.x);
-        float spawnZ = Random.Range(SpawnPosition[0].position.z , SpawnPosition[1].position.z);
+        float spawnX = UnityEngine.Random.Range(SpawnPosition[0].position.x , SpawnPosition[1].position.x);
+        float spawnZ = UnityEngine.Random.Range(SpawnPosition[0].position.z , SpawnPosition[1].position.z);
         Vector3 spawnPosition = new Vector3(spawnX, SpawnPosition[0].position.y, spawnZ);       
 
         //랜덤 회전값. (오브젝트 스폰시 다양하게 보이려고)
-        float randomX = Random.value > 0.5f ? 90f : 0f; 
-        float randomZ = Random.value > 0.5f ? 90f : 0f; 
-        float randomY = Random.Range(0f, 360f);
+        float randomX = UnityEngine.Random.value > 0.5f ? 90f : 0f; 
+        float randomZ = UnityEngine.Random.value > 0.5f ? 90f : 0f; 
+        float randomY = UnityEngine.Random.Range(0f, 360f);
         Vector3 spawnRotation = new Vector3(randomX, randomY, randomZ);
 
         // 모든 클라이언트에서 오브젝트를 설치하는 ClientRpc 호출
@@ -135,13 +136,18 @@ public class PurchaseController : NetworkBehaviour
     [ClientRpc]
     void PerchaseClientRpc(string playerName, string itemName)
 	{
-        LogTMP.text += $"\n {playerName} is Buy {itemName}";
+        string newLog = $"{playerName} is Buy {itemName}";
 
-        // 줄 수 초과 시 앞에서부터 제거
-        string[] lines = LogTMP.text.Split('\n');
-        if (lines.Length > 30)
+        // 현재 줄 수 계산
+        string[] lines = logTMP.text.Split('\n');
+
+        if (lines.Length >= maxLines)
         {
-            LogTMP.text = string.Join("\n", lines.Skip(lines.Length - 30));
+            logTMP.text = newLog;
+        }
+        else
+        {
+            logTMP.text += $"\n{newLog}";
         }
     }
 }

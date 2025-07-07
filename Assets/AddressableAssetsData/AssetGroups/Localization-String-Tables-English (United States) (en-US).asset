@@ -28,11 +28,18 @@ MonoBehaviour:
     - Locale-en-US
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 400feeca398e29e42a19fd4c61e20bfc
+    m_Address: ErrorTable_en-US
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-US
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 80162f602fd0c9b48bbeebfcbea851c3
     m_Address: UITable_en-US
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en-US
+    - Preload
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 6fcb3993968c1dd4babb07a0de79fb19, type: 2}

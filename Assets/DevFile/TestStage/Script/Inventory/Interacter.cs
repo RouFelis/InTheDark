@@ -78,6 +78,21 @@ public class Interacter : NetworkBehaviour
                 infoText.gameObject.SetActive(true);
                 return;
             }
+            if (hit.transform.CompareTag("InteractableObject_NonNet"))
+            {
+                localizedString.TableReference = "InteractTable"; // 사용하고자 하는 테이블
+                localizedString.TableEntryReference = hit.transform.name; // 사용하고자 하는 키
+                infoText.text = $"{localizedString.GetLocalizedString()} ({KeySettingsManager.Instance.InteractKey}) \n";
+
+                if (Input.GetKeyDown(KeySettingsManager.Instance.InteractKey))
+                {
+                    hit.transform.gameObject.GetComponent<InteractableObject_NonNet>().Interact(netobject.OwnerClientId, this.transform);
+
+                    nowInteractableObject = hit.transform.gameObject.GetComponent<GrabbableObject>();
+                }
+                infoText.gameObject.SetActive(true);
+                return;
+            }
         }
 
         if (nowInteractableObject != null && Input.GetKeyDown(KeySettingsManager.Instance.InteractKey))

@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class UIAnimationManager : MonoBehaviour
 {
@@ -16,71 +16,137 @@ public class UIAnimationManager : MonoBehaviour
 	[SerializeField] private UIAnimation dieCameraEffect3;
 
 	[Header("Close Object")]
-	[SerializeField] private GameObject healthBar;
-	#endregion
+	[SerializeField] private RectTransform healthBar;
 
 
-	#region AllDieAni
-	public void AllDieAnimation()
-	{
-		healthBar.SetActive(false);
-		dieAnime.gameObject.SetActive(true);
-		allDieCameraEffect1.gameObject.SetActive(true);
-		allDieCameraEffect2.gameObject.SetActive(true);
-		allDieCameraEffect3.gameObject.SetActive(true);
-		dieAnime.StartEffect();
-		allDieCameraEffect1.StartEffect();
-		allDieCameraEffect2.StartEffect();
-		allDieCameraEffect3.StartEffect();
-	}
 
-	private void DisableAllDieUIAnimations()
-	{
-		dieAnime.gameObject.SetActive(false);
-		allDieCameraEffect1.gameObject.SetActive(false);
-		allDieCameraEffect2.gameObject.SetActive(false);
-		allDieCameraEffect3.gameObject.SetActive(false);
-	}
+	[Header("ReviveAnime")]
+	[SerializeField] private UIAnimation reviveAnimation;
+
 
 
 	#endregion
+
+
+	/*	#region AllDieAni
+		public void AllDieAnimation()
+		{
+			healthBar.localScale = Vector3.zero;
+			dieAnime.gameObject.SetActive(true);
+			allDieCameraEffect1.gameObject.SetActive(true);
+			allDieCameraEffect2.gameObject.SetActive(true);
+			allDieCameraEffect3.gameObject.SetActive(true);
+			dieAnime.StartEffect();
+			allDieCameraEffect1.StartEffect();
+			allDieCameraEffect2.StartEffect();
+			allDieCameraEffect3.StartEffect();
+			Debug.Log("ALL DIE");
+		}
+
+		private void DisableAllDieUIAnimations()
+		{
+			dieAnime.gameObject.SetActive(false);
+			allDieCameraEffect1.gameObject.SetActive(false);
+			allDieCameraEffect2.gameObject.SetActive(false);
+			allDieCameraEffect3.gameObject.SetActive(false);
+		}
+
+
+		#endregion*/
 
 
 	#region DieAni
 
 
-	private void DisableDieUIAnimations()
+	/*private void DisableDieUIAnimations()
 	{
 		dieCameraEffect1.gameObject.SetActive(false);
-		dieCameraEffect1.gameObject.SetActive(false);
-		dieCameraEffect1.gameObject.SetActive(false);
-		dieCameraEffect1.gameObject.SetActive(false);
+		dieCameraEffect2.gameObject.SetActive(false);
+		dieCameraEffect3.gameObject.SetActive(false);
 	}
+
 
 	public void DieAnimation()
 	{
-		healthBar.SetActive(false);
+		healthBar.localScale = Vector3.zero;
 		dieCameraEffect1.gameObject.SetActive(true);
 		dieCameraEffect2.gameObject.SetActive(true);
 		dieCameraEffect3.gameObject.SetActive(true);
 		dieCameraEffect1.StartEffect();
 		dieCameraEffect2.StartEffect();
 		dieCameraEffect3.StartEffect();
+		Debug.Log("DIE");
+	}*/
+	private void DisableDieUIAnimations()
+	{
+		allDieCameraEffect1.gameObject.SetActive(false);
+		allDieCameraEffect2.gameObject.SetActive(false);
+		allDieCameraEffect3.gameObject.SetActive(false);
 	}
-	
+
+
+	public void DieAnimation()
+	{
+		healthBar.localScale = Vector3.zero;
+		allDieCameraEffect1.gameObject.SetActive(true);
+		allDieCameraEffect2.gameObject.SetActive(true);
+		allDieCameraEffect3.gameObject.SetActive(true);
+		allDieCameraEffect1.StartEffect();
+		allDieCameraEffect2.StartEffect();
+		allDieCameraEffect3.StartEffect();
+		Debug.Log("DIE");
+	}
+
+	private void AllDieAnimation(bool oldValue, bool newValue)
+	{		
+		if(newValue)
+			StartCoroutine(AllDieAnimationCo());
+	}
+
+	public IEnumerator AllDieAnimationCo()
+	{
+		yield return new WaitForSeconds(1.618f);
+
+		dieAnime.gameObject.SetActive(true);
+		dieAnime.StartEffect();
+
+		yield return new WaitForSeconds(2f);
+
+		dieAnime.gameObject.SetActive(false);
+	}
+
+
 	#endregion
 
+
+	#region
+
+	public void ReviveAnimation()
+	{
+		reviveAnimation.StartEffect();
+		StartCoroutine(healthbarOn());
+	}
+
+
+	private IEnumerator healthbarOn()
+	{
+		yield return new WaitForSeconds(1f);
+		healthBar.localScale = Vector3.one;
+	}
+	#endregion
 
 
 	private void OnEnable()
 	{
-		allDieCameraEffect3.OnAnimationFinished += DisableAllDieUIAnimations;
-		dieCameraEffect3.OnAnimationFinished += DisableDieUIAnimations;
+		//allDieCameraEffect3.OnAnimationFinished += DisableAllDieUIAnimations;
+		allDieCameraEffect3.OnAnimationFinished += DisableDieUIAnimations;
+		PlayersManager.Instance.allPlayersDead.OnValueChanged += AllDieAnimation;
 	}
 
 	private void OnDisable()
 	{
-		allDieCameraEffect3.OnAnimationFinished -= DisableAllDieUIAnimations;
-		dieCameraEffect3.OnAnimationFinished -= DisableDieUIAnimations;
+		//allDieCameraEffect3.OnAnimationFinished -= DisableAllDieUIAnimations;
+		allDieCameraEffect3.OnAnimationFinished -= DisableDieUIAnimations;
+		PlayersManager.Instance.allPlayersDead.OnValueChanged -= AllDieAnimation;
 	}
 }

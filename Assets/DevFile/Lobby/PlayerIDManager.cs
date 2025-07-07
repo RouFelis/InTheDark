@@ -4,7 +4,7 @@ using TMPro;
 
 public class PlayerIDManager : MonoBehaviour
 {
-    private string playerName;
+    private string playerName = "";
 
     public string PlayerName { get =>playerName; set =>playerName = value ; }
 

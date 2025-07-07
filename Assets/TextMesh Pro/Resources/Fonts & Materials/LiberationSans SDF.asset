@@ -116,7 +116,7 @@ Material:
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0
+    - _OutlineWidth: 0.3
     - _PerPixelSorting: 0
     - _PerspectiveFilter: 0.875
     - _RayTracing: 0
@@ -187,7 +187,7 @@ Material:
     - _GlowColor: {r: 0.31167677, g: 0.572636, b: 0.6415094, a: 0.5}
     - _IsoPerimeter: {r: 0, g: 0, b: 0, a: 0}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0.6132076, g: 0.6132076, b: 0.6132076, a: 1}
     - _OutlineColor1: {r: 0, g: 1, b: 1, a: 1}
     - _OutlineColor2: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor3: {r: 0, g: 0, b: 0, a: 1}

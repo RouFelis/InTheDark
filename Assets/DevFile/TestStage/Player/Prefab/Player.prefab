@@ -465,8 +465,7 @@ GameObject:
   - component: {fileID: 4967549593802716169}
   - component: {fileID: 3044497667356731293}
   - component: {fileID: 2392780955633626093}
-  - component: {fileID: 2816544151119313986}
-  - component: {fileID: 2999762689314916600}
+  - component: {fileID: 3351017001260298488}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -1362,35 +1361,35 @@ MonoBehaviour:
   handAimTargetulong:
     m_InternalValue: 0
   playerConstraints:
+  - constraint: {fileID: 5519282906033870040}
+    weight: 1
+  - constraint: {fileID: 4160200125469821269}
+    weight: 1
+  - constraint: {fileID: 3707212786593984911}
+    weight: 1
+  - constraint: {fileID: 4172576207195356346}
+    weight: 1
+  - constraint: {fileID: 6079684634550978777}
+    weight: 1
   - constraint: {fileID: 5282088525160646007}
     weight: 1
   - constraint: {fileID: 8293933976750834196}
     weight: 1
   - constraint: {fileID: 3130374657479061064}
     weight: 1
-  - constraint: {fileID: 6079684634550978777}
-    weight: 1
-  - constraint: {fileID: 4172576207195356346}
-    weight: 1
-  - constraint: {fileID: 3707212786593984911}
-    weight: 1
-  - constraint: {fileID: 4160200125469821269}
-    weight: 1
-  - constraint: {fileID: 5519282906033870040}
-    weight: 1
+  playerConstraints_Item:
   - constraint: {fileID: 3030163576714590640}
-    weight: 1
+    weight: 0
   - constraint: {fileID: 5543204004960524141}
-    weight: 1
+    weight: 0
   - constraint: {fileID: 6439109444218736363}
-    weight: 1
+    weight: 0
   - constraint: {fileID: 2308237404411610047}
-    weight: 1
+    weight: 0
   - constraint: {fileID: 351133056120783898}
-    weight: 1
+    weight: 0
   - constraint: {fileID: 7113141842098190179}
-    weight: 1
-  playerConstraints_Item: []
+    weight: 0
   distanceFromCamera: 1
   aimMaxDistance: 100
   rigBuilder_firstPerson: {fileID: 7802452241760861788}
@@ -1452,7 +1451,7 @@ MonoBehaviour:
   level:
     m_InternalValue: 0
   currentHealth:
-    m_InternalValue: 1000
+    m_InternalValue: 10
   maxHealth: 100
   cameraShakeMagnitude: 0.00015
   cameraShakeDuration: 0.3
@@ -1474,11 +1473,14 @@ MonoBehaviour:
   - {fileID: 2740562399230657829}
   uiAniManager: {fileID: 0}
   animationRelay: {fileID: 452271807677361613}
+  gamemanager: {fileID: 0}
+  micController: {fileID: 3351017001260298488}
   fallThreshold: 10
-  damageMultiplier: 1
+  damageMultiplier: 2
   groundCheckDistance: 0.2
   collisionSpeedThreshold: 10
-  collisionDamageMultiplier: 1
+  collisionDamageMultiplier: 2
+  isMyCharacter: 0
 --- !u!114 &5492822605165854208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1948,7 +1950,7 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &2816544151119313986
+--- !u!114 &3351017001260298488
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1957,52 +1959,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1441098053676493550}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e453eeaf72f51f448afbf40c14a98d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _channelTypeExpanded: 0
-  _metadataExpanded: 0
-  _activationModeExpanded: 0
-  _tokensExpanded: 0
-  _ampExpanded: 0
-  _activationFaderSettings:
-    _volume: 1
-    _fadeInTicks: 0
-    _fadeOutTicks: 1500000
-  _triggerFaderSettings:
-    _volume: 1
-    _fadeInTicks: 7500000
-    _fadeOutTicks: 11500000
-  _broadcastPosition: 1
-  _channelType: 0
-  _inputName: PushToTalk
-  _mode: 1
-  _muted: 0
-  _playerId: 
-  _useTrigger: 0
-  _roomName: Global
-  _priority: 0
---- !u!114 &2999762689314916600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1441098053676493550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3737438748cf23f448d18cd2c6192e95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _roomExpanded: 1
-  _tokensExpanded: 1
-  _colliderExpanded: 1
-  _roomName: Global
-  _useTrigger: 0
+  broadcastVoice:
+    receipt: {fileID: 0}
+    broadcast: {fileID: 0}
+  dieVoice:
+    receipt: {fileID: 0}
+    broadcast: {fileID: 0}
 --- !u!1 &1595425553284540487
 GameObject:
   m_ObjectHideFlags: 0

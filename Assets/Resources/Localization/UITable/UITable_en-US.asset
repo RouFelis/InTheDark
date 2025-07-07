@@ -36,6 +36,43 @@ MonoBehaviour:
     m_Localized: Upgrade
     m_Metadata:
       m_Items: []
+  - m_Id: 86077098028908544
+    m_Localized: Total Money
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86077100763594752
+    m_Localized: Cleared Quest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86079472009166848
+    m_Localized: Money Quota
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86077424563863552
+    m_Localized: Escape
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86080102211731456
+    m_Localized: Mission Quota
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86080573387259904
+    m_Localized: Area
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86093658265174016
+    m_Localized: Result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86093696831799296
+    m_Localized: "There is no such thing as personal will \u2014 only the will of
+      the State."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86098608919625728
+    m_Localized: Killed Enemy
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

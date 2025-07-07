@@ -59,12 +59,20 @@ namespace InTheDark.Prototypes
 
 		private void OnPlayerDie()
 		{
-			if (_target.Equals(_pawn.Target) && _target.IsDead)
+			try
 			{
-				Debug.Log($"墓鸥况 林陛");
+				if (_target.Equals(_pawn.Target) && _target.IsDead)
+				{
+					Debug.Log($"墓鸥况 林陛");
 
-				Detach(_target);
+					Detach(_target);
+				}
 			}
+			catch
+			{
+
+			}
+
 		}
 
 		public void Attach(Player player)
