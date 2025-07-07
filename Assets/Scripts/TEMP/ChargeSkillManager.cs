@@ -19,6 +19,12 @@ namespace InTheDark.Prototypes
 		private float _duration;
 
 		[SerializeField]
+		private float _flightTime;
+
+		[SerializeField]
+		private float _flightSpeed;
+
+		[SerializeField]
 		private float _initialCooldown;
 		
 		[SerializeField]
@@ -45,6 +51,8 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private bool _isRunning = false;
 
+		private List<Player> _onClash = new();
+
 		public bool IsEnable
 		{
 			get
@@ -60,7 +68,64 @@ namespace InTheDark.Prototypes
 
 		private void OnCollisionEnter(Collision collision)
 		{
-			
+			if (_isRunning && collision.transform.root.CompareTag("Player"))
+			{
+				var contact = collision.contacts[0];
+				var hitNormal = contact.normal;
+
+				var pushDir = -hitNormal.normalized;
+
+				var player = collision.transform.root.GetComponent<Player>();
+
+				Debug.Log($"{collision.transform.root.name} 부딫힘");
+
+				StartCoroutine(OnCollisionPlayer(player, pushDir));
+			}
+			//else
+			//{
+			//	Debug.Log($"? 그런거 모름");
+			//}
+		}
+
+		private IEnumerator OnCollisionPlayer(Player player, Vector3 direction)
+		{
+			var time = 0.0F;
+			var count = 0;
+
+			if (_onClash.Contains(player))
+			{
+				yield break;
+			}
+
+			_onClash.Add(player);
+
+			while (!player.IsDead && time < _flightTime)
+			{
+				var deltaTime = Time.deltaTime;
+				var tempTime = time;
+
+				var cc = player.GetComponent<CharacterController>();
+
+				time = Mathf.Min(time + deltaTime, _flightTime);
+				deltaTime = Mathf.Min(tempTime - time, deltaTime);
+
+				if (cc)
+				{
+					var power = direction * _flightSpeed * deltaTime / _flightTime;
+
+					Debug.Log($"{player}가 {count}번째 충돌 처리로 {power}만큼 날아감!");
+
+					cc.Move(power);
+				}
+
+				count++;
+
+				yield return count;
+			}
+
+			_onClash.Remove(player);
+
+			yield return null;
 		}
 
 		private void OnUpdate()

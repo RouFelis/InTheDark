@@ -20,6 +20,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public const string WALKING_STATE = "IsWalking";
 	public const string ATTACK_TRIGGER = "OnAttack";
 
+	public delegate void EnemyDieDelegate(NetworkBehaviourReference reference);
+
 	public float InitializeCooldownValue;
 	public int InitializeHealthValue;
 	//[Obsolete] public float InitializeResistanceValue;
@@ -87,6 +89,9 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	private EnemyLightInsightedTrigger _lightInsightedTrigger;
 
 	[SerializeField]
+	private EnemyTakeDamageTrigger[] _takeDamageTrigger;
+
+	[SerializeField]
 	private Loot[] _loots;
 
 	private NetworkVariable<NetworkBehaviourReference> _target = new NetworkVariable<NetworkBehaviourReference>();
@@ -94,6 +99,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//private CancellationTokenSource _onAttack;
 
 	//private List<LightSource> _sighted = new List<LightSource>();
+
+	public static event EnemyDieDelegate OnEnemyDie;
 
 	public bool IsDead
 	{
@@ -345,6 +352,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public void OnLightInsighted(SpotLight light)
 	{
+		Debug.Log("인식은 됨?");
+
 		//_sighted.Add(light);
 		_lightInsightedTrigger.OnUpdate(this, light);
 	}
@@ -405,10 +414,23 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public void TakeDamage(float amount , AudioClip hitSound)
 	{
-		var oldValue = _health.Value;
-		var newValue = Mathf.Max(oldValue - amount, 0.0F);
+		var handle = new DamageHandle()
+		{
+			Target = this,
 
-		Debug.Log($"테스트 1번 데미지 : {amount}");
+			Damage = amount
+		};
+
+		// 나중에 피격음을 여기로 빼야함
+		foreach (var trigger in _takeDamageTrigger)
+		{
+			trigger?.OnUpdate(handle);
+		}
+
+		var oldValue = _health.Value;
+		var newValue = Mathf.Max(oldValue - handle.Damage, 0.0F);
+
+		Debug.Log($"테스트 1번 데미지 : {amount}, 테스트 2번 데미지 : {handle.Damage}, 테스트 3번 데미지 : {oldValue - newValue}");
 
 		if (oldValue != newValue)
 		{
@@ -449,6 +471,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 			_behaviorTree.DisableBehavior();
 			_deathTrigger.OnUpdate(this);
+
+			OnEnemyDie?.Invoke(this);
 
 			await UniTask.Delay(TimeSpan.FromSeconds(3.67F));
 

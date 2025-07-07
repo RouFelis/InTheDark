@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime;
+
 using Unity.Netcode;
 using Unity.Netcode.Components;
 
@@ -11,6 +12,7 @@ namespace InTheDark.Prototypes
 	public class MonsterGrab : NetworkBehaviour
 	{
 		public float Range;
+		public float Offset;
 
 		private NetworkVariable<bool> _isActive = new();
 
@@ -23,8 +25,19 @@ namespace InTheDark.Prototypes
 		public NavMeshAgent NavMeshAgent;
 		public BehaviorTree BehaviorTree;
 
+		[SerializeField]
+		private Transform _targetTransform;
+
 		private EnemyPrototypePawn _pawn;
 		private Player _target;
+
+		public bool IsActive
+		{
+			get
+			{
+				return _isActive.Value;
+			}
+		}
 
 		public bool IsEnable
 		{
@@ -39,6 +52,8 @@ namespace InTheDark.Prototypes
 		private void Awake()
 		{
 			_pawn = GetComponent<EnemyPrototypePawn>();
+
+			_targetTransform = GetAnchorTransform();
 		}
 
 		public override void OnNetworkSpawn()
@@ -86,15 +101,20 @@ namespace InTheDark.Prototypes
 		}
 
 		[Rpc(SendTo.Everyone)]
-		protected void AttachClientRPC(NetworkBehaviourReference reference)
+		protected void AttachClientRPC(NetworkBehaviourReference reference, Vector3 position)
 		{
 			if (reference.TryGet(out Player player))
 			{
+				var playerCollider = player.GetComponent<Collider>();
+				var targetTransform = GetAnchorTransform();
 				var constraintSource = new ConstraintSource()
 				{
-					sourceTransform = player.transform,
+					sourceTransform = targetTransform,
 					weight = 1.0F
 				};
+
+				Physics.IgnoreCollision(Collider, playerCollider, true);
+
 				Collider.enabled = false;
 				NetworkTransform.enabled = false;
 
@@ -106,6 +126,11 @@ namespace InTheDark.Prototypes
 
 				PositionConstraint.constraintActive = true;
 				RotationConstraint.constraintActive = true;
+
+				targetTransform.SetParent(player.transform);
+				targetTransform.LookAt(player.transform);
+
+				targetTransform.position = position;
 			}
 		}
 
@@ -115,31 +140,45 @@ namespace InTheDark.Prototypes
 			if (reference.TryGet(out Player player))
 			{
 				var statusEffect = player.GetComponent<StatusEffect>();
+				var insideUnitCircle = Random.insideUnitCircle;
+				var randomPosition = new Vector3(insideUnitCircle.x + player.transform.position.x, player.transform.position.y + Offset, insideUnitCircle.y + player.transform.position.z);
 
 				_isActive.Value = true;
 
 				_target = player;
 
-				statusEffect.ApplySlowServerRpc(true, 0.0F);
+				statusEffect.ApplySlowServerRpc(true, default);
 
-				AttachClientRPC(reference);
+				AttachClientRPC(reference, randomPosition);
 			}
 		}
 
 		[Rpc(SendTo.Everyone)]
 		protected void DetachClientRPC(NetworkBehaviourReference reference)
 		{
-			Collider.enabled = true;
-			NetworkTransform.enabled = true;
+			if (reference.TryGet(out Player player))
+			{
+				var playerCollider = player.GetComponent<Collider>();
+				var targetTransform = GetAnchorTransform();
 
-			NavMeshAgent.enabled = true;
-			BehaviorTree.enabled = true;
+				Physics.IgnoreCollision(Collider, playerCollider, false);
 
-			PositionConstraint.RemoveSource(0);
-			RotationConstraint.RemoveSource(0);
+				Collider.enabled = true;
+				NetworkTransform.enabled = true;
 
-			PositionConstraint.constraintActive = false;
-			RotationConstraint.constraintActive = false;
+				NavMeshAgent.enabled = true;
+				BehaviorTree.enabled = true;
+
+				PositionConstraint.RemoveSource(0);
+				RotationConstraint.RemoveSource(0);
+
+				PositionConstraint.constraintActive = false;
+				RotationConstraint.constraintActive = false;
+
+				targetTransform.SetParent(transform);
+
+				transform.position = Vector3.zero;
+			}
 		}
 
 		[Rpc(SendTo.Server)]
@@ -157,6 +196,20 @@ namespace InTheDark.Prototypes
 
 				DetachClientRPC(reference);
 			}
+		}
+
+		private Transform GetAnchorTransform()
+		{
+			if (!_targetTransform)
+			{
+				var gameObject = new GameObject();
+
+				gameObject.transform.SetParent(transform, false);
+
+				_targetTransform = gameObject.transform;
+			}
+
+			return _targetTransform;
 		}
 	} 
 }

@@ -384,6 +384,7 @@ MonoBehaviour:
   _behaviorTree: {fileID: 4201312871343358130}
   _deathTrigger: {fileID: 11400000, guid: d2dc9e120596c1c40a3890c4958ee638, type: 2}
   _lightInsightedTrigger: {fileID: 11400000, guid: e3029e7a3b60ff74a94892dd565492d3, type: 2}
+  _takeDamageTrigger: []
   _loots:
   - {fileID: 11400000, guid: cb98219c2ef743244bc6f8071018cdfe, type: 2}
 --- !u!114 &7313576750832366103
@@ -547,6 +548,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _duration: 6
+  _flightTime: 3.3
+  _flightSpeed: 25
   _initialCooldown: 15
   _time:
     m_InternalValue: 0
@@ -558,16 +561,16 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.33333334
-      inSlope: 2
-      outSlope: 2
+      value: 1
+      inSlope: 13.776861
+      outSlope: 13.776861
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.030555567
     - serializedVersion: 3
       time: 1
-      value: 4
+      value: 9
       inSlope: 0
       outSlope: 0
       tangentMode: 0
