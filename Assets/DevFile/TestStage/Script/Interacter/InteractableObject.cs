@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.Localization;
+using System.Collections;
 
 public class InteractableObject : NetworkBehaviour
 {
     public float radius = 0.25f;               // 상호작용을 위해 얼마나 가까워야 하는지 설정 (반경)
     public Transform interactionTransform;     // 상호작용을 수행할 위치를 나타내는 트랜스폼 (위치를 오프셋할 때 사용)
-
-//    LayerMask interactableMask;  // 상호작용 가능한 오브젝트를 위한 레이어 마스크 (안씀)
 
     bool isFocus = false;   // 현재 이 상호작용 가능한 오브젝트가 집중되고 있는지 여부
     Transform player;       // 플레이어의 트랜스폼을 참조하기 위한 변수
@@ -18,6 +15,11 @@ public class InteractableObject : NetworkBehaviour
     public string objectName;
     public LocalizedString localizedString;
     public bool IsDragable = false;
+
+
+    private bool canInteract = true;
+    [SerializeField] private float interactCooldown = 2f; // 딜레이 시간 (초)
+
 
     public virtual void Start()
     {
@@ -37,7 +39,19 @@ public class InteractableObject : NetworkBehaviour
     // 상호작용 메서드는 자식 클래스에서 재정의되도록 설계됨
     public virtual void Interact(ulong userId ,Transform interactingObjectTransform)
     {
+		if (!canInteract) return;
+        if (KeySettingsManager.Instance.isEveryEvent) return;
+
+        canInteract = false;
+		StartCoroutine(InteractCooldown());
+
         Debug.Log(interactingObjectTransform.name + " has interacted with " + transform.name);
+    }
+
+    private IEnumerator InteractCooldown()
+    {
+        yield return new WaitForSeconds(interactCooldown);
+        canInteract = true;
     }
 
     // 오브젝트가 플레이어의 집중 대상이 되었을 때 호출됨

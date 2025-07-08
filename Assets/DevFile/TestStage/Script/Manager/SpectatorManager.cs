@@ -54,7 +54,7 @@ public class SpectatorManager : MonoBehaviour
             userPlayer = client.PlayerObject.GetComponent<Player>();
             // 로컬 플레이어의 가상 카메라 참조를 할당합니다.
             cinemachineCamera = userPlayer.VirtualCamera;
-            Debug.Log($"내 플레이어 오브젝트: {userPlayer.name}");
+            Debug.Log($"내 플레이어 오브젝트: {userPlayer.PlayerName}");
         }
 
         // 로컬 이벤트 등록: 플레이어 사망 및 부활 시 호출되는 메서드 등록
@@ -114,10 +114,18 @@ public class SpectatorManager : MonoBehaviour
             Debug.Log($"추가 할 오브젝트: {temptPlayer.name} , Ulong {networkLong}");
         }
 
-        // 네트워크 객체 리스트와 플레이어 리스트에 새 플레이어 추가
-        playersNetworkObject.Add(temptPlayer);
+        // 네트워크 객체 리스트에 중복이 없을 때만 추가
+        if (!playersNetworkObject.Contains(temptPlayer))
+        {
+            playersNetworkObject.Add(temptPlayer);
+        }
+
+        // 플레이어 리스트에 중복이 없을 때만 추가
         Player temptCam = temptPlayer.GetComponent<Player>();
-        players.Add(temptCam);
+        if (!players.Contains(temptCam))
+        {
+            players.Add(temptCam);
+        }
     }
 
 
@@ -175,23 +183,39 @@ public class SpectatorManager : MonoBehaviour
         }
     }
 
-    // 플레이어 부활 시 호출되는 메서드
-    private void SetRevive()
-    {
-        isUserDie = false;
+	// 플레이어 부활 시 호출되는 메서드
+	private void SetRevive()
+	{
+		isUserDie = false;
 
-        // 현재 보고 있던 플레이어의 사망 뷰를 비활성화합니다.
-        players[currentCameraIndex].SetPlayerDieView(false);
+		// 현재 보고 있던 플레이어의 사망 뷰를 비활성화합니다.
+		players[currentCameraIndex].SetPlayerDieView(false);
 
-        // 부활하면 다시 로컬 플레이어(인덱스 0)로 카메라를 변경합니다.
-        currentCameraIndex = 0;
-        cinemachineCamera.Follow = players[currentCameraIndex].FirstPersonCamera.transform;
-        //회전객체설정
-        rotationTransform = null;
-        // LookAt 설정이 필요한 경우 주석 해제 가능
-        cinemachineCamera.LookAt = null;
+		// 부활하면 다시 로컬 플레이어(인덱스 0)로 카메라를 변경합니다.
+		currentCameraIndex = 0;
 
-        players[currentCameraIndex].SetPlayerDieView(true);
+		cinemachineCamera.Follow = players[currentCameraIndex].FirstPersonCamera.transform;
+
+		//회전객체설정
+		rotationTransform = null;
+		// LookAt 설정이 필요한 경우 주석 해제 가능
+
+		Cinemachine3rdPersonFollow followComponent = cinemachineCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+
+		cinemachineCamera.LookAt = null;
+
+
+		if (followComponent != null)
+		{
+			// CameraDistance 값을 변경함.
+			followComponent.CameraDistance = 0;
+		}
+		else
+		{
+			Debug.LogError("Cinemachine3rdPersonFollow 컴포넌트를 찾을 수 없습니다. 님큰일남 ㅋㅋ");
+		}
+
+		players[currentCameraIndex].SetPlayerDieView(true);
     }
 
     private void Update()

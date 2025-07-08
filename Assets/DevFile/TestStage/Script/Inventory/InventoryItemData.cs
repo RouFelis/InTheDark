@@ -62,8 +62,8 @@ public struct InventoryItemData : INetworkSerializable, IEquatable<InventoryItem
                price == other.price &&
                maxPrice == other.maxPrice &&
                minPrice == other.minPrice &&
-               minPrice == other.batteryLevel &&
-               minPrice == other.batteryEfficiency;
+               batteryLevel == other.batteryLevel &&
+               batteryEfficiency == other.batteryEfficiency;
     }
 
     public override bool Equals(object obj)

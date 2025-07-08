@@ -7,8 +7,10 @@ TagManager:
   - Ground
   - Item
   - InteractableObject
+  - InteractableObject_NonNet
   - IronFloor
   - Enemy
+  - ItemSpawnPos
   layers:
   - Default
   - TransparentFX

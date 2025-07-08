@@ -16,12 +16,12 @@ MonoBehaviour:
   itemSpritePath: Image/Cat
   previewPrefabPath: Prefab/Preview
   objectPrefabPath: Prefab/Work Light 2
-  dropPrefabPath: Prefab/DropPrefab
+  dropPrefabPath: Prefab/Work Light Drop
   isPlaceable: 1
   isUsable: 0
-  price: 10
-  minPrice: 10
-  maxPrice: 5
+  price: 0
+  minPrice: 5
+  maxPrice: 10
   batteryLevel: 100
   batteryEfficiency: 1
   weight: 10

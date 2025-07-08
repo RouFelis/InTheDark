@@ -31,9 +31,12 @@ public class WaitRoomSetter : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    void SetUserPosServerRPC(ulong userID)
-    { 
+
+
+    [ServerRpc]
+    public void SetUserPosServerRPC(ulong userID)
+    {
+        if (!IsServer) return;
         // 접속한 클라이언트의 플레이어 오브젝트 찾기
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(userID, out var client))
         {
@@ -41,16 +44,10 @@ public class WaitRoomSetter : NetworkBehaviour
 
             if (playerObject != null && playerObject.TryGetComponent(out CharacterController characterController))
             {
-                // 캐릭터 컨트롤러 비활성화
-                characterController.enabled = false;
-
                 // 스폰 위치 계산 (부모 오브젝트 제외)
                 int spawnIndex = (int)(userID % (ulong)(spawnPoint.Count - 1)) + 1;
+                spawnIndex = Mathf.Clamp(spawnIndex, 0, spawnPoint.Count - 1);
                 Vector3 spawnPosition = spawnPoint[spawnIndex].position;
-
-                // 플레이어 위치 이동
-                playerObject.transform.position = spawnPosition;
-                characterController.enabled = true;
 
                 // 클라이언트들에게 위치 동기화
                 MovePlayerClientRpc(playerObject.NetworkObjectId, spawnPosition);
@@ -69,7 +66,9 @@ public class WaitRoomSetter : NetworkBehaviour
             {
                 characterController.enabled = false;
                 playerObject.transform.position = targetPosition;
-                characterController.enabled = true;
+				characterController.enabled = true;
+
+                Debug.Log($"플레이어 {playerId} 위치를 {targetPosition}로 이동했습니다.");
             }
         }
     }

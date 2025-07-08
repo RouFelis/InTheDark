@@ -31,6 +31,42 @@ MonoBehaviour:
     m_Key: Upgrade
     m_Metadata:
       m_Items: []
+  - m_Id: 86077098028908544
+    m_Key: Total Money
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86077100763594752
+    m_Key: Completed Mission
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86077424563863552
+    m_Key: Escape
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86079472009166848
+    m_Key: Money Quota
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86080102211731456
+    m_Key: Mission Quota
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86080573387259904
+    m_Key: Area
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86093658265174016
+    m_Key: Result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86093696831799296
+    m_Key: PS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86098608919625728
+    m_Key: Killed Enemy
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

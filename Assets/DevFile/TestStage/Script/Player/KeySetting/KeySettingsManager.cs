@@ -56,7 +56,7 @@ public class KeySettingsManager : MonoBehaviour
     [SerializeField] public Slider sensitivitySlider; // 슬라이더 연결
     public Player localPlayer;
 
-    private bool isPaused = false;
+    public bool isEveryEvent = false;
 
     #region 이게 제일 빠를거같고 키도 몇개안되서 이래 함. 맘에 안들면 이거지우고 그냥 딕셔너리값 불러오게하면됨. 위에있음 ㅇㅇ
     public KeyCode InteractKey {         

@@ -9,7 +9,7 @@ public class DonotDestroy : MonoBehaviour
     // 사용할 씬 이름들을 enum으로 정의
     public enum SceneToDestroyIn
     {
-        MainMenu,
+        MainScene,
         Gameplay,
         Settings,
         Credits

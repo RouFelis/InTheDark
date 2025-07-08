@@ -14,19 +14,15 @@ public class GrabHelper : NetworkBehaviour
     [SerializeField] NetworkTransform networkTransform;
     [SerializeField] NetworkRigidbody networkRigidbody;
 
+    [SerializeField ]private Player player;
 
-    /*private void Update()
-    {
-        // 아이템이 플레이어에게 부모로 지정되면 손 위치를 찾고, 아이템을 손 위치에 맞춤
-        if (isPickedUp && handTransform != null)
-        {
-            // 아이템을 손의 위치와 회전에 맞춰 업데이트
-            transform.position = handTransform.position;
-            transform.rotation = handTransform.rotation;
-        }
-    }*/
+	private void Start()
+	{
+        player = GetComponent<Player>();
+	}
 
-    [ServerRpc(RequireOwnership = false)]
+
+	[ServerRpc(RequireOwnership = false)]
     public void AttachToPlayerServerRpc(ulong PlayerID)
     {
         // 손 위치를 Position Constraint의 Source로 추가합니다.
@@ -39,7 +35,7 @@ public class GrabHelper : NetworkBehaviour
         this.gameObject.transform.position = new Vector3(0,0,0);
         this.gameObject.transform.rotation = Quaternion.identity;
 
-        this.tag = "Untagged";
+        this.gameObject.layer = 0;
         isPickedUp = true;
         AttachToPlayerClientRpc(PlayerID);
     }
@@ -72,7 +68,7 @@ public class GrabHelper : NetworkBehaviour
         networkTransform.enabled = false;
         networkRigidbody.enabled = false;
 
-        this.tag = "Item";
+        this.gameObject.layer = 0;
         isPickedUp = true;
     }
 

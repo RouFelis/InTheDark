@@ -31,14 +31,29 @@ public class UIToggleSlide : MonoBehaviour
 
     void Update()
     {
-        var menu = MenuManager.Instance;
+		if (PlayersManager.Instance.myPlayerDead)
+		{
+			if (isOn)
+			{
+                StartCoroutine(TurnOffEffect());
+                MenuManager.Instance.SetPause(false);
+            }
+            return;
+		}
 
-        if (Input.GetKeyDown(interacteKey) && !isTransitioning && !menu.IsPaused && !menu.IsEvenet)
+
+        if (Input.GetKeyDown(interacteKey) && !isTransitioning)
         {
             if (isOn)
+			{
                 StartCoroutine(TurnOffEffect());
-            else
+                MenuManager.Instance.SetPause(false);
+            }
+			else
+			{
                 StartCoroutine(TurnOnEffect());
+                MenuManager.Instance.SetPause(true);
+            }
         }
     }
 
@@ -54,16 +69,17 @@ public class UIToggleSlide : MonoBehaviour
     }
 
 
+    //화면 켜기
     System.Collections.IEnumerator TurnOnEffect()
     {
         isTransitioning = true;
 
         if (tvOnClip && audioSource)
-            audioSource.PlayOneShot(tvOnClip);
+            audioSource.PlayOneShot(tvOnClip); //오디오 넣고
 
         MenuManager.Instance.SetPause(true);
 
-        // Flash
+        // 번쩍이면서 켜지게끔
         float timer = 0f;
         while (timer < flashDuration)
         {
@@ -74,7 +90,7 @@ public class UIToggleSlide : MonoBehaviour
         }
         uiCanvasGroup.alpha = 1f;
 
-        // Expand
+        // 여기서 확장시키기
         timer = 0f;
         while (timer < transitionDuration)
         {
@@ -90,12 +106,13 @@ public class UIToggleSlide : MonoBehaviour
         isTransitioning = false;
     }
 
+    //화면끄기
     System.Collections.IEnumerator TurnOffEffect()
     {
         isTransitioning = true;
 
         if (tvOffClip && audioSource)
-            audioSource.PlayOneShot(tvOffClip);
+            audioSource.PlayOneShot(tvOffClip); //오디오 넣고
 
         MenuManager.Instance.SetPause(false);
 
@@ -107,10 +124,11 @@ public class UIToggleSlide : MonoBehaviour
             float t = timer / transitionDuration;
             float scaleY = 1 - scaleCurve.Evaluate(t);
             uiTransform.localScale = new Vector3(originalScale.x, Mathf.Max(scaleY, 0.01f), originalScale.z);
-            uiCanvasGroup.alpha = 1f - t; // fade out
+            uiCanvasGroup.alpha = 1f - t; // 페이드 아웃!
             yield return null;
         }
 
+        //알파값 0으로 맞춰서 안보이게 하기.
         uiCanvasGroup.alpha = 0f;
         uiTransform.localScale = new Vector3(originalScale.x, 0.01f, originalScale.z);
         isOn = false;

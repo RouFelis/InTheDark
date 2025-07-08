@@ -69,7 +69,7 @@ public class playerMoveController : SaintsNetworkBehaviour
     [Header("PlayerAim")]
     [LayoutStart("PlayerAim", ELayout.FoldoutBox)]
     [SerializeField] private GameObject handAimTargetPrefab;
-    [SerializeField] protected Transform handAimTarget;
+    [SerializeField] public Transform handAimTarget;
     [SerializeField] private NetworkVariable<ulong> handAimTargetulong = new NetworkVariable<ulong>();
     [SerializeField] private List<ConstraintConfig> playerConstraints = new List<ConstraintConfig>();
     [SerializeField] private List<ConstraintConfig> playerConstraints_Item = new List<ConstraintConfig>();
@@ -248,8 +248,6 @@ public class playerMoveController : SaintsNetworkBehaviour
 		{
 
         }
-      /*  if(handAimTarget == null)
-            FindAimTargetObject();*/
         UpdateAnimator();
     }
 
@@ -331,11 +329,10 @@ public class playerMoveController : SaintsNetworkBehaviour
         // if (characterController.isGrounded)
         if (IsGrounded())
         {
-/*            if (!isEventPlaying.Value && !pause)
+            if (isEventPlaying.Value || pause)
 			{
-                moveDirection.y -= gravity * Time.deltaTime;
                 return;
-            }*/
+            }
 
             if (isJumping)
             {
@@ -349,17 +346,17 @@ public class playerMoveController : SaintsNetworkBehaviour
                 isJumping = true;
                 firstpersonAnimator.speed = 1.0f; // 점프 중에는 기본 속도
                 thirdpersonAnimator.speed = 1.0f; // 점프 중에는 기본 속도
-            }
+            }            
         }
         else
         {
             moveDirection.y -= gravity * Time.deltaTime;
+            characterController.Move(moveDirection * Time.deltaTime);
         }
     }
 
     private void EventPlayingStop()
 	{
-        moveDirection = Vector3.zero;
         SetPlayerAimPos(new Vector3(0, 2f, 10f));
     }
 
@@ -370,7 +367,7 @@ public class playerMoveController : SaintsNetworkBehaviour
             staminaBar = GameObject.Find("StaminaBar").GetComponent<Image>();
         }
         float healthRatio = currentStamina.Value / maxStamina; // 0 ~ 1
-        staminaBar.fillAmount = healthRatio * 0.5f; // 0 ~ 0.5로 변환
+        staminaBar.fillAmount = healthRatio; // 0 ~ 0.5로 변환
     }
 
     //걸을때 머리 덜렁이기 ㅋㅋ
@@ -396,7 +393,7 @@ public class playerMoveController : SaintsNetworkBehaviour
 
     private void HandleAim()
 	{
-        //허리 각도 조절이랑 에임 조절용
+/*        //허리 각도 조절이랑 에임 조절용
         if (Physics.Raycast(firstPersonCamera.transform.position, firstPersonCamera.transform.forward, out hit, aimMaxDistance, layerMask))
         {
             Debug.DrawRay(firstPersonCamera.transform.position, firstPersonCamera.transform.forward * hit.distance, Color.red, 0.1f);
@@ -411,8 +408,9 @@ public class playerMoveController : SaintsNetworkBehaviour
             Debug.DrawRay(firstPersonCamera.transform.position, firstPersonCamera.transform.forward * hit.distance, Color.red, 0.1f);
             // 충돌하지 않은 경우, maxDistance 지점으로 설정
             aimTargetPosition = firstPersonCamera.transform.position + firstPersonCamera.transform.forward * aimMaxDistance;
-        }
+        }*/
 
+        aimTargetPosition = firstPersonCamera.transform.position + firstPersonCamera.transform.forward * aimMaxDistance;
         handAimTarget.transform.position = Vector3.SmoothDamp(handAimTarget.transform.position, aimTargetPosition, ref velocity, smoothTime);
 
         Vector3 cameraForward = firstPersonCamera.transform.forward.normalized;
@@ -425,6 +423,10 @@ public class playerMoveController : SaintsNetworkBehaviour
         {
             isWalking.Value = moveDirection.x != 0 || moveDirection.z != 0;
             isRunning.Value = isWalking.Value && Input.GetKey(KeyCode.LeftShift);
+        }
+		if (pause)
+		{
+            isWalking.Value = false;
         }
 
         firstpersonAnimator.SetBool("IsWalking", isWalking.Value);
@@ -460,6 +462,13 @@ public class playerMoveController : SaintsNetworkBehaviour
     }
 
 
+
+    /// <summary>
+    /// 까먹어서 적어놓음. 이거 원래 상점 배치해 놓을때 팔 내리고 화면 전방 고정 시키려고 넣어놓은건데, 코드도 좀 이상하고 (이벤트 벨류 변경이 메뉴매니저를 통해
+    /// 진행되고 있지 않음) 암튼 나중에 충분히 쓸만하긴함. 지금으로써는 쓸모없긴함.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="target"></param>
     public void EventToggle(bool value, GameObject target)
     {
         isEventPlaying.Value = value;
@@ -556,6 +565,62 @@ public class playerMoveController : SaintsNetworkBehaviour
         foreach (var config in playerConstraints)
         {
             AddSourceObject(config.constraint, handAimTarget, config.weight);
+        }         
+        
+        foreach (var config in playerConstraints_Item)
+        {
+            AddSourceObject(config.constraint, handAimTarget, config.weight);
+        }
+
+
+        //빌더 초기화.
+        if (rigBuilder_firstPerson != null)
+        {
+            rigBuilder_firstPerson.Build();
+        }
+        //빌더 초기화.
+        if (rigBuilder_thridPerson != null)
+        {
+            rigBuilder_thridPerson.Build();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetToggleItemHandServerRpc(bool isItem)
+    {
+        SetToggleItemHandClientRpc(isItem);
+    }
+
+    [ClientRpc]
+    public void SetToggleItemHandClientRpc(bool isItem)
+    {
+        if (isItem)
+        {
+            foreach (var config in playerConstraints_Item)
+            {
+                var data = config.constraint.data;
+                var sources = data.sourceObjects;
+
+                var wt = sources[0];
+                wt.weight = 1;
+                sources.SetWeight(0, 1); // 꼭 이 메서드 사용!
+                data.sourceObjects = sources;
+                config.constraint.data = data;
+            }
+        }
+		else
+		{
+            foreach (var config in playerConstraints_Item)
+            {
+                var data = config.constraint.data;
+                var sources = data.sourceObjects;
+
+                var wt = sources[0];
+                wt.weight = 0;
+                sources.SetWeight(0, 0); // 꼭 이 메서드 사용!
+                data.sourceObjects = sources;
+                config.constraint.data = data;
+            }
         }
 
         //빌더 초기화.
@@ -569,6 +634,7 @@ public class playerMoveController : SaintsNetworkBehaviour
             rigBuilder_thridPerson.Build();
         }
     }
+
 
     private bool getAimTarget()
 	{
@@ -622,6 +688,11 @@ public class playerMoveController : SaintsNetworkBehaviour
 
         // 모든 MultiAimConstraint에 대해 소스 오브젝트 추가
         foreach (var config in playerConstraints)
+        {
+            AddSourceObject(config.constraint, handAimTarget, config.weight);
+        }
+        // 모든 MultiAimConstraint에 대해 소스 오브젝트 추가
+        foreach (var config in playerConstraints_Item)
         {
             AddSourceObject(config.constraint, handAimTarget, config.weight);
         }

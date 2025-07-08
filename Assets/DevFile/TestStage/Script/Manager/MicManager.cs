@@ -64,6 +64,22 @@ public class MicManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 이름으로 micAudio 항목을 찾음
+    /// </summary>
+    /// <param name="name">찾을 이름</param>
+    /// <returns>해당 이름의 micAudio, 없으면 null</returns>
+    public micAudio? GetMicAudioByName(string name)
+    {
+        foreach (var mic in micUI)
+        {
+            if (mic.micUI.name == name)
+            {
+                return mic;
+            }
+        }
+        return null;
+    }
 
     public IEnumerator InitMicUI()
     {
@@ -248,4 +264,10 @@ public class MicManager : MonoBehaviour
             }
         }
     }
+
+
+    private void ChangeRoom()
+	{
+
+	}
 }
