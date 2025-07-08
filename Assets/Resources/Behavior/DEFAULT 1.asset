@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b23f08d2ae4cba14087c1ed36193d82b, type: 3}
+  m_Name: DEFAULT 1
+  m_EditorClassIdentifier: 
+  mBehaviorSource:
+    behaviorName: 
+    behaviorDescription: 
+    mTaskData:
+      types: []
+      parentIndex: 
+      startIndex: 
+      variableStartIndex: 
+      JSONSerialization: '{"EntryTask":{"Type":"BehaviorDesigner.Runtime.Tasks.EntryTask","NodeData":{"Offset":"(97.62791,-3.705431)"},"ID":0,"Name":"Entry","Instant":true},"RootTask":{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-4.63378334,102.911041)"},"ID":1,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-153.93631,111.547981)"},"ID":2,"Name":"Sequence","Instant":true,"AbortTypeabortType":"LowerPriority","Children":[{"Type":"AttackableNearby","NodeData":{"Offset":"(-73.06125,100)"},"ID":3,"Name":"Attackable
+        Nearby","Instant":true,"Singledistance":16},{"Type":"AttackTargetPawn","NodeData":{"Offset":"(73.92792,98.54492)"},"ID":4,"Name":"Attack
+        Target Pawn","Instant":true}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(105.260132,110.688324)"},"ID":5,"Name":"Sequence","Instant":true,"AbortTypeabortType":"Both","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-50,98.43712)"},"ID":6,"Name":"Selector","Instant":true,"AbortTypeabortType":"Both","Children":[{"Type":"WithinSight","NodeData":{"Offset":"(-105.454529,111.073647)"},"ID":7,"Name":"Within
+        Sight","Instant":true,"SinglesightDistance":30,"SinglearoundDistance":15,"SinglefieldOfViewAngle":60,"LayerMasktargetLayer":8,"SharedVector3target":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},"SharedNetworkBehaviourpawn":{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}},{"Type":"HeardSound","NodeData":{"Offset":"(0.4914112,112.9656)"},"ID":8,"Name":"Heard
+        Sound","Instant":true,"Singledistance":15,"LayerMasktargetLayer":8,"SharedVector3target":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"}},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(114.545471,110)"},"ID":9,"Name":"Sequence","Instant":true,"AbortTypeabortType":"Both","Children":[{"Type":"ArriveAtDestination","NodeData":{"Offset":"(-151.7243,98.88888)"},"ID":10,"Name":"Arrive
+        At Destination","Instant":true,"Singledistance":0.1},{"Type":"ClearPawnTarget","NodeData":{"Offset":"(-3.07694244,100)"},"ID":11,"Name":"Clear
+        Pawn Target","Instant":true},{"Type":"GetRandomPositionOnNavMesh","NodeData":{"Offset":"(131.330032,100)"},"ID":12,"Name":"
+        On Nav Mesh","Instant":true,"Singleradius":15,"SharedVector3target":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"}}]}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent.SetDestinationWithAnimation","NodeData":{"Offset":"(70.86955,100.869568)"},"ID":13,"Name":"Set
+        Destination","Instant":true,"SharedGameObjecttargetGameObject":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":null},"SharedVector3destination":{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"}}]}]},"Variables":[{"Type":"BehaviorDesigner.Runtime.SharedVector3","Name":"TargetPosition","IsShared":true,"Vector3mValue":"(0,0,0)"},{"Type":"SharedNetworkBehaviour","Name":"TargetPawn","IsShared":true}]}'
+      fieldSerializationData:
+        typeName: []
+        fieldNameHash: 
+        startIndex: 
+        dataPosition: 
+        unityObjects: []
+        byteData: 
+        byteDataArray: 
+      Version: 1.7.10

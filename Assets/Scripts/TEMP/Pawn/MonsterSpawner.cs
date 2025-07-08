@@ -106,6 +106,10 @@ namespace InTheDark.Prototypes
 						SpawnInternal(enemyRef, GetRandomPositionInNavMesh(), Quaternion.identity);
 					}
 				}
+
+
+
+				EnemyPrototypePawn.OnEnemyDieWithPlayer += skjdaksjd;
 			}
 		}
 
@@ -113,6 +117,13 @@ namespace InTheDark.Prototypes
 		{
 			Game.OnDungeonEnter -= OnDungeonEnter;
 			Game.OnDungeonExit -= OnDungeonExit;
+
+			EnemyPrototypePawn.OnEnemyDieWithPlayer -= skjdaksjd;
+		}
+
+		private void skjdaksjd()
+		{
+			Debug.Log("ю╦╬с аж╠щ");
 		}
 
 		[Rpc(SendTo.Server)]
@@ -173,7 +184,7 @@ namespace InTheDark.Prototypes
 			{
 				var data = _stage[buildIndex];
 
-				_isLocked.Value = true;
+				//_isLocked.Value = true;
 
 				//for (var i = 0; i < data.Triggers.Length; i++)
 				//{

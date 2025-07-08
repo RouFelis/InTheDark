@@ -21,6 +21,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public const string ATTACK_TRIGGER = "OnAttack";
 
 	public delegate void EnemyDieDelegate(NetworkBehaviourReference reference);
+	public delegate void PlayerKilledEnemyDelegate();
 
 	public float InitializeCooldownValue;
 	public int InitializeHealthValue;
@@ -101,6 +102,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//private List<LightSource> _sighted = new List<LightSource>();
 
 	public static event EnemyDieDelegate OnEnemyDie;
+	public static event PlayerKilledEnemyDelegate OnEnemyDieWithPlayer;
 
 	public bool IsDead
 	{
@@ -332,10 +334,10 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	{
 		DamagedEffect();
 
-		if (!_isDead.Value && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
-		{
-			Die();
-		}
+		//if (!_isDead.Value && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
+		//{
+		//	Die();
+		//}
 	}
 
 	public void OnTargetDie()
@@ -441,6 +443,13 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 				// 여기다 피격음 넣으면 되는데 일단 넣음
 				_audioSource.PlayOneShot(hitSound);
 			}
+		}
+
+		if (!_isDead.Value && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
+		{
+			Die();
+
+			OnEnemyDieWithPlayer?.Invoke();
 		}
 	}
 

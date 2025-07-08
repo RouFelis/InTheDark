@@ -33,7 +33,7 @@ namespace InTheDark.Prototypes
 
 		private void OnAwake()
 		{
-			
+
 		}
 	}
 }

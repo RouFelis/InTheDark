@@ -40,6 +40,11 @@ namespace InTheDark
 		}
 	}
 
+	public static class EntityExtensionMethods
+	{
+
+	}
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -257,6 +262,16 @@ namespace InTheDark
 		}
 
 		protected virtual void Awake()
+		{
+
+		}
+
+		protected virtual void Start()
+		{
+
+		}
+
+		public void OnAttacked()
 		{
 
 		}

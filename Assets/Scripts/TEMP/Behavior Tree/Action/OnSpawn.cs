@@ -11,6 +11,8 @@ public class OnSpawn : Action
 	public Animator animator;
 	public EnemyPrototypePawn pawn;
 
+	private float time;
+
 	public override void OnAwake()
 	{
 		pawn = GetComponent<EnemyPrototypePawn>();
@@ -27,9 +29,15 @@ public class OnSpawn : Action
 		}
 		else if (status.Equals(TaskStatus.Running))
 		{
+			// 이 부분이 문제라는데여
 			var isRunning = animator.GetCurrentAnimatorStateInfo(0) is var info && info.IsName(targetStateName) && info.normalizedTime <= 1.0F;
+			//var isRunning = time < 1.0F;
 
-			status = isRunning ? TaskStatus.Running : TaskStatus.Success;
+			//time += Time.deltaTime;
+
+			//Debug.Log($"{time}초 경과: 상태: {isRunning}/{status}");
+
+			status = isRunning ? TaskStatus.Running : TaskStatus.Failure;
 		}
 
 		return status;
