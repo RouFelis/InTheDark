@@ -28,7 +28,8 @@ public class SharedData : NetworkBehaviour
 		Money.OnValueChanged += ChangeValue;
 	}
 
-	public void SetNetSeed()
+	[ServerRpc]
+	public void SetNetSeedServerRpc()
 	{
 		// 시드를 현재 시간으로 설정하여 매번 다른 난수를 생성
 		int seed = (int)System.DateTime.Now.Ticks;

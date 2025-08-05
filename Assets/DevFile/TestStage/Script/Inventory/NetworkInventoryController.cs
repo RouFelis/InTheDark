@@ -400,11 +400,12 @@ public class NetworkInventoryController : NetworkBehaviour
             HandleInteractItem(); // 아이템 사용 처리 추가
             HandleUseItem();
         }
-        if (isPlacingItem && IsOwner)
+        if (isPlacingItem && IsOwner && !MenuManager.Instance.IsPaused && !MenuManager.Instance.IsEvenet)
         {
             currentPlaceableItemManager.UpdatePreviewObject();
             currentPlaceableItemManager.HandleRotation(ref isPlacingItem , currentSelectedItem.objectPrefabPath );
         }
+        Debug.Log($"테스트 IsPaused : {MenuManager.Instance.IsPaused} , IsEvenet : {MenuManager.Instance.IsEvenet} ");
     }
 
     private void HandleKeyboardInput()
@@ -561,14 +562,51 @@ public class NetworkInventoryController : NetworkBehaviour
         }
     }
 
-    //아이템 지우기(현재 슬롯)
-    public int HandleSellItem()
+    //현재 슬롯 아이템 이름 확인
+    public string GetSelectedItemName()
 	{
-        int price = items[selectedSlot.Value].price;
-        RequestRemoveItemFromInventoryServerRpc(selectedSlot.Value);
-        return price;
+		try
+		{
+            string temptName = items[selectedSlot.Value].itemName;
+            return temptName;
+		}
+		catch
+		{
+            return "NonItem";
+		}
+
     }
 
+    //아이템 팔기(현재 슬롯)
+    public int HandleSellItem()
+	{
+		try
+		{
+            int price = items[selectedSlot.Value].price;
+            RequestRemoveItemFromInventoryServerRpc(selectedSlot.Value);
+            return price;
+		}
+		catch
+		{
+            return -1; 
+		}
+    }
+
+    //아이템 지우기(현재 슬롯)
+    public void HandleEraseItem()
+	{
+        try
+        {
+            int price = items[selectedSlot.Value].price;
+            RequestRemoveItemFromInventoryServerRpc(selectedSlot.Value);
+        }
+        catch
+        {
+            Debug.LogError("Non Item in inventory....");
+        }
+    }
+    
+    //아이템 떨어뜨리기
     [ServerRpc(RequireOwnership = false)]
     private void DropItemServerRpc(string itemName, Vector3 position, Quaternion rotation, int slotIndex)
     {
@@ -630,6 +668,7 @@ public class NetworkInventoryController : NetworkBehaviour
         }
     }
 
+    //아이템 힘 줘서 버리기
 	private IEnumerator ApplyForceAfterSpawn(Rigidbody rb)
 	{
 		yield return null; // 다음 프레임까지 대기
@@ -641,6 +680,7 @@ public class NetworkInventoryController : NetworkBehaviour
 		}
 	}
 
+    //프레임 쉬었다가 아이템데이터 추가하기.
     private IEnumerator SetDataNextFrame(PickupItem item, InventoryItemData data)
     {
         yield return null; // 1 frame delay
@@ -673,7 +713,7 @@ public class NetworkInventoryController : NetworkBehaviour
     }
 
 
-    //아이템 제거 요청
+    //아이템 사용 후 제거 요청
     public void UseCurrentSelectedItem(ulong objectID)
     {
         InventoryItem currentItem = items[selectedSlot.Value];
@@ -696,7 +736,7 @@ public class NetworkInventoryController : NetworkBehaviour
 
         if (GetComponent<NetworkObject>().OwnerClientId == senderClientId)
         {
-            InventoryItem currentItem = items[selectedSlot.Value];
+            InventoryItem currentItem = items[slotIndex];
             var updatedItemData = new InventoryItemData(
                   currentItem.itemName,
                   currentItem.itemSpritePath,
@@ -714,7 +754,7 @@ public class NetworkInventoryController : NetworkBehaviour
 
             NetworkManager.SpawnManager.SpawnedObjects[objectID].gameObject.GetComponent<PickupItem>().networkInventoryItemData.Value = updatedItemData;
 
-            CompleteClientRpc(slotIndex);
+            RequestRemoveItemFromInventoryServerRpc(slotIndex);
         }      
     }
     

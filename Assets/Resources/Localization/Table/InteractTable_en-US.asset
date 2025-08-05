@@ -46,6 +46,50 @@ MonoBehaviour:
     m_Localized: Enter
     m_Metadata:
       m_Items: []
+  - m_Id: 120890370326216704
+    m_Localized: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890378345725952
+    m_Localized: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890387120209920
+    m_Localized: 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890389896839168
+    m_Localized: 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890391276765184
+    m_Localized: 4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890392832851968
+    m_Localized: 5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890394154057728
+    m_Localized: 6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890395261353984
+    m_Localized: 7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890396754526208
+    m_Localized: 8
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120890399409520640
+    m_Localized: 9
+    m_Metadata:
+      m_Items: []
+  - m_Id: 120892338264293376
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

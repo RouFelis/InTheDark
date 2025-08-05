@@ -15,8 +15,11 @@ public class OutStage : InteractableObject
         outDoorAction = GameObject.Find("CompassManager").GetComponent<Compass>().setDungeunBool;
 	}
 
-	public override void Interact(ulong uerID, Transform interactingObjectTransform)
+	public override bool Interact(ulong uerID, Transform interactingObjectTransform)
     {
+        if (!base.Interact(uerID, interactingObjectTransform))
+            return false;
+
         if (spawnPoint == null)
         {
             spawnPoint = GameObject.Find("OutPoint").GetComponent<Transform>();
@@ -31,6 +34,8 @@ public class OutStage : InteractableObject
         //{
         //	BuildIndex = 0
         //});
+
+        return true;
     }
 
     private void PlayDoorSound()

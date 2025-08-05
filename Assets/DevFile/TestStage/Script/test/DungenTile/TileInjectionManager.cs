@@ -31,10 +31,10 @@ public class TileInjectionManager : MonoBehaviour
 
     [Header("몇 개의 세트를 인젝션할지")]
     public int numberOfSetsToInject = 1;
+    public RuntimeDungeon runtimeDungeon;
 
-    private void Start()
+    private void Awake()
     {
-        var runtimeDungeon = FindAnyObjectByType<RuntimeDungeon>();
         if (runtimeDungeon == null)
         {
             Debug.LogError("RuntimeDungeon이 씬에 존재하지 않음!");
@@ -42,6 +42,7 @@ public class TileInjectionManager : MonoBehaviour
         }
 
         runtimeDungeon.Generator.TileInjectionMethods += InjectTiles;
+
     }
 
     private void InjectTiles(RandomStream randomStream, ref List<InjectedTile> tiles)
@@ -59,12 +60,18 @@ public class TileInjectionManager : MonoBehaviour
         int injectCount = Mathf.Min(numberOfSetsToInject, shuffled.Count);
         int actualTileCount = 0;
 
+        Debug.Log($"[InjectionManager] 타일 인젝션 시도 시작 - SetCount: {tileSetPairs.Count} ");
+        Debug.Log($"[InjectionManager] 타일 인젝션 시드 값 - Seed: {injectionSeed} ");
+
+
         for (int i = 0; i < injectCount; i++)
         {
             var pair = shuffled[i];
 
             if (TryAddTile(pair.tileA, tiles)) actualTileCount++;
             if (TryAddTile(pair.tileB, tiles)) actualTileCount++;
+
+            Debug.Log($"[InjectionManager] 타일셋 {i} - A: {pair.tileA?.tileSet?.name}, B: {pair.tileB?.tileSet?.name}");
         }
 
         Debug.Log($"[Seed {injectionSeed}] 총 {actualTileCount}개의 타일이 인젝션되었습니다.");

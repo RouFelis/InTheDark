@@ -30,9 +30,12 @@ public class EnterGame1 : InteractableObject
     }
 
 
-    public override void Interact(ulong uerID, Transform interactingObjectTransform)
-    {
+	public override bool Interact(ulong uerID, Transform interactingObjectTransform)
+	{
+		if (!base.Interact(uerID, interactingObjectTransform))
+			return false;
 
-        base.Interact(uerID, interactingObjectTransform);
+
+        return true;
     }
 }

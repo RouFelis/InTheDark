@@ -243,7 +243,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   InitializeCooldownValue: 5
   InitializeHealthValue: 100
-  InitializeResistanceValue: 20
   InitializeMoveSpeed: 0
   objectRenderer: {fileID: 6368315079064182521}
   damagedVFXgraph: {fileID: 6282305715552553252}
@@ -251,18 +250,10 @@ MonoBehaviour:
   skinnedMaterials: []
   _isDead:
     m_InternalValue: 0
-  _isActive:
-    m_InternalValue: 1
   _health:
     m_InternalValue: 100
   _maxHealth:
     m_InternalValue: 20
-  _resistance:
-    m_InternalValue: 20
-  _damage:
-    m_InternalValue: 5
-  _cooldown:
-    m_InternalValue: 0
   _state:
     m_InternalValue:
       utf8LengthInBytes: 6
@@ -408,6 +399,7 @@ MonoBehaviour:
   _behaviorTree: {fileID: 4201312871343358130}
   _deathTrigger: {fileID: 11400000, guid: d2dc9e120596c1c40a3890c4958ee638, type: 2}
   _lightInsightedTrigger: {fileID: 11400000, guid: e3029e7a3b60ff74a94892dd565492d3, type: 2}
+  _takeDamageTrigger: []
   _loots:
   - {fileID: 11400000, guid: cb98219c2ef743244bc6f8071018cdfe, type: 2}
 --- !u!114 &7313576750832366103
@@ -551,6 +543,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _duration: 0
+  _flightTime: 0
+  _flightSpeed: 0
   _initialCooldown: 0
   _time:
     m_InternalValue: 0
@@ -567,6 +561,35 @@ MonoBehaviour:
   _controller: {fileID: 7614236128885380916}
   _agent: {fileID: -6386649275116767646}
   _isRunning: 0
+  _knockbackCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _knockbackY: 10
+  _capsuleCollider: {fileID: 0}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &2814409174314574360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -582,6 +605,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _damage: 5
   _range: 16
+  _delay: 0.9
   _cooldown:
     m_InternalValue: 0
   _pawn: {fileID: 1433858302028618446}

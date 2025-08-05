@@ -43,6 +43,6 @@ MonoBehaviour:
         m_RotationOrder: 4
       TileSet: {fileID: 11400000}
   LockPrefabs:
-  - Socket: {fileID: 11400000, guid: 81fa1ebaa27acf442aaa1c557a1cb7ee, type: 2}
+  - Socket: {fileID: 11400000, guid: d0fd533e56e73444db35bcb8aeff7f77, type: 2}
     LockPrefabs:
       Weights: []

@@ -44,10 +44,10 @@ public class SceneObjectManager : NetworkBehaviour
 
         foreach (var col in hits)
         {
-            var go = col.gameObject;
+			var go = col.gameObject;
 
-            // 자기 자신은 건너뜀
-            if (go == this.gameObject)
+            // 자기 자신 또는 Tag가 Manager인 경우 건너뜀
+            if (go == this.gameObject || go.CompareTag("Manager"))
                 continue;
 
             var netObj = go.GetComponent<NetworkObject>();

@@ -22,18 +22,23 @@ public class GrabbableObject : InteractableObject
         rb = GetComponent<Rigidbody>();
     }
 
-    public override void Interact(ulong userId, Transform interactingObjectTransform)
-    {
-        if (isFollowing && userId == followingClientId)
-        {
-            Debug.Log("[SERVER] Already grabbed, dropping now.");
-            StopGrab(userId);
-        }
-        else
-        {
-            Debug.Log("[SERVER] Interacted by " + interactingObjectTransform.name + ", grabbing now.");
-            StartGrab(userId);            
-        }
+	public override bool Interact(ulong userId, Transform interactingObjectTransform)
+	{
+		if (!base.Interact(userId, interactingObjectTransform))
+			return false;
+
+		if (isFollowing && userId == followingClientId)
+		{
+			Debug.Log("[SERVER] Already grabbed, dropping now.");
+			StopGrab(userId);
+		}
+		else
+		{
+			Debug.Log("[SERVER] Interacted by " + interactingObjectTransform.name + ", grabbing now.");
+			StartGrab(userId);
+		}
+
+        return true;
     }
 
     void StartGrab(ulong clientId)

@@ -13,6 +13,7 @@ public class PlaceableItemManager : NetworkBehaviour
     // == 설치 관련 변수 ==
     public float maxPlacementDistance = 10f; // 최대 설치 거리
     public bool canPlace; // 설치 가능 여부
+    public LayerMask laycastMark;
 
     // == 머티리얼 ==
     public Material transparentMaterial; // 투명한 머티리얼
@@ -34,7 +35,6 @@ public class PlaceableItemManager : NetworkBehaviour
     public bool enableLogs = true; // 로그 활성화 체크박스
     [HideInInspector] public GameObject previewObject; // 설치 미리보기 오브젝트
 	private playerMoveController playerController; // 플레이어 컨트롤러 참조
-
 
     void Start()
     {
@@ -130,24 +130,39 @@ public class PlaceableItemManager : NetworkBehaviour
     public void UpdatePreviewObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        /*
+                if (Physics.Raycast(ray, out RaycastHit hit, maxPlacementDistance, laycastMark))
+                {
+                    float distance = Vector3.Distance(Camera.main.transform.position, hit.point);
+                    if (distance <= maxPlacementDistance)
+                    {
+                        previewObject.transform.position = hit.point;
+                        canPlace = hit.collider.CompareTag("Ground");
+                        SetObjectMaterial(previewObject, canPlace ? validPlacementMaterial : invalidPlacementMaterial);
+                    }
+                    else
+                    {
+                        PlacePreviewBelow(ray);
+                    }
+                }
+                else
+                {
+                    PlacePreviewBelow(ray);
+                }
+        */
+        if (Physics.Raycast(ray, out RaycastHit hit, maxPlacementDistance, laycastMark))
         {
-            float distance = Vector3.Distance(Camera.main.transform.position, hit.point);
-            if (distance <= maxPlacementDistance)
-            {
-                previewObject.transform.position = hit.point;
-                canPlace = hit.collider.CompareTag("Ground");
-                SetObjectMaterial(previewObject, canPlace ? validPlacementMaterial : invalidPlacementMaterial);
-            }
-            else
-            {
-                PlacePreviewBelow(ray);
-            }
+            // Ground와의 충돌 여부 및 거리 확인
+            canPlace = hit.collider.CompareTag("Ground");
+            previewObject.transform.position = hit.point;
+            SetObjectMaterial(previewObject, canPlace ? validPlacementMaterial : invalidPlacementMaterial);
         }
         else
         {
+            // 레이캐스트 실패 시 예비 배치 위치로
             PlacePreviewBelow(ray);
         }
+
 
         if (isRotating)
         {

@@ -5,13 +5,18 @@ public class StageMover : InteractableObject
 {
     public Transform spawnPoint;
 
-    public override void Interact(ulong uerID, Transform interactingObjectTransform)
-    {
-        if (spawnPoint == null)
-        {
-            spawnPoint = GameObject.Find("StageSpawn").GetComponent<Transform>();
-        }
-        SetEveryPlayerPosServerRPC(uerID);
+	public override bool Interact(ulong uerID, Transform interactingObjectTransform)
+	{
+		if (!base.Interact(uerID, interactingObjectTransform))
+			return false;
+
+		if (spawnPoint == null)
+		{
+			spawnPoint = GameObject.Find("StageSpawn").GetComponent<Transform>();
+		}
+		SetEveryPlayerPosServerRPC(uerID);
+
+        return true;
     }
 
 

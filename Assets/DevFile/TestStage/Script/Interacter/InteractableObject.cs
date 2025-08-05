@@ -37,15 +37,16 @@ public class InteractableObject : NetworkBehaviour
 
 
     // 상호작용 메서드는 자식 클래스에서 재정의되도록 설계됨
-    public virtual void Interact(ulong userId ,Transform interactingObjectTransform)
+    public virtual bool Interact(ulong userId ,Transform interactingObjectTransform)
     {
-		if (!canInteract) return;
-        if (KeySettingsManager.Instance.isEveryEvent) return;
+        if (!canInteract || KeySettingsManager.Instance.isEveryEvent)
+            return false;
 
         canInteract = false;
 		StartCoroutine(InteractCooldown());
 
         Debug.Log(interactingObjectTransform.name + " has interacted with " + transform.name);
+        return true;
     }
 
     private IEnumerator InteractCooldown()

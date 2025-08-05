@@ -2,8 +2,12 @@ using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using System;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
 
 public class PurchaseController : NetworkBehaviour 
 {
@@ -30,8 +34,10 @@ public class PurchaseController : NetworkBehaviour
     private WeaponSystem weaponSystem;
     private NetworkObject spawnedObjectParent;
 
+    public LocalizedString localizedString;
+
     private void Start()
-	{
+    {
         StartCoroutine(InitManager());
         initButton();
         shopInteracter.SelectPlayerCode.OnValueChanged += (olbvalue, newvalue) => PlayerChange();
@@ -61,7 +67,7 @@ public class PurchaseController : NetworkBehaviour
 			if (purchase.upgrade)
             {
                 purchase.purchaseButton.onClick.AddListener(() => { weaponSystem.UpgradeWeapon(); });
-                purchase.name.text = purchase.price.ToString() + "TK";
+                purchase.name.text = purchase.price.ToString() + "￦";
             }
         }
     }
@@ -72,7 +78,7 @@ public class PurchaseController : NetworkBehaviour
         {
 			if (!purchase.upgrade)
             {
-                purchase.name.text = purchase.price.ToString() + "TK";
+                purchase.name.text = purchase.price.ToString() + "￦";
                 purchase.purchaseButton.onClick.AddListener(() => {
                     PurchaseObjectServerRpc(PlayersManager.Instance.playersList[0].Name, purchase.name.text, purchase.objectPath, purchase.price);                     
                 });
@@ -136,18 +142,29 @@ public class PurchaseController : NetworkBehaviour
     [ClientRpc]
     void PerchaseClientRpc(string playerName, string itemName)
 	{
-        string newLog = $"{playerName} is Buy {itemName}";
+        // 새로운 로그 텍스트 생성
+        localizedString.TableReference = "UITable";
+        localizedString.TableEntryReference = "Buyer";
+        string newLog = $"{localizedString.GetLocalizedString()} : {playerName} / ";
 
-        // 현재 줄 수 계산
+        localizedString.TableReference = "UITable";
+        localizedString.TableEntryReference = "Item";
+        newLog += $"{localizedString.GetLocalizedString()} : {itemName}";
+
+        // 현재 로그 줄들 분리
         string[] lines = logTMP.text.Split('\n');
+        List<string> lineList = new List<string>(lines);
 
-        if (lines.Length >= maxLines)
+        // 최대 줄 수 초과 시 가장 윗줄 제거
+        if (lineList.Count >= maxLines)
         {
-            logTMP.text = newLog;
+            lineList.RemoveAt(0);  // 맨 위의 줄 삭제
         }
-        else
-        {
-            logTMP.text += $"\n{newLog}";
-        }
+
+        // 새로운 로그 추가
+        lineList.Add(newLog);
+
+        // 다시 전체 로그 문자열 구성
+        logTMP.text = string.Join("\n", lineList);
     }
 }

@@ -5,20 +5,32 @@ using Unity.Netcode;
 public class DungeunNetobjectSpawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> spawnObjects;
-    [SerializeField] private List<Vector3> spawnPos; // 부모 기준 로컬 위치
-    [SerializeField] private List<Quaternion> spawnRot; // 부모 기준 로컬 회전
+    [SerializeField] private List<Transform> spawnMarkers;  // 프리팹 내부의 Empty 오브젝트들
+
+    private List<Vector3> spawnPos = new List<Vector3>();
+    private List<Quaternion> spawnRot = new List<Quaternion>();
 
     private void Start()
     {
         if (NetworkManager.Singleton.IsServer)
         {
+            ExtractSpawnDataFromMarkers();
             SpawnAllObjectsServerRpc();
         }
-        else
+    }
+
+    private void ExtractSpawnDataFromMarkers()
+    {
+        spawnPos.Clear();
+        spawnRot.Clear();
+
+        foreach (var marker in spawnMarkers)
         {
-          // DestroyAllObjects();
+            spawnPos.Add(marker.position);      // 로컬 기준
+            spawnRot.Add(marker.localRotation);      // 로컬 회전
         }
     }
+
 
     [ServerRpc]
     private void SpawnAllObjectsServerRpc()
@@ -33,7 +45,7 @@ public class DungeunNetobjectSpawner : MonoBehaviour
         for (int i = 0; i < spawnObjects.Count; i++)
         {
             // 로컬 위치와 회전을 월드 기준으로 변환
-            Vector3 worldPosition = transform.TransformPoint(spawnPos[i]);
+            Vector3 worldPosition = spawnPos[i];
             Quaternion worldRotation = transform.rotation * spawnRot[i];
 
             // 객체 생성

@@ -9,9 +9,12 @@ public class EnterStage : InteractableObject
 
     public Action<bool> enterDoorAction;
 
-    public override void Interact(ulong uerID, Transform interactingObjectTransform)
+    public override bool Interact(ulong uerID, Transform interactingObjectTransform)
     {
-		if (spawnPoint == null)
+        if (!base.Interact(uerID, interactingObjectTransform))
+            return false;
+
+        if (spawnPoint == null)
 		{
             spawnPoint = GameObject.Find("StageSpawn").GetComponent<Transform>();            
         }
@@ -19,12 +22,7 @@ public class EnterStage : InteractableObject
         SetEveryPlayerPosServerRPC(uerID);
         enterDoorAction.Invoke(true);
 
-        // 2024.12.24 던전 입장 이벤트 추가
-        // 2024.12.26 던전 입장 이벤트 재배치
-        //InTheDark.Prototypes.Game.OnDungeonEnter.Invoke(new InTheDark.Prototypes.DungeonEnterEvent()
-        //{
-        //    BuildIndex = 0
-        //});
+        return true;
     }
 
 

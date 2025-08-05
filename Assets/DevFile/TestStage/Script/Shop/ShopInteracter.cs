@@ -10,26 +10,30 @@ public class ShopInteracter : InteractableObject
     public NetworkVariable<bool> isUsed = new NetworkVariable<bool>(false);
 
 
-    public override void Interact(ulong uerID , Transform interactingObjectTransform)
+    public override bool Interact(ulong uerID , Transform interactingObjectTransform)
     {
 		if (!isUsed.Value)
 		{
-            NetworkObject netObject = interactingObjectTransform.GetComponent<NetworkObject>();
-            NetUtil.TeleportUtil.SetEveryPlayerPosServerRPC(netObject.NetworkObjectId, usePosTransform.position, new Vector3(0f, 90f, 0f));
-            
-            //ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ ¸ØÃç!
-            playerMoveController controller = netObject.gameObject.GetComponent<playerMoveController>();
-            controller.EventToggle(true, this.gameObject);
+			if (!base.Interact(uerID, interactingObjectTransform))
+				return false;
 
-            storeUI.initObject();
+			NetworkObject netObject = interactingObjectTransform.GetComponent<NetworkObject>();
+			NetUtil.TeleportUtil.SetEveryPlayerPosServerRPC(netObject.NetworkObjectId, usePosTransform.position, new Vector3(0f, 90f, 0f));
 
-            ChangePowerServerRpc(interactingObjectTransform.GetComponent<NetworkObject>().NetworkObjectId , true);
+			//ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ ¸ØÃç!
+			playerMoveController controller = netObject.gameObject.GetComponent<playerMoveController>();
+			controller.EventToggle(true, this.gameObject);
 
-            MenuManager.Instance.IsEvenet = true;
+			storeUI.initObject();
 
-            base.Interact(uerID, interactingObjectTransform);
-        }       
-    }
+			ChangePowerServerRpc(interactingObjectTransform.GetComponent<NetworkObject>().NetworkObjectId, true);
+
+			MenuManager.Instance.IsEvenet = true;
+
+			return true;
+		}
+		return false;
+	}
 
 /*    ulong test;
 	private void Update()

@@ -119,7 +119,6 @@ public class StoreUI : MonoBehaviour
     public void PowerOff()
 	{
         ulong networkObjectId = NetworkManager.Singleton.LocalClient.PlayerObject.NetworkObjectId;
-        Debug.Log("À×ÀÌÀÌÀ×");
 
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(networkObjectId, out var networkObject))
         {
@@ -127,7 +126,7 @@ public class StoreUI : MonoBehaviour
             if (playerController != null)
             {
                 playerController.EventToggle(false, this.gameObject);
-                shopInteracter.ChangePowerServerRpc(0, false);
+                //shopInteracter.ChangePowerServerRpc(0, false);
 
                 MenuManager.Instance.IsEvenet = false;
                 Debug.Log($"Disabled playerMoveController for {networkObject.name}");
