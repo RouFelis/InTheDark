@@ -387,6 +387,7 @@ MonoBehaviour:
   _behaviorTree: {fileID: 4201312871343358130}
   _deathTrigger: {fileID: 11400000, guid: 3c7c8769374a3054987985cf938b2e87, type: 2}
   _lightInsightedTrigger: {fileID: 11400000, guid: e3029e7a3b60ff74a94892dd565492d3, type: 2}
+  _takeDamageTrigger: []
   _loots:
   - {fileID: 11400000, guid: cb98219c2ef743244bc6f8071018cdfe, type: 2}
 --- !u!82 &982930836932718898
@@ -523,7 +524,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1322677889333264117
 Transform:
   m_ObjectHideFlags: 0
@@ -666,7 +667,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7157309607397930224, guid: 46e20b3dfa952fe46af2777b3bc0959e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -49,7 +49,7 @@ namespace InTheDark.Prototypes
 					{
                         stage.outDoorAction += OnPLayerStageExit;
 
-                        Debug.Log("연결 확ㅇ;ㅣㄴ!!!!!!!!!!!!!!!!11");
+                        //Debug.Log("연결 확ㅇ;ㅣㄴ!!!!!!!!!!!!!!!!11");
 
                         isRunning = !isRunning;
 					}

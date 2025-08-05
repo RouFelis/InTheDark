@@ -514,4 +514,10 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		//_agent?.ResetPath();
 		//_animator?.SetBool(WALKING_STATE, false);
 	}
+
+	[ContextMenu("TakeDamage")]
+	public void Test_TakeDamage()
+	{
+		TakeDamage(1.0F, null);
+	}
 }

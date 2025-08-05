@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -52,6 +53,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 					var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
 
 					pawn?.StartMove();
+
+					//StartCoroutine(EndWalkingAnimation());
 				}
 			}
 
@@ -78,6 +81,17 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 		{
 			targetGameObject = null;
 			destination = Vector3.zero;
+		}
+
+		private IEnumerator EndWalkingAnimation()
+		{
+			var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
+
+			yield return new WaitUntil(() => navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance);
+
+			Debug.Log($"{gameObject.name} ∏ÿ√„!");
+
+			pawn?.StopMove();
 		}
 
 		//public override void OnEnd()
