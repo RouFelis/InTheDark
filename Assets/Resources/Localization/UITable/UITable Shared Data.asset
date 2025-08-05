@@ -67,6 +67,22 @@ MonoBehaviour:
     m_Key: Killed Enemy
     m_Metadata:
       m_Items: []
+  - m_Id: 91476682590863360
+    m_Key: Buyer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91499196897509376
+    m_Key: Price
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91499415978590208
+    m_Key: Item
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91500291166257152
+    m_Key: VolumeSetting
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

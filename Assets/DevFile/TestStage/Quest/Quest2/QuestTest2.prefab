@@ -136,6 +136,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 1
@@ -306,6 +308,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 0
@@ -476,6 +480,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 1
@@ -524,7 +530,7 @@ GameObject:
   - component: {fileID: 3088084065791975610}
   - component: {fileID: 8900161195534483817}
   - component: {fileID: 3820519593805928126}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Arch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13847,6 +13853,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 0
@@ -14073,6 +14081,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 1
@@ -14249,6 +14259,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 0
@@ -14332,7 +14344,7 @@ GameObject:
   - component: {fileID: 7230374067184988715}
   - component: {fileID: 4716075070382399194}
   - component: {fileID: 191028793530344128}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: QuestTest2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14966,11 +14978,12 @@ MonoBehaviour:
   spawnPoint: {fileID: 3981383838015867875}
   isCompleted:
     m_InternalValue: 0
+  failTime:
+    m_InternalValue: 0
+  MaxFailTime: 3
   startSound: {fileID: 8300000, guid: 96fe8080591376f43a7a1b0b16ce7e16, type: 3}
   endSound: {fileID: 8300000, guid: 854a8c2dd9f91c84e95e6d3108a2c0e7, type: 3}
   audioSource: {fileID: 191028793530344128}
-  isUsed:
-    m_InternalValue: 0
   startChecker: {fileID: 0}
   checkerList:
   - {fileID: 5431672811626262374}
@@ -14986,6 +14999,8 @@ MonoBehaviour:
   - {fileID: 6779714861722052915}
   - {fileID: 4851859330939492124}
   - {fileID: 5817158387599908534}
+  isUsed:
+    m_InternalValue: 0
 --- !u!114 &4716075070382399194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15274,6 +15289,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 0
@@ -15537,6 +15554,8 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 1

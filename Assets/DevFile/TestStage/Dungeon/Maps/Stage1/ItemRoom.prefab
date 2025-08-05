@@ -49,16 +49,7 @@ MonoBehaviour:
   - {fileID: 5925011532140792597, guid: 51be89d58f6b7d34f9ae45f0c54e7150, type: 3}
   - {fileID: 5925011532140792597, guid: 51be89d58f6b7d34f9ae45f0c54e7150, type: 3}
   - {fileID: 5925011532140792597, guid: 51be89d58f6b7d34f9ae45f0c54e7150, type: 3}
-  spawnPos:
-  - {x: -6.479, y: 1.982, z: 0.719}
-  - {x: -7.91, y: 1.982, z: 0.719}
-  - {x: -9.265, y: 1.982, z: 0.719}
-  - {x: -10.7, y: 1.982, z: 0.719}
-  spawnRot:
-  - {x: 0, y: 1, z: 0, w: -0.00000004371139}
-  - {x: 0, y: 1, z: 0, w: -0.00000004371139}
-  - {x: 0, y: 1, z: 0, w: -0.00000004371139}
-  - {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  spawnMarkers: []
 --- !u!1 &742594295721467880
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,7 +212,7 @@ GameObject:
   m_Component:
   - component: {fileID: 768930866069187915}
   - component: {fileID: 4042239398505006046}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +281,7 @@ GameObject:
   - component: {fileID: 2433446044712135068}
   - component: {fileID: 586278521492001036}
   - component: {fileID: 1118195411017093416}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4181,7 +4172,7 @@ GameObject:
   - component: {fileID: 6782361133107106051}
   - component: {fileID: 1437695078335733909}
   - component: {fileID: 6337923707855232060}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6081,6 +6072,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_LocalScale.x
       value: 7.950909
@@ -6184,6 +6179,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_LocalScale.x
@@ -6289,6 +6288,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -6393,6 +6396,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Concrete_Pillar_03 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 1863599309944848, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 4641453231242936, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
       propertyPath: m_LocalScale.y
       value: 1.5481813
@@ -6492,6 +6499,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03 (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_IsActive
@@ -6706,7 +6717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1931392446869072, guid: 76f75afd9a0418940b8ab3285c177668, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1931392446869072, guid: 76f75afd9a0418940b8ab3285c177668, type: 3}
       propertyPath: m_TagString
@@ -6900,6 +6911,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Concrete_Pillar_03
       objectReference: {fileID: 0}
+    - target: {fileID: 1863599309944848, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 4641453231242936, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
       propertyPath: m_LocalScale.y
       value: 1.5481813
@@ -7000,6 +7015,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Concrete_Pillar_03 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1863599309944848, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 4641453231242936, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
       propertyPath: m_LocalScale.y
       value: 1.5481813
@@ -7099,6 +7118,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_LocalScale.x
@@ -7204,6 +7227,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5081070485273181115, guid: 29100a21734f174458bbd8032c1b6952, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 5447476958597175322, guid: 29100a21734f174458bbd8032c1b6952, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.05
@@ -7256,6 +7283,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 1d3d0a8bcfd9ee44f99b9dea491033f1, type: 2}
+    - target: {fileID: 8823886993237914409, guid: 29100a21734f174458bbd8032c1b6952, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7306,6 +7337,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_LocalScale.x
@@ -7413,7 +7448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1290132087912812, guid: d9aae718eb3789a4fad44b8727d939f0, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1290132087912812, guid: d9aae718eb3789a4fad44b8727d939f0, type: 3}
       propertyPath: m_TagString
@@ -7615,6 +7650,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Concrete_Pillar_03 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1863599309944848, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 4641453231242936, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
       propertyPath: m_LocalScale.y
       value: 1.5481813
@@ -7811,6 +7850,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_LocalScale.x
       value: 11.870336
@@ -7914,6 +7957,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_LocalScale.x
@@ -8021,7 +8068,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1242232213132576, guid: e3f2e5d78b4d30e44872cbfd7dd167c1, type: 3}
       propertyPath: m_Layer
-      value: 10
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1242232213132576, guid: e3f2e5d78b4d30e44872cbfd7dd167c1, type: 3}
       propertyPath: m_TagString
@@ -8118,6 +8165,10 @@ PrefabInstance:
     - target: {fileID: 1863599309944848, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
       propertyPath: m_Name
       value: SM_Bld_Concrete_Pillar_03 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1863599309944848, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 4641453231242936, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
       propertyPath: m_LocalScale.y
@@ -8218,6 +8269,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_Name
       value: SM_Bld_House_Wall_03 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 42e037d8f795ed241b81cb4e9970ec95, type: 3}
       propertyPath: m_LocalScale.x
@@ -8322,6 +8377,10 @@ PrefabInstance:
     - target: {fileID: 1863599309944848, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
       propertyPath: m_Name
       value: SM_Bld_Concrete_Pillar_03 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1863599309944848, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 4641453231242936, guid: eb1d3756a07d2604495c656a8b94649a, type: 3}
       propertyPath: m_LocalScale.y

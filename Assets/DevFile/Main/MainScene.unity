@@ -3639,6 +3639,7 @@ GameObject:
   - component: {fileID: 457865919}
   - component: {fileID: 457865918}
   - component: {fileID: 457865917}
+  - component: {fileID: 457865920}
   m_Layer: 5
   m_Name: Cancle
   m_TagString: Untagged
@@ -3663,7 +3664,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 327, y: -895}
+  m_AnchoredPosition: {x: -302, y: -895}
   m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &457865917
@@ -3748,6 +3749,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 457865915}
   m_CullTransparentMesh: 1
+--- !u!114 &457865920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457865915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f96e9a1303cf54d8556c42459f5867, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSound: {fileID: 8300000, guid: 3cf23926f067e9b4ca59854aec6470bf, type: 3}
+  selectSound: {fileID: 8300000, guid: e1e21a81645253f45a468fad150092c3, type: 3}
 --- !u!1 &498446747
 GameObject:
   m_ObjectHideFlags: 0
@@ -4265,8 +4280,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f96e9a1303cf54d8556c42459f5867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverSound: {fileID: 8300000, guid: 180eb70ccd7651946918a5a028aaa835, type: 3}
-  selectSound: {fileID: 8300000, guid: 426dd703d72d0834f9c34d90af767aed, type: 3}
+  hoverSound: {fileID: 8300000, guid: 3cf23926f067e9b4ca59854aec6470bf, type: 3}
+  selectSound: {fileID: 8300000, guid: 68c9d45d9c592b140a9ecbcdeec16cad, type: 3}
 --- !u!222 &531503713
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4471,6 +4486,7 @@ MonoBehaviour:
   sensitivityInput: {fileID: 709577163}
   sensitivitySlider: {fileID: 1718144523}
   localPlayer: {fileID: 0}
+  isEveryEvent: 0
 --- !u!4 &539049124
 Transform:
   m_ObjectHideFlags: 0
@@ -4538,8 +4554,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f96e9a1303cf54d8556c42459f5867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverSound: {fileID: 8300000, guid: 180eb70ccd7651946918a5a028aaa835, type: 3}
-  selectSound: {fileID: 8300000, guid: 426dd703d72d0834f9c34d90af767aed, type: 3}
+  hoverSound: {fileID: 8300000, guid: 3cf23926f067e9b4ca59854aec6470bf, type: 3}
+  selectSound: {fileID: 8300000, guid: 68c9d45d9c592b140a9ecbcdeec16cad, type: 3}
 --- !u!114 &554369173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5254,7 +5270,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1019.56085}
+  m_AnchoredPosition: {x: 0, y: 1019.5607}
   m_SizeDelta: {x: 0, y: 2099.5605}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &622207841
@@ -10601,8 +10617,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f96e9a1303cf54d8556c42459f5867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverSound: {fileID: 8300000, guid: 180eb70ccd7651946918a5a028aaa835, type: 3}
-  selectSound: {fileID: 8300000, guid: 426dd703d72d0834f9c34d90af767aed, type: 3}
+  hoverSound: {fileID: 8300000, guid: 3cf23926f067e9b4ca59854aec6470bf, type: 3}
+  selectSound: {fileID: 8300000, guid: e1e21a81645253f45a468fad150092c3, type: 3}
 --- !u!222 &1382636267
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11736,6 +11752,7 @@ GameObject:
   - component: {fileID: 1629254679}
   - component: {fileID: 1629254678}
   - component: {fileID: 1629254677}
+  - component: {fileID: 1629254680}
   m_Layer: 5
   m_Name: Apply
   m_TagString: Untagged
@@ -11760,7 +11777,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -302, y: -895}
+  m_AnchoredPosition: {x: 327, y: -895}
   m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1629254677
@@ -11845,6 +11862,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1629254675}
   m_CullTransparentMesh: 1
+--- !u!114 &1629254680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629254675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5f96e9a1303cf54d8556c42459f5867, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSound: {fileID: 8300000, guid: 3cf23926f067e9b4ca59854aec6470bf, type: 3}
+  selectSound: {fileID: 8300000, guid: 68c9d45d9c592b140a9ecbcdeec16cad, type: 3}
 --- !u!1 &1645481428
 GameObject:
   m_ObjectHideFlags: 0
@@ -14661,7 +14692,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1907391050}
   m_Direction: 2
   m_Value: -0.0000004789134
-  m_Size: 0.51439196
+  m_Size: 0.5143915
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

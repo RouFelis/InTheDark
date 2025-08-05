@@ -43,16 +43,20 @@ public class EnemyRandomBox : InteractableObject
         gameObject.layer = _friendlyLayerMask;
 	}
 
-	public override void Interact(ulong userId, Transform interactingObjectTransform)
+	public override bool Interact(ulong userId, Transform interactingObjectTransform)
 	{
+		var result = false;
+
 		if (!_isEnemy.Value)
 		{
-			base.Interact(userId, interactingObjectTransform);
+			result = base.Interact(userId, interactingObjectTransform);
 
 			_audioSource.PlayOneShot(_insertCoinAudioClip);
 
 			InternalOnInteractServerRPC();
 		}
+
+		return result;
 	}
 
 	// ÄÚµå ±Ü¾î¿È ¤£ ¤¾¤¾;;;

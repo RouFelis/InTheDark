@@ -1252,7 +1252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &444316168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1921,6 +1921,7 @@ GameObject:
   - component: {fileID: 641896174}
   - component: {fileID: 641896173}
   - component: {fileID: 641896176}
+  - component: {fileID: 641896177}
   m_Layer: 0
   m_Name: DunGenenrator
   m_TagString: Untagged
@@ -1944,7 +1945,7 @@ MonoBehaviour:
     allowImmediateRepeats: 0
     Seed: 0
     ShouldRandomizeSeed: 0
-    MaxAttemptCount: 20
+    MaxAttemptCount: 1
     UseMaximumPairingAttempts: 0
     MaxPairingAttempts: 5
     IgnoreSpriteBounds: 0
@@ -1959,7 +1960,7 @@ MonoBehaviour:
     TileTriggerLayer: 2
     GenerateAsynchronously: 0
     MaxAsyncFrameMilliseconds: 50
-    PauseBetweenRooms: 0
+    PauseBetweenRooms: 1
     RestrictDungeonToBounds: 0
     TilePlacementBounds:
       m_Center: {x: 0, y: 0, z: 0}
@@ -2010,10 +2011,40 @@ MonoBehaviour:
     AreaTypeID: 0
     DisableLinkWhenDoorIsClosed: 0
   NavMeshLinkDistanceFromDoorway: -2
-  AutoGenerateFullRebakeSurfaces: 1
+  AutoGenerateFullRebakeSurfaces: 0
   FullRebakeTargets: []
   UseAutomaticLinkDistance: 0
   AutomaticLinkDistanceOffset: 2
+--- !u!114 &641896177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641896172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76f356143a516846a54607aa83a9ae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority: 0
+  BakeMode: 1
+  LayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  AddNavMeshLinksBetweenRooms: 1
+  NavMeshAgentTypes:
+  - AgentTypeID: 0
+    AreaTypeID: 0
+    DisableLinkWhenDoorIsClosed: 1
+  - AgentTypeID: -1923039037
+    AreaTypeID: 0
+    DisableLinkWhenDoorIsClosed: 1
+  NavMeshLinkDistanceFromDoorway: 1
+  AutoGenerateFullRebakeSurfaces: 1
+  FullRebakeTargets: []
+  UseAutomaticLinkDistance: 1
+  AutomaticLinkDistanceOffset: 1
 --- !u!1 &653401721
 GameObject:
   m_ObjectHideFlags: 0
@@ -2123,10 +2154,10 @@ RectTransform:
   - {fileID: 64610476}
   m_Father: {fileID: 163126632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -250}
+  m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &687703135
 MonoBehaviour:
@@ -2550,9 +2581,21 @@ MonoBehaviour:
   tileSetPairs:
   - tileA:
       tileSet: {fileID: 11400000, guid: db7d2f3425c6d36419943c04af9483de, type: 2}
-      isOnMainPath: 1
+      isOnMainPath: 0
       isRequired: 1
+      pathDepth: 0.5
+      branchDepth: 0.5
+    tileB:
+      tileSet: {fileID: 0}
+      isOnMainPath: 0
+      isRequired: 0
       pathDepth: 0
+      branchDepth: 0
+  - tileA:
+      tileSet: {fileID: 11400000, guid: fb509b6b59727d741a900ec7bcba0140, type: 2}
+      isOnMainPath: 0
+      isRequired: 1
+      pathDepth: 0.7
       branchDepth: 0
     tileB:
       tileSet: {fileID: 0}
@@ -2561,18 +2604,43 @@ MonoBehaviour:
       pathDepth: 0
       branchDepth: 0
   - tileA:
+      tileSet: {fileID: 11400000, guid: 679b98ef3ae802248a22e8a80e7f91a4, type: 2}
+      isOnMainPath: 0
+      isRequired: 1
+      pathDepth: 0.5
+      branchDepth: 0.5
+    tileB:
+      tileSet: {fileID: 0}
+      isOnMainPath: 0
+      isRequired: 0
+      pathDepth: 0
+      branchDepth: 0
+  - tileA:
       tileSet: {fileID: 11400000, guid: 7eb160c0de3905345b5af5b39e40123c, type: 2}
-      isOnMainPath: 1
+      isOnMainPath: 0
       isRequired: 1
       pathDepth: 0
       branchDepth: 0
     tileB:
       tileSet: {fileID: 11400000, guid: a6eea298ea95d704894ea7df98a30da3, type: 2}
-      isOnMainPath: 1
+      isOnMainPath: 0
       isRequired: 1
+      pathDepth: 0.5
+      branchDepth: 0.5
+  - tileA:
+      tileSet: {fileID: 11400000, guid: c9f11e52d616a504ba005323a042c8d3, type: 2}
+      isOnMainPath: 0
+      isRequired: 1
+      pathDepth: 0.5
+      branchDepth: 0.5
+    tileB:
+      tileSet: {fileID: 0}
+      isOnMainPath: 0
+      isRequired: 0
       pathDepth: 0
       branchDepth: 0
-  numberOfSetsToInject: 2
+  numberOfSetsToInject: 4
+  runtimeDungeon: {fileID: 641896173}
 --- !u!4 &748455758
 Transform:
   m_ObjectHideFlags: 0
@@ -3823,6 +3891,77 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1098497631}
   m_CullTransparentMesh: 1
+--- !u!1 &1110009232
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1110009234}
+  - component: {fileID: 1110009233}
+  m_Layer: 0
+  m_Name: InjectionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1110009233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110009232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6512723afeb01f741a212815705caeca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSetPairs:
+  - tileA:
+      tileSet: {fileID: 11400000, guid: 7eb160c0de3905345b5af5b39e40123c, type: 2}
+      isOnMainPath: 0
+      isRequired: 1
+      pathDepth: 0
+      branchDepth: 0
+    tileB:
+      tileSet: {fileID: 11400000, guid: a6eea298ea95d704894ea7df98a30da3, type: 2}
+      isOnMainPath: 0
+      isRequired: 1
+      pathDepth: 0.5
+      branchDepth: 0.5
+  - tileA:
+      tileSet: {fileID: 11400000, guid: c9f11e52d616a504ba005323a042c8d3, type: 2}
+      isOnMainPath: 0
+      isRequired: 1
+      pathDepth: 0
+      branchDepth: 0
+    tileB:
+      tileSet: {fileID: 0}
+      isOnMainPath: 0
+      isRequired: 0
+      pathDepth: 0
+      branchDepth: 0
+  numberOfSetsToInject: 2
+  runtimeDungeon: {fileID: 641896173}
+--- !u!4 &1110009234
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110009232}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -133.32767, y: -0.71496034, z: 30.5887}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1164218396
 GameObject:
   m_ObjectHideFlags: 0
@@ -5633,10 +5772,10 @@ RectTransform:
   - {fileID: 542409495}
   m_Father: {fileID: 163126632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -50}
+  m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1691296815
 MonoBehaviour:
@@ -5869,10 +6008,10 @@ RectTransform:
   - {fileID: 724096622}
   m_Father: {fileID: 163126632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -150}
+  m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1816455823
 MonoBehaviour:
@@ -5974,7 +6113,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1845783543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7421,6 +7560,7 @@ SceneRoots:
   - {fileID: 1164218399}
   - {fileID: 586395264}
   - {fileID: 748455758}
+  - {fileID: 1110009234}
   - {fileID: 50799335}
   - {fileID: 87464236}
   - {fileID: 712449474}

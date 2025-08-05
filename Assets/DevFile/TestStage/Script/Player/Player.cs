@@ -334,7 +334,7 @@ public class Player : playerMoveController, IHealth, ICharacter
 			yield return null;
 		}
 
-		postProcessingVolume = GameObject.Find("Sky and Fog Global Volume")?.GetComponent<Volume>();
+		postProcessingVolume = GameObject.Find("Vigentte")?.GetComponent<Volume>();
 		if (postProcessingVolume?.profile.TryGet(out vignette) == true)
 		{
 			vignette.intensity.value = DefaultVignetteIntensity;
@@ -458,6 +458,8 @@ public class Player : playerMoveController, IHealth, ICharacter
 			vignette.intensity.value = Mathf.Lerp(start, end, elapsed / duration);
 			yield return null;
 		}
+
+		Debug.Log("테스트 1번");
 	}
 
 
@@ -539,14 +541,14 @@ public class Player : playerMoveController, IHealth, ICharacter
 	/// </summary>
 	/// <param name="value"></param>
 	public void SetPlayerDieView(bool value)
-	{/*
-		firstPersonObject.gameObject.SetActive(!firstPersonObject.activeInHierarchy);
-		thirdPersonObject.gameObject.SetActive(!thirdPersonObject.activeInHierarchy);
-*/
+	{
+		firstPersonObject.gameObject.SetActive(value);
+		thirdPersonObject.gameObject.SetActive(!value);
+
 
 		camTarget.gameObject.SetActive(value);
-		//spotlightControl.firstPersonWeaponLight.gameObject.SetActive(value);
-		//spotlightControl.thirdPersonWeaponLight.gameObject.SetActive(!value);
+		spotlightControl.firstPersonWeaponLight.gameObject.SetActive(value);
+		spotlightControl.thirdPersonWeaponLight.gameObject.SetActive(!value);
 
 
 
@@ -627,7 +629,6 @@ public class Player : playerMoveController, IHealth, ICharacter
 			SetHealthServerRpc(maxHealth);
 			SetAimMode(); // 조준 가능 상태로 전환
 			OnReviveLocal?.Invoke();
-			Debug.Log($"테스트 {PlayerName} : 333333333333333333333");
 		}
 	}
 

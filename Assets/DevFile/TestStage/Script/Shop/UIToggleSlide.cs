@@ -44,18 +44,26 @@ public class UIToggleSlide : MonoBehaviour
 
         if (Input.GetKeyDown(interacteKey) && !isTransitioning)
         {
-            if (isOn)
-			{
-                StartCoroutine(TurnOffEffect());
-                MenuManager.Instance.SetPause(false);
-            }
-			else
-			{
-                StartCoroutine(TurnOnEffect());
-                MenuManager.Instance.SetPause(true);
-            }
+            ToggleTV();
         }
     }
+
+    public void ToggleTV()
+	{
+        if (isOn)
+        {
+            StartCoroutine(TurnOffEffect());
+            MenuManager.Instance.IsEvenet = false;
+            MenuManager.Instance.SetPause(false);
+        }
+        else
+        {
+            StartCoroutine(TurnOnEffect());
+            MenuManager.Instance.IsEvenet = true;
+            MenuManager.Instance.SetPause(true);
+        }
+    }
+
 
 
     private void SetKey()

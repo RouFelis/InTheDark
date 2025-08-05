@@ -22,13 +22,20 @@ public class GameManagerAndInteractor : InteractableObject
     private Dictionary<ulong, string> clientLoadedScenes = new Dictionary<ulong, string>();
 	private Dictionary<string, int> sceneRefCount = new Dictionary<string, int>();
 
+    [SerializeField] private Vector3 originalPosition_R;
+    [SerializeField] private Vector3 originalPosition_L;
+    [SerializeField] private Vector3 targetPosition_R;
+    [SerializeField] private Vector3 targetPosition_L;
 
     private UIAnimationManager animanager;
     private bool isFailSequenceRunning = false;
 
     public override void Start()
 	{
-		base.Start();
+        originalPosition_R = rightDoorAxis.localPosition;
+        originalPosition_L = leftDoorAxis.localPosition;
+
+        base.Start();
 		roundManager = FindAnyObjectByType<RoundManager>();
 		animanager = FindAnyObjectByType<UIAnimationManager>();
 	}
@@ -44,13 +51,17 @@ public class GameManagerAndInteractor : InteractableObject
     }
 
 
-	public override void Interact(ulong userID, Transform interactingObjectTransform)
-    {
-        base.Interact(userID, interactingObjectTransform);
-        if (!doorState.Value)
-            RequestSceneChangeServerRpc("TestScene");
-        else
-            RequestGameClearServerRpc();
+	public override bool Interact(ulong userID, Transform interactingObjectTransform)
+	{
+		if (!base.Interact(userID, interactingObjectTransform))
+			return false;
+
+		if (!doorState.Value)
+			RequestSceneChangeServerRpc("TestScene");
+		else
+			RequestGameClearServerRpc();
+
+        return true;
     }
 
 
@@ -198,7 +209,7 @@ public class GameManagerAndInteractor : InteractableObject
         }
     }
 
-    private IEnumerator AnimateDoors(bool open)
+/*    private IEnumerator AnimateDoors(bool open)
     {
         float dur = doorSound.clip.length;
         Quaternion lStart = leftDoorAxis.localRotation;
@@ -215,6 +226,28 @@ public class GameManagerAndInteractor : InteractableObject
             rightDoorAxis.localRotation = Quaternion.Slerp(rStart, rTarget, frac);
             yield return null;
         }
+        doorAnimationCoroutine = null;
+    } */
+    
+
+    private IEnumerator AnimateDoors(bool open)
+    {
+        float dur = doorSound.clip.length;
+        Vector3 start_R = rightDoorAxis.localPosition;
+        Vector3 start_L = leftDoorAxis.localPosition;
+        Vector3 target_R = open ? targetPosition_R : originalPosition_R;
+        Vector3 target_L = open ? targetPosition_L : originalPosition_L;
+
+        float t = 0;
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            float frac = Mathf.Clamp01(t / dur);
+            leftDoorAxis.localPosition = Vector3.Slerp(start_L, target_L, frac);
+            rightDoorAxis.localPosition = Vector3.Slerp(start_R, target_R, frac);
+            yield return null;
+        }
+
         doorAnimationCoroutine = null;
     }
 

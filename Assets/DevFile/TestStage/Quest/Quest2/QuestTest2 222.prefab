@@ -136,6 +136,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 1
@@ -281,6 +282,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 0
@@ -426,6 +428,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 1
@@ -449,7 +452,7 @@ GameObject:
   - component: {fileID: 3088084065791975610}
   - component: {fileID: 8900161195534483817}
   - component: {fileID: 3820519593805928126}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Arch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13772,6 +13775,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 0
@@ -13948,6 +13952,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 1
@@ -14124,6 +14129,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 0
@@ -14182,7 +14188,7 @@ GameObject:
   - component: {fileID: 7230374067184988715}
   - component: {fileID: 4716075070382399194}
   - component: {fileID: 191028793530344128}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: QuestTest2 222
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16253,6 +16259,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 0
@@ -16491,6 +16498,7 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 0
+  interactCooldown: 2
   isComplete:
     m_InternalValue: 0
   isStart: 1

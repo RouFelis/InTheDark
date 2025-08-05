@@ -18,13 +18,14 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private NetworkVariable<int> _count = new();
 
-		public override void Interact(ulong userId, Transform interactingObjectTransform)
+		public override bool Interact(ulong userId, Transform interactingObjectTransform)
 		{
 			var player = interactingObjectTransform.GetComponent<Player>();
-
-			base.Interact(userId, interactingObjectTransform);
+			var result = base.Interact(userId, interactingObjectTransform);
 
 			InternalOnInteractServerRPC(player);
+
+			return result;
 		}
 
 		[Rpc(SendTo.Server)]

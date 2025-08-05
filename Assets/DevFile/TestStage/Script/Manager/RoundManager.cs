@@ -29,8 +29,14 @@ public class RoundManager : MonoBehaviour
 		SharedData.Instance.questQuota.OnValueChanged += SetquestQuotaTMP;
 		SharedData.Instance.moneyQuota.OnValueChanged += SetmoneyQuotaTMP;
 
+		LocalizationSettings.SelectedLocaleChanged += SetLanguage;
 
 		InitResult();
+	}
+
+	private void OnDisable()
+	{
+		LocalizationSettings.SelectedLocaleChanged -= SetLanguage;
 	}
 
 	private void InitResult()
@@ -42,6 +48,23 @@ public class RoundManager : MonoBehaviour
 		roundClearResultTMP.text = "";
 		roundClearContentsTMP.text = "";
 		roundClearPSTMP.text = "";
+	}
+
+	private void SetLanguage(Locale newLocale)
+	{
+		Debug.Log($"언어가 {newLocale.LocaleName}로 변경되었습니다.");
+
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Area"; // 사용하고자 하는 키
+		areaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.area.Value;
+
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Mission Quota"; // 사용하고자 하는 키
+		missionQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.questQuota.Value;
+
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Money Quota"; // 사용하고자 하는 키
+		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.moneyQuota.Value;
 	}
 
 

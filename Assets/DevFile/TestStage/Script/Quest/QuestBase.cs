@@ -26,13 +26,13 @@ public class QuestBase : NetworkBehaviour
 	{
 		if (newValue)
         {
-            SpawnClearRewardServerRpc();
+            if(rewardPrefab != null)
+                SpawnClearRewardServerRpc();
         }
-
     }
 
     [ServerRpc(RequireOwnership = false)]
-    protected void QuestFailedServerRpc()
+    protected virtual void QuestFailedServerRpc()
 	{
         failTime.Value += 1;
 
@@ -47,7 +47,7 @@ public class QuestBase : NetworkBehaviour
     {
 		if (rewardPrefab != null)
         {
-            GameObject spawned = Instantiate(rewardPrefab, spawnPoint.position, Quaternion.identity);
+            GameObject spawned = Instantiate(rewardPrefab, spawnPoint.position, spawnPoint.rotation);
             spawned.GetComponent<NetworkObject>().Spawn();
 		}
         ClearRewardClientRpc();

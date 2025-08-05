@@ -17,6 +17,7 @@ public class UIAnimationManager : MonoBehaviour
 
 	[Header("Close Object")]
 	[SerializeField] private RectTransform healthBar;
+	[SerializeField] private RectTransform compass;
 
 
 
@@ -88,6 +89,7 @@ public class UIAnimationManager : MonoBehaviour
 	public void DieAnimation()
 	{
 		healthBar.localScale = Vector3.zero;
+		compass.localScale = Vector3.zero;
 		allDieCameraEffect1.gameObject.SetActive(true);
 		allDieCameraEffect2.gameObject.SetActive(true);
 		allDieCameraEffect3.gameObject.SetActive(true);
@@ -132,6 +134,7 @@ public class UIAnimationManager : MonoBehaviour
 	{
 		yield return new WaitForSeconds(1f);
 		healthBar.localScale = Vector3.one;
+		compass.localScale = Vector3.one;
 	}
 	#endregion
 

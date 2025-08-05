@@ -20,7 +20,7 @@ MonoBehaviour:
   BranchMode: 1
   BranchCount:
     Min: 2
-    Max: 5
+    Max: 10
   GlobalProps: []
   KeyManager: {fileID: 11400000, guid: 5ccf0f6fc8ee25a4e8af60f511c148ae, type: 2}
   DoorwayConnectionChance: 0
@@ -48,12 +48,9 @@ MonoBehaviour:
       id: 2
     TagB:
       id: 0
-  - TagA:
-      id: 2
-    TagB:
-      id: 2
-  BranchTagPruneMode: 1
-  BranchPruneTags: []
+  BranchTagPruneMode: 0
+  BranchPruneTags:
+  - id: 0
   Nodes:
   - Graph: {fileID: 11400000}
     TileSets:

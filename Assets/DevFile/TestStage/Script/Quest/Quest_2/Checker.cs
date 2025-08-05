@@ -38,13 +38,16 @@ public class Checker : InteractableObject
 		isComplete.Value = value;
 	}
 
-	public override void Interact(ulong uerID, Transform interactingObjectTransform)
+	public override bool Interact(ulong uerID, Transform interactingObjectTransform)
 	{
-		base.Interact(uerID , interactingObjectTransform);		
+		if (!base.Interact(uerID, interactingObjectTransform))
+			return false;
+
 		if (isComplete.Value)
 		{
-			return;
+			return false;
 		}
+
 		if (isStart)
 		{
 			quest.WireStar(startEndTransform, this, this.connectionOrder, uerID);
@@ -53,5 +56,7 @@ public class Checker : InteractableObject
 		{
 			quest.WireEnd(startEndTransform, this);
 		}
+
+		return true;
 	}
 }

@@ -20,6 +20,9 @@ public class playerMoveController : SaintsNetworkBehaviour
     [SerializeField] private float gravity = 20.0f;
     [SerializeField] private float jumpForce = 8.0f;
     public float SlowMultiplier = 1.0f;
+    private bool stun = false;
+    public bool Stun { set { stun = value; } get => stun; }
+
 
 
     [Header("Camera & Head Rotation")]
@@ -45,7 +48,7 @@ public class playerMoveController : SaintsNetworkBehaviour
     public CinemachineVirtualCamera VirtualCamera { get => virtualCamera; }
 
     [SerializeField] private float lookSpeed = 2.0f;
-    [SerializeField] private float lookXLimit = 60.0f;
+    [SerializeField] private float lookXLimit = 90.0f;
     [SerializeField] private float smoothSpeed = 1f;
 
     [Header("Animation")]
@@ -54,7 +57,7 @@ public class playerMoveController : SaintsNetworkBehaviour
 
     [Header("Networking")]
     [LayoutStart("Networking", ELayout.FoldoutBox)]
-    [SerializeField] protected NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
+    [SerializeField] public NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isGrabItem = new NetworkVariable<bool>(value: false, writePerm: NetworkVariableWritePermission.Owner);
@@ -272,50 +275,54 @@ public class playerMoveController : SaintsNetworkBehaviour
 
     private void HandleInput()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+		if (!stun)
+		{
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
 
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 right = transform.TransformDirection(Vector3.right);
+            Vector3 forward = transform.TransformDirection(Vector3.forward);
+            Vector3 right = transform.TransformDirection(Vector3.right);
 
-        Vector3 inputDirection = forward * vertical + right * horizontal;
+            Vector3 inputDirection = forward * vertical + right * horizontal;
 
-        if (inputDirection.magnitude > 1)
-            inputDirection.Normalize();
+            if (inputDirection.magnitude > 1)
+                inputDirection.Normalize();
 
-        bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value > 0);
-        float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
-        moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier * SlowMultiplier;
-        moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier * SlowMultiplier;
+            bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value > 0);
+            float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
+            moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier * SlowMultiplier;
+            moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier * SlowMultiplier;
 
 
-        if (isRunning)
-        {
-            currentStamina.Value -= staminaDecreaseRate * Time.deltaTime;
-            currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
-            lastRunTime = Time.time; // 마지막으로 달린 시간 업데이트
-            UpdateSteaminaBar();
+            if (isRunning)
+            {
+                currentStamina.Value -= staminaDecreaseRate * Time.deltaTime;
+                currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
+                lastRunTime = Time.time; // 마지막으로 달린 시간 업데이트
+                UpdateSteaminaBar();
+            }
+            else if (Time.time > lastRunTime + staminaRegenDelay)
+            {
+                currentStamina.Value += staminaRegenRate * Time.deltaTime;
+                currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
+                UpdateSteaminaBar();
+            }
+
+            characterController.Move(moveDirection * Time.deltaTime);
+
+
+            if (mouseControl)
+            {
+                // 마우스 회전 입력
+                rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+
+                //firstPersonCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
+                camTarget.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
+                rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
+            }
         }
-        else if (Time.time > lastRunTime + staminaRegenDelay)
-        {
-            currentStamina.Value += staminaRegenRate * Time.deltaTime;
-            currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
-            UpdateSteaminaBar();
-        }
-
-        characterController.Move(moveDirection * Time.deltaTime);
-
-
-        if (mouseControl)
-        {
-            // 마우스 회전 입력
-            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-
-            //firstPersonCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
-            camTarget.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
-            rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
-            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
-        }
+        
 
         HandleAim();
         HeadBobbing();
@@ -340,7 +347,7 @@ public class playerMoveController : SaintsNetworkBehaviour
                 isJumping = false;
             }
 
-            if (Input.GetButtonDown("Jump"))
+            if (!Stun && Input.GetButtonDown("Jump"))
             {
                 moveDirection.y = jumpForce;
                 isJumping = true;
@@ -350,10 +357,47 @@ public class playerMoveController : SaintsNetworkBehaviour
         }
         else
         {
-            moveDirection.y -= gravity * Time.deltaTime;
-            characterController.Move(moveDirection * Time.deltaTime);
+			if (!Stun)
+            {
+                moveDirection.y -= gravity * Time.deltaTime;
+                characterController.Move(moveDirection * Time.deltaTime);
+            }
         }
     }
+
+    Vector3 _velocity;         // 전체 이동 속도 (입력 + 넉백 + 중력 포함)
+    Vector3 knockbackVelocity; // 넉백 전용 속도
+    float knockbackDamping = 5f;
+    bool isKnockback = false;
+
+    public IEnumerator SetStun(float _flightTime , float _flightSpeed, AnimationCurve _knockbackCurve , float _knockbackY , Vector3 direction)
+    {
+        var time = 0.0f;
+        Stun = true;
+
+        Vector3 horizontalKnock = direction * _flightSpeed;
+        float verticalVelocity = _knockbackY;
+
+        while (time < _flightTime)
+        {
+            float t = time / _flightTime;
+
+            Vector3 totalMove =
+                horizontalKnock * _knockbackCurve.Evaluate(t) +
+                Vector3.up * verticalVelocity;
+
+            characterController.Move(totalMove * Time.deltaTime);
+
+            // 중력 적용
+            verticalVelocity -= gravity * Time.deltaTime;
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        Stun = false;
+    }
+
 
     private void EventPlayingStop()
 	{

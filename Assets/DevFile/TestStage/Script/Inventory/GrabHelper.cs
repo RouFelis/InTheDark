@@ -6,84 +6,112 @@ using Unity.Netcode.Components;
 
 public class GrabHelper : NetworkBehaviour
 {
-    public Transform handTransform; // 손의 위치를 나타내는 Transform
+    [Header("Attachment Settings")]
+    public Transform handTransform;
     public bool isPickedUp = false;
 
-    [SerializeField] PositionConstraint positionConstraint;
-    [SerializeField] RotationConstraint rotationConstraint;
-    [SerializeField] NetworkTransform networkTransform;
-    [SerializeField] NetworkRigidbody networkRigidbody;
+    [SerializeField] private PositionConstraint positionConstraint;
+    [SerializeField] private RotationConstraint rotationConstraint;
+    [SerializeField] private NetworkTransform networkTransform;
+    [SerializeField] private NetworkRigidbody networkRigidbody;
 
-    [SerializeField ]private Player player;
+    [SerializeField] private Player player;
 
-	private void Start()
-	{
-        player = GetComponent<Player>();
-	}
-
-
-	[ServerRpc(RequireOwnership = false)]
-    public void AttachToPlayerServerRpc(ulong PlayerID)
+    private void Start()
     {
-        // 손 위치를 Position Constraint의 Source로 추가합니다.
-        NetworkObject playerRootNetworkObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[PlayerID];
-//        ConstraintSource source = new ConstraintSource();
+        player = GetComponent<Player>();
+    }
 
-        NetworkInventoryController playerInven = playerRootNetworkObject.gameObject.GetComponent<NetworkInventoryController>();
-        playerInven.GrabedObject = this.NetworkObject;
+    [ServerRpc(RequireOwnership = false)]
+    public void AttachToPlayerServerRpc(ulong playerId)
+    {
+        if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(playerId, out NetworkObject playerObj)) return;
 
-        this.gameObject.transform.position = new Vector3(0,0,0);
-        this.gameObject.transform.rotation = Quaternion.identity;
+        var inventory = playerObj.GetComponent<NetworkInventoryController>();
+        inventory.GrabedObject = this.NetworkObject;
 
-        this.gameObject.layer = 0;
         isPickedUp = true;
-        AttachToPlayerClientRpc(PlayerID);
+        this.gameObject.layer = 0;
+
+        AttachToPlayerClientRpc(playerId);
     }
 
     [ClientRpc]
-    private void AttachToPlayerClientRpc(ulong PlayerID)
+    private void AttachToPlayerClientRpc(ulong playerId)
     {
-        // NetworkObjectId로 playerRoot Transform을 찾습니다.
-        NetworkObject playerRootNetworkObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[PlayerID];
-        Transform playerRootTransform = playerRootNetworkObject.gameObject.GetComponent<NetworkInventoryController>().grabHandTransform;
+        if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(playerId, out NetworkObject playerObj)) return;
 
-        // Position Constraint에 Source를 추가합니다.
-        ConstraintSource source = new ConstraintSource
-        {
-            sourceTransform = playerRootTransform,
-            weight = 1
-        };
+        var handTransform = playerObj.GetComponent<NetworkInventoryController>().grabHandTransform;
 
-        //포지션 값.
-        positionConstraint.AddSource(source);
-        positionConstraint.constraintActive = true;
-
-        //회전값
-        rotationConstraint.AddSource(source);
-        rotationConstraint.constraintActive = true;
-
-        this.gameObject.transform.position = new Vector3(0, 0, 0);
-        this.gameObject.transform.rotation = Quaternion.identity;
-
-        networkTransform.enabled = false;
-        networkRigidbody.enabled = false;
-
-        this.gameObject.layer = 0;
-        isPickedUp = true;
+        ApplyAttachment(handTransform);
     }
 
     public void DetachFromPlayer()
     {
-        // Position Constraint 비활성화
+        isPickedUp = false;
+        RemoveAttachment();
+
+        // 다시 물리 활성화
+        SetItemPhysics(true);
+        this.tag = "Item";
+    }
+
+    // =========================
+    // 헬퍼 메서드들
+    // =========================
+
+    private void ApplyAttachment(Transform targetTransform)
+    {
+        AddConstraint(positionConstraint, targetTransform);
+        AddConstraint(rotationConstraint, targetTransform);
+
+        ResetTransform();
+        SetItemPhysics(false);
+        this.gameObject.layer = 0;
+        isPickedUp = true;
+    }
+
+    private void RemoveAttachment()
+    {
         positionConstraint.constraintActive = false;
         rotationConstraint.constraintActive = false;
-        isPickedUp = false;
 
-        this.tag = "Item";
         positionConstraint.RemoveSource(0);
         rotationConstraint.RemoveSource(0);
-        networkTransform.enabled = true;
-        networkRigidbody.enabled = true;
+    }
+
+    private void ResetTransform()
+    {
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+    }
+
+    private void SetItemPhysics(bool enabled)
+    {
+        if (networkTransform != null)
+            networkTransform.enabled = enabled;
+        if (networkRigidbody != null)
+            networkRigidbody.enabled = enabled;
+    }
+
+    private void AddConstraint(IConstraint constraint, Transform source)
+    {
+        var sourceData = new ConstraintSource
+        {
+            sourceTransform = source,
+            weight = 1
+        };
+
+        if (constraint is PositionConstraint pos)
+        {
+            pos.AddSource(sourceData);
+            pos.constraintActive = true;
+        }
+        else if (constraint is RotationConstraint rot)
+        {
+            rot.AddSource(sourceData);
+            rot.constraintActive = true;
+        }
     }
 }
 

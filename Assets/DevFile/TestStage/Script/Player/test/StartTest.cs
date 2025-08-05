@@ -15,18 +15,22 @@ public class StartTest : StartRoomSetter
 
     void Start()
 	{
+		if (IsClient&&!IsServer)
+		{
+			SharedData.Instance.networkSeed.OnValueChanged += ClientDungenGenerate;
+			//기본 1회 생성.
+			dungeon.Generator.Seed = SharedData.Instance.networkSeed.Value;
+			dungeon.Generate();
+		}
+
 		if (IsHost)
 		{
-			SharedData.Instance.SetNetSeed();
+			SharedData.Instance.SetNetSeedServerRpc();
 
 			dungeon.Generator.Seed = SharedData.Instance.networkSeed.Value;
+			dungeon.Generator.OnGenerationStatusChanged += GenerateFail;
 			dungeon.Generate();
             //SetEveryPlayerPos();
-        }
-		else
-		{
-			dungeon.Generator.Seed = SharedData.Instance.networkSeed.Value;
-			dungeon.Generate();
         }
 
 		// 추가?
@@ -38,5 +42,32 @@ public class StartTest : StartRoomSetter
 		};
 
 		command.Invoke();
+	}
+
+	private void ClientDungenGenerate(int oldValue, int newValue)
+	{
+		dungeon.Generator.Seed = newValue;
+		dungeon.Generate();
+	}
+
+	private void GenerateFail(DungeonGenerator generator, GenerationStatus status)
+	{
+		if (status == GenerationStatus.Failed)
+		{
+			SharedData.Instance.SetNetSeedServerRpc();
+
+			dungeon.Generator.Seed = SharedData.Instance.networkSeed.Value;
+			Debug.Log($"던전 생성 실패. 새 시드 {SharedData.Instance.networkSeed.Value}");
+
+			dungeon.Generate();
+		}
+	}
+
+	private void OnDisable()
+	{
+		if (!IsHost)
+		{
+			SharedData.Instance.networkSeed.OnValueChanged -= ClientDungenGenerate;
+		}
 	}
 }

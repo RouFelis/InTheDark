@@ -1337,7 +1337,7 @@ MonoBehaviour:
   ThirdpersonCameraTransform: {fileID: 0}
   positionOffset: {x: 0, y: 1.7, z: 0}
   lookSpeed: 2
-  lookXLimit: 60
+  lookXLimit: 90
   smoothSpeed: 1
   firstpersonAnimator: {fileID: 2405997118467678167}
   thirdpersonAnimator: {fileID: 5073388931812896167}
@@ -1451,7 +1451,7 @@ MonoBehaviour:
   level:
     m_InternalValue: 0
   currentHealth:
-    m_InternalValue: 100
+    m_InternalValue: 9999999
   maxHealth: 100
   cameraShakeMagnitude: 0.00015
   cameraShakeDuration: 0.3
