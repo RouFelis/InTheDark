@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UIElements;
 using UnityEngine.VFX;
 
@@ -39,8 +40,10 @@ namespace InTheDark.Prototypes
 		protected override async UniTask OnAttack(IHealth target)
 		{
 			var time = 0.0F;
-			var targetPos = _pawn.Target.transform.position;
+			var navMeshAgent = GetComponent<NavMeshAgent>();
+			var player = _pawn.Target?.GetComponent<Player>();
 
+			var targetPos = player.FirstPersonCamera.transform.position;
 			var tempPos = LaserTransform.transform.position + new Vector3(0.0F, 0.05F, 0.0F);
 
 			var chargingDis = Vector3.Distance(LaserTransform.position, tempPos);
@@ -65,18 +68,22 @@ namespace InTheDark.Prototypes
 			LaserVFX.SetFloat("Length", chargingDis);
 			LaserVFX.SetVector3("TargetPos", chargingPos);
 
+			_pawn.StopMove();
+
+			navMeshAgent.enabled = false;
+
 			while (duration + Delay > time && !_pawn.IsDead)
 			{
 				if (time > Delay)
 				{
 					var raycast = Physics.Raycast(transform.position, LaserTransform.forward, out var hit, maxDistance);
-					var player = hit.collider?.GetComponent<Player>();
+					var hitPlayer = hit.collider?.GetComponent<Player>();
 
 					//Debug.Log($"playerPos: {player?.transform.position}, cameraPos: {player?.FirstPersonCamera.transform.position}");
 
 					var targetPosition = raycast
-						? player
-							? player.FirstPersonCamera.transform.position
+						? hitPlayer
+							? hitPlayer.FirstPersonCamera.transform.position
 							: hit.point
 						: transform.position + transform.forward * maxDistance;
 
@@ -84,13 +91,15 @@ namespace InTheDark.Prototypes
 					var position = LaserTransform.transform.InverseTransformPoint(targetPosition);
 					var direction = targetPosition - LaserTransform.transform.position;
 
+					_pawn.StopMove();
+
 					LaserVFX.SetVector3("Direction", direction.normalized);
 					LaserVFX.SetFloat("Length", distance);
 					LaserVFX.SetVector3("TargetPos", position);
 
-					Debug.Log($"player: {player}, target: {target}, hit: {hit.collider}/{hit.collider?.name}");
+					Debug.Log($"player: {hitPlayer}, target: {target}, hit: {hit.collider}/{hit.collider?.name}");
 
-					if (IsTargetNearby && player && player.Equals(target))
+					if (IsTargetNearby && hitPlayer && hitPlayer.Equals(target))
 					{
 						target.TakeDamage(_damage, _pawn.attackSound);
 					}
@@ -107,46 +116,9 @@ namespace InTheDark.Prototypes
 
 				LaserVFX.SetBool(VFX_IS_FIRING, IsFiring);
 				LaserVFX.Stop();
+
+				navMeshAgent.enabled = true;
 			}
-
-			//while (Delay > time && !_pawn.IsDead)
-			//{
-			//	time = Mathf.Min(time + Time.deltaTime, Delay);
-
-			//	await UniTask.NextFrame();
-			//}
-
-			//time = 0.0F;
-
-			//while (duration > time && !_pawn.IsDead)
-			//{
-			//	var targetPosition = Physics.Raycast(LaserTransform.position, LaserTransform.forward.normalized, out RaycastHit hit, maxDistance)
-			//		? hit.point
-			//		: transform.position + transform.forward * maxDistance;
-
-			//	var distance = Vector3.Distance(LaserTransform.position, targetPosition);
-			//	var position = LaserTransform.transform.InverseTransformPoint(targetPosition);
-			//	var direction = targetPosition - LaserTransform.transform.position;
-
-			//	var player = hit.collider?.GetComponent<Player>();
-
-			//	LaserVFX.SetVector3("Direction", direction.normalized);
-			//	LaserVFX.SetFloat("Length", distance);
-			//	LaserVFX.SetVector3("TargetPos", position);
-
-			//	//Debug.Log($"player: {player}, target: {target}, 혹시...{hit.collider.name}/{hit.collider}");
-
-			//	if (IsTargetNearby && player && player.Equals(target))
-			//	{
-			//		target.TakeDamage(_damage, _pawn.attackSound);
-			//	}
-
-			//	time = Mathf.Min(time + Time.deltaTime, duration);
-
-			//	await UniTask.NextFrame();
-			//}
-
-			//Debug.Log("끼에에에에에에에에에엑");
 		}
 
 		//private void OnDrawGizmos()
