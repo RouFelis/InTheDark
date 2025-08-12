@@ -58,43 +58,70 @@ public class Quest1 : QuestBase
 		if (isCompleted.Value)
 			return;
 
-		// targetObjectName에 포함되지 않은 이름이 하나라도 있는지 검사
+		if (networkObjectsInZone == null || networkObjectsInZone.Count == 0)
+			return;
+
+		bool hasMatchingObject = false;
+
 		foreach (var netObj in networkObjectsInZone)
 		{
-			string cleanName = netObj.gameObject.name.Replace("(Clone)", "");
-			if (!targetObjectName.Contains(cleanName))
+			var questItem = netObj?.GetComponent<QuestItem>();
+			var player = netObj?.GetComponent<Player>();
+
+			// 플레이어면 데미지 주고 계속 검사
+			if (player != null)
 			{
-				Debug.Log($"[TriggerLogger] '{cleanName}' 은(는) 퀘스트 조건에 포함되지 않음. 퀘스트 실패 처리.");
-				QuestFailedServerRpc();
-				return; // 조건이 안 맞으면 즉시 종료
+				player.damageHandler.RequestDamage(10000);
+				continue;
+			}
+
+			// QuestItem이 없으면 조건 불일치로 간주
+			if (questItem == null)
+			{
+				Debug.Log($"[TriggerLogger] '{netObj.name}' 에 QuestItem 컴포넌트가 없음.");
+				continue;
+			}
+
+			// 목표 아이템 목록에 포함되면 성공 조건 만족
+			if (targetObjectName.Contains(questItem.itemId))
+			{
+				hasMatchingObject = true;
 			}
 		}
 
-		// 여기까지 왔다는 건 모든 오브젝트 이름이 targetObjectName에 포함된 경우
-		Debug.Log("[TriggerLogger] 모든 오브젝트가 퀘스트 조건을 만족함.");
-
-		CompleteBoolChangeServerRpc(true);
-
-		// 모든 클라이언트에 성공 UI 및 사운드 재생 요청
-		ShowSuccessClientRpc(moveDuration);
-
-
-		foreach (var netObj in networkObjectsInZone)
+		// 최종 판정
+		if (hasMatchingObject)
 		{
-			if (collectObjectWall != null)
+			Debug.Log("[TriggerLogger] 조건에 맞는 오브젝트가 있음 → 퀘스트 성공");
+			CompleteBoolChangeServerRpc(true);
+			ShowSuccessClientRpc(moveDuration);
+
+			foreach (var netObj in networkObjectsInZone)
 			{
-				StartCoroutine(MoveObjectOverTime(
-					collectObjectWall.transform,
-					originPos,
-					endPos,
-					moveDuration,
-					netObj
-				));
+				// Player는 디스폰 안 함
+				if (netObj.GetComponent<Player>() != null)
+					continue;
+
+				if (collectObjectWall != null)
+				{
+					StartCoroutine(MoveObjectOverTime(
+						collectObjectWall.transform,
+						originPos,
+						endPos,
+						moveDuration,
+						netObj
+					));
+				}
+				else
+				{
+					netObj.Despawn(true);
+				}
 			}
-			else
-			{
-				netObj.Despawn(true);
-			}
+		}
+		else
+		{
+			Debug.Log("[TriggerLogger] 조건에 맞는 오브젝트 없음 → 퀘스트 실패");
+			QuestFailedServerRpc();
 		}
 	}
 
@@ -159,7 +186,5 @@ public class Quest1 : QuestBase
 	{
 		StartCoroutine(HandleQuestUISequence(false, 2f));
 	}
-
-
 
 }

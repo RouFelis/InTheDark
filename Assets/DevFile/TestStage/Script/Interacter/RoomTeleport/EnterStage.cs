@@ -18,8 +18,8 @@ public class EnterStage : InteractableObject
 		{
             spawnPoint = GameObject.Find("StageSpawn").GetComponent<Transform>();            
         }
-        PlayDoorSound();
-        SetEveryPlayerPosServerRPC(uerID);
+        PlayDoorSound(); 
+        SetPlayerPosServerRPC(uerID);
         enterDoorAction.Invoke(true);
 
         return true;
@@ -37,29 +37,46 @@ public class EnterStage : InteractableObject
 
 
     [ServerRpc(RequireOwnership = false)]
-    void SetEveryPlayerPosServerRPC(ulong playerId)
+    void SetPlayerPosServerRPC(ulong playerId)
     {
-        Debug.Log(playerId);
-        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(playerId, out var client))
-		{
-            var playerObject = client.PlayerObject;
+        if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(playerId, out var client))
+            return;
 
-            if (spawnPoint == null)
-            {
-                spawnPoint = GameObject.Find("StageSpawn").GetComponent<Transform>();
-            }
-           
-            playerObject.gameObject.GetComponent<CharacterController>().enabled = false;
+        var playerObject = client.PlayerObject;
+        if (spawnPoint == null)
+            spawnPoint = GameObject.Find("StageSpawn").transform;
 
-            //위치이동
-            playerObject.transform.position = spawnPoint.position;
-            playerObject.gameObject.GetComponent<CharacterController>().enabled = true;
+        var cc = playerObject.GetComponent<CharacterController>();
+        var damageHandler = playerObject.GetComponent<PlayerDamageHandler>();
 
-            MovePlayerClientRpc(playerObject.NetworkObjectId, spawnPoint.position);
+        // CC 끄고 이동
+        cc.enabled = false;
+        playerObject.transform.position = spawnPoint.position;
 
-            Debug.Log("Set PlayerPosition at " + spawnPoint.position + " .....");
-        } 
+        // 물리/변환 동기화 후 CC 재활성
+        Physics.SyncTransforms();
+        cc.enabled = true;
+
+        // CC 내부 velocity 초기화(중요)
+        cc.Move(Vector3.zero);
+
+        // 낙하 데미지 그레이스 시작(서버)
+        if (damageHandler != null)
+            damageHandler.BeginTeleportGrace(0.3f);
+
+        // 클라 포지션 스냅 + 그레이스 시작(클라)
+        MovePlayerClientRpc(playerObject.NetworkObjectId, spawnPoint.position);
+        BeginTeleportGraceClientRpc(playerObject.NetworkObjectId, 0.3f);
     }
+
+    [ClientRpc]
+    void BeginTeleportGraceClientRpc(ulong netObjId, float seconds)
+    {
+        var obj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[netObjId];
+        var dh = obj.GetComponent<PlayerDamageHandler>();
+        if (dh != null) dh.BeginTeleportGrace(seconds);
+    }
+
 
 
     // 모든 클라이언트에게 이동을 반영하는 RPC

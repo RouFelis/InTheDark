@@ -8,6 +8,6 @@ public class Keypad_Quest4 : InteractableObject_NonNet
 
     public override void Interact(ulong userId, Transform interactingObjectTransform)
     {
-        quest4.AddDigit(num);
+        quest4.AddDigitServerRpc(num);
     }
 }

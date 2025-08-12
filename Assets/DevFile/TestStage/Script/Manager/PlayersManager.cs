@@ -28,6 +28,9 @@ public class PlayersManager : NetworkSingleton<PlayersManager>
 	public Vector3 boxSize = new Vector3(5, 3, 5);
 	public LayerMask playerLayer;
 
+	// 클래스 상단: 타이밍 상수 추가
+	private const float BlackoutLeadSeconds = 0.6f; // 글리치 보여주고 블랙아웃까지의 리드타임
+	private const float FadeInDelaySeconds = 3f;    // 원복 후 까만 화면 유지 시간
 
 	//REF
 	private WaitRoomSetter setter;
@@ -186,31 +189,61 @@ public class PlayersManager : NetworkSingleton<PlayersManager>
 
 		if (!isInsideRespawnZone || player.IsDead)
 		{
-			Debug.Log($"[Respawn] {player.PlayerName} 리스폰 존 밖 - 텔레포트 및 부활 시도");
+			Debug.Log($"[Respawn] {player.Name} 리스폰 존 밖 - 텔레포트 및 부활 시도");
 
 			bool isMyPlayer = player.IsOwner;
 
+			// 1) 로컬(죽은) 플레이어에게만 글리치 + 블랙아웃 시작
 			if (isFadeAnime && isMyPlayer)
-			{
-				yield return new WaitForSeconds(4f);
-				animanager.ReviveAnimation();
-				yield return new WaitForSeconds(2f);
-			}
+				StartCoroutine(PlayGlitchAndBlackoutLocal(BlackoutLeadSeconds));
 
+			// 2) 모든 인스턴스에서 동일한 리드타임 만큼 대기 -> 서버 텔레포트 타이밍 동기화
+			yield return new WaitForSeconds(BlackoutLeadSeconds);
+
+			// 3) 서버가 원래 위치로 복귀(텔레포트)
 			if (IsServer)
 				setter.SetUserPosServerRPC(originalPlayer);
 
+			// 4) 부활 처리(클라 연출과 병행)
 			StartCoroutine(player.ReviveSequence());
 
+			// 5) 서버에서 allPlayersDead 해제
 			if (IsServer)
 				PlayersManager.Instance.allPlayersDead.Value = false;
+
+			// 6) 로컬(죽은) 플레이어에게만 일정 시간 뒤 페이드 인
+			if (isFadeAnime && isMyPlayer)
+			{
+				yield return new WaitForSeconds(FadeInDelaySeconds);
+				FadeInFromBlackLocal();
+				uiAniManager.ReviveSet();
+			}
 		}
 		else
 		{
-			Debug.Log($"[Respawn] {player.PlayerName} 은 리스폰 존 안에 있음 - 이동 생략");
+			Debug.Log($"[Respawn] {player.Name} 은 리스폰 존 안에 있음 - 이동 생략");
 		}
 	}
 
+	// 로컬 이펙트 유틸(프로젝트의 UI/포스트프로세스 연동 포인트)
+	// 필요 시 UIAnimationManager 연동으로 교체하세요.
+	private IEnumerator PlayGlitchAndBlackoutLocal(float leadSeconds)
+	{
+		TriggerGlitchEffectLocal(); // TODO: 포스트프로세스/머티리얼/캔버스 이펙트 호출
+		yield return new WaitForSeconds(leadSeconds);
+		FadeToBlackLocal();         // TODO: 풀스크린 패널 알파 1로
+	}
+
+	private void FadeInFromBlackLocal()
+	{
+		// TODO: 풀스크린 패널 알파 0으로 서서히 (3초 딜레이 후 호출됨)
+		// 예: animanager?.FadeInFromBlack();
+	}
+
+	// 아래 3개는 실제 연출 시스템과 연결할 자리 (임시 빈 구현)
+	private void TriggerGlitchEffectLocal() { /* TODO: animanager?.PlayGlitch(); */ }
+	private void FadeToBlackLocal()
+	{ /* TODO: animanager?.FadeToBlack(); */}
 
 	// 클라이언트에게 결과 전파
 	[ClientRpc]

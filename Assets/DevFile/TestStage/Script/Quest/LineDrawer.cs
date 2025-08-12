@@ -40,10 +40,12 @@ public class LineDrawer : NetworkBehaviour
         var networkObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkObjectId];
         cableNet = networkObject;
         Debug.Log("타겟 " + networkObjectId);
+        Quest2_Marker marker = cableNet.GetComponent<Quest2_Marker>();
+
         if (networkObject != null)
         {
             SetColor(matColor);
-            var meshRenderer = networkObject.GetComponent<MeshRenderer>();
+            var meshRenderer = marker.letMesh;
             if (meshRenderer != null && meshRenderer.materials.Length > 0)
             {
                 meshRenderer.materials[0].color = this.matColor;
@@ -52,7 +54,7 @@ public class LineDrawer : NetworkBehaviour
         // 클라이언트가 해당 오브젝트를 초기화
         if (NetworkManager.Singleton.LocalClientId == targetClientId)
         {
-            cableObject = networkObject.gameObject;
+            cableObject = marker.wireGameobject;
         }        
     }
 

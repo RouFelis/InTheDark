@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using Unity.Netcode;
 
 public class KeySettingsManager : MonoBehaviour
 {
@@ -168,10 +169,13 @@ public class KeySettingsManager : MonoBehaviour
 
         sensitivitySlider.onValueChanged.AddListener(UpdateInputField); //슬라이더 이벤트 추가
         sensitivityInput.onEndEdit.AddListener(UpdateSliderFromInput); //슬라이더 이벤트 추가
-        senestiveInit();
+        senestiveSliderInit();
+        Debug.Log("테스트 33333333333");
 
         keySettingsPanel.SetActive(false); // 초기 상태는 비활성화
+        Debug.Log("테스트 2222222222");
         SetLanguage();
+        Debug.Log("테스트 1111111111111");
         SetKey();
     }
 
@@ -237,28 +241,6 @@ public class KeySettingsManager : MonoBehaviour
 
     private void LoadKeySettings()
     {
-        /*        if (File.Exists(settingsFilePath))
-                {
-                    string json = File.ReadAllText(settingsFilePath); // 파일에서 JSON 읽기
-                    KeySettingList keySettingList = JsonUtility.FromJson<KeySettingList>(json); // JSON을 객체로 변환
-                    keySettings = new Dictionary<string, KeyCode>(); // 딕셔너리 초기화
-                    foreach (var keySetting in keySettingList.keySettings)
-                    {
-                        keySettings[keySetting.name] = keySetting.key; // 키 설정 로드
-                    }
-                }
-                else
-                {
-                    // 기본 키 설정 추가
-                    keySettings["Interact"] = KeyCode.F;
-                    keySettings["Drop"] = KeyCode.Q;
-                    keySettings["UseItem"] = KeyCode.E;
-                    keySettings["ScanKey"] = KeyCode.T;
-                    keySettings["Light"] = KeyCode.R;
-                    keySettings["Sprint"] = KeyCode.LeftShift;
-                    keySettings["Shop"] = KeyCode.Tab;
-                }*/
-
         // 기본 키 설정을 미리 정의
         Dictionary<string, KeyCode> defaultKeySettings = new Dictionary<string, KeyCode>
     {
@@ -407,7 +389,7 @@ public class KeySettingsManager : MonoBehaviour
     }
 
 	#region MouseSenestive
-	public void senestiveInit()
+	public void senestiveSliderInit()
 	{
         // 슬라이더 초기화
         if (sensitivitySlider != null)
@@ -416,30 +398,88 @@ public class KeySettingsManager : MonoBehaviour
             sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
             UpdateInputField(mouseSenstive);
         }
-
-        // 플레이어 컨트롤러 초기화
-        if (localPlayer != null)
-        {
-            localPlayer.SetMouseSensitivity(mouseSenstive);
-        }
     }
 
     public void SetSensitivity(float sensitivity)
     {
-        if (localPlayer != null)
+        // 플레이어 컨트롤러 초기화
+        if (localPlayer == null)
         {
-            localPlayer.SetMouseSensitivity(sensitivity);
+            var playerObj = NetworkManager.Singleton.LocalClient?.PlayerObject;
+            if (playerObj != null)
+            {
+                localPlayer = playerObj.GetComponent<Player>();
+            }
         }
+
+        // localPlayer가 준비되지 않았다면 그냥 return
+        if (localPlayer == null)
+        {
+            Debug.Log("LocalPlayer 아직 스폰안됨...");
+            return;
+        }
+
+        localPlayer.SetMouseSensitivity(sensitivity);
+    }
+    
+    public void senestiveInit()
+    {    
+        // 플레이어 컨트롤러 초기화
+        if (localPlayer == null)
+        {
+            var playerObj = NetworkManager.Singleton.LocalClient?.PlayerObject;
+            if (playerObj != null)
+            {
+                localPlayer = playerObj.GetComponent<Player>();
+            }
+        }
+
+        // localPlayer가 준비되지 않았다면 그냥 return
+        if (localPlayer == null)
+		{
+            Debug.Log("LocalPlayer 아직 스폰안됨...");
+            return;
+        }
+
+        localPlayer.SetMouseSensitivity(mouseSenstive);
     }
 
     // 슬라이더 값이 변경되면 InputField 업데이트
-    private void UpdateInputField(float value)
+    private void UpdateInputField(float sensitivity)
     {
-        sensitivityInput.text = value.ToString("0.0"); // 소수점 한 자리까지 표시
-        if (localPlayer != null)
+        sensitivityInput.text = sensitivity.ToString("0.0"); // 소수점 한 자리까지 표시
+
+        // 플레이어 컨트롤러 초기화
+        if (localPlayer == null)
         {
-            localPlayer.SetMouseSensitivity(value);
+            if (NetworkManager.Singleton == null)
+            {
+                Debug.LogWarning("[UpdateInputField] NetworkManager.Singleton이 아직 없습니다.");
+                return;
+            }
+
+            if (NetworkManager.Singleton.LocalClient == null)
+            {
+                Debug.LogWarning("[UpdateInputField] LocalClient가 아직 생성되지 않았습니다.");
+                return;
+            }
+
+            if (NetworkManager.Singleton.LocalClient.PlayerObject == null)
+            {
+                Debug.LogWarning("[UpdateInputField] PlayerObject가 아직 스폰되지 않았습니다.");
+                return;
+            }
+
+            var playerObj = NetworkManager.Singleton.LocalClient?.PlayerObject; 
+            if (playerObj == null)
+            {
+                Debug.Log("LocalPlayer 아직 없음, 나중에 적용 예정");
+                return;
+            }
+            localPlayer = playerObj.GetComponent<Player>();
         }
+        Debug.Log("테스트 -00000000000000");
+        localPlayer.SetMouseSensitivity(sensitivity);
     }
 
     // InputField 값이 변경되면 슬라이더 값 업데이트

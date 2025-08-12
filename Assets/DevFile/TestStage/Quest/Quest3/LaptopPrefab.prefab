@@ -1866,6 +1866,7 @@ GameObject:
   - component: {fileID: 893486669806442501}
   - component: {fileID: 4515967251976218381}
   - component: {fileID: 4710004310337241889}
+  - component: {fileID: 3731717226777423519}
   m_Layer: 0
   m_Name: LaptopPrefab
   m_TagString: Untagged
@@ -1961,6 +1962,27 @@ MonoBehaviour:
   displayText: {fileID: 7714253674727029438}
   totalPuzzles: 3
   hackingEffectDelay: 0.1
+--- !u!65 &3731717226777423519
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6845371370556366818}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6989318063030132222
 GameObject:
   m_ObjectHideFlags: 0
@@ -2672,7 +2694,7 @@ Light:
   serializedVersion: 11
   m_Type: 3
   m_Color: {r: 0.4862745, g: 0.74509805, b: 0.46666667, a: 1}
-  m_Intensity: 47.746483
+  m_Intensity: 17.825354
   m_Range: 1.4080896
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

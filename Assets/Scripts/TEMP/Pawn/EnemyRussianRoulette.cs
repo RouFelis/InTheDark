@@ -64,7 +64,7 @@ namespace InTheDark.Prototypes
 				if (isSucceed)
 				{
 					var health = player.Health;
-					var maxHealth = player.maxHealth;
+					var maxHealth = player.stats.maxHealth;
 
 					// Èú Ä­ÀÌ ¾øÀ½
 					//player.Health = Mathf.Min(health + _healValue, maxHealth);

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using Unity.Netcode;
 using System;
 
@@ -25,7 +26,7 @@ public class OutStage : InteractableObject
             spawnPoint = GameObject.Find("OutPoint").GetComponent<Transform>();
         }
         PlayDoorSound();
-        SetEveryPlayerPosServerRPC(uerID);
+        SetPlayerPosServerRPC(uerID);
         outDoorAction.Invoke(false);
 
         // 2024.12.24 던전 퇴장 이벤트 재배치
@@ -48,28 +49,44 @@ public class OutStage : InteractableObject
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void SetEveryPlayerPosServerRPC(ulong playerId)
+    void SetPlayerPosServerRPC(ulong playerId)
     {
-        Debug.Log(playerId);
-        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(playerId, out var client))
-        {
-            var playerObject = client.PlayerObject;
+        if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(playerId, out var client))
+            return;
 
-            if (spawnPoint == null)
-            {
-                spawnPoint = GameObject.Find("OutPoint").GetComponent<Transform>();
-            }
+        var playerObject = client.PlayerObject;
+        if (spawnPoint == null)
+            spawnPoint = GameObject.Find("OutPoint").transform;
 
-            playerObject.gameObject.GetComponent<CharacterController>().enabled = false;
+        var cc = playerObject.GetComponent<CharacterController>();
+        var damageHandler = playerObject.GetComponent<PlayerDamageHandler>();
 
-            //위치이동
-            playerObject.transform.position = spawnPoint.position;
-            playerObject.gameObject.GetComponent<CharacterController>().enabled = true;
+        // CC 끄고 이동
+        cc.enabled = false;
+        playerObject.transform.position = spawnPoint.position;
 
-            MovePlayerClientRpc(playerObject.NetworkObjectId, spawnPoint.position);
+        // 물리/변환 동기화 후 CC 재활성
+        Physics.SyncTransforms();
+        cc.enabled = true;
 
-            Debug.Log("Set PlayerPosition at " + spawnPoint.position + " .....");
-        }
+        // CC 내부 velocity 초기화(중요)
+        cc.Move(Vector3.zero);
+
+        // 낙하 데미지 그레이스 시작(서버)
+        if (damageHandler != null)
+            damageHandler.BeginTeleportGrace(0.3f);
+
+        // 클라 포지션 스냅 + 그레이스 시작(클라)
+        MovePlayerClientRpc(playerObject.NetworkObjectId, spawnPoint.position);
+        BeginTeleportGraceClientRpc(playerObject.NetworkObjectId, 0.3f);
+    }
+
+    [ClientRpc]
+    void BeginTeleportGraceClientRpc(ulong netObjId, float seconds)
+    {
+        var obj = NetworkManager.Singleton.SpawnManager.SpawnedObjects[netObjId];
+        var dh = obj.GetComponent<PlayerDamageHandler>();
+        if (dh != null) dh.BeginTeleportGrace(seconds);
     }
 
 

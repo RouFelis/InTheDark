@@ -15,6 +15,9 @@ public class Quest5 : QuestBase
     [SerializeField] private Transform USBSpawnTransfrom;
     [SerializeField] private GameObject USBPrefab;
 
+    [Header("USB")]
+    [SerializeField] private GameObject questInteractableObjects;
+
     [Header("Screen Settings")]
     private const int MaxDisplayLines = 11;
 
@@ -64,10 +67,13 @@ public class Quest5 : QuestBase
     [SerializeField] private LayerMask completeLayer;
 
 
-    public void StartQuest()
+    [ClientRpc]
+    public void StartQuestClientRpc()
 	{
         StartCoroutine(PlayHackingEffectAndRefresh());
-	}
+        questInteractableObjects.layer = 0;
+
+    }
 
 
 

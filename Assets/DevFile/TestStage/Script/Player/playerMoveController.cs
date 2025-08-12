@@ -7,13 +7,10 @@ using UnityEngine.Animations.Rigging;
 using Cinemachine;
 using UnityEngine.UI;
 using UnityEngine.Animations;
-using SaintsField.Playa;
-using SaintsField;
 
-public class playerMoveController : SaintsNetworkBehaviour
+public class playerMoveController : NetworkBehaviour
 {
     [Header("Movement Settings")]
-    [LayoutStart("Movement Settings", ELayout.FoldoutBox)]
     [SerializeField] private float walkSpeed = 5.0f;
     [SerializeField] private float runSpeedMultiplier = 1.5f;
     [SerializeField] private float rotationSpeed = 2.0f;
@@ -26,10 +23,9 @@ public class playerMoveController : SaintsNetworkBehaviour
 
 
     [Header("Camera & Head Rotation")]
-    [LayoutStart("Camera & Head Rotation", ELayout.FoldoutBox)]
     [SerializeField] protected Camera firstPersonCamera;
     [SerializeField] protected Camera thirdPersonCamera;
-    [SerializeField] protected Transform camTarget;
+    [SerializeField] public Transform camTarget;
     [SerializeField] protected CinemachineVirtualCamera virtualCamera;
     [SerializeField] protected GameObject ThirdpersonConstraintPrefab;
     [SerializeField] protected Transform ThirdpersonCameraTransform;
@@ -56,7 +52,6 @@ public class playerMoveController : SaintsNetworkBehaviour
     [SerializeField] protected Animator thirdpersonAnimator;
 
     [Header("Networking")]
-    [LayoutStart("Networking", ELayout.FoldoutBox)]
     [SerializeField] public NetworkVariable<bool> isEventPlaying = new NetworkVariable<bool>(false);
     [SerializeField] private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
     [SerializeField] private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false , writePerm:NetworkVariableWritePermission.Owner);
@@ -64,13 +59,11 @@ public class playerMoveController : SaintsNetworkBehaviour
     [SerializeField] private NetworkVariable<float> currentStamina = new NetworkVariable<float>(value: 100, writePerm: NetworkVariableWritePermission.Owner);
 
     [Header("GroundChecker")]
-    [LayoutStart("GroundChecker", ELayout.FoldoutBox)]
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheckPosition;
 
     [Header("PlayerAim")]
-    [LayoutStart("PlayerAim", ELayout.FoldoutBox)]
     [SerializeField] private GameObject handAimTargetPrefab;
     [SerializeField] public Transform handAimTarget;
     [SerializeField] private NetworkVariable<ulong> handAimTargetulong = new NetworkVariable<ulong>();
@@ -84,24 +77,22 @@ public class playerMoveController : SaintsNetworkBehaviour
 
 
 
-    [LayoutStart("MoveReference", ELayout.FoldoutBox)]
+    [Header("MoveReference")]
     public LayerMask layerMask;
     private Vector3 aimTargetPosition; // 에임타겟 포지션
     private Vector3 velocity = Vector3.zero;
-    protected CharacterController characterController;
-    [SerializeField]protected CapsuleCollider bodyCollider;
+    [HideInInspector] public  CharacterController characterController;
+    [SerializeField] public CapsuleCollider bodyCollider;
     [SerializeField] private Vector3 moveDirection = Vector3.zero;
     [SerializeField] private float rotationX = 0.0f;
     private RaycastHit hit;
 
     [Header("Head Bobbing Settings")]
-    [LayoutStart("Head Bobbing Settings", ELayout.FoldoutBox)]
     public float bobbingSpeed = 14f; // 머리 흔들림 속도
     public float bobbingAmount = 0.05f; // 머리 흔들림 강도
     public float walkBobbingAmount = 0.05f; // 머리 흔들림 강도
     public float RunningBobbingAmount = 0.05f; // 머리 흔들림 강도
     public float midpoint = 0f; // 기본 카메라 높이 (플레이어 머리 위치)
-    [LayoutEnd]
 
     private float timer = 0f; // 시간 값을 추적
     protected bool pause = false; //퍼즈
@@ -115,7 +106,6 @@ public class playerMoveController : SaintsNetworkBehaviour
 
     [Header("Stamina Settings")]
     [SerializeField] private float Stamina => currentStamina.Value;
-    [LayoutStart("Stamina Settings", ELayout.FoldoutBox)]
     [SerializeField] private float maxStamina = 100f;
     [SerializeField] private float staminaDecreaseRate = 10f; // 초당 감소량
     [SerializeField] private float staminaRegenRate = 5f; // 초당 회복량
@@ -218,7 +208,7 @@ public class playerMoveController : SaintsNetworkBehaviour
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
         characterController = GetComponent<CharacterController>();
-
+        KeySettingsManager.Instance.senestiveInit();
 
         if (IsOwner)
         {
@@ -313,13 +303,15 @@ public class playerMoveController : SaintsNetworkBehaviour
 
             if (mouseControl)
             {
-                // 마우스 회전 입력
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-
-                //firstPersonCamera.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
-                camTarget.transform.localRotation = Quaternion.Euler(new Vector3(rotationX, 0, 0));
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
-                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed, 0);
+
+                camTarget.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+                transform.eulerAngles = new Vector3(
+                    0,
+                    transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed,
+                    0
+                );
             }
         }
         

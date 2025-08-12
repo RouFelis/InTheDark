@@ -728,10 +728,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c46c91cebc20b140b77ed2d6e8803b1, type: 3}
   m_Name: Glitch1_RLPRO
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   Fade:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.354
   amount:
     m_OverrideState: 1
     m_Value: 8.5
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 905bf1e6ec7a95d479de58b30d1af33f, type: 3}
   m_Name: CustomTexture_RLPRO
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   intensity:
     m_OverrideState: 1
     m_Value: 1

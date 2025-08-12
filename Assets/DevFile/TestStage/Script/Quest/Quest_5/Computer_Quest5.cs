@@ -1,14 +1,10 @@
 ﻿using UnityEngine;
-using TMPro;
-using System.Collections.Generic;
-using System.Collections;
 using Unity.Netcode;
-using Unity.Collections;
 
 public class Computer_Quest5 : InteractableObject_NonNet
 {
     [SerializeField] private Quest5 quest5;
-
+    [SerializeField] private BoxCollider boxCollider;
 
     public override void Interact(ulong userId, Transform interactingObjectTransform)
     {
@@ -20,9 +16,13 @@ public class Computer_Quest5 : InteractableObject_NonNet
 
             if (playerObject != null)
             {
-                playerObject.GetComponent<NetworkInventoryController>().HandleEraseItem();
-
-                quest5.StartQuest();
+                var inventory =  playerObject.GetComponent<NetworkInventoryController>();
+                if (inventory.GetSelectedItemName() == "USB")
+				{
+                    inventory.HandleEraseItem();
+                    this.gameObject.layer = 0;
+                    quest5.StartQuestClientRpc();
+                }
             }
             else
             {
