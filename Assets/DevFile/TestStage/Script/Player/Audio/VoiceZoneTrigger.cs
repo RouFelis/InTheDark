@@ -20,7 +20,7 @@ public class VoiceZoneTrigger : MonoBehaviour
         {              
             if (manager != null)
             {
-                manager.SetAudioZone(zoneMixerGroup, other.GetComponent<Player>().PlayerName);
+                manager.SetAudioZone(zoneMixerGroup, other.GetComponent<Player>().Name);
                 Debug.Log($" {other.name}이(가) {zoneMixerGroup.name} 존에 들어옴!");
             }
         }

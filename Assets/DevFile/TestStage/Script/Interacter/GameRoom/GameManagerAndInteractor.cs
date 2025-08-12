@@ -16,19 +16,21 @@ public class GameManagerAndInteractor : InteractableObject
     [SerializeField] private Animator buttonAnim;
     [SerializeField] private RoundManager roundManager;
 
-    private Coroutine doorAnimationCoroutine;
-    public NetworkVariable<bool> doorState = new NetworkVariable<bool>(false); // false: closed, true: open
-
-    private Dictionary<ulong, string> clientLoadedScenes = new Dictionary<ulong, string>();
-	private Dictionary<string, int> sceneRefCount = new Dictionary<string, int>();
-
+    [Header("Door Positions")]
     [SerializeField] private Vector3 originalPosition_R;
     [SerializeField] private Vector3 originalPosition_L;
     [SerializeField] private Vector3 targetPosition_R;
     [SerializeField] private Vector3 targetPosition_L;
 
+    private Coroutine doorAnimationCoroutine;
     private UIAnimationManager animanager;
     private bool isFailSequenceRunning = false;
+
+    private Dictionary<ulong, string> clientLoadedScenes = new Dictionary<ulong, string>();
+    private Dictionary<string, int> sceneRefCount = new Dictionary<string, int>();
+
+    public NetworkVariable<bool> doorState = new NetworkVariable<bool>(false); // false: closed, true: open
+
 
     public override void Start()
 	{
@@ -56,7 +58,9 @@ public class GameManagerAndInteractor : InteractableObject
 		if (!base.Interact(userID, interactingObjectTransform))
 			return false;
 
-		if (!doorState.Value)
+        buttonAnim.SetTrigger("Push");
+
+        if (!doorState.Value)
 			RequestSceneChangeServerRpc("TestScene");
 		else
 			RequestGameClearServerRpc();
@@ -71,68 +75,60 @@ public class GameManagerAndInteractor : InteractableObject
         if (newValue && !isFailSequenceRunning)
         {
             isFailSequenceRunning = true;
-            StartCoroutine(GameFail());
+            StartCoroutine(HandleGameFail());
         }
     }
 
-    [ServerRpc]
-    private void RequestGameFailServerRpc()
-	{
-            RequestSceneChangeServerRpc("TestScene");
+    #region Game Flow
+
+    private IEnumerator HandleGameFail()
+    {
+        yield return RunCommonGameSequence(
+            beforeDelay: 6f,
+            afterDelay: 7f,
+            onServerEnd: () => RequestGameFailServerRpc()
+        );
+        isFailSequenceRunning = false;
     }
 
-	private IEnumerator GameFail()
-	{
-		KeySettingsManager.Instance.isEveryEvent = true;
-
-		yield return new WaitForSeconds(6f);
-
-		roundManager.GameClearAnime();
-
-		StartCoroutine(PlayersManager.Instance.RespawnPlayers(true));
-        Debug.Log("테스트 Fail");
-
-		yield return new WaitForSeconds(7f);
-
-		KeySettingsManager.Instance.isEveryEvent = false;
-
-		if (IsServer)
-			RequestGameFailServerRpc();
-
-        isFailSequenceRunning = false; // 반드시 복구
+    private IEnumerator HandleGameClear()
+    {
+        yield return RunCommonGameSequence(
+            beforeDelay: 0f,
+            afterDelay: 7f,
+            onServerStart: () => roundManager.GameClearServerRPC(),
+            onServerEnd: () => RequestSceneChangeServerRpc("TestScene")
+        );
     }
 
+    /// <summary>
+    /// 실패/성공 공통 시퀀스 처리
+    /// </summary>
+    private IEnumerator RunCommonGameSequence(float beforeDelay, float afterDelay, System.Action onServerStart = null, System.Action onServerEnd = null)
+    {
+        KeySettingsManager.Instance.isEveryEvent = true;
 
+        yield return new WaitForSeconds(beforeDelay);
 
-
-	private IEnumerator GameClear()
-	{
-		KeySettingsManager.Instance.isEveryEvent = true;
-
-        if(IsServer)
-        //라운드 숫자 증가
-        roundManager.GameClearServerRPC();
-
-
-		//1. 게임 정보 취합 (돈) 애니메이션 재생
-		roundManager.GameClearAnime();
-
-
-        //2. 안에있는 플레이어들 위치 텔레포트 (부활)     
+        onServerStart?.Invoke();
+        roundManager.GameClearAnime();
         StartCoroutine(PlayersManager.Instance.RespawnPlayers(true));
-        Debug.Log("테스트 GameClear");
 
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(afterDelay);
 
         KeySettingsManager.Instance.isEveryEvent = false;
+        if (IsServer) onServerEnd?.Invoke();
+    }
 
-        //3. 오브젝트들 삭제.
-        if (IsServer)
-            RequestSceneChangeServerRpc("TestScene");
+    #endregion
 
-        yield return null;
-	}
+    #region RPCs
 
+    [ServerRpc]
+    private void RequestGameFailServerRpc()
+    {
+        RequestSceneChangeServerRpc("TestScene");
+    }
 
     [ServerRpc(RequireOwnership = false)]
     private void RequestGameClearServerRpc()
@@ -142,121 +138,109 @@ public class GameManagerAndInteractor : InteractableObject
 
     [ClientRpc]
     private void GameClearClientRPC()
-	{
-        StartCoroutine(GameClear());
+    {
+        StartCoroutine(HandleGameClear());
     }
-
 
     [ServerRpc(RequireOwnership = false)]
     private void RequestSceneChangeServerRpc(string sceneName, ServerRpcParams rpcParams = default)
     {
         ulong clientId = rpcParams.Receive.SenderClientId;
 
-        // 이미 로드된 씬들 중 중복 없이 언로드
-        HashSet<string> uniqueLoadedScenes = new HashSet<string>(clientLoadedScenes.Values);
-        foreach (string loadedScene in uniqueLoadedScenes)
+        // 현재 클라이언트가 가진 씬 모두 언로드
+        UnloadAllClientScenes();
+
+        if (!string.IsNullOrEmpty(sceneName))
+            LoadSceneForClient(clientId, sceneName);
+
+        // 문 상태 전환
+        ToggleDoor(!doorState.Value);
+    }
+
+    #endregion
+
+    #region Scene Management
+
+    private void LoadSceneForClient(ulong clientId, string sceneName)
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+        clientLoadedScenes[clientId] = sceneName;
+
+        if (!sceneRefCount.ContainsKey(sceneName))
+            sceneRefCount[sceneName] = 0;
+
+        sceneRefCount[sceneName]++;
+    }
+
+    private void UnloadAllClientScenes()
+    {
+        HashSet<string> uniqueScenes = new HashSet<string>(clientLoadedScenes.Values);
+        foreach (var scene in uniqueScenes)
+            UnloadScene(scene);
+    }
+
+    private void UnloadScene(string sceneName)
+    {
+        if (!sceneRefCount.ContainsKey(sceneName)) return;
+
+        sceneRefCount[sceneName]--;
+        if (sceneRefCount[sceneName] <= 0)
         {
-            UnloadSceneForClient(loadedScene);
+            var scene = SceneManager.GetSceneByName(sceneName);
+            if (scene.IsValid())
+                NetworkManager.Singleton.SceneManager.UnloadScene(scene);
+
+            sceneRefCount.Remove(sceneName);
         }
+    }
 
-        if(sceneName != "")
-		{
-            // 새로운 씬 로드
-            NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
-            clientLoadedScenes[clientId] = sceneName;
+    public void OnPlayerDeath(ulong clientId)
+    {
+        if (IsServer && clientLoadedScenes.TryGetValue(clientId, out var sceneName))
+            UnloadScene(sceneName);
+    }
 
-            // 참조 카운트 관리
-            sceneRefCount.TryAdd(sceneName, 0);
-            sceneRefCount[sceneName]++;
-        }
+    #endregion
 
-        // 문 상태 반전 및 연출
-        PlayDoorEffectsClientRpc(!doorState.Value);
-        doorState.Value = !doorState.Value;
+    #region Door Control
+
+    private void ToggleDoor(bool open)
+    {
+        if (doorAnimationCoroutine != null)
+            StopCoroutine(doorAnimationCoroutine);
+
+        doorAnimationCoroutine = StartCoroutine(AnimateDoors(open));
+        PlayDoorEffectsClientRpc(open);
+        doorState.Value = open;
     }
 
     [ClientRpc]
     private void PlayDoorEffectsClientRpc(bool opening)
     {
-        buttonAnim.SetTrigger("Push");
-		//doorCollider.enabled = false;
-		doorSound.Play();
-		if (doorAnimationCoroutine != null)
-		{
-			StopCoroutine(doorAnimationCoroutine);
-        }
-
-        doorAnimationCoroutine = StartCoroutine(AnimateDoors(opening));
+        doorSound.Play();
     }
-
-
-    private void UnloadSceneForClient(string sceneName)
-    {
-        if (sceneRefCount.ContainsKey(sceneName))
-        {
-            sceneRefCount[sceneName]--;
-
-            if (sceneRefCount[sceneName] <= 0)
-            {
-                var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByName(sceneName);
-                if (scene.IsValid())
-                {
-                    NetworkManager.Singleton.SceneManager.UnloadScene(scene);
-                }
-
-                sceneRefCount.Remove(sceneName);
-            }
-        }
-    }
-
-/*    private IEnumerator AnimateDoors(bool open)
-    {
-        float dur = doorSound.clip.length;
-        Quaternion lStart = leftDoorAxis.localRotation;
-        Quaternion rStart = rightDoorAxis.localRotation;
-        Quaternion lTarget = open ? Quaternion.Euler(0, doorOpenAngle, 0) : Quaternion.identity;
-        Quaternion rTarget = open ? Quaternion.Euler(0, -doorOpenAngle, 0) : Quaternion.identity;
-
-        float t = 0;
-        while (t < dur)
-        {
-            t += Time.deltaTime;
-            float frac = Mathf.Clamp01(t / dur);
-            leftDoorAxis.localRotation = Quaternion.Slerp(lStart, lTarget, frac);
-            rightDoorAxis.localRotation = Quaternion.Slerp(rStart, rTarget, frac);
-            yield return null;
-        }
-        doorAnimationCoroutine = null;
-    } */
-    
 
     private IEnumerator AnimateDoors(bool open)
     {
-        float dur = doorSound.clip.length;
-        Vector3 start_R = rightDoorAxis.localPosition;
-        Vector3 start_L = leftDoorAxis.localPosition;
-        Vector3 target_R = open ? targetPosition_R : originalPosition_R;
-        Vector3 target_L = open ? targetPosition_L : originalPosition_L;
+        float duration = doorSound.clip.length;
+        Vector3 startR = rightDoorAxis.localPosition;
+        Vector3 startL = leftDoorAxis.localPosition;
+        Vector3 targetR = open ? targetPosition_R : originalPosition_R;
+        Vector3 targetL = open ? targetPosition_L : originalPosition_L;
 
-        float t = 0;
-        while (t < dur)
+        float t = 0f;
+        while (t < duration)
         {
             t += Time.deltaTime;
-            float frac = Mathf.Clamp01(t / dur);
-            leftDoorAxis.localPosition = Vector3.Slerp(start_L, target_L, frac);
-            rightDoorAxis.localPosition = Vector3.Slerp(start_R, target_R, frac);
+            float frac = Mathf.Clamp01(t / duration);
+            leftDoorAxis.localPosition = Vector3.Slerp(startL, targetL, frac);
+            rightDoorAxis.localPosition = Vector3.Slerp(startR, targetR, frac);
             yield return null;
         }
 
         doorAnimationCoroutine = null;
     }
 
-    public void OnPlayerDeath(ulong clientId)
-    {
-        if (IsServer && clientLoadedScenes.TryGetValue(clientId, out string sceneName))
-        {
-            UnloadSceneForClient(sceneName);
-        }
-    }
+    #endregion
 
 }

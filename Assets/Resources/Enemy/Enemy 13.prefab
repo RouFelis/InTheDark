@@ -534,7 +534,7 @@ MonoBehaviour:
   _pawn: {fileID: 1433858302028618446}
   _animator: {fileID: 4453662768508219377}
   _minLightIntensity: 0
-  _maxLightIntensity: 100000
+  _maxLightIntensity: 1000
   _radius: 6.65
   _explosingSpeedRatio: 0.5
   _targetLayer:

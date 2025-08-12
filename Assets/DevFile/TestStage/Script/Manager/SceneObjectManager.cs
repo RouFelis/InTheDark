@@ -28,9 +28,6 @@ public class SceneObjectManager : NetworkBehaviour
     //씬 언로드 후 오브젝트 삭제.
     private void OnSceneUnloaded(Scene unloadedScene)
     {
-        if (!IsServer)
-            return;
-
         Vector3 center = region.transform.TransformPoint(region.center);
         Vector3 halfSize = region.size * 0.5f;
         Quaternion rotation = region.transform.rotation;

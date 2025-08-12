@@ -54,7 +54,7 @@ public class SpectatorManager : MonoBehaviour
             userPlayer = client.PlayerObject.GetComponent<Player>();
             // 로컬 플레이어의 가상 카메라 참조를 할당합니다.
             cinemachineCamera = userPlayer.VirtualCamera;
-            Debug.Log($"내 플레이어 오브젝트: {userPlayer.PlayerName}");
+            Debug.Log($"내 플레이어 오브젝트: {userPlayer.Name}");
         }
 
         // 로컬 이벤트 등록: 플레이어 사망 및 부활 시 호출되는 메서드 등록

@@ -20,11 +20,11 @@ public class UIAnimationManager : MonoBehaviour
 	[SerializeField] private RectTransform compass;
 
 
-
 	[Header("ReviveAnime")]
 	[SerializeField] private UIAnimation reviveAnimation;
 
-
+	/*[Header("volume")]
+	[SerializeField] private Volume;*/
 
 	#endregion
 
@@ -129,6 +129,10 @@ public class UIAnimationManager : MonoBehaviour
 		StartCoroutine(healthbarOn());
 	}
 
+	public void ReviveSet()
+	{
+		StartCoroutine(healthbarOn());
+	}
 
 	private IEnumerator healthbarOn()
 	{

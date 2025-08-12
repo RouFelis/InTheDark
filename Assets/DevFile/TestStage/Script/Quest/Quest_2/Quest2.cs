@@ -21,6 +21,7 @@ public class Quest2 : QuestBase
     public NetworkVariable<bool> isUsed = new NetworkVariable<bool>(false);
 
 
+
     protected override void Start()
 	{
         base.Start();

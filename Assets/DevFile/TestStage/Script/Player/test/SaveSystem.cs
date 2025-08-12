@@ -160,7 +160,7 @@ public class SaveSystem : MonoBehaviour
         Debug.Log(2);
         PlayerData playerData = new PlayerData
         {
-            playerName = player.PlayerName,
+            playerName = player.Name,
             experience = player.Experience,
             level = player.Level
         };

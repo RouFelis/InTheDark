@@ -90,8 +90,8 @@ public class MicManager : MonoBehaviour
 
         foreach (var player in PlayersManager.Instance.playersList)
         {
-            string playerName = player.PlayerName;
-
+            string playerName = player.Name;
+            
             // 중복 체크
             if (micUI.Exists(m => m.micUI.name == playerName))
             {
@@ -137,14 +137,14 @@ public class MicManager : MonoBehaviour
             {
                 inputField = uiObject.GetComponentInChildren<TMPro.TMP_InputField>(),
                 slider = uiObject.GetComponentInChildren<Slider>(),
-                name = player.PlayerName
+                name = player.Name
             };
 
             // TMP_Text도 자식에서 찾음
             TMPro.TMP_Text nameText = uiObject.GetComponentInChildren<TMPro.TMP_Text>();
             if (nameText != null)
             {
-                nameText.text = player.PlayerName;
+                nameText.text = player.Name;
             }
 
             temp.audio = audio;
@@ -177,7 +177,7 @@ public class MicManager : MonoBehaviour
             ConnectedPlayer = playerClient.PlayerObject.GetComponent<Player>();
         }
 
-        string playerName = ConnectedPlayer.PlayerName;
+        string playerName = ConnectedPlayer.Name;
 
         // 중복 체크
         if (micUI.Exists(m => m.micUI.name == playerName))
@@ -224,14 +224,14 @@ public class MicManager : MonoBehaviour
         {
             inputField = uiObject.GetComponentInChildren<TMPro.TMP_InputField>(),
             slider = uiObject.GetComponentInChildren<Slider>(),
-            name = ConnectedPlayer.PlayerName
+            name = ConnectedPlayer.Name
         };
 
         // TMP_Text도 자식에서 찾음
         TMPro.TMP_Text nameText = uiObject.GetComponentInChildren<TMPro.TMP_Text>();
         if (nameText != null)
         {
-            nameText.text = ConnectedPlayer.PlayerName;
+            nameText.text = ConnectedPlayer.Name;
         }
 
         temp.audio = audio;

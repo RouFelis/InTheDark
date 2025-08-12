@@ -83,6 +83,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1102128075732584, guid: c3e6d8d1b8fa76343bf6bccdc6403ad6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7080151262404954136}
+    - targetCorrespondingSourceObject: {fileID: 1102128075732584, guid: c3e6d8d1b8fa76343bf6bccdc6403ad6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2089265766581354337}
   m_SourcePrefab: {fileID: 100100000, guid: c3e6d8d1b8fa76343bf6bccdc6403ad6, type: 3}
 --- !u!4 &1587239766323541875 stripped
 Transform:
@@ -181,10 +184,15 @@ MonoBehaviour:
     m_WaitForCompletion: 0
     m_LocalVariables: []
   IsDragable: 1
+  interactCooldown: 2
   followDistance: 4
   baseFollowSpeed: 100
   maxDistanceBeforeDrop: 5
+  isSlowed: 1
+  isPermanent: 1
+  slowDuration: 0
   isFollowing: 0
+  usingUserID: 1000
   followingClientId: 0
   rb: {fileID: 0}
   references:
@@ -234,3 +242,16 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &2089265766581354337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588498752183077961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 701e37fff0e52dd4d9305dfcb7c3fc1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemId: wagon

@@ -47,7 +47,7 @@ namespace InTheDark.Prototypes
 		private int _size;
 
 		private Collider[] _colliders = new Collider[16];
-
+		//서버 검증 X ->
 		protected override async UniTask OnAttack(IHealth target)
 		{
 			var speed = _agent.speed;

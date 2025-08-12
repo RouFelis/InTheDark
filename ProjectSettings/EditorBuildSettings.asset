@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Initialize.unity
     guid: 7d927ca4362144043a6744a9538c2349
   - enabled: 1
+    path: Assets/DevFile/DunTestScene/TestRoom.unity
+    guid: 72a29246b80ffc84599af232fa1dd836
+  - enabled: 1
     path: Assets/DevFile/Main/MainScene.unity
     guid: 0f85a64b0c77cb742b36673a36a2a3b2
   - enabled: 1

@@ -1,19 +1,15 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
-using SaintsField.Playa;
-using SaintsField;
 
-public class WeaponSystem : SaintsNetworkBehaviour
+public class WeaponSystem : NetworkBehaviour
 {
     [Header("Weapon Data")]
-    [LayoutStart("Weapon Data", ELayout.FoldoutBox)]
     public WeaponData baseWeaponData; // ScriptableObject (무기의 기본값)
     public WeaponInstance weaponInstance; // 플레이어별 고유 무기 인스턴스
  
 
     [Header("Weapon Net Data")]
-    [LayoutStart("Weapon Net Data", ELayout.FoldoutBox)]
     public NetworkVariable<float> currentLevel = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
     public NetworkVariable<float> baseDamage = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
     public NetworkVariable<float> zoomDamage = new NetworkVariable<float>(writePerm: NetworkVariableWritePermission.Owner);
@@ -57,7 +53,7 @@ public class WeaponSystem : SaintsNetworkBehaviour
         zoomDamage.OnValueChanged += (oldData, newdata) => ZoomDamageValueChaged();
         batteryCapacity.OnValueChanged += (oldData, newdata) => BatteryCapacityValueChaged();
 
-        initWeaponInstance(saveSystem.LoadWeaponData(player.PlayerName));
+        initWeaponInstance(saveSystem.LoadWeaponData(player.Name));
         Debug.Log("WeaponSystem Init complete");
     }
 
@@ -74,17 +70,17 @@ public class WeaponSystem : SaintsNetworkBehaviour
     private void BaseDamageValueChaged()
 	{
         weaponInstance.baseDamage = baseDamage.Value;
-        saveSystem.SaveWeaponData(weaponInstance , player.PlayerName);
+        saveSystem.SaveWeaponData(weaponInstance , player.Name);
     }
     private void ZoomDamageValueChaged()
     {
         weaponInstance.baseDamage = baseDamage.Value;
-        saveSystem.SaveWeaponData(weaponInstance, player.PlayerName);
+        saveSystem.SaveWeaponData(weaponInstance, player.Name);
     }
     private void BatteryCapacityValueChaged()
     {
         weaponInstance.baseDamage = baseDamage.Value;
-        saveSystem.SaveWeaponData(weaponInstance, player.PlayerName);
+        saveSystem.SaveWeaponData(weaponInstance, player.Name);
     }
 
 
