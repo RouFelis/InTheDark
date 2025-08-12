@@ -1,6 +1,5 @@
 using System.Collections;
 using Unity.Netcode;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 
 public class EnemyRandomBox : InteractableObject

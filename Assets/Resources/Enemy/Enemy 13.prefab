@@ -526,7 +526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _damage: 16384
+  _damage: 16
   _range: 1.5
   _delay: 5
   _cooldown:
@@ -542,6 +542,30 @@ MonoBehaviour:
     m_Bits: 8
   _warningAudioClip: {fileID: 8300000, guid: 2f74d87f649b3fb418044af23af1b16b, type: 3}
   _exploseAudioClip: {fileID: 8300000, guid: b0fcc1dc2fe4a3146967cf747380ba36, type: 3}
+  _knockbackCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _light: {fileID: 2618072747348598612}
   _audioSource: {fileID: 982930836932718898}
   _exploseEffect: {fileID: 2194836402762790864}

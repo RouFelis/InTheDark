@@ -211,6 +211,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 	public Animator animator => _animator;
 
+	public BehaviorTree BehaviorTree => _behaviorTree;
+
 	private void Start()
 	{
 		skinnedMaterials = objectRenderer.materials;

@@ -26,6 +26,9 @@ namespace InTheDark.Prototypes
 
 		[SerializeField]
 		private float _initialCooldown;
+
+		[SerializeField]
+		private float _stunTime;
 		
 		[SerializeField]
 		private NetworkVariable<float> _time = new();
@@ -50,6 +53,9 @@ namespace InTheDark.Prototypes
 
 		[SerializeField]
 		private bool _isRunning = false;
+
+		[SerializeField]
+		private NetworkVariable<bool> _isStunning = new();
 
 		private List<Player> _onClash = new();
 
@@ -164,7 +170,11 @@ namespace InTheDark.Prototypes
 				}
 				else if(hit.gameObject.layer == wallLayer)
 				{
+					// 기절 코드 추가
 					StopCharge();
+					StunServerRPC();
+
+					Debug.Log("나머리쿵해쪄");
 				}
 			}
 		}
@@ -236,7 +246,7 @@ namespace InTheDark.Prototypes
 		{
 			var c = _cooldown.Value;
 
-			if (IsServer && 0.0F < c)
+			if (IsServer && 0.0F < c && !_isRunning)
 			{
 				var value = Mathf.Max(0.0F, c - Time.deltaTime);
 
@@ -318,9 +328,11 @@ namespace InTheDark.Prototypes
 					var t = _time.Value / _duration;
 					var speed = _magnification * _speedCurve.Evaluate(t);
 
+					//Debug.Log($"{_time.Value} secends... :: {speed}/s...");
+
 					transform.rotation = lookRotation;
 
-					_controller.Move(speed * normalized * Time.deltaTime);
+					_controller.Move(speed * normalized * Time.deltaTime - new Vector3(0.0F, -20.0F, 0.0F));
 
 					_time.Value += Time.deltaTime;
 
@@ -333,6 +345,50 @@ namespace InTheDark.Prototypes
 
 				StopCharge();
 			}
+
+			yield return null;
+		}
+
+		[Rpc(SendTo.Server)]
+		private void StunServerRPC()
+		{
+			if (!_isStunning.Value)
+			{
+				StartCoroutine(Stun());
+			}
+		}
+
+		[Rpc(SendTo.Everyone)]
+		private void StartStunClientRPC()
+		{
+			_pawn.StopMove();
+
+			if (_agent)
+				_agent.isStopped = true;
+
+			if (_pawn.BehaviorTree)
+				_pawn.BehaviorTree.DisableBehavior();
+		}
+
+		[Rpc(SendTo.Everyone)]
+		private void EndStunClientRPC()
+		{
+			if (_agent)
+				_agent.isStopped = false;
+
+			if (_pawn.BehaviorTree)
+				_pawn.BehaviorTree.EnableBehavior();
+		}
+
+		private IEnumerator Stun()
+		{
+			_isStunning.Value = true;
+			StartStunClientRPC();
+
+			yield return new WaitForSeconds(_stunTime);
+
+			_isStunning.Value = false;
+			EndStunClientRPC();
 
 			yield return null;
 		}

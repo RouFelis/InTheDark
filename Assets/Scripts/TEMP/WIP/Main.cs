@@ -33,6 +33,14 @@ namespace InTheDark.Prototypes
 
 		private void OnAwake()
 		{
+			Stun.Run();
+		}
+	}
+
+	public class Stun
+	{
+		public static void Run()
+		{
 
 		}
 	}

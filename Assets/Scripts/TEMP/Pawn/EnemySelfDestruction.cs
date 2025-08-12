@@ -33,6 +33,9 @@ namespace InTheDark.Prototypes
 		private AudioClip _exploseAudioClip;
 
 		[SerializeField]
+		private AnimationCurve _knockbackCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+
+		[SerializeField]
 		private Light _light;
 
 		[SerializeField]
@@ -68,6 +71,19 @@ namespace InTheDark.Prototypes
 				if (player)
 				{
 					player.TakeDamage(_damage, null);
+
+					if (!player.IsDead)
+					{
+						var direction = player.transform.position - transform.position;
+						var pushDir = direction.normalized;
+
+						var flightTime = 1.0F;
+						var flightSpeed = 10.0F;
+
+						var knockBackHeight = 10.0F;
+
+						await player.SetStun(flightTime, flightSpeed, _knockbackCurve, knockBackHeight, direction).ToUniTask();
+					}
 
 					Debug.Log($"{player.name}({player.OwnerClientId})°¡ Æø¹ß¿¡ ÈÛ¾µ¸².");
 				}
