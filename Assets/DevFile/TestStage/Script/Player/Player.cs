@@ -307,21 +307,6 @@ public class Player : playerMoveController, IHealth, ICharacter
         foreach (Transform child in target.transform) SetLayers(child.gameObject, layer);
     }
 	// end Player class
-
-	public void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            var enemies = FindObjectsByType<EnemyPrototypePawn>(default);
-
-            foreach (var enemy in enemies)
-            {
-                enemy.SetAggroTargetServerRPC(this);
-
-                Debug.Log($"그 {name}... 여기 있대니까...");
-			}
-		}
-	}
 }
 
 [Serializable]
