@@ -75,8 +75,6 @@ public class Quest5 : QuestBase
 
     }
 
-
-
     private IEnumerator PlayHackingEffectAndRefresh()
     {
         int lineCount = hackingEffectLines.Count;
@@ -113,6 +111,8 @@ public class Quest5 : QuestBase
 
         // 서버에 레이어 설정 요청
         SetLayerServerRpc(spawnedObjectId);
+
+        QuestSucceedServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]

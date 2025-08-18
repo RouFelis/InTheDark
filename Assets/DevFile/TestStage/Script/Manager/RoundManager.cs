@@ -7,7 +7,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 using System.Collections;
 
-public class RoundManager : MonoBehaviour
+public class RoundManager : NetworkBehaviour
 {
 	[Header("TV")]
 	[SerializeField] private TMP_Text areaTMP;
@@ -68,9 +68,19 @@ public class RoundManager : MonoBehaviour
 	}
 
 
-	public void GameClearAnime()
+
+
+	[ServerRpc]
+	public void GameClearAnimeServerRpc()
+	{
+		GameClearAnimeClientRpc();
+	}
+
+	[ClientRpc]
+	public void GameClearAnimeClientRpc()
 	{
 		StartCoroutine(GameClearRoutine());
+		Debug.Log("À×???");
 	}
 
 	private IEnumerator GameClearRoutine()

@@ -26,7 +26,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0cbd84360923854fa4064ecdaf56ec3, type: 3}
   m_Name: Glitch3_RLPRO
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   MaxDisplace:
     m_OverrideState: 1
     m_Value: 5

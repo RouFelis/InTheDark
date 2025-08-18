@@ -3,9 +3,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
+using Unity.Netcode;
 
 [DisallowMultipleComponent]
-public class PlayerUIHandler : MonoBehaviour
+public class PlayerUIHandler : NetworkBehaviour
 {
     [Header("Vignette settings")]
     public float vignettePeak = 0.6f;
@@ -91,4 +92,41 @@ public class PlayerUIHandler : MonoBehaviour
         if (healthBar == null || stats.maxHealth <= 0f) return;
         healthBar.fillAmount = Mathf.Clamp01(player.GetComponent<PlayerNetworkData>().Health.Value / stats.maxHealth) * 0.5f;
     }
+
+
+    [ClientRpc]
+    public void GlitchClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        if(IsOwner)
+        {
+            PlayGlitchAndBlackoutLocal();
+            Debug.Log("테스트 111111111");
+		}
+    }
+
+    [ClientRpc]
+    public void FadeinClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        if (IsOwner)
+        {
+            FadeInFromBlackLocal();
+            Debug.Log("테스트 22222222222");
+        }
+    }
+
+
+    // 글리치 로컬...
+    private void PlayGlitchAndBlackoutLocal()
+    {
+        UIAnimationManager.Instance.FadeOutAnimation();
+    }
+
+    // 페이드인 로컬...
+    private void FadeInFromBlackLocal()
+    {
+        UIAnimationManager.Instance.ReviveAnimation();
+    }
+
+
+
 }

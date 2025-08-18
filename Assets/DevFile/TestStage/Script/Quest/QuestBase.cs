@@ -18,11 +18,11 @@ public class QuestBase : NetworkBehaviour
 
     protected virtual void Start()
 	{
-        isCompleted.OnValueChanged += QuestComplete;
+        isCompleted.OnValueChanged += QuestCompleteReward;
         QuestManager.inst.QuestInsert(this);
     }
 
-	public virtual void QuestComplete(bool oldValue , bool newValue)
+	public virtual void QuestCompleteReward(bool oldValue , bool newValue)
 	{
 		if (newValue)
         {
@@ -31,8 +31,20 @@ public class QuestBase : NetworkBehaviour
         }
     }
 
+
     [ServerRpc(RequireOwnership = false)]
-    protected virtual void QuestFailedServerRpc()
+    protected virtual void QuestSucceedServerRpc()
+    {
+        failTime.Value += 1;
+
+        if (MaxFailTime <= failTime.Value)
+        {
+            QuestManager.inst.QuestFailAction.Invoke();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public virtual void QuestFailedServerRpc()
 	{
         failTime.Value += 1;
 
@@ -59,9 +71,4 @@ public class QuestBase : NetworkBehaviour
         QuestManager.inst.QuestComplete(this);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void CompleteBoolChangeServerRpc(bool value)
-    {
-        isCompleted.Value = value;
-    }
 }

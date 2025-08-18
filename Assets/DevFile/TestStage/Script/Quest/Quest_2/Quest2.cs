@@ -19,7 +19,7 @@ public class Quest2 : QuestBase
 
     [Header("기타 옵션")]
     public NetworkVariable<bool> isUsed = new NetworkVariable<bool>(false);
-
+    Player usedplayer;
 
 
     protected override void Start()
@@ -85,8 +85,12 @@ public class Quest2 : QuestBase
             WireSetNull();
             if (CheckerCheck())
             {
-                CompleteBoolChangeServerRpc(true);
-            }
+                QuestSucceedServerRpc();
+			}
+			else
+			{
+
+			}
         }
         else
         {
@@ -130,8 +134,4 @@ public class Quest2 : QuestBase
     {
         startChecker = null;
     }
-    public override void QuestComplete(bool oldValue, bool newValue)
-	{
-		base.QuestComplete(oldValue, newValue);
-	}
 }

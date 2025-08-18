@@ -1661,7 +1661,6 @@ MonoBehaviour:
     m_InternalValue: 0
   allPlayersDead:
     m_InternalValue: 0
-  uiAniManager: {fileID: 0}
   nfgoPlayer: []
   playersList: []
   myPlayerDead: 0
@@ -1670,6 +1669,9 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 0
+  BlackoutBeforLeadSeconds: 5
+  BlackoutLeadSeconds: 3
+  FadeInDelaySeconds: 3
 --- !u!114 &731114795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2029,6 +2031,7 @@ GameObject:
   - component: {fileID: 855062497}
   - component: {fileID: 855062496}
   - component: {fileID: 855062498}
+  - component: {fileID: 855062499}
   m_Layer: 5
   m_Name: Test
   m_TagString: Untagged
@@ -2098,6 +2101,7 @@ MonoBehaviour:
   serverBtn: {fileID: 1333184386}
   hostBtn: {fileID: 398088144}
   clientBtn: {fileID: 884917852}
+  testBtn: {fileID: 0}
   text: {fileID: 93696435}
   joinCodeInput: {fileID: 968129226}
   loadingUI: {fileID: 147146774}
@@ -2155,6 +2159,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadingUI: {fileID: 147146774}
   loadingText: {fileID: 425557462}
+--- !u!114 &855062499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 855062492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69beb381e244f92449b8c4cf954630e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TrackedObjects:
+  - rid: 8585672183459872860
+  references:
+    version: 2
+    RefIds:
+    - rid: 8585672183459872860
+      type: {class: TrackedMonoBehaviourObject, ns: UnityEngine.Localization.PropertyVariants.TrackedObjects, asm: Unity.Localization}
+      data:
+        m_Target: {fileID: 855062496}
+        m_TrackedProperties:
+          items:
+          - rid: 8585672183459872861
+        m_UpdateType: 0
+        m_Changed:
+          m_PersistentCalls:
+            m_Calls: []
+    - rid: 8585672183459872861
+      type: {class: BoolTrackedProperty, ns: UnityEngine.Localization.PropertyVariants.TrackedProperties, asm: Unity.Localization}
+      data:
+        m_PropertyPath: m_Enabled
+        m_VariantData:
+        - localeIdentifier:
+            m_Code: en-US
+          value: 1
 --- !u!1 &884917850
 GameObject:
   m_ObjectHideFlags: 0
@@ -3177,6 +3217,9 @@ MonoBehaviour:
   spawnedItemID: 0
   maxPlacementDistance: 10
   canPlace: 1
+  laycastMark:
+    serializedVersion: 2
+    m_Bits: 0
   transparentMaterial: {fileID: 2100000, guid: 8036ca5fdfce72f40b1b0fd7672435e2, type: 2}
   validPlacementMaterial: {fileID: 2100000, guid: 0340ade0a5cb30a40ab59a5d899c6913, type: 2}
   invalidPlacementMaterial: {fileID: 2100000, guid: ab0bf8416da6b90498ff9e548f960e3f, type: 2}
@@ -4858,7 +4901,6 @@ MonoBehaviour:
     m_InternalValue: 0
   allPlayersDead:
     m_InternalValue: 0
-  uiAniManager: {fileID: 0}
   nfgoPlayer: []
   playersList: []
   myPlayerDead: 0
@@ -4867,6 +4909,9 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
+  BlackoutBeforLeadSeconds: 5
+  BlackoutLeadSeconds: 3
+  FadeInDelaySeconds: 3
 --- !u!114 &1972160489
 MonoBehaviour:
   m_ObjectHideFlags: 0

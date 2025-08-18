@@ -2,15 +2,16 @@ using UnityEngine;
 using Unity.Collections;
 using Unity.Netcode;
 
-public class PlayerNetworkData : MonoBehaviour
+public class PlayerNetworkData : NetworkBehaviour
 {
-    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>(writePerm: NetworkVariableWritePermission.Server);
-    public NetworkVariable<int> Experience = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
-    public NetworkVariable<int> Level = new NetworkVariable<int>(writePerm: NetworkVariableWritePermission.Server);
+    public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>(value:"",writePerm: NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> Experience = new NetworkVariable<int>(value: 0, writePerm: NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> Level = new NetworkVariable<int>(value: 0, writePerm: NetworkVariableWritePermission.Server);
     public NetworkVariable<float> Health = new NetworkVariable<float>(100f, writePerm: NetworkVariableWritePermission.Server);
 
     public bool IsDead => Health.Value <= 0f;
 
+    [SerializeField] private string testname;
     private Player ownerPlayer;
 
     public void Initialize(Player player)
@@ -20,6 +21,11 @@ public class PlayerNetworkData : MonoBehaviour
         Experience.OnValueChanged += (oldVal, newVal) => player?.NotifyDataChanged();
         Level.OnValueChanged += (oldVal, newVal) => player?.NotifyDataChanged();
         Health.OnValueChanged += OnHealthChanged;
+    }
+
+    public void SetName(string userName)
+	{
+        PlayerName.Value = userName;
     }
 
     private void OnHealthChanged(float oldVal, float newVal)

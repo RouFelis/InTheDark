@@ -170,12 +170,9 @@ public class KeySettingsManager : MonoBehaviour
         sensitivitySlider.onValueChanged.AddListener(UpdateInputField); //슬라이더 이벤트 추가
         sensitivityInput.onEndEdit.AddListener(UpdateSliderFromInput); //슬라이더 이벤트 추가
         senestiveSliderInit();
-        Debug.Log("테스트 33333333333");
 
         keySettingsPanel.SetActive(false); // 초기 상태는 비활성화
-        Debug.Log("테스트 2222222222");
         SetLanguage();
-        Debug.Log("테스트 1111111111111");
         SetKey();
     }
 

@@ -1,159 +1,125 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIAnimationManager : MonoBehaviour
 {
-	#region DieProperty
-	[Header("AllDieAnime")]
-	[SerializeField] private UIAnimation dieAnime;
-	[SerializeField] private UIAnimation allDieCameraEffect1;
-	[SerializeField] private UIAnimation allDieCameraEffect2;
-	[SerializeField] private UIAnimation allDieCameraEffect3;
+    public static UIAnimationManager Instance { get; private set; }
 
-	[Header("DieAnime")]
-	[SerializeField] private UIAnimation dieCameraEffect1;
-	[SerializeField] private UIAnimation dieCameraEffect2;
-	[SerializeField] private UIAnimation dieCameraEffect3;
+    [Header("UI애니메이션목록")]
+    [SerializeField] private List<NamedUIAnimation> animations = new List<NamedUIAnimation>();
 
-	[Header("Close Object")]
-	[SerializeField] private RectTransform healthBar;
-	[SerializeField] private RectTransform compass;
+    [Header("UI 요소")]
+    [SerializeField] private RectTransform healthBar;
+    [SerializeField] private RectTransform compass;
 
+    private Dictionary<string, UIAnimation> animationLookup;
 
-	[Header("ReviveAnime")]
-	[SerializeField] private UIAnimation reviveAnimation;
+    private void Awake()
+    {
+        // 빠른 검색을 위해 Dictionary 변환
+        animationLookup = new Dictionary<string, UIAnimation>();
+        foreach (var item in animations)
+        {
+            if (!animationLookup.ContainsKey(item.name))
+                animationLookup.Add(item.name, item.animation);
+            else
+                Debug.LogWarning($"UIAnimationManager: 중복된 이름 '{item.name}'이 감지되었습니다.");
+        }
+        Instance = this;
+    }
 
-	/*[Header("volume")]
-	[SerializeField] private Volume;*/
+    public void Play(string name)
+    {
+        if (animationLookup.TryGetValue(name, out UIAnimation anim))
+        {
+            anim.gameObject.SetActive(true);
+            anim.StartEffect();
+        }
+        else
+        {
+            Debug.LogError($"UIAnimationManager: '{name}' 애니메이션을 찾을 수 없습니다.");
+        }
+    }
 
-	#endregion
+    #region 예시 로직
+    public void DieAnimation()
+    {
+        healthBar.localScale = Vector3.zero;
+        compass.localScale = Vector3.zero;
 
+        Play("AllDieEffect1");
+        Play("AllDieEffect2");
+        Play("AllDieEffect3");
+    }
 
-	/*	#region AllDieAni
-		public void AllDieAnimation()
-		{
-			healthBar.localScale = Vector3.zero;
-			dieAnime.gameObject.SetActive(true);
-			allDieCameraEffect1.gameObject.SetActive(true);
-			allDieCameraEffect2.gameObject.SetActive(true);
-			allDieCameraEffect3.gameObject.SetActive(true);
-			dieAnime.StartEffect();
-			allDieCameraEffect1.StartEffect();
-			allDieCameraEffect2.StartEffect();
-			allDieCameraEffect3.StartEffect();
-			Debug.Log("ALL DIE");
+    public IEnumerator AllDieAnimationCo()
+    {
+        if (animationLookup.TryGetValue("DieAnime", out var anim))
+            anim.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(1.618f);
+
+        Play("DieAnime");
+
+        yield return new WaitForSeconds(2f);
+
+        anim.gameObject.SetActive(false);
+    }
+
+    public void ReviveAnimation()
+    {
+        Play("ReviveAnimeFadeIn");
+        StartCoroutine(HealthbarOn());
+    }
+
+    public void FadeOutAnimation()
+    {
+        Play("ReviveAnimeFadeOut");
+    }
+
+    private IEnumerator HealthbarOn()
+    {
+        yield return new WaitForSeconds(1f);
+        healthBar.localScale = Vector3.one;
+        compass.localScale = Vector3.one;
+    }
+    #endregion
+
+    private void OnEnable()
+    {
+        if (animationLookup.TryGetValue("AllDieEffect3", out var anim))
+        {
+            anim.OnAnimationFinished += DisableDieUIAnimations;
 		}
-
-		private void DisableAllDieUIAnimations()
+		else
 		{
-			dieAnime.gameObject.SetActive(false);
-			allDieCameraEffect1.gameObject.SetActive(false);
-			allDieCameraEffect2.gameObject.SetActive(false);
-			allDieCameraEffect3.gameObject.SetActive(false);
+            Debug.LogError("AllDieEffect3을 찾을 수 없음.");
 		}
+    }
+
+    private void OnDisable()
+    {
+        if (animationLookup.TryGetValue("AllDieEffect3", out var anim))
+        {
+            anim.OnAnimationFinished -= DisableDieUIAnimations;
+        }
+        else
+        {
+            Debug.LogError("AllDieEffect3을 찾을 수 없음.");
+        }
+    }
 
 
-		#endregion*/
+    public void AllDieAnimation()
+    {
+            StartCoroutine(AllDieAnimationCo());
+    }
 
-
-	#region DieAni
-
-
-	/*private void DisableDieUIAnimations()
-	{
-		dieCameraEffect1.gameObject.SetActive(false);
-		dieCameraEffect2.gameObject.SetActive(false);
-		dieCameraEffect3.gameObject.SetActive(false);
-	}
-
-
-	public void DieAnimation()
-	{
-		healthBar.localScale = Vector3.zero;
-		dieCameraEffect1.gameObject.SetActive(true);
-		dieCameraEffect2.gameObject.SetActive(true);
-		dieCameraEffect3.gameObject.SetActive(true);
-		dieCameraEffect1.StartEffect();
-		dieCameraEffect2.StartEffect();
-		dieCameraEffect3.StartEffect();
-		Debug.Log("DIE");
-	}*/
-	private void DisableDieUIAnimations()
-	{
-		allDieCameraEffect1.gameObject.SetActive(false);
-		allDieCameraEffect2.gameObject.SetActive(false);
-		allDieCameraEffect3.gameObject.SetActive(false);
-	}
-
-
-	public void DieAnimation()
-	{
-		healthBar.localScale = Vector3.zero;
-		compass.localScale = Vector3.zero;
-		allDieCameraEffect1.gameObject.SetActive(true);
-		allDieCameraEffect2.gameObject.SetActive(true);
-		allDieCameraEffect3.gameObject.SetActive(true);
-		allDieCameraEffect1.StartEffect();
-		allDieCameraEffect2.StartEffect();
-		allDieCameraEffect3.StartEffect();
-		Debug.Log("DIE");
-	}
-
-	private void AllDieAnimation(bool oldValue, bool newValue)
-	{		
-		if(newValue)
-			StartCoroutine(AllDieAnimationCo());
-	}
-
-	public IEnumerator AllDieAnimationCo()
-	{
-		yield return new WaitForSeconds(1.618f);
-
-		dieAnime.gameObject.SetActive(true);
-		dieAnime.StartEffect();
-
-		yield return new WaitForSeconds(2f);
-
-		dieAnime.gameObject.SetActive(false);
-	}
-
-
-	#endregion
-
-
-	#region
-
-	public void ReviveAnimation()
-	{
-		reviveAnimation.StartEffect();
-		StartCoroutine(healthbarOn());
-	}
-
-	public void ReviveSet()
-	{
-		StartCoroutine(healthbarOn());
-	}
-
-	private IEnumerator healthbarOn()
-	{
-		yield return new WaitForSeconds(1f);
-		healthBar.localScale = Vector3.one;
-		compass.localScale = Vector3.one;
-	}
-	#endregion
-
-
-	private void OnEnable()
-	{
-		//allDieCameraEffect3.OnAnimationFinished += DisableAllDieUIAnimations;
-		allDieCameraEffect3.OnAnimationFinished += DisableDieUIAnimations;
-		PlayersManager.Instance.allPlayersDead.OnValueChanged += AllDieAnimation;
-	}
-
-	private void OnDisable()
-	{
-		//allDieCameraEffect3.OnAnimationFinished -= DisableAllDieUIAnimations;
-		allDieCameraEffect3.OnAnimationFinished -= DisableDieUIAnimations;
-		PlayersManager.Instance.allPlayersDead.OnValueChanged -= AllDieAnimation;
-	}
+    private void DisableDieUIAnimations()
+    {
+        if (animationLookup.TryGetValue("AllDieEffect1", out var a1)) a1.gameObject.SetActive(false);
+        if (animationLookup.TryGetValue("AllDieEffect2", out var a2)) a2.gameObject.SetActive(false);
+        if (animationLookup.TryGetValue("AllDieEffect3", out var a3)) a3.gameObject.SetActive(false);
+    }
 }

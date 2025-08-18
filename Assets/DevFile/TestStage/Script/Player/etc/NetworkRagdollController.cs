@@ -51,7 +51,7 @@ public class NetworkRagdollController : NetworkBehaviour
         controller.enabled = !activate;
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void DieServerRpc(Vector3 deathPosition)
     {
         isRagdoll.Value = true;
@@ -72,7 +72,7 @@ public class NetworkRagdollController : NetworkBehaviour
         hipsRb.AddExplosionForce(deathForce, deathPosition, 5f);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void ReviveServerRpc()
     {
         isRagdoll.Value = false;

@@ -411,7 +411,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   quest5: {fileID: 3862753064239870716}
-  boxCollider: {fileID: 0}
+  boxCollider: {fileID: 8261046751992263486}
   references:
     version: 2
     RefIds: []
