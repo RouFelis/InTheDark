@@ -417,6 +417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _pawn: {fileID: 0}
 --- !u!82 &982930836932718898
 AudioSource:
   m_ObjectHideFlags: 0
@@ -547,6 +548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _range: 12
   _duration: 6
   _flightTime: 1
   _flightSpeed: 15
@@ -585,6 +587,8 @@ MonoBehaviour:
   _controller: {fileID: 7614236128885380916}
   _agent: {fileID: -6386649275116767646}
   _isRunning: 0
+  _isStunning:
+    m_InternalValue: 0
   _knockbackCurve:
     serializedVersion: 2
     m_Curve:

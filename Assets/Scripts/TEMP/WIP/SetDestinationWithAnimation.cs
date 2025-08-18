@@ -34,7 +34,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 
 		public override TaskStatus OnUpdate()
 		{
-			var result = TaskStatus.Failure;
+			var result = TaskStatus.Success;
 
 			if (NetworkObjectBase.IsServer)
 			{
@@ -44,18 +44,24 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 					return TaskStatus.Failure;
 				}
 
-				var isEnable = navMeshAgent.SetDestination(destination.Value);
-				
-				result = isEnable ? TaskStatus.Success : TaskStatus.Failure;
+				var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
 
-				if (isEnable)
-				{
-					var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
+				pawn.SetDestinationServerRPC(destination.Value);
 
-					pawn?.StartMove();
+				//var isEnable = navMeshAgent.SetDestination(destination.Value);
 
-					//StartCoroutine(EndWalkingAnimation());
-				}
+				//result = isEnable ? TaskStatus.Success : TaskStatus.Failure;
+
+				//if (isEnable)
+				//{
+				//	var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
+
+				//	pawn?.StartMove();
+
+				//	//StartCoroutine(EndWalkingAnimation());
+				//}
+
+
 			}
 
 			//if (NavMeshAgent == null)

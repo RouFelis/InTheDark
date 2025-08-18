@@ -326,7 +326,7 @@ public class Player : playerMoveController, IHealth, ICharacter
         target.layer = layer;
         foreach (Transform child in target.transform) SetLayers(child.gameObject, layer);
     }
-    // end Player class
+	// end Player class
 }
 
 [Serializable]

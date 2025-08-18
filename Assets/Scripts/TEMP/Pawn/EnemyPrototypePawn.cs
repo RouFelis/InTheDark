@@ -13,6 +13,45 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.VFX;
 
+// 일단 만들어 두기만....
+public ref struct EnemyTarget
+{
+	public bool IsEnable;
+	public Player Player;
+
+	public static implicit operator bool(EnemyTarget target)
+	{
+		var isEnalbe = target.IsEnable;
+
+		return isEnalbe;
+	}
+
+	public static implicit operator Player(EnemyTarget target)
+	{
+		var player = target.Player;
+
+		return player;
+	}
+
+	public EnemyTarget(bool isEnable, Player player)
+	{
+		IsEnable = isEnable;
+		Player = player;
+	}
+
+	public EnemyTarget(NetworkBehaviourReference reference)
+	{
+		IsEnable = reference.TryGet(out Player player);
+		Player = player;
+	}
+
+	public void Deconstruct(out bool isEnable, out Player player)
+	{
+		isEnable = IsEnable;
+		player = Player;
+	}
+}
+
 public class EnemyPrototypePawn : NetworkPawn, IHealth
 {
 	public const string DEFAULT_STATE = "Normal";
@@ -100,6 +139,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//private CancellationTokenSource _onAttack;
 
 	//private List<LightSource> _sighted = new List<LightSource>();
+
+	private Coroutine _navMeshAgentCoroutine;
 
 	public static event EnemyDieDelegate OnEnemyDie;
 	public static event PlayerKilledEnemyDelegate OnEnemyDieWithPlayer;
@@ -206,6 +247,17 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 			{
 				_target.Value = value;
 			}
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public bool IsMoving
+	{
+		get
+		{
+			return _navMeshAgentCoroutine != null;
 		}
 	}
 
@@ -517,9 +569,86 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		//_animator?.SetBool(WALKING_STATE, false);
 	}
 
-	[ContextMenu("TakeDamage")]
-	public void Test_TakeDamage()
+	[Rpc(SendTo.Server)]
+	public void SetPrioritizePlayerAggroRPC(NetworkBehaviourReference reference)
 	{
-		TakeDamage(1.0F, null);
+		var isPlayerEnable = reference.TryGet(out Player player);
+		var isTargetEnable = _target.Value.TryGet(out Player target);
+
+		if (isPlayerEnable)
+		{
+			if (!isTargetEnable)
+			{
+				var message = $"타겟이 {player.name}({player.OwnerClientId})로 설정되었습니다.";
+
+				Debug.Log(message);
+
+				_target.Value = reference;
+			}
+			else if (isTargetEnable && target.Equals(player))
+			{
+				var message = $"타겟이 이미 {player.name}({player.OwnerClientId})입니다.";
+
+				Debug.Log(message);
+			}
+		}
 	}
+
+	[Rpc(SendTo.Server)]
+	public void SetAggroTargetServerRPC(NetworkBehaviourReference reference)
+	{
+		var isEnable = reference.TryGet(out Player player);
+
+		SetPrioritizePlayerAggroRPC(reference);
+
+		if (isEnable)
+		{
+			SetDestinationServerRPC(player.transform.position);
+		}
+	}
+
+	[Rpc(SendTo.Server)]
+	public void SetDestinationServerRPC(Vector3 destination)
+	{
+		var isOnNavMesh = NavMesh.SamplePosition(destination, out var hit, 1.0F, NavMesh.AllAreas);
+		var position = isOnNavMesh ? destination : hit.position;
+
+		var message = $"NavMesh Sample Position : {isOnNavMesh}, Position : {position}";
+
+		_agent.SetDestination(position);
+
+		if (IsMoving)
+		{
+			StopCoroutine(_navMeshAgentCoroutine);
+		}
+
+		_navMeshAgentCoroutine = StartCoroutine(OnNavMeshRunning());
+
+		Debug.Log(message);
+	}
+
+	private IEnumerator OnNavMeshRunning()
+	{
+		StartMove();
+
+		yield return new WaitUntil(() => _agent.remainingDistance <= _agent.stoppingDistance);
+
+		_navMeshAgentCoroutine = null;
+
+		StopMove();
+
+		yield return null;
+	}
+
+	//[Rpc(SendTo.Server)]
+	//public void SetDestinationServerRPC(Vector3 position)
+	//{
+	//	var tmp = NavMesh.SamplePosition(position, out var hit, 1.0F, NavMesh.AllAreas);
+	//}
+
+	//[ContextMenu("TakeDamage")]
+	//public void Test_TakeDamage()
+	//{
+	//	TakeDamage(1.0F, null);
+	//}
 }
