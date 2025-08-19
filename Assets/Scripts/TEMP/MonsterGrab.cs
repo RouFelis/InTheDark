@@ -1,11 +1,12 @@
 using BehaviorDesigner.Runtime;
-
+using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations;
+using static UnityEditor.Rendering.FilterWindow;
 
 namespace InTheDark.Prototypes
 {
@@ -30,6 +31,10 @@ namespace InTheDark.Prototypes
 
 		private EnemyPrototypePawn _pawn;
 		private Player _target;
+
+		private int _size;
+
+		private Collider[] _colliders = new Collider[16];
 
 		public bool IsActive
 		{
@@ -223,6 +228,26 @@ namespace InTheDark.Prototypes
 				_pawn.CurrentHealth = 0;
 
 				_pawn.Die();
+			}
+		}
+
+		private IEnumerator OnAttachPlayer()
+		{
+			while (IsActive)
+			{
+				_size = Physics.OverlapSphereNonAlloc(transform.position, Range * 25.0F, _colliders);
+
+				for (var i = 0; i < _size; i++)
+				{
+					var collider = _colliders[i];
+					var pawn = collider.GetComponent<EnemyPrototypePawn>();
+
+					pawn.SetAggroTargetServerRPC(_pawn.Target);
+
+					_colliders[i] = null;
+				}
+
+				yield return null;
 			}
 		}
 	}

@@ -37,7 +37,7 @@ public class PlayerNetworkData : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SetNameServerRpc(string name) => PlayerName.Value = name;
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(float amount)
     {
         if (Health.Value <= 0f) return;

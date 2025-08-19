@@ -1,7 +1,7 @@
 using BehaviorDesigner.Runtime;
 
 using Cysharp.Threading.Tasks;
-
+using InTheDark.Example.Keywords;
 using InTheDark.LoremIpsum;
 
 using System;
@@ -21,6 +21,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.VFX;
 
 namespace InTheDark.Prototypes
 {
@@ -33,7 +34,7 @@ namespace InTheDark.Prototypes
 
 		private void OnAwake()
 		{
-
+			VFXSpawnerCallbacks callbacks = default;
 		}
 	}
 }
