@@ -14,43 +14,43 @@ using UnityEngine.AI;
 using UnityEngine.VFX;
 
 // 일단 만들어 두기만....
-public ref struct EnemyTarget
-{
-	public bool IsEnable;
-	public Player Player;
+//public ref struct EnemyTarget
+//{
+//	public bool IsEnable;
+//	public Player Player;
 
-	public static implicit operator bool(EnemyTarget target)
-	{
-		var isEnalbe = target.IsEnable;
+//	public static implicit operator bool(EnemyTarget target)
+//	{
+//		var isEnalbe = target.IsEnable;
 
-		return isEnalbe;
-	}
+//		return isEnalbe;
+//	}
 
-	public static implicit operator Player(EnemyTarget target)
-	{
-		var player = target.Player;
+//	public static implicit operator Player(EnemyTarget target)
+//	{
+//		var player = target.Player;
 
-		return player;
-	}
+//		return player;
+//	}
 
-	public EnemyTarget(bool isEnable, Player player)
-	{
-		IsEnable = isEnable;
-		Player = player;
-	}
+//	public EnemyTarget(bool isEnable, Player player)
+//	{
+//		IsEnable = isEnable;
+//		Player = player;
+//	}
 
-	public EnemyTarget(NetworkBehaviourReference reference)
-	{
-		IsEnable = reference.TryGet(out Player player);
-		Player = player;
-	}
+//	public EnemyTarget(NetworkBehaviourReference reference)
+//	{
+//		IsEnable = reference.TryGet(out Player player);
+//		Player = player;
+//	}
 
-	public void Deconstruct(out bool isEnable, out Player player)
-	{
-		isEnable = IsEnable;
-		player = Player;
-	}
-}
+//	public void Deconstruct(out bool isEnable, out Player player)
+//	{
+//		isEnable = IsEnable;
+//		player = Player;
+//	}
+//}
 
 public class EnemyPrototypePawn : NetworkPawn, IHealth
 {
@@ -569,6 +569,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		//_animator?.SetBool(WALKING_STATE, false);
 	}
 
+	// 대상만 설정!
 	[Rpc(SendTo.Server)]
 	public void SetPrioritizePlayerAggroRPC(NetworkBehaviourReference reference)
 	{
@@ -594,6 +595,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
+	// 위치 지정까지!
 	[Rpc(SendTo.Server)]
 	public void SetAggroTargetServerRPC(NetworkBehaviourReference reference)
 	{

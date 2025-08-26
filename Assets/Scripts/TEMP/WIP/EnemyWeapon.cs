@@ -87,6 +87,10 @@ namespace InTheDark.Prototypes
 			if (IsTargetNearby)
 			{
 				target.TakeDamage(_damage, _pawn.attackSound);
+
+				var message = $"EnemyWeapon: {name} attacked {target} with {_damage} damage. (Player Health Left => {target.Health})";
+
+				Debug.Log(message);
 			}
 
 			//Debug.Log("HIT!!!");

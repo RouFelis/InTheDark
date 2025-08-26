@@ -1439,7 +1439,6 @@ MonoBehaviour:
   - {fileID: 4815689048121716002}
   dieEnableNetworkBehaviorScripts:
   - {fileID: 2740562399230657829}
-  uiAniManager: {fileID: 0}
   animationRelay: {fileID: 452271807677361613}
   isMyCharacter: 0
 --- !u!114 &5492822605165854208
@@ -1838,6 +1837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1eadd15bd37e4b9488bd2dd2b098ea26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   vignettePeak: 0.6
   vignetteAttack: 0.1
   vignetteDecay: 1
@@ -1885,6 +1885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abacd0bce52f361489572e0a1ff7c91f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   PlayerName:
     m_InternalValue:
       utf8LengthInBytes: 0
@@ -1926,6 +1927,7 @@ MonoBehaviour:
     m_InternalValue: 0
   Health:
     m_InternalValue: 100
+  testname: 
 --- !u!82 &344860905703892509
 AudioSource:
   m_ObjectHideFlags: 0

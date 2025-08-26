@@ -1,7 +1,7 @@
 using BehaviorDesigner.Runtime;
 
 using Cysharp.Threading.Tasks;
-
+using InTheDark.Example.Keywords;
 using InTheDark.LoremIpsum;
 
 using System;
@@ -21,6 +21,8 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.VFX;
+using UnityEngine.VFX.Utility;
 
 namespace InTheDark.Prototypes
 {
@@ -33,7 +35,34 @@ namespace InTheDark.Prototypes
 
 		private void OnAwake()
 		{
-
+			//VFXSpawnerCallbacks callbacks = default;
 		}
 	}
+
+	#region PETIT_CODE
+
+	public interface IPetitHealth
+	{
+
+	}
+
+	[Serializable]
+	public class PetitHealth : IPetitHealth
+	{
+
+	}
+
+	[Serializable]
+	public class PetitPlayer
+	{
+		
+	}
+
+	[Serializable]
+	public class PetitEnemy
+	{
+		
+	}
+
+	#endregion
 }
