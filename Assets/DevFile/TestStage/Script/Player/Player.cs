@@ -194,13 +194,11 @@ public class Player : playerMoveController, IHealth, ICharacter
     #region Die
     public void Die() => StartCoroutine(DieSequence());
 
+    //죽었을 때 발동!
     private IEnumerator DieSequence()
     {
-        Debug.Log($"test 111111111");
         OnDieEffects?.Invoke();
-        Debug.Log($"사망체크2222222222 {OnDie == null}");
         OnDie?.Invoke();
-        Debug.Log($"사망체크 {OnDie == null}");
 
         if (IsOwner)
         {

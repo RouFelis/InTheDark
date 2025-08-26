@@ -6,9 +6,13 @@ public class SharedData : NetworkBehaviour
 
 	public NetworkVariable<int> Money = new NetworkVariable<int>(0);
 	public NetworkVariable<int> networkSeed = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-	public NetworkVariable<int> area = new NetworkVariable<int>(0);
-	public NetworkVariable<int> questQuota = new NetworkVariable<int>(0);
-	public NetworkVariable<int> moneyQuota = new NetworkVariable<int>(0);
+	public NetworkVariable<int> area = new NetworkVariable<int>(1);
+	public NetworkVariable<int> questQuota = new NetworkVariable<int>(1);
+	public NetworkVariable<int> moneyQuota = new NetworkVariable<int>(1000);
+
+	private int questQoutaDefult = 3;
+	private int moneyQoutaDefult = 3;
+
 
 	public override void OnNetworkSpawn()
 	{
@@ -21,6 +25,11 @@ public class SharedData : NetworkBehaviour
 			// 인스턴스가 이미 존재하면 중복된 객체를 삭제
 			Destroy(gameObject);
 		}
+
+		if (IsServer)
+			area.OnValueChanged += SetQuota;
+		questQuota.Value = questQoutaDefult;
+		moneyQuota.Value = moneyQoutaDefult;
 	}
 
 	private void Start()
@@ -49,20 +58,47 @@ public class SharedData : NetworkBehaviour
 		Money.Value += value;
 	}
 
-	public int subtractionMoney(int value)
+	[ServerRpc(RequireOwnership = false)]
+	public void subtractionMoneyServerRpc(int value)
 	{
 		if (Money.Value >= value)
 		{
 			Money.Value = Money.Value - value;
-			return Money.Value;
 		}
 		else
 		{
 			Debug.LogError("Can not minus");
-			return -1; 
 		}
 		
 	}
+
+
+
+	#region 맵 설정...
+
+
+	public void SetQuota(int newValue, int oldValue)
+	{
+		RequestQuestQuota();
+		RequestMoneyQuota();
+	}
+
+
+	private int RequestQuestQuota()
+	{
+		Debug.Log($"퀘스트 할당량 호출 : {(area.Value % 2)} ");
+		return 3 + (area.Value % 2);
+	}
+
+	private int RequestMoneyQuota()
+	{
+		Debug.Log($"돈 할당량 호출 : {(area.Value % 2)} ");
+		return 500 + 500 / (area.Value % 2);
+	}
+
+
+
+	#endregion
 
 
 }

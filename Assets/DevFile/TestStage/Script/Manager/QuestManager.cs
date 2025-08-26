@@ -8,8 +8,8 @@ public class QuestManager : NetworkBehaviour
 
 	public static QuestManager inst { get; set; }
 	public List<QuestBase> questList;
-	public int mustClearQuestTotal = 0;
-	public int nowClearedQuestTotal = 0;
+	public NetworkVariable<int> mustClearQuestTotal = new NetworkVariable<int>(0);
+	public NetworkVariable<int> nowClearedQuestTotal = new NetworkVariable<int>(0);
 	QuestBase selectedQuest;
 
 	public Action QuestFailAction;
@@ -46,7 +46,7 @@ public class QuestManager : NetworkBehaviour
 		}
 
 		int index = questList.IndexOf(quest);
-		nowClearedQuestTotal += 1;
+		nowClearedQuestTotal.Value += 1;
 
 		if (index != -1)
 		{
@@ -54,7 +54,7 @@ public class QuestManager : NetworkBehaviour
 			Debug.Log("Quest Complete");
 
 			// [[25.06.24]] 이벤트 임시 추가
-			OnQuestComplete?.Invoke(quest, mustClearQuestTotal, nowClearedQuestTotal);
+			OnQuestComplete?.Invoke(quest, mustClearQuestTotal.Value, nowClearedQuestTotal.Value);
 		}
 		else
 		{
@@ -64,8 +64,8 @@ public class QuestManager : NetworkBehaviour
 
 	public void QuestReset()
 	{
-		nowClearedQuestTotal = 0;
-		mustClearQuestTotal = 0;
+		nowClearedQuestTotal.Value = 0;
+		mustClearQuestTotal.Value = 0;
 		questList.Clear();
 	}
 

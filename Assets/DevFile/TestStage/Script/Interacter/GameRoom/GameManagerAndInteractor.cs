@@ -108,7 +108,7 @@ public class GameManagerAndInteractor : InteractableObject
     {
         yield return RunGameSequence(
             beforeDelay: 0f,
-            afterDelay: 20f,
+            afterDelay: 10f,
             onServerStart: () => roundManager.GameClearServerRPC(),
             onServerEnd: () => RequestSceneChangeServerRpc("TestScene")
         );
@@ -142,8 +142,9 @@ public class GameManagerAndInteractor : InteractableObject
         // 7. 씬 언로드/변경
         KeySettingsManager.Instance.isEveryEvent = false;
         if (IsServer) onServerEnd?.Invoke();
+        yield return new WaitForSeconds(3.0f);
 
-
+        roundManager.GameClearCheckServerRpc();
         isSequenceRunning.Value = false;
     }
 

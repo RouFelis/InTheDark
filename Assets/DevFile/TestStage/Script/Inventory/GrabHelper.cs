@@ -14,6 +14,7 @@ public class GrabHelper : NetworkBehaviour
     [SerializeField] private RotationConstraint rotationConstraint;
     [SerializeField] private NetworkTransform networkTransform;
     [SerializeField] private NetworkRigidbody networkRigidbody;
+    [SerializeField] private BoxCollider boxCollider;
 
     [SerializeField] private Player player;
 
@@ -91,7 +92,9 @@ public class GrabHelper : NetworkBehaviour
         if (networkTransform != null)
             networkTransform.enabled = enabled;
         if (networkRigidbody != null)
-            networkRigidbody.enabled = enabled;
+            networkRigidbody.enabled = enabled; 
+        if (boxCollider != null)
+            boxCollider.enabled = enabled;
     }
 
     private void AddConstraint(IConstraint constraint, Transform source)

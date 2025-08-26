@@ -100,7 +100,6 @@ public class PlayerUIHandler : NetworkBehaviour
         if(IsOwner)
         {
             PlayGlitchAndBlackoutLocal();
-            Debug.Log("테스트 111111111");
 		}
     }
 
@@ -110,7 +109,6 @@ public class PlayerUIHandler : NetworkBehaviour
         if (IsOwner)
         {
             FadeInFromBlackLocal();
-            Debug.Log("테스트 22222222222");
         }
     }
 

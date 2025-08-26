@@ -13,6 +13,10 @@ public class UIAnimationManager : MonoBehaviour
     [SerializeField] private RectTransform healthBar;
     [SerializeField] private RectTransform compass;
 
+    [Header("VolumeEffect")]
+    [SerializeField] private GameObject glitchGameobject;
+
+
     private Dictionary<string, UIAnimation> animationLookup;
 
     private void Awake()
@@ -42,7 +46,7 @@ public class UIAnimationManager : MonoBehaviour
         }
     }
 
-    #region 예시 로직
+    #region 로직
     public void DieAnimation()
     {
         healthBar.localScale = Vector3.zero;
@@ -72,6 +76,11 @@ public class UIAnimationManager : MonoBehaviour
         Play("ReviveAnimeFadeIn");
         StartCoroutine(HealthbarOn());
     }
+    
+    public void FadeInAnimation()
+    {
+        Play("ReviveAnimeFadeIn"); 
+    }
 
     public void FadeOutAnimation()
     {
@@ -84,6 +93,23 @@ public class UIAnimationManager : MonoBehaviour
         healthBar.localScale = Vector3.one;
         compass.localScale = Vector3.one;
     }
+
+    public IEnumerator HealthbarOff()
+    {
+        yield return new WaitForSeconds(1f);
+        healthBar.localScale = Vector3.zero;
+        compass.localScale = Vector3.zero;
+    }
+
+    public void Glitch(bool value)
+	{
+        glitchGameobject.SetActive(value);
+    }
+
+    public void GameFailAnimation()
+	{
+        Play("GameFailAnimation");
+	}
     #endregion
 
     private void OnEnable()

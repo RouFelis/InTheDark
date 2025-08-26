@@ -76,6 +76,20 @@ public class PlayersManager : NetworkSingleton<PlayersManager>
 
 	}
 
+	public void AllPlayerSetPos()
+	{
+		if (!IsServer)
+			return;
+		foreach (var player in players)
+		{
+			setter.SetUserPosServerRPC(player);
+		}
+	}
+
+	public void PlayerSetinit(Player player)
+	{
+		//미구현. 스테이터스나 넣으면 넣을듯.	
+	}
 
 	private IEnumerator findScript()
 	{
@@ -228,7 +242,7 @@ public class PlayersManager : NetworkSingleton<PlayersManager>
 			yield return new WaitForSeconds(BlackoutLeadSeconds);
 
 
-			// 3) 서버가 원래 위치로 복귀(텔레포트) -->> 이건 왜안됨?
+			// 3) 서버가 원래 위치로 복귀(텔레포트)
 			if (IsServer)
 				setter.SetUserPosServerRPC(originalPlayer);
 

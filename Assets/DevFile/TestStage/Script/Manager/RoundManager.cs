@@ -28,6 +28,9 @@ public class RoundManager : NetworkBehaviour
 		SharedData.Instance.area.OnValueChanged += SetAreaTMP;
 		SharedData.Instance.questQuota.OnValueChanged += SetquestQuotaTMP;
 		SharedData.Instance.moneyQuota.OnValueChanged += SetmoneyQuotaTMP;
+		SharedData.Instance.Money.OnValueChanged += SetmoneyQuotaTMP;
+
+		QuestManager.inst.nowClearedQuestTotal.OnValueChanged += SetquestQuotaTMP;
 
 		LocalizationSettings.SelectedLocaleChanged += SetLanguage;
 
@@ -45,9 +48,20 @@ public class RoundManager : NetworkBehaviour
 		summaryCanvs.gameObject.SetActive(false);
 
 		// 텍스트 초기화
-		roundClearResultTMP.text = "";
-		roundClearContentsTMP.text = "";
-		roundClearPSTMP.text = "";
+		/*		roundClearResultTMP.text = "";
+				roundClearContentsTMP.text = "";
+				roundClearPSTMP.text = "";*/
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Area"; // 사용하고자 하는 키
+		areaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.area.Value;
+
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Mission Quota"; // 사용하고자 하는 키
+		missionQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + QuestManager.inst.nowClearedQuestTotal.Value + " / " + SharedData.Instance.questQuota.Value;
+
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Money Quota"; // 사용하고자 하는 키
+		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.Money.Value + " / " + SharedData.Instance.moneyQuota.Value;
 	}
 
 	private void SetLanguage(Locale newLocale)
@@ -60,30 +74,72 @@ public class RoundManager : NetworkBehaviour
 
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Mission Quota"; // 사용하고자 하는 키
-		missionQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.questQuota.Value;
+		missionQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + QuestManager.inst.nowClearedQuestTotal.Value + " / " + SharedData.Instance.questQuota.Value;
 
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Money Quota"; // 사용하고자 하는 키
-		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.moneyQuota.Value;
+		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.Money.Value + " / " + SharedData.Instance.moneyQuota.Value;
+	}
+
+	private void SetAreaTMP(int oldValue, int newValue)
+	{
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Area"; // 사용하고자 하는 키
+		areaTMP.text = $"{localizedString.GetLocalizedString()} : " + newValue.ToString();
+	}
+	private void SetquestQuotaTMP(int oldValue, int newValue)
+	{
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Mission Quota"; // 사용하고자 하는 키
+		missionQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + QuestManager.inst.nowClearedQuestTotal + " / " + SharedData.Instance.questQuota.Value;
+	}
+	private void SetmoneyQuotaTMP(int oldValue, int newValue)
+	{
+		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+		localizedString.TableEntryReference = "Money Quota"; // 사용하고자 하는 키
+		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.Money.Value + " / " + SharedData.Instance.moneyQuota.Value;
 	}
 
 
+	#region 게임 클리어 관련
+	[ServerRpc]
+	public void GameClearCheckServerRpc()
+	{
+		bool missionQuotaCleared = QuestManager.inst.nowClearedQuestTotal.Value >= SharedData.Instance.questQuota.Value;
+		bool moneyQuotaCleared = SharedData.Instance.moneyQuota.Value <= SharedData.Instance.Money.Value; // 원하는 조건으로 수정
 
+		if (missionQuotaCleared && moneyQuotaCleared)
+		{
+			SharedData.Instance.area.Value += 1; // 다음 라운드로 진행
+		}
+		else
+		{
+			// 클리어 실패
+			Debug.Log("라운드 클리어 실패 - 조건 미달");
+			GameOverAnimeClientRpc();
+		}
+	}
 
 	[ServerRpc]
 	public void GameClearAnimeServerRpc()
 	{
-		GameClearAnimeClientRpc();
+		GameClearAnimeClientRpc(); // 클리어 연출 실행
 	}
+
+	[ClientRpc]
+	private void GameOverAnimeClientRpc()
+	{
+		StartCoroutine(GameFailRoutine());
+	}
+
 
 	[ClientRpc]
 	public void GameClearAnimeClientRpc()
 	{
-		StartCoroutine(GameClearRoutine());
-		Debug.Log("잉???");
+		StartCoroutine(GameOverRoutine());
 	}
 
-	private IEnumerator GameClearRoutine()
+	private IEnumerator GameOverRoutine()
 	{
 		summaryCanvs.gameObject.SetActive(true);
 
@@ -92,8 +148,16 @@ public class RoundManager : NetworkBehaviour
 		SetRoundClearPSTMP();
 
 		yield return null;
-	}
-
+	}	
+		
+	
+	private IEnumerator GameFailRoutine()
+	{
+		//yield return new WaitForSeconds();
+		yield return null;
+		UIAnimationManager.Instance.GameFailAnimation();
+	}	
+	
 	private void SetRoundClearSummaryTMP()
 	{
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
@@ -107,7 +171,7 @@ public class RoundManager : NetworkBehaviour
 	{
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Completed Mission"; // 사용하고자 하는 키
-		roundClearContentsTMP.text = $"{localizedString.GetLocalizedString()} : " + QuestManager.inst.nowClearedQuestTotal + "\n";
+		roundClearContentsTMP.text = $"{localizedString.GetLocalizedString()} : " + QuestManager.inst.nowClearedQuestTotal.Value + "\n";
 
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Killed Enemy"; // 사용하고자 하는 키
@@ -129,31 +193,13 @@ public class RoundManager : NetworkBehaviour
 		StartCoroutine(ScrambleIn(roundClearPSTMP.text, roundClearPSTMP));
 	}
 
-
-
-	private void SetAreaTMP(int oldValue, int newValue)
-	{
-		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
-		localizedString.TableEntryReference = "Area"; // 사용하고자 하는 키
-		areaTMP.text = $"{localizedString.GetLocalizedString()} : " + newValue.ToString();
-	}
-	private void SetquestQuotaTMP(int oldValue, int newValue)
-	{
-		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
-		localizedString.TableEntryReference = "Mission Quota"; // 사용하고자 하는 키
-		missionQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + newValue.ToString();
-	}
-	private void SetmoneyQuotaTMP(int oldValue, int newValue)
-	{
-		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
-		localizedString.TableEntryReference = "Money Quota"; // 사용하고자 하는 키
-		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + newValue.ToString();
-	}
+	#endregion
 
 	[ServerRpc]
 	public void GameClearServerRPC()
 	{		
 		SharedData.Instance.area.Value += 1;
+		QuestManager.inst.QuestReset();
 		//SharedData.Instance.questQuota.Value = 0;
 		//SharedData.Instance.moneyQuota.Value = 0;
 	}
