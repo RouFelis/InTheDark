@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine.UI;
 
@@ -93,7 +94,7 @@ public class Quest1 : QuestBase
 		if (hasMatchingObject)
 		{
 			Debug.Log("[TriggerLogger] 조건에 맞는 오브젝트가 있음 → 퀘스트 성공");
-			CompleteBoolChangeServerRpc(true);
+			QuestSucceedServerRpc();
 			ShowSuccessClientRpc(moveDuration);
 
 			foreach (var netObj in networkObjectsInZone)
@@ -127,7 +128,7 @@ public class Quest1 : QuestBase
 
 
 	// 디스폰을 위한 NetworkObject 추가
-	private System.Collections.IEnumerator MoveObjectOverTime(Transform objTransform, Vector3 startPos, Vector3 targetPos, float duration, NetworkObject netObjToDespawn)
+	private IEnumerator MoveObjectOverTime(Transform objTransform, Vector3 startPos, Vector3 targetPos, float duration, NetworkObject netObjToDespawn)
 	{
 		float elapsed = 0f;
 
@@ -149,7 +150,7 @@ public class Quest1 : QuestBase
 	}
 
 	// 클라이언트 측 UI 및 사운드 처리
-	private System.Collections.IEnumerator HandleQuestUISequence(bool isSuccess, float duration)
+	private IEnumerator HandleQuestUISequence(bool isSuccess, float duration)
 	{
 		if (monitor != null && loadingImage != null)
 			monitor.sprite = loadingImage;
@@ -175,7 +176,7 @@ public class Quest1 : QuestBase
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	protected override void QuestFailedServerRpc()
+	public override void QuestFailedServerRpc()
 	{
 		base.QuestFailedServerRpc();
 		ShowFailureClientRpc();

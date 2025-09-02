@@ -59,7 +59,9 @@ public class WithinSight : Conditional
 				//target.Value = element.transform.position;
 				target.Value = destination.position;
 				//pawn.Value = element.GetComponent<NetworkBehaviour>();
-				self.Target = player;
+				//self.Target = player;
+
+				self.SetAggroTargetServerRPC(player);
 
 				return TaskStatus.Success;
 			}

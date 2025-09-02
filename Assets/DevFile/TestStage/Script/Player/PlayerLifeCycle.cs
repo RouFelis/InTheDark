@@ -4,11 +4,6 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class PlayerLifeCycle : MonoBehaviour
 {
-    public event Action OnDieLocal;
-    public event Action OnDieEffects;
-    public event Action OnReviveLocal;
-    public static event Action OnDie;
-
     private PlayerNetworkData networkData;
     private PlayerDamageHandler damageHandler;
     private PlayerUIHandler uiHandler;
@@ -27,14 +22,14 @@ public class PlayerLifeCycle : MonoBehaviour
     public void BindLocalEvents(PlayerMicController micController)
     {
         if (micController == null) return;
-        OnDieEffects += ownerPlayer.DieEffect;
-        OnDieEffects += micController.Die;
-        OnReviveLocal += micController.Revive;
+        ownerPlayer.OnDieEffects += ownerPlayer.DieEffect;
+        ownerPlayer.OnDieEffects += micController.Die;
+        ownerPlayer.OnReviveLocal += micController.Revive;
     }
 
     public void UnbindEvents()
     {
-        OnDieEffects -= ownerPlayer.DieEffect;
+        ownerPlayer.OnDieEffects -= ownerPlayer.DieEffect;
     }
 
     public void LocalReviveStart()

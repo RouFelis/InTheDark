@@ -192,8 +192,8 @@ MonoBehaviour:
       - rid: 3671807161102762006
       - rid: 3671807161102762007
       - rid: 3671807161102762008
-      - rid: 7598830745204293632
-      - rid: 7598830745204293633
+      - rid: 8585672066069168128
+      - rid: 8585672066069168129
     m_RuntimeSettings:
       m_List: []
   renderingLayerNames:
@@ -277,47 +277,47 @@ MonoBehaviour:
         m_AfterPostProcessCustomPostProcesses:
           m_InjectionPoint: 2
           m_CustomPostProcessTypesAsString:
-          - TV_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - VHSScanlines_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
-          - UltimateVignette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
+          - Noise_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
           - CRTAperture_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
+          - VHS_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - CustomTexture_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - Glitch2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - EdgeNoise_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Glitch3_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Phosphor_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - PictureCorrection_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
           - RLProVHSRewind, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - ColormapPalette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          - OldFilm_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Glitch1_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Fisheye_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - UltimateVignette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
           - AnalogTVNoise_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
-          - VHS_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - Noise2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - EdgeNoise_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
           - Bleed_RLPRO_HDRP, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
-          - PictureCorrection_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          - PulsatingVignette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
-          - EdgeStretch_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
-          - Negative_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - Phosphor_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - Fisheye_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - Noise_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - Glitch2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - CinematicBars_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
+          - OldFilm2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Artefacts_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
           - Warp_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Negative_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - Jitter_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - LowRes_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - VHSScanlines_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
           - NTSCEncode_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
-          - Glitch3_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - OldFilm2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - OldFilm_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - Jitter_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - CustomTexture_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          - Noise2_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - TV_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+          - ColormapPalette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
-          - Glitch1_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - LowRes_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - Artefacts_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          - PulsatingVignette_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          - CinematicBars_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+          - EdgeStretch_RLPRO, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
             PublicKeyToken=null
     - rid: 3671807161102761990
       type: {class: RenderGraphSettings, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
@@ -777,38 +777,6 @@ MonoBehaviour:
         m_setupCS: {fileID: 7200000, guid: 33be2e9a5506b2843bdb2bdff9cad5e1, type: 3}
         m_preTaaCS: {fileID: 7200000, guid: a679dba8ec4d9ce45884a270b0e22dda, type: 3}
         m_taaCS: {fileID: 7200000, guid: 3923900e2b41b5e47bc25bfdcbcdc9e6, type: 3}
-    - rid: 7598830745204293632
-      type: {class: LightmapSamplingSettings, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
-      data:
-        m_Version: 1
-        m_UseBicubicLightmapSampling: 0
-    - rid: 7598830745204293633
-      type: {class: VrsRenderPipelineRuntimeResources, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
-      data:
-        m_TextureComputeShader: {fileID: 7200000, guid: cacb30de6c40c7444bbc78cb0a81fd2a, type: 3}
-        m_VisualizationShader: {fileID: 4800000, guid: 620b55b8040a88d468e94abe55bed5ba, type: 3}
-        m_VisualizationLookupTable:
-          m_Data:
-          - {r: 1, g: 0, b: 0, a: 1}
-          - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-          - {r: 1, g: 1, b: 1, a: 1}
-          - {r: 0, g: 1, b: 0, a: 1}
-          - {r: 0.75, g: 0.75, b: 0, a: 1}
-          - {r: 0, g: 0.75, b: 0.55, a: 1}
-          - {r: 0.5, g: 0, b: 0.5, a: 1}
-          - {r: 0.5, g: 0.5, b: 0.5, a: 1}
-          - {r: 0, g: 0, b: 1, a: 1}
-        m_ConversionLookupTable:
-          m_Data:
-          - {r: 1, g: 0, b: 0, a: 1}
-          - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-          - {r: 1, g: 1, b: 1, a: 1}
-          - {r: 0, g: 1, b: 0, a: 1}
-          - {r: 0.75, g: 0.75, b: 0, a: 1}
-          - {r: 0, g: 0.75, b: 0.55, a: 1}
-          - {r: 0.5, g: 0, b: 0.5, a: 1}
-          - {r: 0.5, g: 0.5, b: 0.5, a: 1}
-          - {r: 0, g: 0, b: 1, a: 1}
     - rid: 8556427327610290176
       type: {class: HDRenderPipelineRuntimeAssets, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
       data:
@@ -917,3 +885,35 @@ MonoBehaviour:
         m_SMAAAreaTex: {fileID: 2800000, guid: 92e0d85ab4eca874098e7fcf6f8f674e, type: 3}
         m_DefaultHDRISky: {fileID: 8900000, guid: 8253d41e6e8b11a4cbe77a4f8f82934d, type: 3}
         m_DefaultCloudMap: {fileID: 2800000, guid: 57a33fc2476a01644865bfde5f06e2f4, type: 3}
+    - rid: 8585672066069168128
+      type: {class: LightmapSamplingSettings, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
+      data:
+        m_Version: 1
+        m_UseBicubicLightmapSampling: 0
+    - rid: 8585672066069168129
+      type: {class: VrsRenderPipelineRuntimeResources, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
+      data:
+        m_TextureComputeShader: {fileID: 7200000, guid: cacb30de6c40c7444bbc78cb0a81fd2a, type: 3}
+        m_VisualizationShader: {fileID: 4800000, guid: 620b55b8040a88d468e94abe55bed5ba, type: 3}
+        m_VisualizationLookupTable:
+          m_Data:
+          - {r: 1, g: 0, b: 0, a: 1}
+          - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+          - {r: 1, g: 1, b: 1, a: 1}
+          - {r: 0, g: 1, b: 0, a: 1}
+          - {r: 0.75, g: 0.75, b: 0, a: 1}
+          - {r: 0, g: 0.75, b: 0.55, a: 1}
+          - {r: 0.5, g: 0, b: 0.5, a: 1}
+          - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+          - {r: 0, g: 0, b: 1, a: 1}
+        m_ConversionLookupTable:
+          m_Data:
+          - {r: 1, g: 0, b: 0, a: 1}
+          - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+          - {r: 1, g: 1, b: 1, a: 1}
+          - {r: 0, g: 1, b: 0, a: 1}
+          - {r: 0.75, g: 0.75, b: 0, a: 1}
+          - {r: 0, g: 0.75, b: 0.55, a: 1}
+          - {r: 0.5, g: 0, b: 0.5, a: 1}
+          - {r: 0.5, g: 0.5, b: 0.5, a: 1}
+          - {r: 0, g: 0, b: 1, a: 1}

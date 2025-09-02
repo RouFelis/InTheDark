@@ -16,6 +16,9 @@ namespace InTheDark.Prototypes
 	public class ChargeSkillManager : NetworkBehaviour
 	{
 		[SerializeField]
+		private float _range;
+
+		[SerializeField]
 		private float _duration;
 
 		[SerializeField]
@@ -82,9 +85,29 @@ namespace InTheDark.Prototypes
 				var target = _pawn.Target;
 				var isCooldown = Mathf.Approximately(_cooldown.Value, 0.0F);
 
-				var isEnable = target && isCooldown && !_isRunning;
+				var isEnable = target && isCooldown && !_isRunning && IsTargetNearby;
 
 				return isEnable;
+			}
+		}
+
+		public bool IsTargetNearby
+		{
+			get
+			{
+				var target = _pawn.Target;
+
+				if (!target)
+				{
+					return false;
+				}
+
+				var direction = target.transform.position - transform.position;
+				var isNearBy = target ? Vector3.Distance(target.transform.position, transform.position) <= _range : false;
+				var isOccultation = Physics.Raycast(transform.position, direction, out var hit, _range);
+				var isAttackable = isNearBy && isOccultation && hit.collider.CompareTag("Player");
+
+				return isAttackable;
 			}
 		}
 
@@ -237,7 +260,13 @@ namespace InTheDark.Prototypes
 			_onClash.Add(player);
 
 			if (!player.IsDead)
-				yield return StartCoroutine(player.SetStun(_flightTime, _flightSpeed, _knockbackCurve, _knockbackY , direction));
+			{
+				//player.TakeDamage(1.234F, null);
+
+				//yield return StartCoroutine(player.SetStun(_flightTime, _flightSpeed, _knockbackCurve, _knockbackY , direction));
+
+				OnClashPlayerRPC(player, direction);
+			}
 
 			_onClash.Remove(player);
 		}
@@ -332,7 +361,7 @@ namespace InTheDark.Prototypes
 
 					transform.rotation = lookRotation;
 
-					_controller.Move(speed * normalized * Time.deltaTime - new Vector3(0.0F, -20.0F, 0.0F));
+					_controller.Move(speed * normalized * Time.deltaTime - new Vector3(0.0F, 20.0F, 0.0F));
 
 					_time.Value += Time.deltaTime;
 
@@ -347,6 +376,19 @@ namespace InTheDark.Prototypes
 			}
 
 			yield return null;
+		}
+
+		[Rpc(SendTo.Server)]
+		public void OnClashPlayerRPC(NetworkBehaviourReference reference, Vector3 direction)
+		{
+			var isEnable = reference.TryGet(out Player player);
+
+			if (isEnable)
+			{
+				player.TakeDamage(1.234F, null);
+
+				StartCoroutine(player.SetStun(_flightTime, _flightSpeed, _knockbackCurve, _knockbackY, direction));
+			}
 		}
 
 		[Rpc(SendTo.Server)]

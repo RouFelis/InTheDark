@@ -30,14 +30,8 @@ public class DieCameraEffect : UIAnimation
         gameObject.SetActive(false);
 	}
 
-    public override void StartEffect()
-	{
-        base.StartEffect();
 
-        StartCoroutine(PlayIntroSequence());
-    }
-
-    IEnumerator PlayIntroSequence()
+    protected override IEnumerator PlayRoutine()
     {
         // Step 1: È®´ë
         uiRoot.localScale = originalScale * scaleUpSize;
@@ -52,8 +46,9 @@ public class DieCameraEffect : UIAnimation
 
         if (IsLastAnimation)
         {
-            ActionInvoke();
+            FinishAnimation(true);
         }
+        FinishAnimation();
     }
 
 }

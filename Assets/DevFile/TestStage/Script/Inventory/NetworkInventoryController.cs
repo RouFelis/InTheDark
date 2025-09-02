@@ -154,6 +154,7 @@ public class NetworkInventoryController : NetworkBehaviour
         networkItems.OnListChanged += OnNetworkItemsChanged; // 네트워크 아이템 리스트 변경 이벤트 구독
         InitializeSlotImages();
         UpdateSlotSelection();
+        player.OnDieEffects += HandleDieDropAllItems;
     }
 
     public override void OnDestroy()
@@ -212,7 +213,8 @@ public class NetworkInventoryController : NetworkBehaviour
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(itemNetworkObjectId, out NetworkObject itemNetworkObject))
         {
-            // 새로운 아이템을 할당하기 전에 슬롯이 비어 있는지 확인
+            // 앞으로 이전
+/*            // 새로운 아이템을 할당하기 전에 슬롯이 비어 있는지 확인
             if (!EqualityComparer<InventoryItemData>.Default.Equals(networkItems[slotIndex], default(InventoryItemData)))
             {
                 bool slotFound = false;
@@ -231,7 +233,7 @@ public class NetworkInventoryController : NetworkBehaviour
                     Debug.Log("빈 슬롯을 찾을 수 없음");
                     return;
                 }
-            }
+            }*/
 
             PickupItem item = itemNetworkObject.GetComponent<PickupItem>();
 
@@ -298,10 +300,23 @@ public class NetworkInventoryController : NetworkBehaviour
 
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(itemNetworkObjectId, out NetworkObject itemNetworkObject))
         {
-            ItemInputRequestServerRpc(slotIndex, itemNetworkObjectId);
-            RequestDespawnItemServerRpc(itemNetworkObjectId);
-            RequestItemSetHand(itemNetworkObjectId);
+            if (GrabedObject == null)
+			{
+                RequestItemSetHand(itemNetworkObjectId);
+                ItemInputRequestServerRpc(slotIndex, itemNetworkObjectId);
+            }
+            else
+            {
+                // 손에 이미 아이템이 있으면 → 인벤토리만 기록하고, 오브젝트는 삭제
+                ItemInputRequestServerRpc(slotIndex, itemNetworkObjectId);
+                RequestDespawnItemServerRpc(itemNetworkObjectId);
+            }
+
             UpdateSlotSelection();
+            /*            ItemInputRequestServerRpc(slotIndex, itemNetworkObjectId);
+                        RequestDespawnItemServerRpc(itemNetworkObjectId);
+                        RequestItemSetHand(itemNetworkObjectId);
+                        UpdateSlotSelection();*/
         }
         else
         {
@@ -314,7 +329,7 @@ public class NetworkInventoryController : NetworkBehaviour
     {
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(itemNetworkObjectId, out NetworkObject itemNetworkObject))
         {
-            itemNetworkObject.transform.SetParent(this.NetworkObject.transform, true);
+            itemNetworkObject.Despawn();
         }
     }
 
@@ -331,8 +346,6 @@ public class NetworkInventoryController : NetworkBehaviour
     private void RequestSlotChangeServerRpc(int newSlot , ulong PlayerID)
     {
         selectedSlot.Value = newSlot;
-
-
 
 		if (GrabedObject != null)
 		{
@@ -363,6 +376,7 @@ public class NetworkInventoryController : NetworkBehaviour
 				UpdateSlotSelectionClientRpc(newSlot, networkObject.NetworkObjectId);
 
                 droppedItem.GetComponent<GrabHelper>().AttachToPlayerServerRpc(PlayerID);
+                Debug.Log("테스트 1111111111111");
             }
         }
     }
@@ -507,16 +521,81 @@ public class NetworkInventoryController : NetworkBehaviour
             {
                 if (hit.transform.CompareTag("Item"))
                 {
+                    int test111 = 0;
+                    // 새로운 아이템을 할당하기 전에 슬롯이 비어 있는지 확인
+                    if (!EqualityComparer<InventoryItemData>.Default.Equals(networkItems[selectedSlot.Value], default(InventoryItemData)))
+                    {
+                        bool slotFound = false;
+                        for (int i = 0; i < networkItems.Count; i++)
+                        {
+                            if (EqualityComparer<InventoryItemData>.Default.Equals(networkItems[i], default(InventoryItemData)))
+                            {
+                                //selectedSlot.Value = i;
+                                test111 = i;
+                                slotFound = true;
+                                break;
+                            }
+                        }
+
+                        if (!slotFound)
+                        {
+                            Debug.Log("빈 슬롯을 찾을 수 없음");
+                            return;
+                        }
+                    }
+
                     PickupItem item = hit.transform.GetComponent<PickupItem>();
                     if (item != null && item.GetComponent<NetworkObject>() != null)
                     {
+
                         ulong itemNetworkObjectId = item.GetComponent<NetworkObject>().NetworkObjectId;
-                        RequestPickupItemServerRpc(itemNetworkObjectId, NetworkManager.Singleton.LocalClientId, selectedSlot.Value);
+                        RequestPickupItemServerRpc(itemNetworkObjectId, NetworkManager.Singleton.LocalClientId, test111);
                     }
                 }
             }
         }
     }
+
+    private void HandleDieDropAllItems()
+    {
+        Vector3 cameraPosition = Camera.main.transform.position;
+        Vector3 cameraForward = Camera.main.transform.forward.normalized;
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            InventoryItem currentItem = items[i];
+            if (currentItem == null)
+                continue;
+
+            if (isPlacingItem && currentSelectedItem == currentItem)
+            {
+                currentPlaceableItemManager.PreviewDestroy();
+                isPlacingItem = false;
+                currentSelectedItem = null;
+                Test = null;
+            }
+
+            // 카메라 정면 + 랜덤 방향 벡터
+            Vector3 randomSpread = new Vector3(
+                Random.Range(-0.5f, 0.5f),
+                Random.Range(0f, 0.5f),  // 살짝 위로도 튀게
+                Random.Range(-0.5f, 0.5f)
+            );
+
+            Vector3 throwDirection = (cameraForward + randomSpread).normalized;
+
+            // 드롭 위치 (플레이어 앞에서 랜덤 오프셋)
+            Vector3 dropPosition = transform.position + throwDirection * Random.Range(1.2f, 2.5f);
+            Quaternion dropRotation = Quaternion.LookRotation(throwDirection);
+
+            // 서버에 드롭 요청
+            DropItemServerRpc(currentItem.itemName, dropPosition, dropRotation, i);
+
+            // 인벤토리 비우기
+            items[i] = null;
+        }
+    }
+
 
     //아이템 내려놓기(슬롯지정하기).
     private void HandleDropItem()

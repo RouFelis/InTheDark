@@ -37,6 +37,15 @@ public class Interacter : NetworkBehaviour
         if (IsOwner)
         {
             infoText.gameObject.SetActive(false);
+            infoText.enabled = false;
+        }
+    }
+
+	private void OnEnable()
+	{
+        if (IsOwner)
+        {
+            infoText.enabled = true;
         }
     }
 
@@ -128,5 +137,6 @@ public class Interacter : NetworkBehaviour
         // 초기에는 픽업 텍스트 숨기기
         infoText.gameObject.SetActive(false);
     }
+
 
 }

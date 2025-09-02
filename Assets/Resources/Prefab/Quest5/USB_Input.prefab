@@ -910,6 +910,7 @@ MonoBehaviour:
   rotationConstraint: {fileID: -7000812829976728627}
   networkTransform: {fileID: 6421790484892122286}
   networkRigidbody: {fileID: 0}
+  boxCollider: {fileID: 6650909822935177849}
   player: {fileID: 0}
 --- !u!1818360608 &-1511296710285311674
 PositionConstraint:

@@ -26,6 +26,7 @@ public class Computer_Quest5 : InteractableObject_NonNet
             }
             else
             {
+                quest5.QuestFailedServerRpc();
                 Debug.LogWarning("플레이어 오브젝트가 null입니다.");
             }
         }

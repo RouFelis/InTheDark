@@ -43,7 +43,9 @@ public class HeardSound : Conditional
 				//target.Value = element.transform.position;
 				target.Value = destination.position;
 				//pawn.Value = element.GetComponent<NetworkBehaviour>();
-				self.Target = element.GetComponent<Player>();
+				//self.Target = element.GetComponent<Player>();
+
+				self.SetAggroTargetServerRPC(element.GetComponent<Player>());
 
 				Debug.Log($"{self.Target}... I Heard You...");
 

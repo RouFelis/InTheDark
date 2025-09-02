@@ -107,6 +107,7 @@ public class Quest4 : QuestBase
         }
     }
 
+    // 비밀번호 확인하기
     public void SubmitInput()
     {
         if (!IsOwner || currentInput.Length < 4)
@@ -118,22 +119,25 @@ public class Quest4 : QuestBase
         CheckPasswordServerRpc(new FixedString32Bytes(currentInput));
     }
 
+    // 비밀번호 확인[서버]
     [ServerRpc]
     void CheckPasswordServerRpc(FixedString32Bytes input)
     {
         bool isCorrect = input == generatedPassword.Value;
         if (isCorrect)
         {
-            isCompleted.Value = true;
+            QuestSucceedServerRpc();
             CheckPasswordClientRpc(true, input, generatedPassword.Value);
             StartCoroutine(MoveDoor());
         }
         else
         {
+            QuestFailedServerRpc();
             CheckPasswordClientRpc(false, input, generatedPassword.Value);
         }
     }
 
+    // 마스터키.
     [ServerRpc(RequireOwnership = false)]
     public void CardPassServerRpc()
     {
@@ -147,6 +151,7 @@ public class Quest4 : QuestBase
         StartCoroutine(MoveDoor());
     }
 
+    // 클라이언트 패스워드 효과
     [ClientRpc]
     void CheckPasswordClientRpc(bool isCorrect, FixedString32Bytes input, FixedString32Bytes answer)
     {
@@ -194,6 +199,7 @@ public class Quest4 : QuestBase
         }
     }
 
+    // 비번 효과
     IEnumerator HandleCorrectPassword()
     {
         // 초록색으로 변경 + 정답 사운드
@@ -207,6 +213,7 @@ public class Quest4 : QuestBase
         yield return null;
     }
 
+    // 문효과
     private IEnumerator MoveDoor()
     {
         float elapsed = 0f;

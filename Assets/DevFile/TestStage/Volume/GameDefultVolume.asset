@@ -137,7 +137,7 @@ MonoBehaviour:
     m_Value: 3
   intensity:
     m_OverrideState: 1
-    m_Value: 0.194
+    m_Value: 0.143
   response:
     m_OverrideState: 1
     m_Value: 0
@@ -329,7 +329,7 @@ MonoBehaviour:
     m_Value: 0.136
   cropToFit:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
 --- !u!114 &-4420585915364343767
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -391,10 +391,10 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.244
+    m_Value: 0.262
   downscale:
     m_OverrideState: 1
-    m_Value: 0.263
+    m_Value: 0.238
   referenceWidth: 1920
   mask:
     m_OverrideState: 1
@@ -437,7 +437,7 @@ MonoBehaviour:
   active: 1
   rotation:
     m_OverrideState: 0
-    m_Value: 180
+    m_Value: 0
   skyIntensityMode:
     m_OverrideState: 1
     m_Value: 2
@@ -493,7 +493,7 @@ MonoBehaviour:
       multiplyValue: 1
   sunInitialRotation:
     m_OverrideState: 0
-    m_Value: -180
+    m_Value: 0
   lockSun:
     m_OverrideState: 1
     m_Value: 1
@@ -704,7 +704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90ec1528d7d6db145a072f2bef835b66, type: 3}
   m_Name: ColormapPalette_RLPRO
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   Opacity:
     m_OverrideState: 1
     m_Value: 0.465
@@ -819,53 +819,12 @@ MonoBehaviour:
   - {fileID: 3240277295885423329}
   - {fileID: 7718180014120281268}
   - {fileID: -2341740892264699086}
-  - {fileID: 380944318542684308}
   - {fileID: 5972430389968117337}
   - {fileID: -8611810905597652686}
   - {fileID: -5059218968807000778}
   - {fileID: -1143297975336896362}
   - {fileID: -4333545222144138846}
   - {fileID: -4219785702637165122}
---- !u!114 &380944318542684308
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c1be1b6c95cd2e41b27903b9270817f, type: 3}
-  m_Name: Vignette
-  m_EditorClassIdentifier: 
-  active: 0
-  mode:
-    m_OverrideState: 1
-    m_Value: 0
-  color:
-    m_OverrideState: 1
-    m_Value: {r: 1, g: 0, b: 0, a: 1}
-  center:
-    m_OverrideState: 0
-    m_Value: {x: 0.5, y: 0.5}
-  intensity:
-    m_OverrideState: 1
-    m_Value: 0
-  smoothness:
-    m_OverrideState: 1
-    m_Value: 1
-  roundness:
-    m_OverrideState: 0
-    m_Value: 1
-  rounded:
-    m_OverrideState: 0
-    m_Value: 0
-  mask:
-    m_OverrideState: 0
-    m_Value: {fileID: 0}
-  opacity:
-    m_OverrideState: 0
-    m_Value: 1
 --- !u!114 &1188638646920265217
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -1058,7 +1017,7 @@ MonoBehaviour:
   active: 1
   _posterizeAmount:
     m_OverrideState: 1
-    m_Value: 500
+    m_Value: 200
   _isEnabled:
     m_OverrideState: 1
     m_Value: 1

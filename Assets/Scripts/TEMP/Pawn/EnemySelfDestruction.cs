@@ -53,13 +53,63 @@ namespace InTheDark.Prototypes
 		//서버 검증 X ->
 		protected override async UniTask OnAttack(IHealth target)
 		{
+			OnExplosionServerRPC();
+
+			// 그냥 알림뜨는거 보기 싫어서 넣음
+			// UniTask 조만간 제거 예정
+			await UniTask.NextFrame();
+
+			//var speed = _agent.speed;
+
+			//_agent.speed = speed * _explosingSpeedRatio;
+
+			//await OnExploseHerald().ToUniTask();
+
+			//OnExplosionClientRPC();
+
+			//_size = Physics.OverlapSphereNonAlloc(transform.position, _radius, _colliders, _targetLayer);
+
+			//for (var i = 0; i < _size; i++)
+			//{
+			//	var collider = _colliders[i];
+			//	var player = collider?.GetComponent<Player>();
+
+			//	if (player)
+			//	{
+			//		player.TakeDamage(_damage, null);
+
+			//		if (!player.IsDead)
+			//		{
+			//			var direction = player.transform.position - transform.position;
+			//			var pushDir = direction.normalized;
+
+			//			var flightTime = 1.0F;
+			//			var flightSpeed = 10.0F;
+
+			//			var knockBackHeight = 10.0F;
+
+			//			await player.SetStun(flightTime, flightSpeed, _knockbackCurve, knockBackHeight, direction).ToUniTask();
+			//		}
+
+			//		Debug.Log($"{player.name}({player.OwnerClientId})가 폭발에 휩쓸림.");
+			//	}
+
+			//	_colliders[i] = default;
+			//}
+
+			//Debug.Log("죽을게");
+
+			//_pawn.Die();
+		}
+
+		[Rpc(SendTo.Server)]
+		private void OnExplosionServerRPC()
+		{
 			var speed = _agent.speed;
 
 			_agent.speed = speed * _explosingSpeedRatio;
 
-			await OnExploseHerald().ToUniTask();
-
-			OnExplosionClientRPC();
+			StartCoroutine(OnExploseHerald());
 
 			_size = Physics.OverlapSphereNonAlloc(transform.position, _radius, _colliders, _targetLayer);
 
@@ -82,7 +132,7 @@ namespace InTheDark.Prototypes
 
 						var knockBackHeight = 10.0F;
 
-						await player.SetStun(flightTime, flightSpeed, _knockbackCurve, knockBackHeight, direction).ToUniTask();
+						StartCoroutine(player.SetStun(flightTime, flightSpeed, _knockbackCurve, knockBackHeight, direction));
 					}
 
 					Debug.Log($"{player.name}({player.OwnerClientId})가 폭발에 휩쓸림.");
@@ -126,6 +176,8 @@ namespace InTheDark.Prototypes
 
 				yield return null;
 			}
+
+			OnExplosionClientRPC();
 		}
 
 		private void OnDrawGizmos()

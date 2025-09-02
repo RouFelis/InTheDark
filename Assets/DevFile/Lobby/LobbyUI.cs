@@ -79,30 +79,6 @@ public class LobbyUI : NetworkBehaviour
 				Logger.Instance?.LogInfo("Client could not be started...");
 			}
 		});
-
-		testBtn.onClick.AddListener(async () =>
-		{
-			OnSceneLoadStarted();
-
-			if (TestRelay.Instance.IsRelayEnabled && !string.IsNullOrEmpty(joinCodeInput.text))
-			{
-				await TestRelay.Instance.JoinRelay(joinCodeInput.text);
-			}
-
-			if (NetworkManager.Singleton.StartClient())
-			{
-				Logger.Instance?.LogInfo("Client started...");
-				NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoadCompleted;
-				NetworkManager.Singleton.SceneManager.LoadScene("GameRoom", LoadSceneMode.Single);
-
-				//PlayersManager.Instance.AddEvent();
-			}
-			else
-			{
-				OnSceneLoadFaill("GameError_1");
-				Logger.Instance?.LogInfo("Client could not be started...");
-			}
-		});
 	}
 
 

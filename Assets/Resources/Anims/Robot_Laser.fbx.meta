@@ -3,7 +3,12 @@ guid: bfeef4964744c1640a35ba6d1858b382
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 31e58547f9825c5439af1d95126ba6ab, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -262,7 +267,7 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1

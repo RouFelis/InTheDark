@@ -11,6 +11,12 @@ public class Quest3 : QuestBase
     [Header("UI")]
     [SerializeField] private TMP_Text displayText;
 
+    [Header("Sound")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip addSound;
+    [SerializeField] private AudioClip successSound;
+    [SerializeField] private AudioClip failSound;
+
     [Header("Puzzle Settings")]
     [SerializeField] private int totalPuzzles = 3;
     private int currentPuzzleIndex = 0;
@@ -61,7 +67,8 @@ public class Quest3 : QuestBase
         history.Add("> Launching tool: /System/Democracy/F1/Reset.exe");
     }
 
-    // 서버: 숫자 추가 입력
+
+    // 숫자 추가 입력
     [ServerRpc(RequireOwnership = false)]
     public void AddDigitServerRpc(int digit)
     {
@@ -71,10 +78,11 @@ public class Quest3 : QuestBase
         if (current.Length < 3)
         {
             currentInput.Value = current + digit;
+            PlayAddSoundClientRpc();
         }
     }
 
-    // 서버: 제출 버튼 입력
+    // 제출 버튼 입력
     [ServerRpc(RequireOwnership = false)]
     public void SubmitInputServerRpc(ServerRpcParams rpcParams = default)
     {
@@ -99,6 +107,8 @@ public class Quest3 : QuestBase
                 return;
             }
 
+            SoundPlaySuccessClientRpc();
+
             currentInput.Value = "";
 
             // 정답 시 해킹 효과 실행 (문제 갱신은 효과 종료 후 서버가 수행)
@@ -107,6 +117,8 @@ public class Quest3 : QuestBase
         }
         else
         {
+            QuestFailedServerRpc();
+            SoundPlayFailureClientRpc();
             history.Add("Incorrect.");
         }
 
@@ -211,6 +223,37 @@ public class Quest3 : QuestBase
             lines.RemoveAt(0);
 
         return string.Join("\n", lines);
+    }
+
+    [ClientRpc]
+    private void PlayAddSoundClientRpc()
+    {
+        audioSource.clip = addSound;
+        audioSource.Play();
+    }
+
+    [ClientRpc]
+    private void SoundPlaySuccessClientRpc()
+    {
+        audioSource.clip = successSound;
+        audioSource.Play();
+    }
+
+    [ClientRpc]
+    private void SoundPlayFailureClientRpc()
+    {
+        audioSource.clip = failSound;
+        audioSource.Play();
+    }  
+    
+
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public override void QuestFailedServerRpc()
+    {
+        base.QuestFailedServerRpc();
+        SoundPlayFailureClientRpc();
     }
 }
 

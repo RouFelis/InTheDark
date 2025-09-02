@@ -43,14 +43,8 @@ public class AllDieCameraEffect : UIAnimation
         gameObject.SetActive(false);
 	}
 
-    public override void StartEffect()
-	{
-        base.StartEffect();
 
-        StartCoroutine(PlayIntroSequence());
-    }
-
-    IEnumerator PlayIntroSequence()
+    protected override IEnumerator PlayRoutine()
     {
         // Step 1: È®´ë
         uiRoot.localScale = originalScale * scaleUpSize;
@@ -75,10 +69,11 @@ public class AllDieCameraEffect : UIAnimation
 
         yield return new WaitForSeconds(2.5f);
 
-		if (IsLastAnimation)
-		{
-            ActionInvoke();
+        if (IsLastAnimation)
+        {
+            FinishAnimation(true);
         }
+        FinishAnimation();
     }
 
     IEnumerator ShakeEffect()

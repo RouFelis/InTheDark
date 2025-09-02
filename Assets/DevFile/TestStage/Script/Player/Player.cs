@@ -34,7 +34,6 @@ public class Player : playerMoveController, IHealth, ICharacter
     [SerializeField] private NetworkRagdollController netRagdollController;
     [SerializeField] public List<MonoBehaviour> dieEnableMonoBehaviorScripts;
     [SerializeField] public List<NetworkBehaviour> dieEnableNetworkBehaviorScripts;
-    [SerializeField] private UIAnimationManager uiAniManager;
     [SerializeField] private AnimationRelay animationRelay;
 
     private Volume postProcessingVolume;
@@ -48,7 +47,6 @@ public class Player : playerMoveController, IHealth, ICharacter
 
     private HashSet<string> destroySceneNames;
 
-    // Events (restored)
     public event Action OnDataChanged;
     public event Action OnDieLocal;
     public event Action OnDieEffects;
@@ -113,23 +111,30 @@ public class Player : playerMoveController, IHealth, ICharacter
         if (!uiHandler) uiHandler = GetComponent<PlayerUIHandler>();
         if (!lifeCycle) lifeCycle = GetComponent<PlayerLifeCycle>();
 
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
         StartCoroutine(WaitSpawnForInit());
     }
 
-	private IEnumerator WaitSpawnForInit()
-	{
-		yield return new WaitForSeconds(0.25f);
+    private IEnumerator WaitSpawnForInit()
+    {
+        yield return new WaitForSeconds(1f);
 
-		// Initialize subsystems
-		networkData.Initialize(this);
-		damageHandler.Initialize(this, stats, networkData, uiHandler);
-		uiHandler.Initialize(this, stats);
-		lifeCycle.Initialize(this, networkData, damageHandler, uiHandler);
+        // Initialize subsystems
+        networkData.Initialize(this);
+        uiHandler.Initialize(this, stats);
+        damageHandler.Initialize(this, stats, networkData, uiHandler);
+        lifeCycle.Initialize(this, networkData, damageHandler, uiHandler);
 
         if (IsOwner)
         {
             isMyCharacter = true;
             Name = FindAnyObjectByType<PlayerIDManager>().PlayerName;
+            networkData.SetName(Name);
             micController = FindAnyObjectByType<PlayerMicController>();
             lifeCycle.BindLocalEvents(micController);
 
@@ -189,6 +194,7 @@ public class Player : playerMoveController, IHealth, ICharacter
     #region Die
     public void Die() => StartCoroutine(DieSequence());
 
+    //죽었을 때 발동!
     private IEnumerator DieSequence()
     {
         OnDieEffects?.Invoke();
@@ -196,7 +202,7 @@ public class Player : playerMoveController, IHealth, ICharacter
 
         if (IsOwner)
         {
-            uiAniManager?.DieAnimation();
+            UIAnimationManager.Instance.DieAnimation();
             SetDieScirpt(false);
         }
 
@@ -248,8 +254,8 @@ public class Player : playerMoveController, IHealth, ICharacter
     /// </summary>
     public void SetPlayerDieView(bool value)
     {
-        if (firstPersonObject != null) firstPersonObject.gameObject.SetActive(value);
-        if (thirdPersonObject != null) thirdPersonObject.gameObject.SetActive(!value);
+        /*  if (firstPersonObject != null) firstPersonObject.gameObject.SetActive(value);
+          if (thirdPersonObject != null) thirdPersonObject.gameObject.SetActive(!value);*/
 
         if (camTarget != null) camTarget.gameObject.SetActive(value);
         if (spotlightControl != null)
@@ -274,14 +280,7 @@ public class Player : playerMoveController, IHealth, ICharacter
     // For revive sequence called by other managers
     public IEnumerator ReviveSequence()
     {
-        if (IsOwner)
-        {
-            // 죽음 관련 스크립트 다시 활성화
-            SetDieScirpt(true);
-
-            // 카메라 및 무기 라이트 초기화
-            SetPlayerDieView(false); // 다시 3인칭으로
-        }
+        ReviveLayerClientRpc();
 
         // ragdoll 상태 해제
         netRagdollController?.ReviveServerRpc();
@@ -292,11 +291,30 @@ public class Player : playerMoveController, IHealth, ICharacter
 
         yield return null;
 
+        ReviveSetClientRpc();
+    }
+
+    [ClientRpc]
+    private void ReviveSetClientRpc()
+	{
         if (IsOwner)
         {
             networkData.SetHealthServerRpc(stats.maxHealth);
             SetAimMode(); // 조준 가능 상태로 전환
             OnReviveLocal?.Invoke();
+        }
+    }
+
+    [ClientRpc]
+    private void ReviveLayerClientRpc()
+	{
+        if (IsOwner)
+        {
+            // 죽음 관련 스크립트 다시 활성화
+            SetDieScirpt(true);
+
+            // 카메라 및 무기 라이트 초기화
+            SetPlayerDieView(false); // 다시 3인칭으로
         }
     }
 
@@ -306,7 +324,7 @@ public class Player : playerMoveController, IHealth, ICharacter
         target.layer = layer;
         foreach (Transform child in target.transform) SetLayers(child.gameObject, layer);
     }
-    // end Player class
+	// end Player class
 }
 
 [Serializable]

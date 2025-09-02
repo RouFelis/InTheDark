@@ -7,24 +7,27 @@ namespace InTheDark.Prototypes
     // ¾Æ
     public class EnemyAggroHandler : NetworkBehaviour
     {
-		private NetworkVariable<NetworkBehaviourReference> _target = new NetworkVariable<NetworkBehaviourReference>();
+		[SerializeField]
+		private EnemyPrototypePawn _pawn;
 
-        public Player Target
-        {
-            get
-            {
-                var isEnable = _target.Value.TryGet(out Player player);
+		//private NetworkVariable<NetworkBehaviourReference> _target = new NetworkVariable<NetworkBehaviourReference>();
 
-				return player;
-            }
+   //     public Player Target
+   //     {
+   //         get
+   //         {
+   //             var isEnable = _target.Value.TryGet(out Player player);
 
-            set
-            {
-                if (IsServer)
-                {
-					_target.Value = value;
-				}
-			}
-        }
+			//	return player;
+   //         }
+
+   //         set
+   //         {
+   //             if (IsServer)
+   //             {
+			//		_target.Value = value;
+			//	}
+			//}
+   //     }
 	} 
 }

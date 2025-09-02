@@ -87,9 +87,9 @@ public class GameTestRoom : InteractableObject
 
 		yield return new WaitForSeconds(6f);
 
-		roundManager.GameClearAnime();
+        roundManager.GameClearAnimeServerRpc();
 
-		StartCoroutine(PlayersManager.Instance.RespawnPlayers(true));
+        StartCoroutine(PlayersManager.Instance.RespawnPlayers(true));
         Debug.Log("테스트 Fail");
 
 		yield return new WaitForSeconds(7f);
@@ -114,8 +114,9 @@ public class GameTestRoom : InteractableObject
         roundManager.GameClearServerRPC();
 
 
-		//1. 게임 정보 취합 (돈) 애니메이션 재생
-		roundManager.GameClearAnime();
+        //1. 게임 정보 취합 (돈) 애니메이션 재생    
+        roundManager.GameClearAnimeServerRpc();
+
 
 
         //2. 안에있는 플레이어들 위치 텔레포트 (부활)     
