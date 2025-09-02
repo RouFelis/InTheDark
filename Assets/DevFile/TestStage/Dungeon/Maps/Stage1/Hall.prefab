@@ -2215,6 +2215,10 @@ PrefabInstance:
       propertyPath: 'BlockerSceneObjects.Array.data[0]'
       value: 
       objectReference: {fileID: 4255618072844646391}
+    - target: {fileID: 8600691992923320857, guid: 29100a21734f174458bbd8032c1b6952, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8823886993235652073, guid: 29100a21734f174458bbd8032c1b6952, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
