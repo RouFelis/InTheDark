@@ -43,6 +43,10 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private float _radius;
 
+		// 밑 = 몬스터 생성 수 조절
+		[SerializeField]
+		private float _logBase = Mathf.Sqrt(2.0F);
+
 		[SerializeField]
 		private AIGenerateData[] _stage;
 
@@ -97,15 +101,15 @@ namespace InTheDark.Prototypes
 				Game.OnDungeonEnter += OnDungeonEnter;
 				Game.OnDungeonExit += OnDungeonExit;
 
-				if (_isLocked.Value)
-				{
-					//Debug.Log("jdhfjdsfjdhfj");
+				//if (_isLocked.Value)
+				//{
+				//	//Debug.Log("jdhfjdsfjdhfj");
 
-					foreach (var enemyRef in _spawned)
-					{
-						SpawnInternal(enemyRef, GetRandomPositionInNavMesh(), Quaternion.identity);
-					}
-				}
+				//	foreach (var enemyRef in _spawned)
+				//	{
+				//		SpawnInternal(enemyRef, GetRandomPositionInNavMesh(), Quaternion.identity);
+				//	}
+				//}
 
 
 
@@ -180,9 +184,30 @@ namespace InTheDark.Prototypes
 		[Rpc(SendTo.Server)]
 		private void OnDungeonEnterRPC(int buildIndex)
 		{
+			var area = buildIndex + 1;
+
 			if (!_isLocked.Value)
 			{
-				var data = _stage[buildIndex];
+				Debug.Log(area + "번 던전");
+
+				var temp = 1 + Mathf.Log(area, _logBase);
+				var max = Mathf.Floor(temp);
+
+				for (var i = 0; i < max; i++)
+				{
+					var index = UnityEngine.Random.Range(0, _stage.Length);
+					var data = _stage[index];
+
+					Debug.Log(index + "번 몬스터 선택");
+
+					foreach (var trigger in data.Triggers)
+					{
+						//SpawnEnemyRPC(index, GetRandomPositionInNavMesh(), Quaternion.identity);
+						trigger.OnUpdate();
+					}
+				}
+
+				//var data = _stage[buildIndex];
 
 				//_isLocked.Value = true;
 
@@ -196,11 +221,11 @@ namespace InTheDark.Prototypes
 				//	_spawned.Add(enemyRef);
 				//}
 
-				foreach (var trigger in data.Triggers)
-				{
-					//SpawnEnemyRPC(index, GetRandomPositionInNavMesh(), Quaternion.identity);
-					trigger.OnUpdate();
-				}
+				//foreach (var trigger in data.Triggers)
+				//{
+				//	//SpawnEnemyRPC(index, GetRandomPositionInNavMesh(), Quaternion.identity);
+				//	trigger.OnUpdate();
+				//}
 
 				//SpawnEnemyInDungeonRpc();
 			}

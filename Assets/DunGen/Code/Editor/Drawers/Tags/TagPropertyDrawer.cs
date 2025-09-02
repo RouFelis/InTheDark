@@ -47,7 +47,7 @@ namespace DunGen.Editor.Drawers.Tags
 			foreach(var id in tagManager.GetTagIDs())
 				menu.AddItem(new GUIContent(tagManager.TryGetNameFromID(id)), id == tag.ID, OnTagSelected, new MenuItemData(property, id));
 
-			menu.AddItem(new GUIContent("Open Tag Editor..."), false, OnOpenTagWindow);
+			menu.AddItem(new GUIContent("OpenDamage Tag Editor..."), false, OnOpenTagWindow);
 			menu.DropDown(rect);
 
 			EditorGUI.EndProperty();

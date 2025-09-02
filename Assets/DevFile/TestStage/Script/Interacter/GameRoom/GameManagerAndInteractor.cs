@@ -70,7 +70,17 @@ public class GameManagerAndInteractor : InteractableObject
             RequestSceneChangeServerRpc("TestScene");
         }
         else
-            RequestGameClearServerRpc();
+        {
+			// 추가추가추가추가 
+            using var exit = new InTheDark.Prototypes.Exit()
+            {
+                BuildIndex = SharedData.Instance.area.Value
+            };
+
+			RequestGameClearServerRpc();
+
+			exit?.Invoke();
+		}
 
         return true;
     }

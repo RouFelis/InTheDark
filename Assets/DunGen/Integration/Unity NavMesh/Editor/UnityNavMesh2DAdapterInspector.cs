@@ -161,7 +161,7 @@ namespace Dungen.Adapters
 					}
 					GUILayout.BeginHorizontal();
 					GUILayout.Space(EditorGUIUtility.labelWidth);
-					if (GUILayout.Button("Open Agent Settings...", EditorStyles.miniButton))
+					if (GUILayout.Button("OpenDamage Agent Settings...", EditorStyles.miniButton))
 						NavMeshEditorHelpers.OpenAgentSettings(adapter.AgentTypeID);
 					GUILayout.EndHorizontal();
 					hadError = true;

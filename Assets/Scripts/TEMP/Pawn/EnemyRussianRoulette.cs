@@ -7,6 +7,8 @@ namespace InTheDark.Prototypes
 {
     public class EnemyRussianRoulette : InteractableObject
     {
+		private const string VFX_AMPLITUDE = "Amplitude";
+
 		[SerializeField]
 		private float _healValue;
 
@@ -26,6 +28,9 @@ namespace InTheDark.Prototypes
 		private NetworkVariable<int> _count = new();
 
 		[SerializeField]
+		private NetworkVariable<bool> _isOverload = new();
+
+		[SerializeField]
 		private AudioClip _exploseAudioClip;
 
 		[SerializeField]
@@ -36,6 +41,9 @@ namespace InTheDark.Prototypes
 
 		[SerializeField]
 		private VisualEffect _exploseEffect;
+
+		[SerializeField]
+		private VisualEffect _electricEffect;
 
 		private int _size;
 
@@ -88,6 +96,7 @@ namespace InTheDark.Prototypes
 				}
 
 				//InternalOnInteractClientRPC(reference, isSucceed);
+				IntensifyOverloadClientRPC();
 			}
 		}
 
@@ -134,6 +143,47 @@ namespace InTheDark.Prototypes
 			_exploseEffect.Play();
 
 			Debug.Log("폭발 효과 재생");
+		}
+
+		[Rpc(SendTo.Everyone)]
+		private void IntensifyOverloadClientRPC()
+		{
+			//var isOverload = _isOverload.Value;
+			//var power = _count.Value * 0.1F;
+
+			//_isOverload.Value = _count.Value > 0;
+
+			//if (_isOverload.Value && !isOverload)
+			//{
+			//	_electricEffect.Play();
+			//}
+			//else if (!_isOverload.Value && isOverload)
+			//{
+			//	_electricEffect.Stop();
+			//}
+
+			//_electricEffect.SetFloat(VFX_AMPLITUDE, power);
+
+			var isOverload = _count.Value > 0.0F;
+			var power = _count.Value * 0.1F;
+
+			if (_isOverload.Value != isOverload)
+			{
+				if (isOverload)
+				{
+					_electricEffect.Play();
+				}
+				else
+				{
+					_electricEffect.Stop();
+				}
+
+				_isOverload.Value = isOverload;
+			}
+
+			Debug.Log($"과부하 효과 재생: {isOverload}/{_isOverload.Value}, power: {power}");
+
+			_electricEffect.SetFloat(VFX_AMPLITUDE, power);
 		}
 
 		//[Rpc(SendTo.Everyone)]

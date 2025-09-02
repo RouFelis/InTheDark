@@ -44,7 +44,7 @@ public sealed class OldFilm_RLPRO : CustomPostProcessVolumeComponent, IPostProce
             return;
 		T += Time.deltaTime;
 		if (T > 100) T = 0;		
-		m_Material.SetFloat("T", T);
+		m_Material.SetFloat("TComponent", T);
 		m_Material.SetFloat("FPS",  fps.value);
 		m_Material.SetFloat("Contrast",  contrast.value);
 		m_Material.SetFloat("Burn",  burn.value);

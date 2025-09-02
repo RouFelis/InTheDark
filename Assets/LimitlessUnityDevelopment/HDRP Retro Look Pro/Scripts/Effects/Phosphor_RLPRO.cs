@@ -47,7 +47,7 @@ public sealed class Phosphor_RLPRO : CustomPostProcessVolumeComponent, IPostProc
         cmd.Blit(source, texTape, m_Material, 1);
         m_Material.SetTexture("_Tex", texTape);
         T = Time.time;
-        m_Material.SetFloat("T", T);
+        m_Material.SetFloat("TComponent", T);
         m_Material.SetFloat("speed", width.value);
         m_Material.SetFloat("fade", Fade.value);
         if (mask.value != null)

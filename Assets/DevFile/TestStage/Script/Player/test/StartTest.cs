@@ -38,7 +38,8 @@ public class StartTest : StartRoomSetter
 		// 2025.02.10 ทัน้?
 		using var command = new InTheDark.Prototypes.Enter()
 		{
-			BuildIndex = 0
+			//BuildIndex = 0
+			BuildIndex = SharedData.Instance.area.Value
 		};
 
 		command.Invoke();

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fd81eb15085fbc4d8ddf870d44cdd17, type: 3}
-  m_Name: new interval spawn 1
+  m_Name: new interval spawn 8
   m_EditorClassIdentifier: 
-  _buildIndex: 5
+  _buildIndex: 13
   _cooldown: 10
   _generator: {fileID: 11400000, guid: 3bf31087fa19c84448bf32d2a1708b68, type: 2}
   _handlerPrefab: {fileID: 9146537953736876458, guid: 7a203b2d61ada9c4d8510e590b73b45e, type: 3}
