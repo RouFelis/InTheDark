@@ -30,19 +30,28 @@ namespace InTheDark.Prototypes
 		[SerializeField]
 		private List<SpawningEnemyInterval> _nodes = new();
 
+		private bool _isRunning = true;
+
 		public override void OnNetworkSpawn()
 		{
 			UpdateManager.OnUpdate += OnUpdate;
+
+			Game.OnDungeonExit += OnDungeonExit;
 		}
 
 		public override void OnNetworkDespawn()
 		{
 			UpdateManager.OnUpdate -= OnUpdate;
+
+			Game.OnDungeonExit -= OnDungeonExit;
 		}
 
 		private void OnUpdate()
 		{
 			var time = Time.deltaTime;
+
+			if (!_isRunning)
+				return;
 
 			foreach (var node in _nodes)
 			{
@@ -81,5 +90,19 @@ namespace InTheDark.Prototypes
 		{
 			MonsterSpawner.Instance.SpawnEnemyRPC(buildIndex, position, rotation);
 		}
-	} 
+
+		private void OnDungeonExit(DungeonExitEvent @event)
+		{
+			_isRunning = !_isRunning;
+
+			foreach (var node in _nodes)
+			{
+				node.Dispose();
+			}
+
+			_nodes.Clear();
+
+			_isRunning = !_isRunning;
+		}
+	}
 }

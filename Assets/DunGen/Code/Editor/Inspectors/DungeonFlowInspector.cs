@@ -43,7 +43,7 @@ namespace DunGen.Editor
 			public static readonly GUIContent DoorwayConnectionChance = new GUIContent("Connection Chance", "The percentage chance that an unconnected but overlapping set of doorways will be connected. This can be overriden on a per-tile basis");
 			public static readonly GUIContent RestrictConnectionToSameSection = new GUIContent("Restrict to Same Section", "If checked, doorways will only be connected if they lie on the same line segment in the dungeon flow graph");
 			public static readonly GUIContent TileInjection = new GUIContent("Special Tile Injection", "Used to inject specific tiles into the dungeon layout based on a set of rules");
-			public static readonly GUIContent OpenFlowEditor = new GUIContent("Open Flow Editor", "The node graph lets you design how the dungeon should be laid out");
+			public static readonly GUIContent OpenFlowEditor = new GUIContent("OpenDamage Flow Editor", "The node graph lets you design how the dungeon should be laid out");
 			public static readonly GUIContent GlobalPropGroupID = new GUIContent("Group ID", "The prop ID. This should match the ID on the GlobalProp component placed inside Tiles");
 			public static readonly GUIContent GlobalPropGroupCount = new GUIContent("Count", "The number of times this prop should appear across the entire dungeon");
 			public static readonly GUIContent TileConnectionTagMode = new GUIContent("Mode", "How to apply the tag rules below. NOTE: This section is ignored if the tag pair list is empty.\n    Accept: Tiles are only connected if their tags match one of the pairs in the list below.\n    Reject: Tiles will always connect unless their tags match one of the pairs in the list below.");
@@ -191,7 +191,7 @@ namespace DunGen.Editor
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
 
-			// Open Flow Editor
+			// OpenDamage Flow Editor
 			if (GUILayout.Button(Labels.OpenFlowEditor))
 				DungeonFlowEditorWindow.Open(data);
 

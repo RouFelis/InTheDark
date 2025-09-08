@@ -48,7 +48,7 @@ public sealed class OldFilm2_RLPRO : CustomPostProcessVolumeComponent, IPostProc
             return;
 		T += Time.deltaTime;
 		if (T > 100) T = 0;		
-		m_Material.SetFloat("T", T);
+		m_Material.SetFloat("TComponent", T);
 		m_Material.SetFloat("SepiaValue", SepiaAmount.value);
 		m_Material.SetFloat("NoiseValue", NoiseAmount.value);
 		m_Material.SetFloat("ScratchValue", ScratchAmount.value);

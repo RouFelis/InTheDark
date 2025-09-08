@@ -388,7 +388,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	{
 		DamagedEffect();
 
-		//if (!_isDead.Value && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
+		//if (!_isTargetKilled.Value && (newValue < 0.0f || Mathf.Approximately(newValue, 0.0f)))
 		//{
 		//	Die();
 		//}
@@ -580,17 +580,17 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		{
 			if (!isTargetEnable)
 			{
-				var message = $"타겟이 {player.name}({player.OwnerClientId})로 설정되었습니다.";
+				//var message = $"타겟이 {player.name}({player.OwnerClientId})로 설정되었습니다.";
 
-				Debug.Log(message);
+				//Debug.Log(message);
 
 				_target.Value = reference;
 			}
 			else if (isTargetEnable && target.Equals(player))
 			{
-				var message = $"타겟이 이미 {player.name}({player.OwnerClientId})입니다.";
+				//var message = $"타겟이 이미 {player.name}({player.OwnerClientId})입니다.";
 
-				Debug.Log(message);
+				//Debug.Log(message);
 			}
 		}
 	}
@@ -615,7 +615,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		var isOnNavMesh = NavMesh.SamplePosition(destination, out var hit, 1.0F, NavMesh.AllAreas);
 		var position = isOnNavMesh ? destination : hit.position;
 
-		var message = $"NavMesh Sample Position : {isOnNavMesh}, Position : {position}";
+		//var message = $"NavMesh Sample Position : {isOnNavMesh}, Position : {position}";
 
 		_agent.SetDestination(position);
 
@@ -626,7 +626,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 		_navMeshAgentCoroutine = StartCoroutine(OnNavMeshRunning());
 
-		Debug.Log(message);
+		//Debug.Log(message);
 	}
 
 	private IEnumerator OnNavMeshRunning()

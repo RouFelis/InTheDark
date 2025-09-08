@@ -38,7 +38,7 @@ public sealed class NTSCEncode_RLPRO : CustomPostProcessVolumeComponent, IPostPr
         if (m_Material == null)
             return;
         T += Time.deltaTime;
-        m_Material.SetFloat("T", T);
+        m_Material.SetFloat("TComponent", T);
         m_Material.SetFloat("_Intensity", intensity.value);
         m_Material.SetFloat("Bsize", brigtness.value);
         m_Material.SetFloat("val1", lineSpeed.value);
