@@ -1960,6 +1960,9 @@ MonoBehaviour:
   failTime:
     m_InternalValue: 0
   MaxFailTime: 3
+  isStory: 1
+  storyNumbers: 00000000010000000200000003000000
+  storyNumber: 0
   displayText: {fileID: 7714253674727029438}
   audioSource: {fileID: 6189346453794453377}
   addSound: {fileID: 8300000, guid: 68c9d45d9c592b140a9ecbcdeec16cad, type: 3}

@@ -7,47 +7,52 @@ public class PickupItem : NetworkBehaviour , IPickupItem
 
 	[SerializeField] private InventoryItem CloneItem;
 
-    [Header("Debug Info (Runtime Only)")]
-    [SerializeField] private string itemName;
-    [SerializeField] private string itemSpritePath;
-    [SerializeField] private string previewPrefabPath;
-    [SerializeField] private string objectPrefabPath;
-    [SerializeField] private string dropPrefabPath;
+    [Header("스토리 넘버 후보")]
+    [SerializeField] private int[] storyNumbers;
 
-    [SerializeField] private bool isPlaceable;
-    [SerializeField] private bool isUsable;
+    /*
+        [Header("Debug Info (Runtime Only)")]
+        [SerializeField] private string itemName;
+        [SerializeField] private string itemSpritePath;
+        [SerializeField] private string previewPrefabPath;
+        [SerializeField] private string objectPrefabPath;
+        [SerializeField] private string dropPrefabPath;
 
-    [SerializeField] private int price;
-    [SerializeField] private int minPrice;
-    [SerializeField] private int maxPrice;
+        [SerializeField] private bool isPlaceable;
+        [SerializeField] private bool isUsable;
 
-    [SerializeField] private float batteryLevel;
-    [SerializeField] private float batteryEfficiency;
+        [SerializeField] private int price;
+        [SerializeField] private int minPrice;
+        [SerializeField] private int maxPrice;
+
+        [SerializeField] private float batteryLevel;
+        [SerializeField] private float batteryEfficiency;
 
 
-    private void Update()
-    {
-        // 실행 중일 때만 디버깅용 인스펙터 업데이트
-        if (!IsOwner && !IsServer) return;
+        private void Update()
+        {
+            // 실행 중일 때만 디버깅용 인스펙터 업데이트
+            if (!IsOwner && !IsServer) return;
 
-        var data = networkInventoryItemData.Value;
+            var data = networkInventoryItemData.Value;
 
-        itemName = data.itemName.ToString();
-        itemSpritePath = data.itemSpritePath.ToString();
-        previewPrefabPath = data.previewPrefabPath.ToString();
-        objectPrefabPath = data.objectPrefabPath.ToString();
-        dropPrefabPath = data.dropPrefabPath.ToString();
+            itemName = data.itemName.ToString();
+            itemSpritePath = data.itemSpritePath.ToString();
+            previewPrefabPath = data.previewPrefabPath.ToString();
+            objectPrefabPath = data.objectPrefabPath.ToString();
+            dropPrefabPath = data.dropPrefabPath.ToString();
 
-        isPlaceable = data.isPlaceable;
-        isUsable = data.isUsable;
+            isPlaceable = data.isPlaceable;
+            isUsable = data.isUsable;
 
-        price = data.price;
-        minPrice = data.minPrice;
-        maxPrice = data.maxPrice;
+            price = data.price;
+            minPrice = data.minPrice;
+            maxPrice = data.maxPrice;
 
-        batteryLevel = data.batteryLevel;
-        batteryEfficiency = data.batteryEfficiency;
-    }
+            batteryLevel = data.batteryLevel;
+            batteryEfficiency = data.batteryEfficiency;
+        }
+    */
 
     public InventoryItem cloneItem 
     {
@@ -67,11 +72,21 @@ public class PickupItem : NetworkBehaviour , IPickupItem
 
     public NetworkVariable<InventoryItemData> networkInventoryItemData = new NetworkVariable<InventoryItemData>();
 
-	protected virtual void Start()
+    public bool RequestBoolStoryItem()
+    {
+        return cloneItem.isStoryItem;
+    }
+
+    public int RequestStoryNum()
+    {
+        return cloneItem.storyNumber;
+    }
+
+    protected virtual void Start()
     {
         if (IsServer)
         {
-            networkInventoryItemData.Value = cloneItem.ToData();
+            SetStroyNumber();
 
             // 클라이언트에서 데이터가 변경될 때 아이템 로드
             networkInventoryItemData.OnValueChanged += (oldValue, newValue) =>
@@ -81,10 +96,24 @@ public class PickupItem : NetworkBehaviour , IPickupItem
         }
         else
         {
+            cloneItem.CopyDataFrom(networkInventoryItemData.Value);
+
             networkInventoryItemData.OnValueChanged += (oldValue, newValue) =>
             {
                 LoadItemFromData(newValue);
             };
+        }
+    }
+
+    private void SetStroyNumber()
+    {
+        if (!cloneItem.isStoryItem && cloneItem.storyNumber != -1) return;
+
+        // 아직 안 정해졌다면 랜덤으로 선택
+        if (storyNumbers.Length > 0)
+        {
+            cloneItem.storyNumber = storyNumbers[Random.Range(0, storyNumbers.Length)]; 
+            networkInventoryItemData.Value = cloneItem.ToData();
         }
     }
 
@@ -95,14 +124,6 @@ public class PickupItem : NetworkBehaviour , IPickupItem
         Debug.Log("DataLoad....");
     }
 
-/*    void Update()
-    {
-		if (cloneItem.isPlaceable)
-		{
-            cloneItem.batteryLevel -= cloneItem.batteryEfficiency * Time.deltaTime;
-        }       
-    }
-*/
     public virtual void UseItem(NetworkInventoryController controller)
 	{
         Debug.Log($"UseItem 테스트");

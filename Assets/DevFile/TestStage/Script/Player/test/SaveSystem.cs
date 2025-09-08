@@ -14,12 +14,15 @@ public class SaveSystem : MonoBehaviour
     private void Start()
 	{
         SaveObjects = GameObject.Find("SpawnedObjects");
-        //SaveGame();
+        //SaveGame();  
+        
+        // 디버깅용: 시작 시 저장된 파일 삭제
+        DeleteSaveFiles();
     }
 
 	public void SaveGame()
     {
-        Save();
+        SaveObject();
    //     playerSaveSystem.SavePlayerData();
     }
 
@@ -31,7 +34,7 @@ public class SaveSystem : MonoBehaviour
 
     #region 저장 오브젝트
 
-    private void Save()
+    private void SaveObject()
     {
         PickupItem[] saveObjectList = SaveObjects.GetComponentsInChildren<PickupItem>();
 
@@ -106,7 +109,9 @@ public class SaveSystem : MonoBehaviour
                      changedObj.cloneItem.maxPrice,
                      changedObj.cloneItem.minPrice,
                      changedObj.cloneItem.batteryLevel,
-                     changedObj.cloneItem.batteryEfficiency
+                     changedObj.cloneItem.batteryEfficiency,
+                     changedObj.cloneItem.isStoryItem,
+                     changedObj.cloneItem.storyNumber
                     );
 
                     changedObj.networkInventoryItemData.Value = updatedItemData;
@@ -148,9 +153,108 @@ public class SaveSystem : MonoBehaviour
         Debug.Log(playerName + "의 무기 데이터가 로드되었습니다... path : " + filePath);
         return weaponData;
     }
-	#endregion
+    #endregion
 
-	private WeaponData CreateDefaultWeaponData()
+    #region 스토리 정보 저장
+
+    /// <summary>
+    /// 퀘스트(스토리) 진행 상황을 JSON 파일로 저장합니다.
+    /// </summary>
+    /// <param name="unlockedStoryIDs">저장할 스토리 ID 리스트</param>
+    public void SaveStoryData(List<int> unlockedStoryIDs)
+    {
+        // 1. 데이터를 래퍼 클래스에 담습니다.
+        QuestDataWrapper dataWrapper = new QuestDataWrapper { unlockedStoryIDs = unlockedStoryIDs };
+
+        // 2. JSON 문자열로 변환합니다.
+        string json = JsonUtility.ToJson(dataWrapper, true);
+
+        // 3. 암호화를 사용한다면 암호화를 적용합니다.
+        if (useEncryption)
+        {
+            json = EncryptDecrypt(json);
+        }
+
+        // 4. 파일에 저장합니다.
+        string path = Path.Combine(Application.persistentDataPath, "storydata.json");
+        File.WriteAllText(path, json);
+        Debug.Log($"스토리 데이터가 저장되었습니다: {path}");
+    }
+
+    /// <summary>
+    /// 파일에서 퀘스트(스토리) 진행 상황을 불러옵니다.
+    /// </summary>
+    /// <returns>불러온 스토리 ID 리스트</returns>
+    public List<int> LoadStoryData()
+    {
+        string path = Path.Combine(Application.persistentDataPath, "storydata.json");
+
+        // 저장 파일이 존재하면 데이터를 읽어옵니다.
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+
+            // 암호화가 사용되었다면 복호화합니다.
+            if (useEncryption)
+            {
+                json = EncryptDecrypt(json);
+            }
+
+            QuestDataWrapper dataWrapper = JsonUtility.FromJson<QuestDataWrapper>(json);
+            Debug.Log($"스토리 데이터를 불러왔습니다: {path}");
+            return dataWrapper.unlockedStoryIDs;
+        }
+        else
+        {
+            // 저장 파일이 없으면 빈 리스트를 반환합니다.
+            Debug.LogWarning("스토리 데이터 파일이 존재하지 않습니다. 새로운 데이터를 생성합니다.");
+            return new List<int>();
+        }
+    }
+
+    // JSON 직렬화를 위한 퀘스트 데이터 래퍼 클래스
+    [System.Serializable]
+    private class QuestDataWrapper
+    {
+        public List<int> unlockedStoryIDs;
+    }
+
+    #endregion
+
+    /// <summary>
+    /// 디버깅용: 저장된 JSON 파일들 삭제
+    /// </summary>
+    private void DeleteSaveFiles()
+    {
+        string[] targetFiles =
+        {
+        Path.Combine(Application.persistentDataPath, "savefile.json"),
+        Path.Combine(Application.persistentDataPath, "storydata.json"),
+        Path.Combine(Application.persistentDataPath, "playerdata.json")
+        // 무기 데이터는 플레이어 이름 기반이니 필요 시 직접 지정하거나 전체 폴더 스캔 가능
+    };
+
+        foreach (var file in targetFiles)
+        {
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+                Debug.Log($"디버깅용 삭제 완료: {file}");
+            }
+        }
+
+        // 만약 모든 JSON 파일을 싹 지우고 싶다면:
+        /*
+        string[] allFiles = Directory.GetFiles(Application.persistentDataPath, "*.json");
+        foreach (var file in allFiles)
+        {
+            File.Delete(file);
+            Debug.Log($"삭제됨: {file}");
+        }
+        */
+    }
+
+    private WeaponData CreateDefaultWeaponData()
     {
         return ScriptableObject.CreateInstance<WeaponData>();
     }

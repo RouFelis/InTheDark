@@ -99,7 +99,9 @@ public class EnemyRandomBox : InteractableObject
 			temptItem.inventoryItem.maxPrice,
 			temptItem.inventoryItem.minPrice,
 			temptItem.inventoryItem.batteryLevel,
-			temptItem.inventoryItem.batteryEfficiency
+			temptItem.inventoryItem.batteryEfficiency,
+			temptItem.inventoryItem.isStoryItem,
+			temptItem.inventoryItem.storyNumber
 		);
 
 		networkObject.Spawn();

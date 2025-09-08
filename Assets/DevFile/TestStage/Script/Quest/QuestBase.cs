@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 using Unity.Netcode;
 
 public class QuestBase : NetworkBehaviour
@@ -16,9 +15,15 @@ public class QuestBase : NetworkBehaviour
     public NetworkVariable<int> failTime = new NetworkVariable<int>(value: 0);
 	[SerializeField] private int MaxFailTime = 3;
 
+    [Header("기본 스토리 설정")]
+    [SerializeField] private bool isStory = false;
+    [SerializeField] private int[] storyNumbers;
+    [SerializeField] private int storyNumber;
+
     protected virtual void Start()
 	{
         isCompleted.OnValueChanged += QuestCompleteReward;
+        SetStroyNumber();
         QuestManager.inst.QuestInsert(this);
     }
 
@@ -28,6 +33,8 @@ public class QuestBase : NetworkBehaviour
         {
             if(rewardPrefab != null)
                 SpawnClearRewardServerRpc();
+            if(isStory)
+              StoryManaager.Inst.AddStroyUIPrefab(storyNumber);
         }
     }
 
@@ -69,6 +76,20 @@ public class QuestBase : NetworkBehaviour
     public void ClearRewardClientRpc()
     {
         QuestManager.inst.QuestComplete(this);
+    }
+
+
+
+    /// <summary>
+    /// 스토리 관련
+    /// </summary>
+    private void SetStroyNumber()
+    {
+        // 아직 안 정해졌다면 랜덤으로 선택
+        if (storyNumbers.Length > 0)
+        {
+            storyNumber = storyNumbers[Random.Range(0, storyNumbers.Length)];
+        }
     }
 
 }

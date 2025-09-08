@@ -109,7 +109,6 @@ public class GameManagerAndInteractor : InteractableObject
         yield return RunGameSequence(
             beforeDelay: 0f,
             afterDelay: 10f,
-            onServerStart: () => roundManager.GameClearServerRPC(),
             onServerEnd: () => RequestSceneChangeServerRpc("TestScene")
         );
     }

@@ -66,7 +66,7 @@ public class QuestManager : NetworkBehaviour
 	{
 		nowClearedQuestTotal.Value = 0;
 		mustClearQuestTotal.Value = 0;
-		questList.Clear();
+		questList.Clear(); 
 	}
 
 	

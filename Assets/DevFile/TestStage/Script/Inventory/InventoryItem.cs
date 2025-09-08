@@ -17,6 +17,9 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
     public int maxPrice;
     public float batteryLevel;
     public float batteryEfficiency;
+    [Header("스토리 아이템. 랜덤일 경우 -1 을 입력하고 픽업 아이템에서 수정")]
+    public bool isStoryItem;
+    public int storyNumber;
 
     public int weight;
 
@@ -114,11 +117,13 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         serializer.SerializeValue(ref price);
         serializer.SerializeValue(ref maxPrice);
         serializer.SerializeValue(ref minPrice);
-        serializer.SerializeValue(ref previewPrefabPath); // 직렬화 추가
-        serializer.SerializeValue(ref objectPrefabPath); // 직렬화 추가
-        serializer.SerializeValue(ref dropPrefabPath); // 직렬화 추가
-        serializer.SerializeValue(ref batteryLevel); // 직렬화 추가
-        serializer.SerializeValue(ref batteryEfficiency); // 직렬화 추가
+        serializer.SerializeValue(ref previewPrefabPath);
+        serializer.SerializeValue(ref objectPrefabPath); 
+        serializer.SerializeValue(ref dropPrefabPath); 
+        serializer.SerializeValue(ref batteryLevel); 
+        serializer.SerializeValue(ref batteryEfficiency); 
+        serializer.SerializeValue(ref isStoryItem); 
+        serializer.SerializeValue(ref storyNumber); 
     }
 
     public void CopyDataFrom(InventoryItem sourceItem)
@@ -131,11 +136,14 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         maxPrice = sourceItem.maxPrice;
         minPrice = sourceItem.minPrice;
         previewPrefabPath = sourceItem.previewPrefabPath; // 데이터 복사 추가
-        objectPrefabPath = sourceItem.objectPrefabPath; // 데이터 복사 추가
-        dropPrefabPath = sourceItem.dropPrefabPath; // 데이터 복사 추가
-        batteryLevel = sourceItem.batteryLevel; // 데이터 복사 추가
-        batteryEfficiency = sourceItem.batteryEfficiency; // 데이터 복사 추가
+        objectPrefabPath = sourceItem.objectPrefabPath;
+        dropPrefabPath = sourceItem.dropPrefabPath; 
+        batteryLevel = sourceItem.batteryLevel;
+        batteryEfficiency = sourceItem.batteryEfficiency;
+        isStoryItem = sourceItem.isStoryItem;
+        storyNumber = sourceItem.storyNumber;
     }
+
     public InventoryItemData ToData()
     {
         return new InventoryItemData(
@@ -150,7 +158,9 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
             maxPrice,
             minPrice,
             batteryLevel,
-            batteryEfficiency
+            batteryEfficiency,
+            isStoryItem,
+            storyNumber
         );
     }
 
@@ -168,6 +178,8 @@ public class InventoryItem : ScriptableObject, INetworkSerializable
         minPrice = data.minPrice;
         batteryLevel = data.batteryLevel;
         batteryEfficiency = data.batteryEfficiency;
+        isStoryItem = data.isStoryItem;
+        storyNumber = data.storyNumber;
     }
 
 }

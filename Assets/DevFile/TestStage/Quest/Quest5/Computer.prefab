@@ -506,6 +506,9 @@ MonoBehaviour:
   failTime:
     m_InternalValue: 0
   MaxFailTime: 3
+  isStory: 1
+  storyNumbers: 00000000010000000200000003000000
+  storyNumber: 0
   displayText: {fileID: 4334355110214570067}
   USBSpawnTransfrom: {fileID: 8969319653923201700}
   USBPrefab: {fileID: 4859087284310973052, guid: 658394564c783454d91a3e2f4b5c2684, type: 3}

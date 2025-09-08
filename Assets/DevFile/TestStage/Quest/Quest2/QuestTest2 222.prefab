@@ -15957,6 +15957,9 @@ MonoBehaviour:
   failTime:
     m_InternalValue: 0
   MaxFailTime: 3
+  isStory: 1
+  storyNumbers: 0100000002000000
+  storyNumber: 0
   startSound: {fileID: 8300000, guid: 96fe8080591376f43a7a1b0b16ce7e16, type: 3}
   endSound: {fileID: 8300000, guid: 854a8c2dd9f91c84e95e6d3108a2c0e7, type: 3}
   audioSource: {fileID: 191028793530344128}

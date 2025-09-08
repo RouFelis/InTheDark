@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 public class GameFailAnimation : UIAnimation
 {
@@ -8,8 +10,9 @@ public class GameFailAnimation : UIAnimation
     [SerializeField] private AudioSource alarmSource;
     [SerializeField] private AudioSource otherSource;
     [SerializeField] private AudioClip alarmSound;
-    [SerializeField] private AudioClip doorSound;
-    [SerializeField] private AudioClip gunSound;
+    [SerializeField] private AudioClip lightOffSound;
+    [SerializeField] private AudioClip gasSound;
+    [SerializeField] private AudioClip gameOverVoiceSound;
 
     [Header("Light")]
     [SerializeField] private Light warningLight_1;
@@ -22,6 +25,13 @@ public class GameFailAnimation : UIAnimation
     [SerializeField] private Light roomLight_2;
     [SerializeField] private float roomLightIntensity = 5f;
 
+    [Header("fog")]
+    [SerializeField] private Volume volume; // HDRP Volume 오브젝트 넣어주기
+    [SerializeField] private float fogFloat = 0;
+    private Fog fog;
+
+
+
     private Coroutine blinkCoroutine_1;
     private Coroutine blinkCoroutine_2;
 
@@ -29,9 +39,50 @@ public class GameFailAnimation : UIAnimation
     {
         warningLight_1.intensity = 0f;
         warningLight_2.intensity = 0f;
+
+        // VolumeProfile에서 Fog 컴포넌트 가져오기
+        if (volume.profile.TryGet(out fog))
+        {
+            Debug.Log("Fog component found!");
+        }
+        else
+        {
+            Debug.LogWarning("Fog component not found in this volume profile.");
+        }
     }
 
-	private IEnumerator BlinkLight(Light light)
+    public void SetFogDensity(float density)
+    {
+        if (fog != null)
+        {
+            fog.meanFreePath.value = Mathf.Lerp(5f, 500f, 1f - density);
+        }
+    }
+
+
+    public IEnumerator GraduallyIncreaseFog(float duration)
+    {
+        float startDensity = 0.1f;
+        float endDensity = 0.999f;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float currentDensity = Mathf.Lerp(startDensity, endDensity, t);
+
+            SetFogDensity(currentDensity);
+
+            yield return null;
+        }
+
+        // 마지막 값 보정
+        SetFogDensity(endDensity);
+    }
+
+    private IEnumerator BlinkLight(Light light)
     {
         while (true)
         {
@@ -51,28 +102,37 @@ public class GameFailAnimation : UIAnimation
         blinkCoroutine_1 = StartCoroutine(BlinkLight(warningLight_1));
         blinkCoroutine_2 = StartCoroutine(BlinkLight(warningLight_2));
 
-        roomLight_1.intensity = 0;
-        roomLight_2.intensity = 0;
-
         alarmSource.clip = alarmSound;
         alarmSource.loop = true;
         alarmSource.Play();
+        yield return new WaitForSeconds(2f);
+
+        roomLight_1.intensity = 0;
+        roomLight_2.intensity = 0;
+        otherSource.PlayOneShot(lightOffSound);
         yield return new WaitForSeconds(3f);
+
+        otherSource.PlayOneShot(gasSound);
+   
+        //0.1에서 0.999까지 점진적 증가하도록...
+        StartCoroutine(GraduallyIncreaseFog(5f));
+
+        yield return new WaitForSeconds(1f);
 
         //2. 글리치
         UIAnimationManager.Instance.Glitch(true);
-        yield return new WaitForSeconds(1f);
+
+
+        otherSource.PlayOneShot(gameOverVoiceSound);
+
+        yield return new WaitForSeconds(gameOverVoiceSound.length + 1f);
+
 
         //3. fade out
         UIAnimationManager.Instance.FadeOutAnimation();
 
-        otherSource.PlayOneShot(doorSound);
-        //3. 문 열리는 소리
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(1f);
 
-        // 5. 총소리 (플레이어들의 죽음 암시)
-        otherSource.PlayOneShot(gunSound);
-        yield return new WaitForSeconds(6f);
 
         // 6. 빨간 경광등, 경보음  종료
         if (blinkCoroutine_1 != null)
@@ -85,9 +145,14 @@ public class GameFailAnimation : UIAnimation
             StopCoroutine(blinkCoroutine_2);
             blinkCoroutine_2 = null;
         }
+
         warningLight_1.intensity = 0f;
         warningLight_2.intensity = 0f;
+
         alarmSource.Stop();
+        otherSource.Stop();
+
+        SetFogDensity(0.1f);
 
         yield return new WaitForSeconds(3f);
 
@@ -105,4 +170,65 @@ public class GameFailAnimation : UIAnimation
 
         Debug.Log("부활 완료!");
     }
+
+    /*  protected override IEnumerator PlayRoutine()
+      {
+          // 1. 빨간 경광등, 경보음 시작
+          blinkCoroutine_1 = StartCoroutine(BlinkLight(warningLight_1));
+          blinkCoroutine_2 = StartCoroutine(BlinkLight(warningLight_2));
+
+          roomLight_1.intensity = 0;
+          roomLight_2.intensity = 0;
+
+          alarmSource.clip = alarmSound;
+          alarmSource.loop = true;
+          alarmSource.Play();
+          yield return new WaitForSeconds(3f);
+
+          //2. 글리치
+          UIAnimationManager.Instance.Glitch(true);
+          yield return new WaitForSeconds(1f);
+
+          //3. fade out
+          UIAnimationManager.Instance.FadeOutAnimation();
+
+          otherSource.PlayOneShot(doorSound);
+          //3. 문 열리는 소리
+          yield return new WaitForSeconds(4f);
+
+          // 5. 총소리 (플레이어들의 죽음 암시)
+          otherSource.PlayOneShot(gunSound);
+          yield return new WaitForSeconds(6f);
+
+          // 6. 빨간 경광등, 경보음  종료
+          if (blinkCoroutine_1 != null)
+          {
+              StopCoroutine(blinkCoroutine_1);
+              blinkCoroutine_1 = null;
+          }
+          if (blinkCoroutine_2 != null)
+          {
+              StopCoroutine(blinkCoroutine_2);
+              blinkCoroutine_2 = null;
+          }
+          warningLight_1.intensity = 0f;
+          warningLight_2.intensity = 0f;
+          alarmSource.Stop();
+
+          yield return new WaitForSeconds(3f);
+
+
+          roomLight_1.intensity = roomLightIntensity;
+          roomLight_2.intensity = roomLightIntensity;
+
+          // 7. fade in
+          UIAnimationManager.Instance.FadeInAnimation();
+          UIAnimationManager.Instance.HealthbarOff();
+
+
+          PlayersManager.Instance.AllPlayerSetPos();
+
+
+          Debug.Log("부활 완료!");
+      }*/
 }

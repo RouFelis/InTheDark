@@ -24,4 +24,6 @@ MonoBehaviour:
   maxPrice: 10
   batteryLevel: 100
   batteryEfficiency: 1
+  isStoryItem: 0
+  storyNumber: 0
   weight: 10

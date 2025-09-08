@@ -75,7 +75,9 @@ public class ItemSpawnManager : MonoBehaviour , IDungeonCompleteReceiver
                   itemToDrop.inventoryItem.maxPrice,
 				  itemToDrop.inventoryItem.minPrice,
 				  itemToDrop.inventoryItem.batteryLevel,
-				  itemToDrop.inventoryItem.batteryEfficiency
+				  itemToDrop.inventoryItem.batteryEfficiency,
+				  itemToDrop.inventoryItem.isStoryItem,
+				  itemToDrop.inventoryItem.storyNumber
 			  );
 
 

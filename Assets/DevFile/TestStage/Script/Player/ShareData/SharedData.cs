@@ -5,13 +5,14 @@ public class SharedData : NetworkBehaviour
 	public static SharedData Instance { get; private set; }
 
 	public NetworkVariable<int> Money = new NetworkVariable<int>(0);
+	public NetworkVariable<int> roundMoney = new NetworkVariable<int>(0);
 	public NetworkVariable<int> networkSeed = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public NetworkVariable<int> area = new NetworkVariable<int>(1);
 	public NetworkVariable<int> questQuota = new NetworkVariable<int>(1);
 	public NetworkVariable<int> moneyQuota = new NetworkVariable<int>(1000);
 
 	private int questQoutaDefult = 3;
-	private int moneyQoutaDefult = 3;
+	private int moneyQoutaDefult = 300;
 
 
 	public override void OnNetworkSpawn()
@@ -25,9 +26,6 @@ public class SharedData : NetworkBehaviour
 			// 인스턴스가 이미 존재하면 중복된 객체를 삭제
 			Destroy(gameObject);
 		}
-
-		if (IsServer)
-			area.OnValueChanged += SetQuota;
 		questQuota.Value = questQoutaDefult;
 		moneyQuota.Value = moneyQoutaDefult;
 	}
@@ -56,6 +54,7 @@ public class SharedData : NetworkBehaviour
 	public void AddMoneyServerRpc(int value)
 	{
 		Money.Value += value;
+		roundMoney.Value += value;
 	}
 
 	[ServerRpc(RequireOwnership = false)]
@@ -72,30 +71,45 @@ public class SharedData : NetworkBehaviour
 		
 	}
 
+	public void ClearButton()
+	{
+		AddMoneyServerRpc(moneyQuota.Value);
+		QuestManager.inst.nowClearedQuestTotal.Value = questQuota.Value;
 
+	}
 
 	#region 맵 설정...
 
-
-	public void SetQuota(int newValue, int oldValue)
+	public void SetRoundClearData()
 	{
-		RequestQuestQuota();
-		RequestMoneyQuota();
+		int round = SharedData.Instance.area.Value;
+		Debug.Log($"라운드 테스트 {round}");
+		if (round != 0)
+		{
+			// 2라운드당 1 증가 → round / 2
+			int questCount = (round / 2);
+			// 최소 1개 이상, 최대 8개 제한
+			questCount = Mathf.Clamp(questCount, 1, 8);
+			questQuota.Value = questCount;
+		}
+		else
+		{
+			questQuota.Value = 1;
+		}
+
+		if (round != 0)
+		{
+			moneyQuota.Value = (int)(300 * Mathf.Pow(1.2f, round));
+		}
+		else
+		{
+			moneyQuota.Value = 300;
+		}
+
+		roundMoney.Value = 0;
+
+		Debug.Log("쿼타 설정.");
 	}
-
-
-	private int RequestQuestQuota()
-	{
-		Debug.Log($"퀘스트 할당량 호출 : {(area.Value % 2)} ");
-		return 3 + (area.Value % 2);
-	}
-
-	private int RequestMoneyQuota()
-	{
-		Debug.Log($"돈 할당량 호출 : {(area.Value % 2)} ");
-		return 500 + 500 / (area.Value % 2);
-	}
-
 
 
 	#endregion

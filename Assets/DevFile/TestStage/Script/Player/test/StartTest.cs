@@ -7,6 +7,8 @@ using Unity.Netcode;
 public class StartTest : StartRoomSetter
 {
 	[SerializeField] RuntimeDungeon dungeon;
+	[SerializeField] private DungeonArchetype Archetype;
+
 
 	public GameObject[] itemPrefabs;     // 스폰할 아이템 프리팹들
 	public int itemCountToSpawn = 10;    // 스폰할 총 아이템 수
@@ -14,7 +16,25 @@ public class StartTest : StartRoomSetter
 	public List<Transform> spawnTransforms = new List<Transform>();
 
     void Start()
-	{
+	{  
+		if (SharedData.Instance.area.Value == 0)
+		{
+			Archetype.BranchCount.Max = 4;
+			Archetype.BranchCount.Min = 2;
+
+			Debug.Log("브랜치 설정 ");
+		}
+		else
+		{
+			int round = SharedData.Instance.area.Value;
+			int baseCount = (int)Mathf.Floor(2 + Mathf.Log(round + 1, 2)); // log₂(라운드+1)
+
+			Archetype.BranchCount.Min = baseCount;
+			Archetype.BranchCount.Max = baseCount + 2;
+
+			Debug.Log("브랜치 설정 ");
+		}
+		
 		if (IsClient&&!IsServer)
 		{
 			SharedData.Instance.networkSeed.OnValueChanged += ClientDungenGenerate;

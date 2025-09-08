@@ -109,15 +109,8 @@ public class GameTestRoom : InteractableObject
 	{
 		KeySettingsManager.Instance.isEveryEvent = true;
 
-        if(IsServer)
-        //라운드 숫자 증가
-        roundManager.GameClearServerRPC();
-
-
         //1. 게임 정보 취합 (돈) 애니메이션 재생    
         roundManager.GameClearAnimeServerRpc();
-
-
 
         //2. 안에있는 플레이어들 위치 텔레포트 (부활)     
         StartCoroutine(PlayersManager.Instance.RespawnPlayers(true));

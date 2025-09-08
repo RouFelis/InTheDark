@@ -4019,6 +4019,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   dungeon: {fileID: 641896173}
+  Archetype: {fileID: 11400000, guid: b8403790cc9ff2b47ab8512eeda223f4, type: 2}
   itemPrefabs:
   - {fileID: 5809953777107759177, guid: 0306e63a0370df7429d7d0eaa1869d85, type: 3}
   itemCountToSpawn: 10

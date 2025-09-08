@@ -199,7 +199,7 @@ public class NetworkInventoryController : NetworkBehaviour
             // 기본 아이템으로 네트워크 아이템 초기화
             for (int i = 0; i < test; i++)
             {
-                var defaultItem = new InventoryItemData(new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), false , false, 0 ,0 ,0 ,0,0);
+                var defaultItem = new InventoryItemData(new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), new FixedString128Bytes(), false , false, 0 ,0 ,0 ,0,0 , false, 0 );
                 Debug.Log("기본 아이템을 networkItems에 추가");
                 networkItems.Add(defaultItem);
                 Debug.Log("기본 아이템이 networkItems에 추가됨");
@@ -235,9 +235,9 @@ public class NetworkInventoryController : NetworkBehaviour
                 }
             }*/
 
-            PickupItem item = itemNetworkObject.GetComponent<PickupItem>();
+            InventoryItemData item = itemNetworkObject.GetComponent<PickupItem>().networkInventoryItemData.Value;
 
-            // 새로운 인벤토리 아이템 데이터를 생성하고 네트워크 리스트에 할당
+           /* // 새로운 인벤토리 아이템 데이터를 생성하고 네트워크 리스트에 할당
             InventoryItemData newItem = new InventoryItemData(
                 new FixedString128Bytes(item.networkInventoryItemData.Value.itemName.ToString()),
                 new FixedString128Bytes(item.networkInventoryItemData.Value.itemSpritePath.ToString()),
@@ -250,14 +250,16 @@ public class NetworkInventoryController : NetworkBehaviour
                 item.networkInventoryItemData.Value.maxPrice,
                 item.networkInventoryItemData.Value.minPrice,
                 item.networkInventoryItemData.Value.batteryLevel,
-                item.networkInventoryItemData.Value.batteryEfficiency
-            );
+                item.networkInventoryItemData.Value.batteryEfficiency,
+                item.networkInventoryItemData.Value.isStoryItem,
+                item.networkInventoryItemData.Value.storyNumber
+            );*/
 
-            networkItems[slotIndex] = newItem;
-            Test2 = newItem;
+            networkItems[slotIndex] = item;
+            Test2 = item;
 
             // 클라이언트 측에서 아이템 로드
-            LoadItemClientRpc(slotIndex, newItem);
+            LoadItemClientRpc(slotIndex, item);
         }
     }
 
@@ -376,7 +378,6 @@ public class NetworkInventoryController : NetworkBehaviour
 				UpdateSlotSelectionClientRpc(newSlot, networkObject.NetworkObjectId);
 
                 droppedItem.GetComponent<GrabHelper>().AttachToPlayerServerRpc(PlayerID);
-                Debug.Log("테스트 1111111111111");
             }
         }
     }
@@ -545,15 +546,32 @@ public class NetworkInventoryController : NetworkBehaviour
                     }
 
                     PickupItem item = hit.transform.GetComponent<PickupItem>();
+
                     if (item != null && item.GetComponent<NetworkObject>() != null)
                     {
-
                         ulong itemNetworkObjectId = item.GetComponent<NetworkObject>().NetworkObjectId;
                         RequestPickupItemServerRpc(itemNetworkObjectId, NetworkManager.Singleton.LocalClientId, test111);
+                    }
+
+					if (item.RequestBoolStoryItem())
+					{
+                        AddStroyUIPrefabServerRpc(item.RequestStoryNum());
                     }
                 }
             }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void AddStroyUIPrefabServerRpc(int stroyNum)
+	{
+        AddStroyUIPrefabClientRpc(stroyNum);
+    }
+
+    [ClientRpc]
+    private void AddStroyUIPrefabClientRpc(int stroyNum)
+    {
+        StoryManaager.Inst.AddStroyUIPrefab(stroyNum);
     }
 
     private void HandleDieDropAllItems()
@@ -699,7 +717,7 @@ public class NetworkInventoryController : NetworkBehaviour
                 GameObject droppedItem = Instantiate(itemPrefab, position + new Vector3(0,1,0), rotation);
                 PickupItem temptItem = droppedItem.GetComponent<PickupItem>();
 
-
+/*
                 var updatedItemData = new InventoryItemData(
                     itemToDropData.itemName,
                     itemToDropData.itemSpritePath,
@@ -712,10 +730,12 @@ public class NetworkInventoryController : NetworkBehaviour
                     itemToDropData.maxPrice,
                     itemToDropData.minPrice,
                     itemToDropData.batteryLevel,
-                    itemToDropData.batteryEfficiency
-                );
+                    itemToDropData.batteryEfficiency,
+                    itemToDropData.isStoryItem,
+                    itemToDropData.storyNumber
+                );*/
 
-                StartCoroutine(SetDataNextFrame(temptItem, updatedItemData));
+                StartCoroutine(SetDataNextFrame(temptItem, itemToDropData));
 
                 NetworkObject networkObject = droppedItem.GetComponent<NetworkObject>();
                 if (networkObject != null)
@@ -816,7 +836,7 @@ public class NetworkInventoryController : NetworkBehaviour
         if (GetComponent<NetworkObject>().OwnerClientId == senderClientId)
         {
             InventoryItem currentItem = items[slotIndex];
-            var updatedItemData = new InventoryItemData(
+/*            var updatedItemData = new InventoryItemData(
                   currentItem.itemName,
                   currentItem.itemSpritePath,
                   currentItem.previewPrefabPath,
@@ -828,10 +848,12 @@ public class NetworkInventoryController : NetworkBehaviour
                   currentItem.maxPrice,
                   currentItem.minPrice,
                   currentItem.batteryLevel,
-                  currentItem.batteryEfficiency
-              );
+                  currentItem.batteryEfficiency,
+                  currentItem.isStoryItem,
+                  currentItem.storyNumber
+              );*/
 
-            NetworkManager.SpawnManager.SpawnedObjects[objectID].gameObject.GetComponent<PickupItem>().networkInventoryItemData.Value = updatedItemData;
+            NetworkManager.SpawnManager.SpawnedObjects[objectID].gameObject.GetComponent<PickupItem>().networkInventoryItemData.Value = currentItem.ToData();
 
             RequestRemoveItemFromInventoryServerRpc(slotIndex);
         }      

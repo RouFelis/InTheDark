@@ -2630,6 +2630,9 @@ MonoBehaviour:
   failTime:
     m_InternalValue: 0
   MaxFailTime: 3
+  isStory: 1
+  storyNumbers: 01000000
+  storyNumber: 0
   targetObjectName: wagon
   collectObjectWall: {fileID: 2730759929918836612}
   insertObject: {fileID: 0}

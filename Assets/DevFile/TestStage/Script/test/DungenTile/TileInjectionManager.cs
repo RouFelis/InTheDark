@@ -43,6 +43,18 @@ public class TileInjectionManager : MonoBehaviour
 
         runtimeDungeon.Generator.TileInjectionMethods += InjectTiles;
 
+		if (SharedData.Instance.area.Value >= 16)
+        {
+            numberOfSetsToInject = 8;
+		}
+		else if(SharedData.Instance.area.Value == 0)
+		{
+            numberOfSetsToInject = 1;
+		}
+		else
+		{
+            numberOfSetsToInject = SharedData.Instance.area.Value;
+        }
     }
 
     private void InjectTiles(RandomStream randomStream, ref List<InjectedTile> tiles)

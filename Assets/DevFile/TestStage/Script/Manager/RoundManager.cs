@@ -28,7 +28,7 @@ public class RoundManager : NetworkBehaviour
 		SharedData.Instance.area.OnValueChanged += SetAreaTMP;
 		SharedData.Instance.questQuota.OnValueChanged += SetquestQuotaTMP;
 		SharedData.Instance.moneyQuota.OnValueChanged += SetmoneyQuotaTMP;
-		SharedData.Instance.Money.OnValueChanged += SetmoneyQuotaTMP;
+		SharedData.Instance.roundMoney.OnValueChanged += SetmoneyQuotaTMP;
 
 		QuestManager.inst.nowClearedQuestTotal.OnValueChanged += SetquestQuotaTMP;
 
@@ -61,7 +61,7 @@ public class RoundManager : NetworkBehaviour
 
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Money Quota"; // 사용하고자 하는 키
-		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.Money.Value + " / " + SharedData.Instance.moneyQuota.Value;
+		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.roundMoney.Value + " / " + SharedData.Instance.moneyQuota.Value;
 	}
 
 	private void SetLanguage(Locale newLocale)
@@ -84,20 +84,20 @@ public class RoundManager : NetworkBehaviour
 	private void SetAreaTMP(int oldValue, int newValue)
 	{
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
-		localizedString.TableEntryReference = "Area"; // 사용하고자 하는 키
+		localizedString.TableEntryReference = "Area"; // 사 용하고자 하는 키
 		areaTMP.text = $"{localizedString.GetLocalizedString()} : " + newValue.ToString();
 	}
 	private void SetquestQuotaTMP(int oldValue, int newValue)
 	{
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Mission Quota"; // 사용하고자 하는 키
-		missionQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + QuestManager.inst.nowClearedQuestTotal + " / " + SharedData.Instance.questQuota.Value;
+		missionQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + QuestManager.inst.nowClearedQuestTotal.Value + " / " + SharedData.Instance.questQuota.Value;
 	}
 	private void SetmoneyQuotaTMP(int oldValue, int newValue)
 	{
 		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Money Quota"; // 사용하고자 하는 키
-		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.Money.Value + " / " + SharedData.Instance.moneyQuota.Value;
+		moneyQuotaTMP.text = $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.roundMoney.Value + " / " + SharedData.Instance.moneyQuota.Value;
 	}
 
 
@@ -106,17 +106,18 @@ public class RoundManager : NetworkBehaviour
 	public void GameClearCheckServerRpc()
 	{
 		bool missionQuotaCleared = QuestManager.inst.nowClearedQuestTotal.Value >= SharedData.Instance.questQuota.Value;
-		bool moneyQuotaCleared = SharedData.Instance.moneyQuota.Value <= SharedData.Instance.Money.Value; // 원하는 조건으로 수정
+		bool moneyQuotaCleared = SharedData.Instance.moneyQuota.Value <= SharedData.Instance.roundMoney.Value;
 
 		if (missionQuotaCleared && moneyQuotaCleared)
 		{
-			SharedData.Instance.area.Value += 1; // 다음 라운드로 진행
+			GameClearServerRPC();
 		}
 		else
 		{
 			// 클리어 실패
 			Debug.Log("라운드 클리어 실패 - 조건 미달");
 			GameOverAnimeClientRpc();
+			GameClearServerRPC();
 		}
 	}
 
@@ -197,8 +198,9 @@ public class RoundManager : NetworkBehaviour
 
 	[ServerRpc]
 	public void GameClearServerRPC()
-	{		
+	{
 		SharedData.Instance.area.Value += 1;
+		SharedData.Instance.SetRoundClearData();
 		QuestManager.inst.QuestReset();
 		//SharedData.Instance.questQuota.Value = 0;
 		//SharedData.Instance.moneyQuota.Value = 0;

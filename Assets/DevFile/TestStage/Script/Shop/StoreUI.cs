@@ -27,12 +27,14 @@ public class StoreUI : MonoBehaviour
 
     public LocalizedString localizedString;
 
+
+    [Header("Monitor Ref")]
     [SerializeField] private List<UIStruct> staticUIList; //Á¤Àû UI.
     [SerializeField] private List<AppStruct> appList;
     [SerializeField] private UIStruct token;
     [SerializeField] private UIStruct rareToken;
     [SerializeField] private Button powerButton;
-    [SerializeField] private ShopInteracter shopInteracter;
+
 
 
     void Start()
@@ -46,6 +48,7 @@ public class StoreUI : MonoBehaviour
 
         powerButton.onClick.AddListener(PowerOff);
     }
+
 
     private void OnLanguageChanged(Locale newLocale)
     {
