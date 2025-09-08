@@ -4,7 +4,8 @@ using Unity.Netcode;
 
 public class Checker : InteractableObject
 {
-	public NetworkVariable<bool> isComplete = new NetworkVariable<bool>(false);
+	//public NetworkVariable<bool> isComplete = new NetworkVariable<bool>(false);
+	public bool isComplete = false;
 	[SerializeField] bool isStart = false;
 	[SerializeField] Quest2 quest;
 	Transform startEndTransform;
@@ -35,7 +36,15 @@ public class Checker : InteractableObject
 	[ServerRpc(RequireOwnership = false)]
 	public void CompleteBoolChangeServerRpc(bool value)
 	{
-		isComplete.Value = value;
+		isComplete = value;
+		CompleteBoolClientRpc(value);
+	}
+
+
+	[ClientRpc(RequireOwnership = false)]
+	public void CompleteBoolClientRpc(bool value)
+	{
+		isComplete = value;
 	}
 
 	public override bool Interact(ulong uerID, Transform interactingObjectTransform)
@@ -43,7 +52,7 @@ public class Checker : InteractableObject
 		if (!base.Interact(uerID, interactingObjectTransform))
 			return false;
 
-		if (isComplete.Value)
+		if (isComplete)
 		{
 			return false;
 		}

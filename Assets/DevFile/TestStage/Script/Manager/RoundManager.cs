@@ -117,7 +117,7 @@ public class RoundManager : NetworkBehaviour
 			// 클리어 실패
 			Debug.Log("라운드 클리어 실패 - 조건 미달");
 			GameOverAnimeClientRpc();
-			GameClearServerRPC();
+			GameFailServerRPC();
 		}
 	}
 
@@ -174,13 +174,13 @@ public class RoundManager : NetworkBehaviour
 		localizedString.TableEntryReference = "Completed Mission"; // 사용하고자 하는 키
 		roundClearContentsTMP.text = $"{localizedString.GetLocalizedString()} : " + QuestManager.inst.nowClearedQuestTotal.Value + "\n";
 
-		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+/*		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Killed Enemy"; // 사용하고자 하는 키
-		roundClearContentsTMP.text += $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.area.Value + "\n";
+		roundClearContentsTMP.text += $"{localizedString.GetLocalizedString()} : " + SharedData.Instance.area.Value + "\n";*/
 
-		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
+/*		localizedString.TableReference = "UITable"; // 사용하고자 하는 테이블
 		localizedString.TableEntryReference = "Escape"; // 사용하고자 하는 키
-		roundClearContentsTMP.text += $"{localizedString.GetLocalizedString()} : " + PlayersManager.Instance.allPlayersDead.Value + "\n";
+		roundClearContentsTMP.text += $"{localizedString.GetLocalizedString()} : " + PlayersManager.Instance.allPlayersDead.Value + "\n";*/
 
 		StartCoroutine(ScrambleIn(roundClearContentsTMP.text, roundClearContentsTMP));
 	}
@@ -200,6 +200,16 @@ public class RoundManager : NetworkBehaviour
 	public void GameClearServerRPC()
 	{
 		SharedData.Instance.area.Value += 1;
+		SharedData.Instance.SetRoundClearData();
+		QuestManager.inst.QuestReset();
+		//SharedData.Instance.questQuota.Value = 0;
+		//SharedData.Instance.moneyQuota.Value = 0;
+	}
+
+	[ServerRpc]
+	public void GameFailServerRPC()
+	{
+		SharedData.Instance.area.Value = 0;
 		SharedData.Instance.SetRoundClearData();
 		QuestManager.inst.QuestReset();
 		//SharedData.Instance.questQuota.Value = 0;

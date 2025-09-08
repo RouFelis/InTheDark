@@ -73,6 +73,8 @@ public class Quest2 : QuestBase
         isUsed.Value = value;
     }
 
+
+
     public void WireEnd(Transform endPoint, Checker endChecker)
     {
         if (endChecker.connectionOrder == startChecker.connectionOrder)
@@ -114,7 +116,7 @@ public class Quest2 : QuestBase
         int boolCount = 0;
         foreach (var checker in checkerList)
         {
-            if (checker.isComplete.Value)
+            if (checker.isComplete)
             {
                 boolCount++;
             }

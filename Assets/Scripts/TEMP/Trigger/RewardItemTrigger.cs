@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
+#if UNITY_EDITOR
 using static UnityEditor.U2D.ScriptablePacker;
+#endif
 
 [CreateAssetMenu]
 public class RewardItemTrigger : EnemyRandomBoxTrigger

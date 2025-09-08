@@ -7,7 +7,7 @@ public class StoryUIMarker : MonoBehaviour
 	[SerializeField] private GameObject reddot;
 	[SerializeField] private Button storyButton;
 
-	[HideInInspector] public int storyID; // ◀◀◀ 이 변수를 추가해주세요!
+	[HideInInspector] public int storyID;
 	[HideInInspector] private bool isRead = true;
 	[HideInInspector] private string storyText = "";
 

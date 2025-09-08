@@ -24,7 +24,8 @@ public class GoRoom : InteractableObject
 		// Ãß°¡?
 		using var command = new InTheDark.Prototypes.Exit()
 		{
-			BuildIndex = 0
+			//BuildIndex = 0
+			BuildIndex = SharedData.Instance.area.Value
 		};
 
 		command.Invoke();

@@ -139,8 +139,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   interactCooldown: 2
-  isComplete:
-    m_InternalValue: 0
+  isComplete: 0
   isStart: 1
   quest: {fileID: 7230374067184988715}
   connectionOrder: 3
@@ -285,8 +284,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   interactCooldown: 2
-  isComplete:
-    m_InternalValue: 0
+  isComplete: 0
   isStart: 0
   quest: {fileID: 7230374067184988715}
   connectionOrder: 1
@@ -13634,8 +13632,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   interactCooldown: 2
-  isComplete:
-    m_InternalValue: 0
+  isComplete: 0
   isStart: 1
   quest: {fileID: 7230374067184988715}
   connectionOrder: 1
@@ -13780,8 +13777,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   interactCooldown: 2
-  isComplete:
-    m_InternalValue: 0
+  isComplete: 0
   isStart: 0
   quest: {fileID: 7230374067184988715}
   connectionOrder: 2
@@ -13928,8 +13924,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   interactCooldown: 2
-  isComplete:
-    m_InternalValue: 0
+  isComplete: 0
   isStart: 1
   quest: {fileID: 7230374067184988715}
   connectionOrder: 4
@@ -14136,8 +14131,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   interactCooldown: 2
-  isComplete:
-    m_InternalValue: 0
+  isComplete: 0
   isStart: 0
   quest: {fileID: 7230374067184988715}
   connectionOrder: 0
@@ -16269,8 +16263,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   interactCooldown: 2
-  isComplete:
-    m_InternalValue: 0
+  isComplete: 0
   isStart: 0
   quest: {fileID: 7230374067184988715}
   connectionOrder: 3
@@ -16510,8 +16503,7 @@ MonoBehaviour:
     m_LocalVariables: []
   IsDragable: 0
   interactCooldown: 2
-  isComplete:
-    m_InternalValue: 0
+  isComplete: 0
   isStart: 1
   quest: {fileID: 7230374067184988715}
   connectionOrder: 1

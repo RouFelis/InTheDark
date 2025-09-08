@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 5209418188129620668}
   - component: {fileID: 3645130872170099156}
   - component: {fileID: 6786268229953502458}
+  - component: {fileID: 3995130756114961452}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -226,6 +227,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoneMixerGroup: {fileID: 3923682070797444629, guid: 6cb6f74c41f9262409531ede94534227, type: 2}
   manager: {fileID: 0}
+--- !u!65 &3995130756114961452
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2984424080947917056}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 37.36482, y: 9.881994, z: 35.772923}
+  m_Center: {x: 6.9442806, y: 4.885538, z: 7.6194706}
 --- !u!1001 &272204339548481928
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2215,6 +2237,10 @@ PrefabInstance:
       propertyPath: 'BlockerSceneObjects.Array.data[0]'
       value: 
       objectReference: {fileID: 4255618072844646391}
+    - target: {fileID: 8600691992923320857, guid: 29100a21734f174458bbd8032c1b6952, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8823886993235652073, guid: 29100a21734f174458bbd8032c1b6952, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

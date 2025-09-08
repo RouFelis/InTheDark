@@ -90,7 +90,7 @@ public class PlayerUIHandler : NetworkBehaviour
     private void UpdateHealthBar()
     {
         if (healthBar == null || stats.maxHealth <= 0f) return;
-        healthBar.fillAmount = Mathf.Clamp01(player.GetComponent<PlayerNetworkData>().Health.Value / stats.maxHealth) * 0.5f;
+        healthBar.fillAmount = Mathf.Clamp01(player.GetComponent<PlayerNetworkData>().Health.Value / stats.maxHealth);
     }
 
 

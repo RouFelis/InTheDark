@@ -57,7 +57,7 @@ public class QuestBase : NetworkBehaviour
 
         if (MaxFailTime <= failTime.Value)
 		{
-            QuestManager.inst.QuestFailAction.Invoke();
+           // QuestManager.inst.QuestFailAction.Invoke();
         }
 	}
 

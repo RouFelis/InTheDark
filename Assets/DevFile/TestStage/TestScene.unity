@@ -430,7 +430,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &163126632
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1252,7 +1252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &444316168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2011,7 +2011,7 @@ MonoBehaviour:
     AreaTypeID: 0
     DisableLinkWhenDoorIsClosed: 0
   NavMeshLinkDistanceFromDoorway: -2
-  AutoGenerateFullRebakeSurfaces: 0
+  AutoGenerateFullRebakeSurfaces: 1
   FullRebakeTargets: []
   UseAutomaticLinkDistance: 0
   AutomaticLinkDistanceOffset: 2
@@ -2022,7 +2022,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641896172}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f76f356143a516846a54607aa83a9ae8, type: 3}
   m_Name: 
@@ -2639,7 +2639,7 @@ MonoBehaviour:
       isRequired: 0
       pathDepth: 0
       branchDepth: 0
-  numberOfSetsToInject: 4
+  numberOfSetsToInject: 5
   runtimeDungeon: {fileID: 641896173}
 --- !u!4 &748455758
 Transform:
@@ -4020,6 +4020,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   dungeon: {fileID: 641896173}
   Archetype: {fileID: 11400000, guid: b8403790cc9ff2b47ab8512eeda223f4, type: 2}
+  dungeonFlow: {fileID: 11400000, guid: 3807c820ce5f84f47a45c1c632165c85, type: 2}
   itemPrefabs:
   - {fileID: 5809953777107759177, guid: 0306e63a0370df7429d7d0eaa1869d85, type: 3}
   itemCountToSpawn: 10
@@ -4850,7 +4851,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1498511602
 RectTransform:
   m_ObjectHideFlags: 0

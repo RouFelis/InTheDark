@@ -4059,6 +4059,7 @@ GameObject:
   - component: {fileID: 4172703667274148429}
   - component: {fileID: 7503646244717198809}
   - component: {fileID: 3306234247816475029}
+  - component: {fileID: 2416190275204565208}
   m_Layer: 2
   m_Name: VoiceZoneTrigger
   m_TagString: Untagged
@@ -4116,6 +4117,30 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 20.22, y: 5.9, z: 169.86}
   m_Center: {x: 0.6, y: 2.72, z: 1.15}
+--- !u!167 &2416190275204565208
+AudioReverbZone:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5316125142167383246}
+  m_Enabled: 1
+  m_MinDistance: 11.942955
+  m_MaxDistance: 21.395111
+  m_ReverbPreset: 1
+  m_Room: -1000
+  m_RoomHF: -100
+  m_DecayTime: 1.49
+  m_DecayHFRatio: 0.83
+  m_Reflections: -2602
+  m_ReflectionsDelay: 0.007
+  m_Reverb: 200
+  m_ReverbDelay: 0.011
+  m_HFReference: 5000
+  m_Diffusion: 100
+  m_Density: 100
+  m_LFReference: 250
+  m_RoomLF: 0
 --- !u!1 &6345918977480585487
 GameObject:
   m_ObjectHideFlags: 0

@@ -45,7 +45,7 @@ public sealed class Negative_RLPRO : CustomPostProcessVolumeComponent, IPostProc
         m_Material.SetFloat("_Intensity", intensity.value);
 		T += Time.deltaTime;
 		if (T > 100) T = 0;
-		m_Material.SetFloat("T", T);
+		m_Material.SetFloat("TComponent", T);
 		if (mask.value != null)
 		{
 			m_Material.SetTexture(_Mask, mask.value);

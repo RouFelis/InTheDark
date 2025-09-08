@@ -80,7 +80,7 @@ public sealed class Glitch1_RLPRO : CustomPostProcessVolumeComponent, IPostProce
 			m_Material.SetFloat(_FadeMultiplier, 0);
 		}
 
-		m_Material.SetFloat("T", T);
+		m_Material.SetFloat("TComponent", T);
 
         cmd.Blit(source, destination, m_Material, 0);
     }

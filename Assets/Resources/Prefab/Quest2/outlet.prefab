@@ -151,7 +151,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2122761618044954919}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
@@ -289,23 +289,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: ce772244a9f5d614b8cea8d750ab25bd, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.3
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce772244a9f5d614b8cea8d750ab25bd, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.3
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce772244a9f5d614b8cea8d750ab25bd, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.3
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce772244a9f5d614b8cea8d750ab25bd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 989.0992
+      value: 989.1292
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce772244a9f5d614b8cea8d750ab25bd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -207.51474
+      value: -207.85095
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: ce772244a9f5d614b8cea8d750ab25bd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -382,7 +382,7 @@ PositionConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: 989.0992, y: -207.51474, z: 1.4168894}
-  m_TranslationOffset: {x: 0, y: 0.33621216, z: 0}
+  m_TranslationOffset: {x: 0.03, y: 0, z: 0}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1

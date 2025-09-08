@@ -172,6 +172,8 @@ public class Player : playerMoveController, IHealth, ICharacter
             firstpersonAnimator.SetTrigger("AttackTrigger");
             thirdpersonAnimator.SetTrigger("AttackTrigger");
         }
+
+
     }
 
     // Expose method to take damage from other systems

@@ -10,26 +10,28 @@ public class PickupItem : NetworkBehaviour , IPickupItem
     [Header("스토리 넘버 후보")]
     [SerializeField] private int[] storyNumbers;
 
-    /*
-        [Header("Debug Info (Runtime Only)")]
-        [SerializeField] private string itemName;
-        [SerializeField] private string itemSpritePath;
-        [SerializeField] private string previewPrefabPath;
-        [SerializeField] private string objectPrefabPath;
-        [SerializeField] private string dropPrefabPath;
 
-        [SerializeField] private bool isPlaceable;
-        [SerializeField] private bool isUsable;
+    public NetworkVariable<InventoryItemData> networkInventoryItemData = new NetworkVariable<InventoryItemData>();
 
-        [SerializeField] private int price;
-        [SerializeField] private int minPrice;
-        [SerializeField] private int maxPrice;
+    [Header("Debug Info (Runtime Only)")]
+    [SerializeField] private string itemName;
+    [SerializeField] private string itemSpritePath;
+    [SerializeField] private string previewPrefabPath;
+    [SerializeField] private string objectPrefabPath;
+    [SerializeField] private string dropPrefabPath;
 
-        [SerializeField] private float batteryLevel;
-        [SerializeField] private float batteryEfficiency;
+    [SerializeField] private bool isPlaceable;
+    [SerializeField] private bool isUsable;
+
+    [SerializeField] private int price;
+    [SerializeField] private int minPrice;
+    [SerializeField] private int maxPrice;
+
+    [SerializeField] private float batteryLevel;
+    [SerializeField] private float batteryEfficiency;
 
 
-        private void Update()
+    private void Update()
         {
             // 실행 중일 때만 디버깅용 인스펙터 업데이트
             if (!IsOwner && !IsServer) return;
@@ -52,7 +54,7 @@ public class PickupItem : NetworkBehaviour , IPickupItem
             batteryLevel = data.batteryLevel;
             batteryEfficiency = data.batteryEfficiency;
         }
-    */
+    
 
     public InventoryItem cloneItem 
     {
@@ -70,8 +72,6 @@ public class PickupItem : NetworkBehaviour , IPickupItem
         }
     }
 
-    public NetworkVariable<InventoryItemData> networkInventoryItemData = new NetworkVariable<InventoryItemData>();
-
     public bool RequestBoolStoryItem()
     {
         return cloneItem.isStoryItem;
@@ -82,46 +82,58 @@ public class PickupItem : NetworkBehaviour , IPickupItem
         return cloneItem.storyNumber;
     }
 
-    protected virtual void Start()
-    {
-        if (IsServer)
-        {
-            SetStroyNumber();
+	public override void OnNetworkSpawn()
+	{
+		base.OnNetworkSpawn();
 
-            // 클라이언트에서 데이터가 변경될 때 아이템 로드
-            networkInventoryItemData.OnValueChanged += (oldValue, newValue) =>
-            {
-                LoadItemFromData(newValue);
-            };
-        }
-        else
-        {
-            cloneItem.CopyDataFrom(networkInventoryItemData.Value);
+		if (IsServer)
+		{
+			SetStoryNumber();
+		}
 
-            networkInventoryItemData.OnValueChanged += (oldValue, newValue) =>
-            {
-                LoadItemFromData(newValue);
-            };
-        }
-    }
+		// 이벤트 등록
+		networkInventoryItemData.OnValueChanged += OnInventoryItemDataChanged;
 
-    private void SetStroyNumber()
-    {
-        if (!cloneItem.isStoryItem && cloneItem.storyNumber != -1) return;
-
-        // 아직 안 정해졌다면 랜덤으로 선택
-        if (storyNumbers.Length > 0)
-        {
-            cloneItem.storyNumber = storyNumbers[Random.Range(0, storyNumbers.Length)]; 
+		if (networkInventoryItemData.Value.itemName == "")
+		{
             networkInventoryItemData.Value = cloneItem.ToData();
         }
+
+		// 초기값 반영
+		LoadItemFromData(networkInventoryItemData.Value);
+	}
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+
+        // 이벤트 해제
+        networkInventoryItemData.OnValueChanged -= OnInventoryItemDataChanged;
+    }
+
+    private void SetStoryNumber()
+    { 
+        if (cloneItem.isStoryItem && cloneItem.storyNumber == -1)
+		{
+            Debug.Log($"{name} : 랜덤생성");
+            // 아직 안 정해졌다면 랜덤으로 선택
+            if (storyNumbers.Length > 0)
+            {
+                cloneItem.storyNumber = storyNumbers[Random.Range(0, storyNumbers.Length)];
+                networkInventoryItemData.Value = cloneItem.ToData();
+            }
+        }
+    }
+    private void OnInventoryItemDataChanged(InventoryItemData oldValue, InventoryItemData newValue)
+    {
+        LoadItemFromData(newValue);
     }
 
     private void LoadItemFromData(InventoryItemData data)
     {
-        Debug.Log("테스트 33333333");
+        Debug.Log($"{name} : 테스트 33333333");
         cloneItem.CopyDataFrom(data);
-        Debug.Log("DataLoad....");
+        Debug.Log($"{name} : DataLoad....");
     }
 
     public virtual void UseItem(NetworkInventoryController controller)

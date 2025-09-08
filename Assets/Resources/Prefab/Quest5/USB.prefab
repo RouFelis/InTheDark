@@ -15,11 +15,11 @@ GameObject:
   - component: {fileID: 6421790484892122286}
   - component: {fileID: 8786113076481540499}
   - component: {fileID: 9217230528584299019}
-  - component: {fileID: 2350395489722831335}
   - component: {fileID: 8215200188016167767}
   - component: {fileID: 9171041764350221938}
   - component: {fileID: 1745094739611174281}
   - component: {fileID: 6650909822935177849}
+  - component: {fileID: 2350395489722831335}
   m_Layer: 6
   m_Name: USB
   m_TagString: Item
@@ -200,6 +200,85 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &8215200188016167767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859087284310973052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61f350855c9379d4892639b06add2c9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  handTransform: {fileID: 0}
+  isPickedUp: 0
+  positionConstraint: {fileID: 9171041764350221938}
+  rotationConstraint: {fileID: 1745094739611174281}
+  networkTransform: {fileID: 6421790484892122286}
+  networkRigidbody: {fileID: 9217230528584299019}
+  boxCollider: {fileID: 6650909822935177849}
+  meshCollider: {fileID: 0}
+  player: {fileID: 0}
+--- !u!1818360608 &9171041764350221938
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859087284310973052}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: -14.24, y: 2, z: 9.06}
+  m_TranslationOffset: {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources: []
+--- !u!1818360609 &1745094739611174281
+RotationConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859087284310973052}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 82.041, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources: []
+--- !u!65 &6650909822935177849
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859087284310973052}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0064189294, y: 0.020015001, z: 0.0025039306}
+  m_Center: {x: 0.0000012250384, y: -0.0000021997841, z: -0.0000048850784}
 --- !u!114 &2350395489722831335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,18 +294,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   inventoryItem: {fileID: 11400000, guid: 931375b0a8111fb489814b1d821b0cc0, type: 2}
   CloneItem: {fileID: 0}
-  itemName: 
-  itemSpritePath: 
-  previewPrefabPath: 
-  objectPrefabPath: 
-  dropPrefabPath: 
-  isPlaceable: 0
-  isUsable: 0
-  price: 0
-  minPrice: 0
-  maxPrice: 0
-  batteryLevel: 0
-  batteryEfficiency: 0
+  storyNumbers: 0000000001000000
   networkInventoryItemData:
     m_InternalValue:
       itemName:
@@ -916,81 +984,5 @@ MonoBehaviour:
       maxPrice: 0
       batteryLevel: 0
       batteryEfficiency: 0
---- !u!114 &8215200188016167767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4859087284310973052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61f350855c9379d4892639b06add2c9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  handTransform: {fileID: 0}
-  isPickedUp: 0
-  positionConstraint: {fileID: 9171041764350221938}
-  rotationConstraint: {fileID: 1745094739611174281}
-  networkTransform: {fileID: 6421790484892122286}
-  networkRigidbody: {fileID: 9217230528584299019}
-  boxCollider: {fileID: 6650909822935177849}
-  player: {fileID: 0}
---- !u!1818360608 &9171041764350221938
-PositionConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4859087284310973052}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: -14.24, y: 2, z: 9.06}
-  m_TranslationOffset: {x: 0, y: 0, z: 0}
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_Active: 0
-  m_IsLocked: 0
-  m_Sources: []
---- !u!1818360609 &1745094739611174281
-RotationConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4859087284310973052}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_RotationAtRest: {x: 82.041, y: 0, z: 0}
-  m_RotationOffset: {x: 0, y: 0, z: 0}
-  m_AffectRotationX: 1
-  m_AffectRotationY: 1
-  m_AffectRotationZ: 1
-  m_Active: 0
-  m_IsLocked: 0
-  m_Sources: []
---- !u!65 &6650909822935177849
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4859087284310973052}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.0064189294, y: 0.020015001, z: 0.0025039306}
-  m_Center: {x: 0.0000012250384, y: -0.0000021997841, z: -0.0000048850784}
+      isStoryItem: 0
+      storyNumber: 0

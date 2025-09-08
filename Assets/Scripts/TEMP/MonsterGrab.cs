@@ -6,7 +6,9 @@ using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations;
+#if UNITY_EDITOR
 using static UnityEditor.Rendering.FilterWindow;
+#endif
 
 namespace InTheDark.Prototypes
 {

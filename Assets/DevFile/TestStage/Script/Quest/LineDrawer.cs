@@ -103,7 +103,8 @@ public class LineDrawer : NetworkBehaviour
     [ServerRpc(RequireOwnership =false)]
     private void DestroyCableServerRpc()
 	{
-        cableNet.Despawn();
+        Destroy(cableNet);
+        //cableNet.Despawn();
     }
 
     void Update()

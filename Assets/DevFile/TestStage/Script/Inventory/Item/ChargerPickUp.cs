@@ -36,9 +36,8 @@ public class ChargerPickUp : PickupItem
     private CharacterController controller;
 
 
-    protected override void Start()
-    {
-        base.Start();        
+    protected void Start()
+    {      
         gaugeBar = GameObject.Find("ItemGauge").GetComponent<Image>();
 
         if (cameraTransform == null && Camera.main != null)

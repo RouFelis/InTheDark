@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Transactions;
 
@@ -36,6 +37,8 @@ namespace InTheDark.Prototypes
 		private void OnAwake()
 		{
 			//VFXSpawnerCallbacks callbacks = default;
+
+			Debug.Log(Math.Log(243, 3));
 		}
 	}
 

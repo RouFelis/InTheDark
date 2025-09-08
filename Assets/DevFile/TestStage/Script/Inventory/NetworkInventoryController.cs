@@ -52,7 +52,6 @@ public class NetworkInventoryController : NetworkBehaviour
     public Transform grabHandTransform; // 손에 아이템을 잡는 위치
 
 
-
     #region 초기화    
 
     private void Awake()
@@ -420,6 +419,7 @@ public class NetworkInventoryController : NetworkBehaviour
             currentPlaceableItemManager.UpdatePreviewObject();
             currentPlaceableItemManager.HandleRotation(ref isPlacingItem , currentSelectedItem.objectPrefabPath );
         }
+     
         Debug.Log($"테스트 IsPaused : {MenuManager.Instance.IsPaused} , IsEvenet : {MenuManager.Instance.IsEvenet} ");
     }
 
@@ -703,6 +703,8 @@ public class NetworkInventoryController : NetworkBehaviour
         }
     }
     
+
+
     //아이템 떨어뜨리기
     [ServerRpc(RequireOwnership = false)]
     private void DropItemServerRpc(string itemName, Vector3 position, Quaternion rotation, int slotIndex)

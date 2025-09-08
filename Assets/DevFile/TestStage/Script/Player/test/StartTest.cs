@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DunGen;
+using DunGen.Graph;
 using UnityEngine;
 using Unity.Netcode;
 
@@ -8,6 +9,7 @@ public class StartTest : StartRoomSetter
 {
 	[SerializeField] RuntimeDungeon dungeon;
 	[SerializeField] private DungeonArchetype Archetype;
+	[SerializeField] private DungeonFlow dungeonFlow;
 
 
 	public GameObject[] itemPrefabs;     // 스폰할 아이템 프리팹들
@@ -21,16 +23,28 @@ public class StartTest : StartRoomSetter
 		{
 			Archetype.BranchCount.Max = 4;
 			Archetype.BranchCount.Min = 2;
+			dungeonFlow.Length.Max = 4;
+			dungeonFlow.Length.Min = 2;
 
 			Debug.Log("브랜치 설정 ");
 		}
 		else
 		{
-			int round = SharedData.Instance.area.Value;
-			int baseCount = (int)Mathf.Floor(2 + Mathf.Log(round + 1, 2)); // log₂(라운드+1)
+			//루트방식
+			/*			int round = Mathf.Max(0, SharedData.Instance.area.Value);
 
-			Archetype.BranchCount.Min = baseCount;
-			Archetype.BranchCount.Max = baseCount + 2;
+						int value = 4 + (int)Mathf.Floor(Mathf.Sqrt(round * 4f)); // float값 조절해서 밀도 증가.*/
+
+			int round = Mathf.Max(0, SharedData.Instance.area.Value);
+
+			//정수방식
+			int value = 2 + (int)Mathf.Floor(Mathf.Pow(round, 0.7f));
+
+			Archetype.BranchCount.Max = value;
+			Archetype.BranchCount.Min = value;
+		
+			dungeonFlow.Length.Max = value;
+			dungeonFlow.Length.Min = value;
 
 			Debug.Log("브랜치 설정 ");
 		}
@@ -58,7 +72,8 @@ public class StartTest : StartRoomSetter
 		// 2025.02.10 롤백?
 		using var command = new InTheDark.Prototypes.Enter()
 		{
-			BuildIndex = 0
+			//BuildIndex = 0
+			BuildIndex = SharedData.Instance.area.Value
 		};
 
 		command.Invoke();

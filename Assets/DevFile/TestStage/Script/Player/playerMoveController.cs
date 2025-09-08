@@ -95,6 +95,8 @@ public class playerMoveController : NetworkBehaviour
     public float midpoint = 0f; // 기본 카메라 높이 (플레이어 머리 위치)
 
     private float timer = 0f; // 시간 값을 추적
+    private float velocityY = 0f;//Movedirection.y 대신할 값 추가.
+
     protected bool pause = false; //퍼즈
 
 
@@ -235,11 +237,7 @@ public class playerMoveController : NetworkBehaviour
 			{
                 EventPlayingStop();
             }
-            JumpHandle();
-        }
-		else
-		{
-
+            //JumpHandle();
         }
         UpdateAnimator();
     }
@@ -263,65 +261,141 @@ public class playerMoveController : NetworkBehaviour
         }
     }
 
+    //핸들 수정...
+    /*   private void HandleInput()
+       {
+           if (stun) return;
+
+           float horizontal = Input.GetAxis("Horizontal");
+           float vertical = Input.GetAxis("Vertical");
+
+           Vector3 forward = transform.TransformDirection(Vector3.forward);
+           Vector3 right = transform.TransformDirection(Vector3.right);
+
+           Vector3 inputDirection = forward * vertical + right * horizontal;
+
+           if (inputDirection.magnitude > 1)
+               inputDirection.Normalize();
+
+           bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value > 0);
+           float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
+           moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier * SlowMultiplier;
+           moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier * SlowMultiplier;
+
+
+           if (isRunning)
+           {
+               currentStamina.Value -= staminaDecreaseRate * Time.deltaTime;
+               currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
+               lastRunTime = Time.time; // 마지막으로 달린 시간 업데이트
+               UpdateSteaminaBar();
+           }
+           else if (Time.time > lastRunTime + staminaRegenDelay)
+           {
+               currentStamina.Value += staminaRegenRate * Time.deltaTime;
+               currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
+               UpdateSteaminaBar();
+           }
+
+           characterController.Move(moveDirection * Time.deltaTime);
+
+
+           if (mouseControl)
+           {
+               rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+               rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
+
+               camTarget.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+               transform.eulerAngles = new Vector3(
+                   0,
+                   transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed,
+                   0
+               );
+           }
+
+
+
+           HandleAim();
+           HeadBobbing();
+           UpdateSteaminaBar();
+       }*/
     private void HandleInput()
     {
-		if (!stun)
-		{
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
+        if (stun) return;
 
-            Vector3 forward = transform.TransformDirection(Vector3.forward);
-            Vector3 right = transform.TransformDirection(Vector3.right);
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
-            Vector3 inputDirection = forward * vertical + right * horizontal;
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        Vector3 right = transform.TransformDirection(Vector3.right);
+        Vector3 inputDirection = forward * vertical + right * horizontal;
 
-            if (inputDirection.magnitude > 1)
-                inputDirection.Normalize();
+        if (inputDirection.magnitude > 1)
+            inputDirection.Normalize();
 
-            bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value > 0);
-            float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
-            moveDirection.x = inputDirection.x * walkSpeed * speedMultiplier * SlowMultiplier;
-            moveDirection.z = inputDirection.z * walkSpeed * speedMultiplier * SlowMultiplier;
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) && (currentStamina.Value > 0);
+        float speedMultiplier = isRunning ? runSpeedMultiplier : 1.0f;
 
+        Vector3 move = inputDirection * walkSpeed * speedMultiplier * SlowMultiplier;
 
-            if (isRunning)
+        // 스태미나 처리
+        if (isRunning)
+        {
+            currentStamina.Value -= staminaDecreaseRate * Time.deltaTime;
+            currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
+            lastRunTime = Time.time;
+        }
+        else if (Time.time > lastRunTime + staminaRegenDelay)
+        {
+            currentStamina.Value += staminaRegenRate * Time.deltaTime;
+            currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
+        }
+
+        UpdateSteaminaBar();
+
+        // ===== 중력/점프 처리 =====
+        if (IsGrounded())
+        {
+            if (velocityY < 0)
+                velocityY = -2f; // 땅에 붙여줌 (뚝 떨어지는 거 방지)
+
+            if (!Stun && Input.GetButtonDown("Jump"))
             {
-                currentStamina.Value -= staminaDecreaseRate * Time.deltaTime;
-                currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
-                lastRunTime = Time.time; // 마지막으로 달린 시간 업데이트
-                UpdateSteaminaBar();
+                velocityY = jumpForce;
+                isJumping = true;
             }
-            else if (Time.time > lastRunTime + staminaRegenDelay)
+            else
             {
-                currentStamina.Value += staminaRegenRate * Time.deltaTime;
-                currentStamina.Value = Mathf.Clamp(currentStamina.Value, 0, maxStamina);
-                UpdateSteaminaBar();
-            }
-
-            characterController.Move(moveDirection * Time.deltaTime);
-
-
-            if (mouseControl)
-            {
-                rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-                rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
-
-                camTarget.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-                transform.eulerAngles = new Vector3(
-                    0,
-                    transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed,
-                    0
-                );
+                isJumping = false;
             }
         }
-        
+
+        velocityY -= gravity * Time.deltaTime;
+        move.y = velocityY;
+
+        // ===== 최종 이동 =====
+        characterController.Move(move * Time.deltaTime);
+
+        // 마우스 카메라 회전
+        if (mouseControl)
+        {
+            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+            rotationX = Mathf.Clamp(rotationX, -lookXLimit, 90f);
+
+            camTarget.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.eulerAngles = new Vector3(
+                0,
+                transform.eulerAngles.y + Input.GetAxis("Mouse X") * lookSpeed,
+                0
+            );
+        }
 
         HandleAim();
         HeadBobbing();
-        UpdateSteaminaBar();
     }
 
-    private void JumpHandle()
+    //기능 병합
+   /* private void JumpHandle()
 	{
 
         // 점프 처리
@@ -355,7 +429,7 @@ public class playerMoveController : NetworkBehaviour
                 characterController.Move(moveDirection * Time.deltaTime);
             }
         }
-    }
+    }*/
 
     Vector3 _velocity;         // 전체 이동 속도 (입력 + 넉백 + 중력 포함)
     Vector3 knockbackVelocity; // 넉백 전용 속도
@@ -429,23 +503,6 @@ public class playerMoveController : NetworkBehaviour
 
     private void HandleAim()
 	{
-/*        //허리 각도 조절이랑 에임 조절용
-        if (Physics.Raycast(firstPersonCamera.transform.position, firstPersonCamera.transform.forward, out hit, aimMaxDistance, layerMask))
-        {
-            Debug.DrawRay(firstPersonCamera.transform.position, firstPersonCamera.transform.forward * hit.distance, Color.red, 0.1f);
-
-            // 충돌한 경우 hit.point로 설정
-            aimTargetPosition = hit.point;
-            // 충돌하지 않은 경우, maxDistance 지점으로 설정
-            //handAimTarget.transform.position = playerCamera.transform.position + playerCamera.transform.forward * aimMaxDistance;
-        }
-        else
-        {
-            Debug.DrawRay(firstPersonCamera.transform.position, firstPersonCamera.transform.forward * hit.distance, Color.red, 0.1f);
-            // 충돌하지 않은 경우, maxDistance 지점으로 설정
-            aimTargetPosition = firstPersonCamera.transform.position + firstPersonCamera.transform.forward * aimMaxDistance;
-        }*/
-
         aimTargetPosition = firstPersonCamera.transform.position + firstPersonCamera.transform.forward * aimMaxDistance;
         handAimTarget.transform.position = Vector3.SmoothDamp(handAimTarget.transform.position, aimTargetPosition, ref velocity, smoothTime);
 
@@ -455,22 +512,39 @@ public class playerMoveController : NetworkBehaviour
 
     private void UpdateAnimator()
     {
-		if (IsOwner)
+        /*	if (IsOwner)
+            {
+                isWalking.Value = moveDirection.x != 0 || moveDirection.z != 0;
+                isRunning.Value = isWalking.Value && Input.GetKey(KeyCode.LeftShift);
+            }
+            if (pause)
+            {
+                isWalking.Value = false;
+            }*/
+
+        //수정
+        if (IsOwner)
         {
-            isWalking.Value = moveDirection.x != 0 || moveDirection.z != 0;
-            isRunning.Value = isWalking.Value && Input.GetKey(KeyCode.LeftShift);
+            // XZ 평면 이동량 체크 (CharacterController.velocity 사용)
+            Vector3 flatVelocity = new Vector3(characterController.velocity.x, 0, characterController.velocity.z);
+            bool isMoving = flatVelocity.magnitude > 0.1f;
+
+            // 걷기/달리기 판정
+            isWalking.Value = isMoving;
+            isRunning.Value = isMoving && Input.GetKey(KeyCode.LeftShift);
         }
-		if (pause)
-		{
+        if (pause)
+        {
             isWalking.Value = false;
+            isRunning.Value = false;
         }
 
+        // 애니메이터 파라미터 적용
         firstpersonAnimator.SetBool("IsWalking", isWalking.Value);
         thirdpersonAnimator.SetBool("IsWalking", isWalking.Value);
-        //  animator.SetBool("IsRunning", isRunning);
-        firstpersonAnimator.SetBool("IsJumping", isJumping);
-        thirdpersonAnimator.SetBool("IsJumping", isJumping);
-        //animator.SetBool("IsJumping", isFalling);
+
+        firstpersonAnimator.SetBool("IsJumping", !IsGrounded());
+        thirdpersonAnimator.SetBool("IsJumping", !IsGrounded());
 
         // 애니메이션 속도 및 사운드 동기화
         if (isWalking.Value)

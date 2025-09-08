@@ -14,7 +14,10 @@ public class GrabHelper : NetworkBehaviour
     [SerializeField] private RotationConstraint rotationConstraint;
     [SerializeField] private NetworkTransform networkTransform;
     [SerializeField] private NetworkRigidbody networkRigidbody;
+    
+    [Header("자기컬라이더 넣기")]
     [SerializeField] private BoxCollider boxCollider;
+    [SerializeField] private MeshCollider meshCollider;
 
     [SerializeField] private Player player;
 
@@ -95,6 +98,8 @@ public class GrabHelper : NetworkBehaviour
             networkRigidbody.enabled = enabled; 
         if (boxCollider != null)
             boxCollider.enabled = enabled;
+        if (meshCollider != null)
+            meshCollider.enabled = enabled;
     }
 
     private void AddConstraint(IConstraint constraint, Transform source)
