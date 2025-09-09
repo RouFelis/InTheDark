@@ -459,7 +459,6 @@ GameObject:
   - component: {fileID: 3170867798847322346}
   - component: {fileID: 2664938574842109991}
   - component: {fileID: 4815689048121716002}
-  - component: {fileID: 7236338420078833990}
   - component: {fileID: -2362926755301820054}
   - component: {fileID: 4967549593802716169}
   - component: {fileID: 3044497667356731293}
@@ -470,6 +469,7 @@ GameObject:
   - component: {fileID: 4726846312733088843}
   - component: {fileID: 2888824451196854836}
   - component: {fileID: 344860905703892509}
+  - component: {fileID: 620985548770586479}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -1435,7 +1435,7 @@ MonoBehaviour:
   - {fileID: 5775247870652489427}
   - {fileID: 3170867798847322346}
   - {fileID: 2664938574842109991}
-  - {fileID: 7236338420078833990}
+  - {fileID: 0}
   - {fileID: 4815689048121716002}
   dieEnableNetworkBehaviorScripts:
   - {fileID: 2740562399230657829}
@@ -1693,22 +1693,6 @@ MonoBehaviour:
     m_Bits: 128
   _causer: {fileID: 0}
   _weapon: {fileID: 2664938574842109991}
---- !u!114 &7236338420078833990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1441098053676493550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c76070aa4e47498892985e5411579684, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  _angle: 0
-  _distance: 0
-  _damagePercent: 0
 --- !u!114 &-2362926755301820054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2025,6 +2009,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &620985548770586479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441098053676493550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6aa0e79f727484f9664fab55ff2c5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  _damage: 16384
+  _range: 1024
+  _target:
+    serializedVersion: 2
+    m_Bits: 128
+  _owner: {fileID: -3805608106118446902}
+  _hitSound: {fileID: 0}
 --- !u!1 &1595425553284540487
 GameObject:
   m_ObjectHideFlags: 0

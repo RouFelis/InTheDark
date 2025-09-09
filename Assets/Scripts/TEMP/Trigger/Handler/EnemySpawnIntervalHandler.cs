@@ -88,7 +88,8 @@ namespace InTheDark.Prototypes
 		[Rpc(SendTo.Server)]
 		private void EnemySpawnRPC(int buildIndex, Vector3 position, Quaternion rotation)
 		{
-			MonsterSpawner.Instance.SpawnEnemyRPC(buildIndex, position, rotation);
+			//MonsterSpawner.Instance.SpawnEnemyRPC(buildIndex, position, rotation);
+			MonsterSpawner.Instance.SpawnEnemyRPC(buildIndex, MonsterSpawner.Instance.GetRandomPositionInNavMesh(), rotation);
 		}
 
 		private void OnDungeonExit(DungeonExitEvent @event)
