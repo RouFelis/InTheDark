@@ -38,8 +38,33 @@ namespace InTheDark.Prototypes
 		{
 			//VFXSpawnerCallbacks callbacks = default;
 
-			Debug.Log(Math.Log(243, 3));
+			//IObserver<IA> observerA = null;
+			//IObserver<IB> observerB = null;
+			//IObserver<IC> observerC = null;
+
+			//IObservable<IA> observableA = null;
+			//IObservable<IB> observableB = null;
+			//IObservable<IC> observableC = null;
+
+			//observableA.Subscribe(observerA);
+			//observableA.Subscribe(observerB);
+			//observableA.Subscribe(observerC);
+
+			//observableB.Subscribe(observerA);
+			//observableB.Subscribe(observerB);
+			//observableB.Subscribe(observerC);
+
+			//observableC.Subscribe(observerA);
+			//observableC.Subscribe(observerB);
+			//observableC.Subscribe(observerC);
+
+			//Debug.Log(Math.Log(243, 3));
 		}
+	}
+
+	public interface IA
+	{
+
 	}
 
 	#region PETIT_CODE

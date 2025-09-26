@@ -277,7 +277,7 @@ namespace InTheDark.Prototypes
 			var result = Vector3.zero;
 			var isOnNavMesh = false;
 
-			for (var i = 0; i < 30 && !isOnNavMesh; i++)
+			for (var i = 0; i < 300 && !isOnNavMesh; i++)
 			{
 				var direction = UnityEngine.Random.insideUnitSphere * _radius;
 
@@ -291,6 +291,8 @@ namespace InTheDark.Prototypes
 					result = hit.position;
 
 					//Debug.Log($"{i}번 시도 차에 {hit.position} 목표 설정 - {gameObject}");
+
+					break;
 				}
 			}
 

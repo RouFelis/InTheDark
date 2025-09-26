@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace InTheDark.Prototypes
 {
-	public interface IDamage : IKeyword
+	public interface IStun : IKeyword
 	{
 
-	}
+	} 
 }

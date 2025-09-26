@@ -11,6 +11,8 @@ public class SharedData : NetworkBehaviour
 	public NetworkVariable<int> questQuota = new NetworkVariable<int>(1);
 	public NetworkVariable<int> moneyQuota = new NetworkVariable<int>(1000);
 
+	public NetworkVariable<int> killed = new NetworkVariable<int>(0);
+
 	private int questQoutaDefult = 3;
 	private int moneyQoutaDefult = 300;
 

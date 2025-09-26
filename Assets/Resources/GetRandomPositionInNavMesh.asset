@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: GetRandomPositionInNavMesh
   m_EditorClassIdentifier: 
   _target: {fileID: 11400000, guid: a6df050a482e374479cd301c96e8343e, type: 2}
-  _radius: 30
-  _maxCount: 30
+  _radius: 1250
+  _maxCount: 300
