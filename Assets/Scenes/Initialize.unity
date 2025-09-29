@@ -237,6 +237,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _radius: 150
   _logBase: 1.414214
+  _agentHeight: 1
+  _enemies: []
   _stage:
   - Triggers:
     - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
@@ -260,6 +262,10 @@ MonoBehaviour:
   - Triggers:
     - {fileID: 11400000, guid: 8c2692361897f4f47a07e4a1ee012d4a, type: 2}
     - {fileID: 11400000, guid: a54ff18b20ac4e043b442cc1a1b70aba, type: 2}
+  _table:
+  - Weight: 1
+    IsEnable: 1
+    Index: 0000000001000000020000000300000004000000050000000600000007000000
   _prefabs:
   - {fileID: 808785113655335579, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
   - {fileID: 808785113655335579, guid: cb6c9a952d86fa349ac1f084ed08ac97, type: 3}
@@ -275,7 +281,6 @@ MonoBehaviour:
   - {fileID: 1433858302028618446, guid: 9081d1f864a30f348bf70134ed091b98, type: 3}
   - {fileID: 1433858302028618446, guid: b0eeea18e7c5f764b8ffd4f448c5f820, type: 3}
   - {fileID: 1433858302028618446, guid: 9f8092a131a0ac445925f5fc7035031e, type: 3}
-  _agentHeight: 1
 --- !u!1 &569208783
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,9 +475,42 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   _radius: 150
   _logBase: 1.414214
+  _agentHeight: 1
+  _enemies: []
   _stage:
   - Triggers:
+    - {fileID: 11400000, guid: 30d7947c1b2913d4ab3f4fb718552d50, type: 2}
+    - {fileID: 11400000, guid: f37491741343b5d498075dfbf03df927, type: 2}
+  - Triggers:
     - {fileID: 11400000, guid: 7020b7c4a173dab42a1112b299ede465, type: 2}
+    - {fileID: 11400000, guid: c408c73dc359cdb47af21898e96a6bdc, type: 2}
+  - Triggers:
+    - {fileID: 11400000, guid: 7e6762e496ff0544f910ce1ca85b2a1a, type: 2}
+  - Triggers:
+    - {fileID: 11400000, guid: e5343159687668440aaf6e050ec64095, type: 2}
+    - {fileID: 11400000, guid: c881a973f5995484a9cf5b7d6b9c55bc, type: 2}
+  - Triggers:
+    - {fileID: 11400000, guid: 9d3fafbd17c75fa42a6666ddc0142fe0, type: 2}
+    - {fileID: 11400000, guid: d8bebfc016f3fb1419fa390216bfadcc, type: 2}
+  - Triggers:
+    - {fileID: 11400000, guid: 6c3631c99045fda4ea3edee5d9636d8d, type: 2}
+  - Triggers:
+    - {fileID: 11400000, guid: 175ada91781183d41a3bad2ff05ace65, type: 2}
+  - Triggers:
+    - {fileID: 11400000, guid: 8c2692361897f4f47a07e4a1ee012d4a, type: 2}
+  _table:
+  - Weight: 1
+    IsEnable: 0
+    Index: 02000000
+  - Weight: 1
+    IsEnable: 0
+    Index: 00000000
+  - Weight: 1
+    IsEnable: 0
+    Index: 07000000
+  - Weight: 1
+    IsEnable: 1
+    Index: 00000000
   _prefabs:
   - {fileID: 808785113655335579, guid: f96346b2ae9b8724e9501cf1c5daa9ae, type: 3}
   - {fileID: 808785113655335579, guid: cb6c9a952d86fa349ac1f084ed08ac97, type: 3}
@@ -488,7 +526,6 @@ MonoBehaviour:
   - {fileID: 1433858302028618446, guid: 9081d1f864a30f348bf70134ed091b98, type: 3}
   - {fileID: 1433858302028618446, guid: b0eeea18e7c5f764b8ffd4f448c5f820, type: 3}
   - {fileID: 1433858302028618446, guid: 9f8092a131a0ac445925f5fc7035031e, type: 3}
-  _agentHeight: 1
 --- !u!114 &1200849442
 MonoBehaviour:
   m_ObjectHideFlags: 0

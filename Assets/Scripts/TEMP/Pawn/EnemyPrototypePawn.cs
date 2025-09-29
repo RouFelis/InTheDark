@@ -105,7 +105,13 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//private NetworkVariable<float> _cooldown = new NetworkVariable<float>();
 
 	[SerializeField]
+	private float _sensitivity = 0.0F;
+
+	[SerializeField]
 	private NetworkVariable<FixedString128Bytes> _state = new(DEFAULT_STATE);
+
+	[SerializeField]
+	private NetworkVariable<float> _pathfindingDelay = new();
 
 	public AudioClip attackSound;  //타격음 삽입해야해용
 	public AudioClip hitSound; // 피격음ㄴ
@@ -141,6 +147,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	//private List<LightSource> _sighted = new List<LightSource>();
 
 	private Coroutine _navMeshAgentCoroutine;
+	private Coroutine _setDestinationDelayCoroutine;
 
 	public static event EnemyDieDelegate OnEnemyDie;
 	public static event PlayerKilledEnemyDelegate OnEnemyDieWithPlayer;
@@ -178,9 +185,9 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		set => _health.Value = value;
 	}
 
-	public float CurrentHealth 
+	public float CurrentHealth
 	{
-		get=> _health.Value; 
+		get => _health.Value;
 
 		set => _health.Value = value;
 	}
@@ -275,13 +282,13 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
-	private void Update()
-	{
-		//if (Target)
-		//{
-		//	Debug.Log($"{name}.{GetInstanceID()}의 타겟은 {Target}");
-		//}
-	}
+	//private void Update()
+	//{
+	//	//if (Target)
+	//	//{
+	//	//	Debug.Log($"{name}.{GetInstanceID()}의 타겟은 {Target}");
+	//	//}
+	//}
 
 	//public override void OnDestroy()
 	//{
@@ -294,6 +301,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	public override void OnNetworkSpawn()
 	{
 		//base.OnNetworkSpawn();
+
+		_pathfindingDelay.Value = _sensitivity;
 
 		_isDead.OnValueChanged += OnIsDeadChanged;
 		//_resistance.OnValueChanged += OnHealthChanged;
@@ -370,7 +379,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 			//gameObject.SetActive(!newValue);
 
-			StartCoroutine(DieEffect());
+			//StartCoroutine(DieEffect());
 		}
 
 		//Debug.LogError("설마 이거 호출 안됨?");
@@ -379,7 +388,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		{
 			foreach (var loot in _loots)
 			{
-				loot.Execute(this);	
+				loot.Execute(this);
 			}
 		}
 	}
@@ -468,7 +477,7 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 		}
 	}
 
-	public void TakeDamage(float amount , AudioClip hitSound)
+	public void TakeDamage(float amount, AudioClip hitSound)
 	{
 		var handle = new DamageHandle()
 		{
@@ -565,6 +574,8 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 			_animator.SetBool(WALKING_STATE, false);
 		}
 
+		_navMeshAgentCoroutine = null;
+
 		//_agent?.ResetPath();
 		//_animator?.SetBool(WALKING_STATE, false);
 	}
@@ -586,12 +597,12 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 				_target.Value = reference;
 			}
-			else if (isTargetEnable && target.Equals(player))
-			{
-				//var message = $"타겟이 이미 {player.name}({player.OwnerClientId})입니다.";
+			//else if (isTargetEnable && target.Equals(player))
+			//{
+			//	//var message = $"타겟이 이미 {player.name}({player.OwnerClientId})입니다.";
 
-				//Debug.Log(message);
-			}
+			//	//Debug.Log(message);
+			//}
 		}
 	}
 
@@ -612,10 +623,49 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 	[Rpc(SendTo.Server)]
 	public void SetDestinationServerRPC(Vector3 destination)
 	{
+		if (IsMoving)
+		{
+			//var distance = Vector3.Distance(_agent.destination, destination);
+			//var weight = Mathf.Min(distance, _sensitivity);
+
+			Debug.Log($"SetDestination Delay : {_setDestinationDelayCoroutine}");
+
+			if (_setDestinationDelayCoroutine == null)
+			{
+				if (_setDestinationDelayCoroutine != null)
+				{
+					Debug.Log($"SetDestination dhfhfhfhfhfhfhfhfhfhf : {_setDestinationDelayCoroutine}");
+				}
+
+				SetDestination_Internal(destination);
+
+				if (_sensitivity > 0.0F)
+				{
+					Debug.Log("SetDestination Delay Start");
+
+					_setDestinationDelayCoroutine = StartCoroutine(SetDelay());;
+				}
+			}
+
+			//_pathfindingDelay.Value += weight;
+
+			//if (_pathfindingDelay.Value >= _sensitivity)
+			//{
+			//	_pathfindingDelay.Value -= _sensitivity;
+
+			//	SetDestination_Internal(destination);
+			//}
+		}
+		else
+		{
+			SetDestination_Internal(destination);
+		}
+	}
+
+	private void SetDestination_Internal(Vector3 destination)
+	{
 		var isOnNavMesh = NavMesh.SamplePosition(destination, out var hit, 1.0F, NavMesh.AllAreas);
 		var position = isOnNavMesh ? destination : hit.position;
-
-		//var message = $"NavMesh Sample Position : {isOnNavMesh}, Position : {position}";
 
 		_agent.SetDestination(position);
 
@@ -624,9 +674,10 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 			StopCoroutine(_navMeshAgentCoroutine);
 		}
 
-		_navMeshAgentCoroutine = StartCoroutine(OnNavMeshRunning());
-
-		//Debug.Log(message);
+		if (!IsMoving)
+		{
+			_navMeshAgentCoroutine = StartCoroutine(OnNavMeshRunning());
+		}
 	}
 
 	private IEnumerator OnNavMeshRunning()
@@ -635,9 +686,16 @@ public class EnemyPrototypePawn : NetworkPawn, IHealth
 
 		yield return new WaitUntil(() => _agent.remainingDistance <= _agent.stoppingDistance);
 
-		_navMeshAgentCoroutine = null;
-
 		StopMove();
+
+		yield return null;
+	}
+
+	private IEnumerator SetDelay()
+	{
+		yield return new WaitForSeconds(_sensitivity);
+
+		_setDestinationDelayCoroutine = null;
 
 		yield return null;
 	}

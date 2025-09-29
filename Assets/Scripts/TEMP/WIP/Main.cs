@@ -1,7 +1,8 @@
 using BehaviorDesigner.Runtime;
 
 using Cysharp.Threading.Tasks;
-using InTheDark.Example.Keywords;
+
+using InTheDark.Keywords;
 using InTheDark.LoremIpsum;
 
 using System;
@@ -9,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Transactions;
@@ -60,11 +62,6 @@ namespace InTheDark.Prototypes
 
 			//Debug.Log(Math.Log(243, 3));
 		}
-	}
-
-	public interface IA
-	{
-
 	}
 
 	#region PETIT_CODE

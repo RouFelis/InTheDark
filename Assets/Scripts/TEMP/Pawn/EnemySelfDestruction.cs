@@ -107,43 +107,11 @@ namespace InTheDark.Prototypes
 		{
 			var speed = _agent.speed;
 
+			//Debug.Log("¿Ö ¾Ë¸² ¾È¶ß³Ä...");
+
 			_agent.speed = speed * _explosingSpeedRatio;
 
 			StartCoroutine(OnExploseHerald());
-
-			_size = Physics.OverlapSphereNonAlloc(transform.position, _radius, _colliders, _targetLayer);
-
-			for (var i = 0; i < _size; i++)
-			{
-				var collider = _colliders[i];
-				var player = collider?.GetComponent<Player>();
-
-				if (player)
-				{
-					player.TakeDamage(_damage, null);
-
-					if (!player.IsDead)
-					{
-						var direction = player.transform.position - transform.position;
-						var pushDir = direction.normalized;
-
-						var flightTime = 1.0F;
-						var flightSpeed = 10.0F;
-
-						var knockBackHeight = 10.0F;
-
-						StartCoroutine(player.SetStun(flightTime, flightSpeed, _knockbackCurve, knockBackHeight, direction));
-					}
-
-					Debug.Log($"{player.name}({player.OwnerClientId})°¡ Æø¹ß¿¡ ÈÛ¾µ¸².");
-				}
-
-				_colliders[i] = default;
-			}
-
-			Debug.Log("Á×À»°Ô");
-
-			_pawn.Die();
 		}
 
 		[Rpc(SendTo.Everyone)]
@@ -178,6 +146,44 @@ namespace InTheDark.Prototypes
 			}
 
 			OnExplosionClientRPC();
+			ApplyDamage();
+		}
+		
+		private void ApplyDamage()
+		{
+			_size = Physics.OverlapSphereNonAlloc(transform.position, _radius, _colliders, _targetLayer);
+
+			for (var i = 0; i < _size; i++)
+			{
+				var collider = _colliders[i];
+				var player = collider?.GetComponent<Player>();
+
+				if (player)
+				{
+					player.TakeDamage(_damage, null);
+
+					if (!player.IsDead)
+					{
+						var direction = player.transform.position - transform.position;
+						var pushDir = direction.normalized;
+
+						var flightTime = 1.0F;
+						var flightSpeed = 10.0F;
+
+						var knockBackHeight = 10.0F;
+
+						StartCoroutine(player.SetStun(flightTime, flightSpeed, _knockbackCurve, knockBackHeight, direction));
+					}
+
+					Debug.Log($"{player.name}({player.OwnerClientId})°¡ Æø¹ß¿¡ ÈÛ¾µ¸².");
+				}
+
+				_colliders[i] = default;
+			}
+
+			Debug.Log("Á×À»°Ô");
+
+			_pawn.Die();
 		}
 
 		private void OnDrawGizmos()

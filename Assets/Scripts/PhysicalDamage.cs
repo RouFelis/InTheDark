@@ -4,11 +4,9 @@ using UnityEngine;
 
 namespace InTheDark.Keywords
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public interface IKeyword
+	[Serializable]
+	public class PhysicalDamage : IPhysicalDamage
 	{
 
-	}
+	} 
 }

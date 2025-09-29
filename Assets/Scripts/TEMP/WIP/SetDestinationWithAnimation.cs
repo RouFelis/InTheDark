@@ -89,16 +89,16 @@ namespace BehaviorDesigner.Runtime.Tasks.Unity.UnityNavMeshAgent
 			destination = Vector3.zero;
 		}
 
-		private IEnumerator EndWalkingAnimation()
-		{
-			var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
+		//private IEnumerator EndWalkingAnimation()
+		//{
+		//	var pawn = gameObject.GetComponent<EnemyPrototypePawn>();
 
-			yield return new WaitUntil(() => navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance);
+		//	yield return new WaitUntil(() => navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance);
 
-			Debug.Log($"{gameObject.name} ∏ÿ√„!");
+		//	Debug.Log($"{gameObject.name} ∏ÿ√„!");
 
-			pawn?.StopMove();
-		}
+		//	pawn?.StopMove();
+		//}
 
 		//public override void OnEnd()
 		//{

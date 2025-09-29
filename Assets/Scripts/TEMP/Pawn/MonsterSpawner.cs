@@ -17,6 +17,16 @@ namespace InTheDark.Prototypes
 		public EnemySpawnTrigger[] Triggers;
 	}
 
+	// 임시의 임시
+	[Serializable]
+	public class AIGenerateTable
+	{
+		public float Weight;
+		public bool IsEnable;
+
+		public int[] Index;
+	}
+
 	// TODO: Enemy Manager 등으로 일부 기능 이동 및 분리, Spawner는 Factory의 역할
 	public class MonsterSpawner : NetworkBehaviour
 	{
@@ -48,17 +58,25 @@ namespace InTheDark.Prototypes
 		private float _logBase = Mathf.Sqrt(2.0F);
 
 		[SerializeField]
+		private float _agentHeight = 1.0F;
+
+		[SerializeField]
+		private List<EnemyPrototypePawn> _enemies = new();
+
+		[SerializeField]
 		private AIGenerateData[] _stage;
+
+		[SerializeField]
+		private AIGenerateTable[] _table;
 
 		[SerializeField]
 		private EnemyPrototypePawn[] _prefabs;
 
-		[SerializeField]
-		private float _agentHeight = 1.0F;
-
 		private NetworkList<EnemyRef> _spawned;
 
 		private NetworkVariable<bool> _isLocked = new NetworkVariable<bool>(false);
+
+		private List<AIGenerateTable> _enabled = new();
 
 		public static MonsterSpawner Instance
 		{
@@ -113,7 +131,7 @@ namespace InTheDark.Prototypes
 
 
 
-				EnemyPrototypePawn.OnEnemyDieWithPlayer += skjdaksjd;
+				//EnemyPrototypePawn.OnEnemyDieWithPlayer += skjdaksjd;
 			}
 		}
 
@@ -122,13 +140,13 @@ namespace InTheDark.Prototypes
 			Game.OnDungeonEnter -= OnDungeonEnter;
 			Game.OnDungeonExit -= OnDungeonExit;
 
-			EnemyPrototypePawn.OnEnemyDieWithPlayer -= skjdaksjd;
+			//EnemyPrototypePawn.OnEnemyDieWithPlayer -= skjdaksjd;
 		}
 
-		private void skjdaksjd()
-		{
-			Debug.Log("으앙 주금");
-		}
+		//private void skjdaksjd()
+		//{
+		//	Debug.Log("으앙 주금");
+		//}
 
 		[Rpc(SendTo.Server)]
 		public void SpawnEnemyRPC(int buildIndex, Vector3 position, Quaternion rotation)
@@ -184,6 +202,7 @@ namespace InTheDark.Prototypes
 		[Rpc(SendTo.Server)]
 		private void OnDungeonEnterRPC(int buildIndex)
 		{
+			var table = Select();
 			var area = buildIndex + 1;
 
 			if (!_isLocked.Value)
@@ -195,8 +214,11 @@ namespace InTheDark.Prototypes
 
 				for (var i = 0; i < max; i++)
 				{
-					var index = UnityEngine.Random.Range(0, _stage.Length);
-					var data = _stage[index];
+					//var index = UnityEngine.Random.Range(0, _stage.Length);
+					//var data = _stage[index];
+
+					var index = UnityEngine.Random.Range(0, table.Length);
+					var data = table[index];
 
 					Debug.Log(index + "번 몬스터 선택");
 
@@ -231,6 +253,52 @@ namespace InTheDark.Prototypes
 			}
 		}
 
+		private AIGenerateData[] Select()
+		{
+			var max = 0.0F;
+			var value = 0.0F;
+
+			foreach (var element in _table)
+			{
+				if (element.IsEnable)
+				{
+					max += element.Weight;
+
+					_enabled.Add(element);
+				}
+			}
+
+			value = UnityEngine.Random.Range(0.0F, max);
+
+			foreach (var element in _enabled)
+			{
+				if (value <= element.Weight)
+				{
+					//return element.Stages;
+
+					var length = element.Index.Length;
+					var result = new AIGenerateData[length];
+
+					for (var i = 0; i < length; i++)
+					{
+						var index = element.Index[i];
+
+						result[i] = _stage[index];
+					}
+
+					return result;
+				}
+				else
+				{
+					value -= element.Weight;
+				}
+			}
+
+			Debug.LogError("없으면 안되는데요...");
+
+			return new AIGenerateData[0];
+		}
+
 		private void SpawnInternal(EnemyRef enemyRef, Vector3 position, Quaternion rotation)
 		{
 			var prefab = _prefabs[enemyRef.BuildIndex];
@@ -244,9 +312,14 @@ namespace InTheDark.Prototypes
 
 			_agentHeight += height;
 
-			if (IsServer && !enemy.IsSpawned)
+			if (IsServer)
 			{
-				enemy.NetworkObject.Spawn(true);
+				_enemies.Add(enemy);
+
+				if (!enemy.IsSpawned)
+				{
+					enemy.NetworkObject.Spawn(true);
+				}
 			}
 
 			//enemy.NetworkObject.Spawn(true);
@@ -266,9 +339,22 @@ namespace InTheDark.Prototypes
 
 		private void OnDungeonExit(DungeonExitEvent received)
 		{
-			if (IsHost)
+			if (IsServer)
 			{
 				_spawned.Clear();
+			}
+
+			if (IsServer)
+			{
+				foreach (var enemy in _enemies)
+				{
+					if (enemy)
+					{
+						enemy.NetworkObject.Despawn(true);
+					}
+				}
+
+				_enemies.Clear();
 			}
 		}
 

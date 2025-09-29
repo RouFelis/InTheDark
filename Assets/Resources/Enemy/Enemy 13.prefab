@@ -235,9 +235,10 @@ MonoBehaviour:
   _isDead:
     m_InternalValue: 0
   _health:
-    m_InternalValue: 100
+    m_InternalValue: 200
   _maxHealth:
     m_InternalValue: 20
+  _sensitivity: 5
   _state:
     m_InternalValue:
       utf8LengthInBytes: 6
@@ -375,6 +376,8 @@ MonoBehaviour:
         byte0123: 0
         byte0124: 0
         byte0125: 0
+  _pathfindingDelay:
+    m_InternalValue: 0
   attackSound: {fileID: 8300000, guid: 5eb4498c9e032624cada3505b66da46c, type: 3}
   hitSound: {fileID: 8300000, guid: 9057b3748785e2846bc32257658c1bd4, type: 3}
   _agent: {fileID: -6386649275116767646}
@@ -416,6 +419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  _pawn: {fileID: 0}
 --- !u!82 &982930836932718898
 AudioSource:
   m_ObjectHideFlags: 0
@@ -426,7 +430,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f5a9fab2caaaa79408eb8696327ec145, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: f5a9fab2caaaa79408eb8696327ec145, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -527,7 +531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   _damage: 16
-  _range: 1.5
+  _range: 2.5
   _delay: 5
   _cooldown:
     m_InternalValue: 0
@@ -535,8 +539,8 @@ MonoBehaviour:
   _animator: {fileID: 4453662768508219377}
   _minLightIntensity: 0
   _maxLightIntensity: 1000
-  _radius: 6.65
-  _explosingSpeedRatio: 0.5
+  _radius: 6
+  _explosingSpeedRatio: 0.33
   _targetLayer:
     serializedVersion: 2
     m_Bits: 8

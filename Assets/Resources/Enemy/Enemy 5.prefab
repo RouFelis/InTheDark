@@ -239,6 +239,7 @@ MonoBehaviour:
     m_InternalValue: 100
   _maxHealth:
     m_InternalValue: 20
+  _sensitivity: 0
   _state:
     m_InternalValue:
       utf8LengthInBytes: 6
@@ -376,6 +377,8 @@ MonoBehaviour:
         byte0123: 0
         byte0124: 0
         byte0125: 0
+  _pathfindingDelay:
+    m_InternalValue: 0
   attackSound: {fileID: 8300000, guid: 5eb4498c9e032624cada3505b66da46c, type: 3}
   hitSound: {fileID: 8300000, guid: 9057b3748785e2846bc32257658c1bd4, type: 3}
   _agent: {fileID: -6386649275116767646}
